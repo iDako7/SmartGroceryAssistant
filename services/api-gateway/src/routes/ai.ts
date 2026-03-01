@@ -35,4 +35,10 @@ export default async function aiRoutes(app: FastifyInstance) {
     handler: (_req: FastifyRequest, reply: FastifyReply) =>
       reply.from(upstream('/api/v1/ai/alternatives')),
   });
+
+  app.get('/api/v1/ai/jobs/:id', {
+    onRequest: auth,
+    handler: (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) =>
+      reply.from(upstream(`/api/v1/ai/jobs/${req.params.id}`)),
+  });
 }
