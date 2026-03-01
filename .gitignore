@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Next.js
+web/.next/
+web/out/
+web/build/
+
+# Env files
+.env
+.env.local
+.env*.local
+**/.env
+**/.env.local
+
+# Go
+services/**/*.exe
+services/**/tmp/
+
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+.venv/
+**/.venv/
+
+# Test / coverage
+coverage/
+**/coverage/
+web/playwright-report/
+web/test-results/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+*.swp
+*.swo
