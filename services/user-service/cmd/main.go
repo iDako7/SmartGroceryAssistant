@@ -38,18 +38,20 @@ func main() {
 
 	r := gin.Default()
 
+	r.GET("/health", func(c *gin.Context) { c.JSON(200, gin.H{"status": "ok"}) })
+
 	// Auth — no JWT required
-	auth := r.Group("/api/v1/auth")
+	users := r.Group("/api/v1/users")
 	{
-		auth.POST("/register", h.Register)
-		auth.POST("/login", h.Login)
+		users.POST("/register", h.Register)
+		users.POST("/login", h.Login)
 	}
 
-	// Users — JWT required
-	users := r.Group("/api/v1/users", middleware.Auth(jwtSecret))
+	// Profile — JWT required
+	me := r.Group("/api/v1/users", middleware.Auth(jwtSecret))
 	{
-		users.GET("/profile", h.GetProfile)
-		users.PUT("/profile", h.UpdateProfile)
+		me.GET("/me", h.GetProfile)
+		me.PUT("/me", h.UpdateProfile)
 	}
 
 	log.Printf("user-service listening on :%s", port)

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-worker
+  namespace: sga
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-worker
+  template:
+    metadata:
+      labels:
+        app: ai-worker
+    spec:
+      containers:
+        - name: ai-worker
+          image: sga/ai-service
+          imagePullPolicy: Never
+          command: ["python", "worker.py"]
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: jwt-secret
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: redis-password
+            - name: RABBITMQ_URL
+              value: amqp://sga:$(RABBITMQ_PASSWORD)@rabbitmq:5672/
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: rabbitmq-password
+            - name: OPENROUTER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: openrouter-api-key
+            - name: OPENROUTER_MODEL
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: openrouter-model

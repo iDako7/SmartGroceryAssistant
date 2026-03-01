@@ -45,6 +45,9 @@ func main() {
 	h := handler.New(svc)
 
 	r := gin.Default()
+
+	r.GET("/health", func(c *gin.Context) { c.JSON(200, gin.H{"status": "ok"}) })
+
 	auth := middleware.Auth(jwtSecret)
 
 	lists := r.Group("/api/v1/lists", auth)
