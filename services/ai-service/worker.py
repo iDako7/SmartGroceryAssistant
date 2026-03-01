@@ -47,7 +47,7 @@ async def main() -> None:
     async with connection:
         channel = await connection.channel()
         await channel.set_qos(prefetch_count=4)
-        q = await channel.get_queue("ai.jobs")
+        q = await channel.declare_queue("ai.jobs", durable=True, arguments={"x-message-ttl": 300000})
         await q.consume(process)
         log.info("worker ready — waiting for jobs")
         await asyncio.Future()  # run forever

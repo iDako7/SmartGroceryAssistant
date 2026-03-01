@@ -1,0 +1,151 @@
+'use client';
+
+import { FormEvent, useState } from 'react';
+import { lists } from '../../lib/api';
+import type { Item, Section } from '../../types';
+import ItemRow from './ItemRow';
+
+interface Props {
+  section: Section;
+  items: Item[];
+  selectedItem: Item | null;
+  onSelectItem: (item: Item) => void;
+  onItemUpdated: (item: Item) => void;
+  onItemDeleted: (sectionId: string, itemId: string) => void;
+  onItemCreated: (sectionId: string, item: Item) => void;
+  onSectionDeleted: (id: string) => void;
+  onSectionUpdated: (section: Section) => void;
+}
+
+export default function SectionCard({
+  section,
+  items,
+  selectedItem,
+  onSelectItem,
+  onItemUpdated,
+  onItemDeleted,
+  onItemCreated,
+  onSectionDeleted,
+  onSectionUpdated,
+}: Props) {
+  const [collapsed, setCollapsed] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [sectionName, setSectionName] = useState(section.name);
+  const [addingItem, setAddingItem] = useState(false);
+  const [newItemName, setNewItemName] = useState('');
+
+  async function saveSectionName() {
+    if (sectionName.trim() === section.name) {
+      setEditingName(false);
+      return;
+    }
+    const updated = await lists.updateSection(section.id, { name: sectionName.trim() });
+    onSectionUpdated(updated as Section);
+    setEditingName(false);
+  }
+
+  async function handleAddItem(e: FormEvent) {
+    e.preventDefault();
+    if (!newItemName.trim()) return;
+    const item = await lists.createItem(section.id, newItemName.trim());
+    onItemCreated(section.id, item as Item);
+    setNewItemName('');
+    setAddingItem(false);
+  }
+
+  const doneCount = items.filter((i) => i.checked).length;
+
+  return (
+    <div className="rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+      {/* Section header */}
+      <div className="flex items-center gap-2 px-4 py-3">
+        <button
+          onClick={() => setCollapsed((c) => !c)}
+          className="text-zinc-400 transition hover:text-zinc-700 dark:hover:text-zinc-200"
+        >
+          {collapsed ? '▶' : '▼'}
+        </button>
+
+        {editingName ? (
+          <input
+            value={sectionName}
+            onChange={(e) => setSectionName(e.target.value)}
+            onBlur={saveSectionName}
+            onKeyDown={(e) => e.key === 'Enter' && saveSectionName()}
+            autoFocus
+            className="flex-1 rounded border border-zinc-300 px-2 py-0.5 text-sm font-semibold outline-none focus:border-emerald-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+          />
+        ) : (
+          <button
+            onClick={() => setEditingName(true)}
+            className="flex-1 text-left text-sm font-semibold text-zinc-800 hover:text-emerald-600 dark:text-zinc-200"
+          >
+            {section.name}
+          </button>
+        )}
+
+        <span className="text-xs text-zinc-400">
+          {doneCount}/{items.length}
+        </span>
+
+        <button
+          onClick={() => onSectionDeleted(section.id)}
+          className="text-zinc-300 transition hover:text-red-500 dark:text-zinc-600"
+          title="Delete section"
+        >
+          ✕
+        </button>
+      </div>
+
+      {/* Items */}
+      {!collapsed && (
+        <div className="border-t border-zinc-100 px-4 pb-3 dark:border-zinc-800">
+          <ul className="mt-2 space-y-0.5">
+            {items.map((item) => (
+              <ItemRow
+                key={item.id}
+                item={item}
+                selected={selectedItem?.id === item.id}
+                onSelect={onSelectItem}
+                onUpdated={onItemUpdated}
+                onDeleted={(id) => onItemDeleted(section.id, id)}
+              />
+            ))}
+          </ul>
+
+          {addingItem ? (
+            <form onSubmit={handleAddItem} className="mt-2 flex gap-2">
+              <input
+                value={newItemName}
+                onChange={(e) => setNewItemName(e.target.value)}
+                placeholder="Item name"
+                autoFocus
+                className="min-w-0 flex-1 rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-emerald-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+              />
+              <button
+                type="submit"
+                className="rounded-lg bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700"
+              >
+                Add
+              </button>
+              <button
+                type="button"
+                onClick={() => setAddingItem(false)}
+                className="text-sm text-zinc-400 hover:underline"
+              >
+                Cancel
+              </button>
+            </form>
+          ) : (
+            <button
+              onClick={() => setAddingItem(true)}
+              className="mt-2 text-sm text-zinc-400 hover:text-emerald-600"
+            >
+              + Add item
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

@@ -16,7 +16,7 @@ async def connect() -> None:
     _connection = await aio_pika.connect_robust(settings.rabbitmq_url)
     _channel = await _connection.channel()
     _exchange = await _channel.declare_exchange(
-        "ai", aio_pika.ExchangeType.DIRECT, durable=True, passive=True
+        "ai", aio_pika.ExchangeType.DIRECT, durable=True
     )
 
 
