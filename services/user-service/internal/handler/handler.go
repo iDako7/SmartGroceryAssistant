@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"errors"
 	"net/http"
 
@@ -9,11 +10,21 @@ import (
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/service"
 )
 
-type Handler struct {
-	svc *service.UserService
+// Ensure *service.UserService satisfies userServicer at compile time.
+var _ userServicer = (*service.UserService)(nil)
+
+type userServicer interface {
+	Register(ctx context.Context, req model.RegisterRequest) (*model.AuthResponse, error)
+	Login(ctx context.Context, req model.LoginRequest) (*model.AuthResponse, error)
+	GetProfile(ctx context.Context, userID string) (*model.ProfileView, error)
+	UpdateProfile(ctx context.Context, userID string, req model.UpdateProfileRequest) (*model.ProfileView, error)
 }
 
-func New(svc *service.UserService) *Handler {
+type Handler struct {
+	svc userServicer
+}
+
+func New(svc userServicer) *Handler {
 	return &Handler{svc: svc}
 }
 

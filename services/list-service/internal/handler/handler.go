@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -8,11 +9,26 @@ import (
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/service"
 )
 
-type Handler struct {
-	svc *service.ListService
+// Ensure *service.ListService satisfies listServicer at compile time.
+var _ listServicer = (*service.ListService)(nil)
+
+type listServicer interface {
+	GetFullList(ctx context.Context, userID string) (*model.FullListResponse, error)
+	GetSections(ctx context.Context, userID string) ([]model.SectionView, error)
+	CreateSection(ctx context.Context, userID string, req model.CreateSectionRequest) (*model.SectionView, error)
+	UpdateSection(ctx context.Context, id, userID string, req model.UpdateSectionRequest) (*model.SectionView, error)
+	DeleteSection(ctx context.Context, id, userID string) error
+	GetItems(ctx context.Context, sectionID string) ([]model.ItemView, error)
+	CreateItem(ctx context.Context, userID, sectionID string, req model.CreateItemRequest) (*model.ItemView, error)
+	UpdateItem(ctx context.Context, userID, id string, req model.UpdateItemRequest) (*model.ItemView, error)
+	DeleteItem(ctx context.Context, userID, id string) error
 }
 
-func New(svc *service.ListService) *Handler {
+type Handler struct {
+	svc listServicer
+}
+
+func New(svc listServicer) *Handler {
 	return &Handler{svc: svc}
 }
 

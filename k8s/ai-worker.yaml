@@ -19,6 +19,11 @@ spec:
           imagePullPolicy: Never
           command: ["python", "worker.py"]
           env:
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: rabbitmq-password
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -26,6 +31,8 @@ spec:
                   key: jwt-secret
             - name: REDIS_HOST
               value: redis
+            - name: SGA_REDIS_PORT
+              value: "6379"
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -33,11 +40,6 @@ spec:
                   key: redis-password
             - name: RABBITMQ_URL
               value: amqp://sga:$(RABBITMQ_PASSWORD)@rabbitmq:5672/
-            - name: RABBITMQ_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: sga-secret
-                  key: rabbitmq-password
             - name: OPENROUTER_API_KEY
               valueFrom:
                 secretKeyRef:

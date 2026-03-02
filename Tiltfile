@@ -34,7 +34,19 @@ docker_build(
 
 # ── Manifests ─────────────────────────────────────────────
 
-k8s_yaml(glob('k8s/*.yaml'))
+k8s_yaml([
+    'k8s/namespace.yaml',
+    'k8s/secret.yaml',
+    'k8s/postgres.yaml',
+    'k8s/redis.yaml',
+    'k8s/rabbitmq.yaml',
+    'k8s/user-service.yaml',
+    'k8s/list-service.yaml',
+    'k8s/ai-service.yaml',
+    'k8s/ai-worker.yaml',
+    'k8s/api-gateway.yaml',
+    'k8s/web.yaml',
+])
 
 # ── Resources & port-forwards ─────────────────────────────
 
@@ -51,7 +63,7 @@ k8s_resource(
 k8s_resource(
     'list-service',
     port_forwards=['4002:4002'],
-    resource_deps=['postgres', 'rabbitmq'],
+    resource_deps=['postgres', 'rabbitmq', 'user-service'],
 )
 
 k8s_resource(

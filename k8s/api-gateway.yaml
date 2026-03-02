@@ -27,6 +27,8 @@ spec:
                 secretKeyRef:
                   name: sga-secret
                   key: jwt-secret
+            - name: CORS_ORIGIN
+              value: http://localhost:3000
             - name: USER_SERVICE_URL
               value: http://user-service:4001
             - name: LIST_SERVICE_URL

@@ -9,7 +9,6 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/model"
-	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/repository"
 	"github.com/jackc/pgx/v5"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -19,13 +18,23 @@ var (
 	ErrInvalidCreds  = errors.New("invalid email or password")
 )
 
+// UserRepository is the data-access interface consumed by UserService.
+type UserRepository interface {
+	CreateUser(ctx context.Context, email, passwordHash string) (*model.User, error)
+	GetUserByEmail(ctx context.Context, email string) (*model.User, error)
+	GetUserByID(ctx context.Context, id string) (*model.User, error)
+	CreateProfile(ctx context.Context, user model.User) (*model.Profile, error)
+	GetProfileByUserID(ctx context.Context, userID string) (*model.Profile, error)
+	UpdateProfile(ctx context.Context, userID string, req model.UpdateProfileRequest) (*model.Profile, error)
+}
+
 type UserService struct {
-	repo      *repository.UserRepo
+	repo      UserRepository
 	jwtSecret string
 	jwtTTL    time.Duration
 }
 
-func NewUserService(repo *repository.UserRepo, jwtSecret string) *UserService {
+func NewUserService(repo UserRepository, jwtSecret string) *UserService {
 	return &UserService{
 		repo:      repo,
 		jwtSecret: jwtSecret,

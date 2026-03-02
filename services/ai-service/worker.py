@@ -43,7 +43,15 @@ async def process(message: aio_pika.IncomingMessage) -> None:
 
 
 async def main() -> None:
-    connection = await aio_pika.connect_robust(settings.rabbitmq_url)
+    for attempt in range(1, 11):
+        try:
+            connection = await aio_pika.connect_robust(settings.rabbitmq_url)
+            break
+        except Exception as exc:
+            log.warning("RabbitMQ not ready (attempt %d/10): %s", attempt, exc)
+            if attempt == 10:
+                raise
+            await asyncio.sleep(3)
     async with connection:
         channel = await connection.channel()
         await channel.set_qos(prefetch_count=4)

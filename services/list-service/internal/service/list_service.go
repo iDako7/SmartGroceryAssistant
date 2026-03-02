@@ -5,15 +5,32 @@ import (
 
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/events"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/model"
-	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/repository"
 )
 
-type ListService struct {
-	repo *repository.ListRepo
-	pub  *events.Publisher
+// ListRepository is the data-access interface consumed by ListService.
+type ListRepository interface {
+	GetSections(ctx context.Context, userID string) ([]model.Section, error)
+	CreateSection(ctx context.Context, userID, name string, position int) (*model.Section, error)
+	UpdateSection(ctx context.Context, id, userID string, req model.UpdateSectionRequest) (*model.Section, error)
+	DeleteSection(ctx context.Context, id, userID string) error
+	GetItems(ctx context.Context, sectionID string) ([]model.Item, error)
+	CreateItem(ctx context.Context, sectionID string, req model.CreateItemRequest) (*model.Item, error)
+	UpdateItem(ctx context.Context, id string, req model.UpdateItemRequest) (*model.Item, error)
+	DeleteItem(ctx context.Context, id string) error
+	GetFullList(ctx context.Context, userID string) ([]model.Section, map[string][]model.Item, error)
 }
 
-func NewListService(repo *repository.ListRepo, pub *events.Publisher) *ListService {
+// EventPublisher is the messaging interface consumed by ListService.
+type EventPublisher interface {
+	Publish(ctx context.Context, userID string, eventType events.EventType, payload any)
+}
+
+type ListService struct {
+	repo ListRepository
+	pub  EventPublisher
+}
+
+func NewListService(repo ListRepository, pub EventPublisher) *ListService {
 	return &ListService{repo: repo, pub: pub}
 }
 
