@@ -51,6 +51,7 @@ Hooks are registered in `settings.local.json`. The structure is:
 ```
 
 Each entry specifies:
+
 - **`matcher`** — which tool to intercept (e.g., `Edit|Write`, `Bash`)
 - **`command`** — the shell script to run
 - **`timeout`** — seconds before the hook is force-killed
@@ -58,6 +59,7 @@ Each entry specifies:
 ### How a hook stops Claude
 
 Exit codes control what happens:
+
 - `exit 0` → allow Claude to proceed
 - `exit 2` → **block** Claude's action and show an error message
 
@@ -92,13 +94,13 @@ fi
 
 **What it does:** Checks that any TypeScript file in `src/` follows the naming conventions:
 
-| Folder | Required name format | Example |
-|--------|---------------------|---------|
-| `src/controller/` | `{Name}Controller.ts` | `GroceryController.ts` |
-| `src/services/` | `{Name}Service.ts` | `SuggestService.ts` |
-| `src/repositories/` | `{Name}Repository.ts` | `ItemRepository.ts` |
-| `src/routes/` | `{name}.routes.ts` | `grocery.routes.ts` |
-| `src/dtos/response/` | `{Name}DTO.ts` | `SuggestResponseDTO.ts` |
+| Folder               | Required name format  | Example                 |
+| -------------------- | --------------------- | ----------------------- |
+| `src/controller/`    | `{Name}Controller.ts` | `GroceryController.ts`  |
+| `src/services/`      | `{Name}Service.ts`    | `SuggestService.ts`     |
+| `src/repositories/`  | `{Name}Repository.ts` | `ItemRepository.ts`     |
+| `src/routes/`        | `{name}.routes.ts`    | `grocery.routes.ts`     |
+| `src/dtos/response/` | `{Name}DTO.ts`        | `SuggestResponseDTO.ts` |
 
 If the name doesn't match, it blocks the file creation and tells Claude the correct format.
 
@@ -111,6 +113,7 @@ If the name doesn't match, it blocks the file creation and tells Claude the corr
 **When it runs:** Before every `Bash` tool call.
 
 **What it does:** Blocks `npm install <package>` unless:
+
 - No package name is given (restoring `node_modules` from lockfile is fine)
 - The package is a `@types/` package
 - The environment variable `CLAUDE_ALLOW_INSTALL=true` is set
@@ -173,6 +176,7 @@ allowed-tools: Read, Glob, Grep, Write, Bash
 You are in TEST WRITING mode.
 
 ## Task
+
 Write integration tests for: $ARGUMENTS
 ...
 ```
@@ -185,6 +189,7 @@ Write integration tests for: $ARGUMENTS
 ### `write-tests.md` — Phase 1
 
 Tells Claude to:
+
 1. Read feature requirements
 2. Write test files in `__tests__/integration/`
 3. Run `npm test` and confirm all new tests **fail**
@@ -195,6 +200,7 @@ The `allowed-tools` intentionally excludes `Edit` (editing existing files is blo
 ### `implement.md` — Phase 2
 
 Tells Claude to:
+
 1. Run `npm test` to see current failures
 2. Read the failing tests to understand what's needed
 3. Write minimum code to make each test pass
@@ -215,13 +221,14 @@ Skills live in `.claude/skills/{name}/SKILL.md`.
 
 ### How skills are triggered
 
-In the `CLAUDE.md` file (the main project instructions), you can reference a skill by name. The system prompt tells Claude: *"Consult the tdd-workflow skill whenever writing tests, implementing features, or working with `__tests__/`."*
+In the `CLAUDE.md` file (the main project instructions), you can reference a skill by name. The system prompt tells Claude: _"Consult the tdd-workflow skill whenever writing tests, implementing features, or working with `__tests__/`."_
 
 This means Claude loads the skill's rules into its context automatically for relevant tasks — you don't need to invoke it manually.
 
 ### `tdd-workflow/SKILL.md`
 
 This skill contains:
+
 - A summary of both TDD phases
 - **File placement reference table** — where each type of file should live
 - **Dependency injection rule** — all `new X()` calls happen only in `app.ts`
@@ -278,14 +285,17 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Bash
 You are in [MODE NAME] mode.
 
 ## Task
+
 Do this thing for: $ARGUMENTS
 
 ## Process
+
 1. Step one
 2. Step two
 3. ...
 
 ## Constraints
+
 - Rule 1
 - Rule 2
 ```
@@ -293,6 +303,7 @@ Do this thing for: $ARGUMENTS
 3. Use it: `/your-command-name some arguments`
 
 **Tips:**
+
 - Be explicit about what Claude should and shouldn't do
 - Include an "Output" section so Claude knows what to report when done
 - Restrict `allowed-tools` to only what's needed — this prevents Claude from doing things outside the command's scope
@@ -310,6 +321,7 @@ Consult the `your-skill-name` skill whenever you are doing X.
 ```
 
 **When to use a skill vs. a command:**
+
 - **Skill** → ongoing rules Claude applies repeatedly across many tasks (e.g., always follow these architecture patterns)
 - **Command** → a one-time workflow you invoke explicitly (e.g., run TDD phase 1 for this feature)
 
@@ -324,11 +336,13 @@ Consult the `your-skill-name` skill whenever you are doing X.
 ```json
 {
   "matcher": "Edit|Write",
-  "hooks": [{
-    "type": "command",
-    "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/your-hook.sh",
-    "timeout": 10
-  }]
+  "hooks": [
+    {
+      "type": "command",
+      "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/your-hook.sh",
+      "timeout": 10
+    }
+  ]
 }
 ```
 
@@ -354,11 +368,11 @@ exit 0
 
 **Hook event reference:**
 
-| Event | Matcher options | When it fires |
-|-------|----------------|---------------|
-| `PreToolUse` | `Edit`, `Write`, `Bash`, `Read`, etc. | Before Claude uses the tool |
-| `PostToolUse` | Same as above | After Claude uses the tool |
-| `Stop` | (no matcher needed) | When Claude finishes responding |
+| Event         | Matcher options                       | When it fires                   |
+| ------------- | ------------------------------------- | ------------------------------- |
+| `PreToolUse`  | `Edit`, `Write`, `Bash`, `Read`, etc. | Before Claude uses the tool     |
+| `PostToolUse` | Same as above                         | After Claude uses the tool      |
+| `Stop`        | (no matcher needed)                   | When Claude finishes responding |
 
 ---
 
