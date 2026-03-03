@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Design tokens from CLAUDE.md */
+@theme {
+  --color-primary: #2E7D32;
+  --color-accent: #FF6B35;
+  --color-bg: #F7F6F3;
+}
+
+body {
+  margin: 0;
+  background-color: #F7F6F3;
+  font-family: system-ui, -apple-system, sans-serif;
+}
