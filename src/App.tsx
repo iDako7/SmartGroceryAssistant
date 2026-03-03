@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 
 // ── Design Tokens ─────────────────────────────────────────────────────────────
 
@@ -181,6 +181,41 @@ interface SuggestResult {
   suggestions: SuggestionEntry[]
 }
 
+// ── Education Panel Types ────────────────────────────────────────────────────
+
+type PanelType = 'info' | 'alternatives' | 'inspire'
+
+interface ItemInfoData {
+  tasteProfile: string
+  commonUses: string
+  howToPick: string
+  storageTips: string
+  funFact: string
+}
+
+interface AlternativeItem {
+  nameEn: string
+  nameSecondary: string
+  matchLevel: 'Very close' | 'Similar' | 'Different but works'
+  comparison: string
+  aisleHint: string
+}
+
+interface RecipeIngredient { nameEn: string; nameSecondary: string }
+
+interface RecipeItem {
+  name: string
+  nameSecondary: string
+  description: string
+  missingIngredients: RecipeIngredient[]
+}
+
+interface ItemPanelCache {
+  info?: ItemInfoData
+  alternatives?: { alternatives: AlternativeItem[] }
+  inspire?: { recipes: RecipeItem[] }
+}
+
 interface Section {
   id: string
   name: string
@@ -239,6 +274,46 @@ const QUESTIONS = [
   { id: 'sides',     label: 'Sides needed / 需要配菜', options: ['Yes / 是', 'No / 否'] },
 ]
 
+// ── Education Mock Data ───────────────────────────────────────────────────────
+
+const MOCK_EDUCATION: Record<string, ItemPanelCache> = {
+  i2: {
+    info: {
+      tasteProfile: 'Rich, fatty, and savory with a perfect balance of meat and fat that becomes meltingly tender when cooked.',
+      commonUses: 'Korean BBQ (samgyeopsal), Chinese red-braised pork (hong shao rou), ramen topping, sandwiches.',
+      howToPick: 'Look for even layers of fat and meat. Fresh pork belly should be pink, not gray. The fat should be white and firm.',
+      storageTips: 'Keep refrigerated and use within 2–3 days, or freeze for up to 3 months. Wrap tightly to prevent freezer burn.',
+      funFact: 'In Korea, samgyeopsal (grilled pork belly) is the most popular BBQ dish — "three-layer flesh" refers to alternating fat and meat layers.',
+    },
+    alternatives: {
+      alternatives: [
+        { nameEn: 'Pork Shoulder', nameSecondary: '猪肩肉', matchLevel: 'Very close', comparison: 'Similar fat content and flavor. Great for BBQ, just needs a bit longer to cook.', aisleHint: 'Meat & Seafood aisle' },
+        { nameEn: 'Beef Short Ribs', nameSecondary: '牛小排', matchLevel: 'Similar', comparison: 'Richer, beefier flavor. Korean-style galbi is a classic BBQ alternative.', aisleHint: 'Meat & Seafood aisle' },
+        { nameEn: 'Chicken Thighs', nameSecondary: '鸡腿肉', matchLevel: 'Different but works', comparison: 'Leaner and lighter. Marinates well and cooks faster on the grill.', aisleHint: 'Meat & Seafood aisle' },
+      ],
+    },
+  },
+  i3: {
+    inspire: {
+      recipes: [
+        { name: 'Kimchi Jjigae', nameSecondary: '泡菜汤', description: 'A hearty Korean stew with kimchi, tofu, and pork.', missingIngredients: [{ nameEn: 'Gochugaru', nameSecondary: '辣椒粉' }, { nameEn: 'Anchovy Stock', nameSecondary: '鱼汤' }, { nameEn: 'Green Onions', nameSecondary: '葱' }] },
+        { name: 'Kimchi Fried Rice', nameSecondary: '泡菜炒饭', description: 'Quick and satisfying fried rice using fermented kimchi.', missingIngredients: [{ nameEn: 'Cooked Rice', nameSecondary: '米饭' }, { nameEn: 'Sesame Oil', nameSecondary: '芝麻油' }] },
+        { name: 'Kimchi Burger Topping', nameSecondary: '泡菜汉堡配料', description: 'Elevate your burgers with tangy, spicy kimchi.', missingIngredients: [{ nameEn: 'Mayo', nameSecondary: '蛋黄酱' }, { nameEn: 'Sesame Seeds', nameSecondary: '芝麻' }] },
+      ],
+    },
+  },
+}
+
+function buildFallbackPanelData(itemName: string, type: PanelType): ItemPanelCache {
+  if (type === 'info') {
+    return { info: { tasteProfile: `${itemName} has a distinctive flavor profile.`, commonUses: 'Commonly used in various dishes.', howToPick: `Look for fresh, high-quality ${itemName}.`, storageTips: 'Store in a cool, dry place or refrigerate as needed.', funFact: `${itemName} is enjoyed in many cuisines around the world.` } }
+  }
+  if (type === 'alternatives') {
+    return { alternatives: { alternatives: [{ nameEn: 'Option A', nameSecondary: '', matchLevel: 'Very close', comparison: 'Similar in taste and texture.', aisleHint: 'General grocery aisle' }, { nameEn: 'Option B', nameSecondary: '', matchLevel: 'Similar', comparison: 'Works well as a substitute.', aisleHint: 'General grocery aisle' }, { nameEn: 'Option C', nameSecondary: '', matchLevel: 'Different but works', comparison: 'Different but can be used.', aisleHint: 'General grocery aisle' }] } }
+  }
+  return { inspire: { recipes: [{ name: `${itemName} Dish 1`, nameSecondary: '', description: 'A delicious preparation.', missingIngredients: [{ nameEn: 'Spice Mix', nameSecondary: '' }] }, { name: `${itemName} Dish 2`, nameSecondary: '', description: 'Another great option.', missingIngredients: [{ nameEn: 'Sauce', nameSecondary: '' }] }, { name: `${itemName} Dish 3`, nameSecondary: '', description: 'Creative and tasty.', missingIngredients: [{ nameEn: 'Herbs', nameSecondary: '' }] }] } }
+}
+
 // ── Initial Data ─────────────────────────────────────────────────────────────
 
 const INITIAL_SECTIONS: Section[] = [
@@ -278,6 +353,8 @@ export default function App() {
   const [addingItemSectionId, setAddingItemSectionId] = useState<string | null>(null)
   const [addingItemText, setAddingItemText] = useState('')
   const [openQtyItemId, setOpenQtyItemId] = useState<string | null>(null)
+  const [openPanel, setOpenPanel] = useState<{ itemId: string; type: PanelType; loading: boolean } | null>(null)
+  const [panelCache, setPanelCache] = useState<Record<string, ItemPanelCache>>({})
 
   // ── Section operations ──────────────────────────────────────────────────────
 
@@ -443,138 +520,303 @@ export default function App() {
     )
   }
 
+  // ── Education panel operations ───────────────────────────────────────────────
+
+  function toggleEducationPanel(itemId: string, type: PanelType, itemName: string) {
+    // Toggle closed if same panel is already open
+    if (openPanel?.itemId === itemId && openPanel?.type === type) {
+      setOpenPanel(null)
+      return
+    }
+    // Open from cache immediately (no spinner)
+    const cached = panelCache[itemId]?.[type]
+    if (cached !== undefined) {
+      setOpenPanel({ itemId, type, loading: false })
+      return
+    }
+    // Show loading spinner, then resolve with mock data
+    setOpenPanel({ itemId, type, loading: true })
+    setTimeout(() => {
+      const data = MOCK_EDUCATION[itemId]?.[type] !== undefined
+        ? MOCK_EDUCATION[itemId]
+        : buildFallbackPanelData(itemName, type)
+      setPanelCache(prev => ({ ...prev, [itemId]: { ...prev[itemId], ...data } }))
+      setOpenPanel(prev =>
+        prev?.itemId === itemId && prev?.type === type ? { ...prev, loading: false } : prev
+      )
+    }, 600)
+  }
+
+  function useAlternative(sectionId: string, itemId: string, nameEn: string, nameSecondary: string) {
+    setSections(prev =>
+      prev.map(s => s.id !== sectionId ? s : {
+        ...s,
+        items: s.items.map(i => i.id !== itemId ? i : { ...i, nameEn, nameSecondary }),
+      })
+    )
+    setOpenPanel(null)
+  }
+
+  function addAllToSection(sectionId: string, ingredients: RecipeIngredient[]) {
+    setSections(prev =>
+      prev.map(s => s.id !== sectionId ? s : {
+        ...s,
+        items: [
+          ...s.items,
+          ...ingredients.map(ing => ({ id: genId(), nameEn: ing.nameEn, nameSecondary: ing.nameSecondary, quantity: 1, checked: false })),
+        ],
+      })
+    )
+  }
+
+  function renderEducationPanel(itemId: string, sectionId: string): ReactNode {
+    if (openPanel?.itemId !== itemId) return null
+    const { type, loading } = openPanel
+
+    if (loading) {
+      return (
+        <div data-testid="education-panel-loading" style={{ padding: '10px 14px', color: T.textSec, fontSize: 13 }}>
+          Loading…
+        </div>
+      )
+    }
+
+    const cache = panelCache[itemId]
+
+    if (type === 'info' && cache?.info) {
+      const info = cache.info
+      return (
+        <div data-testid="item-info-panel" style={{ padding: '12px 14px', background: T.greenLight, borderRadius: 10, margin: '4px 12px' }}>
+          <div data-testid="item-info-taste-profile" style={{ fontSize: 12, marginBottom: 6 }}><strong>Taste:</strong> {info.tasteProfile}</div>
+          <div data-testid="item-info-common-uses" style={{ fontSize: 12, marginBottom: 6 }}><strong>Uses:</strong> {info.commonUses}</div>
+          <div data-testid="item-info-how-to-pick" style={{ fontSize: 12, marginBottom: 6 }}><strong>How to pick:</strong> {info.howToPick}</div>
+          <div data-testid="item-info-storage-tips" style={{ fontSize: 12, marginBottom: 6 }}><strong>Storage:</strong> {info.storageTips}</div>
+          <div data-testid="item-info-fun-fact" style={{ fontSize: 12 }}><strong>Fun fact:</strong> {info.funFact}</div>
+        </div>
+      )
+    }
+
+    if (type === 'alternatives' && cache?.alternatives) {
+      const { alternatives } = cache.alternatives
+      return (
+        <div data-testid="alternatives-panel" style={{ padding: '12px 14px', background: T.coralBg, borderRadius: 10, margin: '4px 12px' }}>
+          {alternatives.map((alt, i) => (
+            <div key={i} data-testid="alternative-item" style={{ marginBottom: 10, padding: '10px 12px', background: '#fff', borderRadius: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                <span data-testid="alternative-name" style={{ fontSize: 14, fontWeight: 600 }}>{alt.nameEn}</span>
+                {alt.nameSecondary && <span style={{ fontSize: 11, color: T.textTer }}>{alt.nameSecondary}</span>}
+                <span
+                  data-testid="match-level-badge"
+                  data-level={alt.matchLevel}
+                  style={{
+                    marginLeft: 'auto', fontSize: 10, fontWeight: 600, padding: '2px 7px', borderRadius: 6,
+                    background: alt.matchLevel === 'Very close' ? T.greenLight : alt.matchLevel === 'Similar' ? '#FFF8E1' : '#FFF3E0',
+                    color: alt.matchLevel === 'Very close' ? T.green : alt.matchLevel === 'Similar' ? '#F57F17' : T.coral,
+                  }}
+                >
+                  {alt.matchLevel}
+                </span>
+              </div>
+              <div style={{ fontSize: 12, color: T.textSec, marginBottom: 4 }}>{alt.comparison}</div>
+              <div style={{ fontSize: 11, color: T.textTer, marginBottom: 8 }}>{alt.aisleHint}</div>
+              <button
+                data-testid="use-this-button"
+                onClick={() => useAlternative(sectionId, itemId, alt.nameEn, alt.nameSecondary)}
+                style={{ padding: '5px 14px', background: T.green, color: '#fff', border: 'none', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontWeight: 600 }}
+              >
+                Use This
+              </button>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    if (type === 'inspire' && cache?.inspire) {
+      const { recipes } = cache.inspire
+      const allMissing = recipes.flatMap(r => r.missingIngredients)
+      return (
+        <div data-testid="inspire-panel" style={{ padding: '12px 14px', background: T.greenLight, borderRadius: 10, margin: '4px 12px' }}>
+          {recipes.map((recipe, i) => (
+            <div key={i} data-testid="inspire-recipe" style={{ marginBottom: 10, padding: '10px 12px', background: '#fff', borderRadius: 8 }}>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>{recipe.name}</div>
+              {recipe.nameSecondary && <div style={{ fontSize: 11, color: T.textTer, marginBottom: 4 }}>{recipe.nameSecondary}</div>}
+              <div style={{ fontSize: 12, color: T.textSec, marginBottom: 8 }}>{recipe.description}</div>
+              {recipe.missingIngredients.map((ing, j) => (
+                <div key={j} data-testid="recipe-missing-ingredient" style={{ fontSize: 12, color: T.textTer, marginBottom: 2 }}>
+                  {ing.nameEn}
+                </div>
+              ))}
+            </div>
+          ))}
+          <button
+            data-testid="add-all-button"
+            onClick={() => addAllToSection(sectionId, allMissing)}
+            style={{ marginTop: 4, padding: '7px 18px', background: T.coral, color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, cursor: 'pointer', fontWeight: 600 }}
+          >
+            Add All
+          </button>
+        </div>
+      )
+    }
+
+    return null
+  }
+
   // ── Render helpers ──────────────────────────────────────────────────────────
 
   function renderFlatItemRow(item: GroceryItem, sectionId: string) {
     return (
-      <div
-        key={item.id}
-        data-testid="grocery-item"
-        data-checked={item.checked ? 'true' : 'false'}
-        style={{
-          display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6,
-          opacity: item.checked ? 0.55 : 1,
-          borderBottom: `1px solid ${T.border}`,
-        }}
-      >
+      <div key={item.id} style={{ borderBottom: `1px solid ${T.border}` }}>
         <div
-          data-testid="checkbox-touch-target"
-          data-min-height="44"
-          style={{ minHeight: 44, display: 'flex', alignItems: 'center' }}
+          data-testid="grocery-item"
+          data-checked={item.checked ? 'true' : 'false'}
+          style={{
+            display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6,
+            opacity: item.checked ? 0.55 : 1,
+          }}
         >
-          <RoundCheckbox
-            checked={item.checked}
-            onChange={() => toggleItem(sectionId, item.id)}
-            size={22}
-          />
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <span
-            data-testid="item-name-en"
-            style={{ fontSize: 14, fontWeight: 500, textDecoration: item.checked ? 'line-through' : 'none' }}
+          <div
+            data-testid="checkbox-touch-target"
+            data-min-height="44"
+            style={{ minHeight: 44, display: 'flex', alignItems: 'center' }}
           >
-            {item.nameEn}
-          </span>
-          {item.nameSecondary && (
+            <RoundCheckbox
+              checked={item.checked}
+              onChange={() => toggleItem(sectionId, item.id)}
+              size={22}
+            />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <span
-              data-testid="item-name-secondary"
-              style={{ fontSize: 11, color: T.textTer, marginLeft: 6 }}
+              data-testid={`item-name-en-${item.id}`}
+              style={{ fontSize: 14, fontWeight: 500, textDecoration: item.checked ? 'line-through' : 'none' }}
             >
-              {item.nameSecondary}
+              {item.nameEn}
             </span>
-          )}
-        </div>
-        <TinyBtn title="Learn about this item"><InfoSvg /></TinyBtn>
-        <TinyBtn title="Alternatives"><SwapSvg /></TinyBtn>
-        <div style={{ position: 'relative' }}>
-          <button
-            data-testid="item-quantity"
-            onClick={() => setOpenQtyItemId(openQtyItemId === item.id ? null : item.id)}
-            style={{
-              background: T.bg, border: 'none', borderRadius: 11, padding: '2px 8px',
-              cursor: 'pointer', fontSize: 12, fontWeight: 700, minWidth: 22, height: 22,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            {item.quantity}
-          </button>
-          {openQtyItemId === item.id && (
-            <div
-              data-testid="quantity-picker"
+            {item.nameSecondary && (
+              <span
+                data-testid="item-name-secondary"
+                style={{ fontSize: 11, color: T.textTer, marginLeft: 6 }}
+              >
+                {item.nameSecondary}
+              </span>
+            )}
+          </div>
+          <TinyBtn
+            data-testid={`info-button-${item.id}`}
+            onClick={() => toggleEducationPanel(item.id, 'info', item.nameEn)}
+            title="Learn about this item"
+          ><InfoSvg /></TinyBtn>
+          <TinyBtn
+            data-testid={`alternatives-button-${item.id}`}
+            onClick={() => toggleEducationPanel(item.id, 'alternatives', item.nameEn)}
+            title="Alternatives"
+          ><SwapSvg /></TinyBtn>
+          <div style={{ position: 'relative' }}>
+            <button
+              data-testid="item-quantity"
+              onClick={() => setOpenQtyItemId(openQtyItemId === item.id ? null : item.id)}
               style={{
-                position: 'absolute', right: 0, top: '110%', background: 'white',
-                border: '1px solid #ddd', borderRadius: 8, display: 'flex',
-                flexWrap: 'wrap', width: 108, zIndex: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+                background: T.bg, border: 'none', borderRadius: 11, padding: '2px 8px',
+                cursor: 'pointer', fontSize: 12, fontWeight: 700, minWidth: 22, height: 22,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => (
-                <button
-                  key={n}
-                  data-testid={`qty-option-${n}`}
-                  onClick={() => setItemQty(sectionId, item.id, n)}
-                  style={{ width: '33.33%', border: 'none', background: 'none', padding: '7px 0', cursor: 'pointer', fontSize: 14 }}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-          )}
+              {item.quantity}
+            </button>
+            {openQtyItemId === item.id && (
+              <div
+                data-testid="quantity-picker"
+                style={{
+                  position: 'absolute', right: 0, top: '110%', background: 'white',
+                  border: '1px solid #ddd', borderRadius: 8, display: 'flex',
+                  flexWrap: 'wrap', width: 108, zIndex: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+                }}
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => (
+                  <button
+                    key={n}
+                    data-testid={`qty-option-${n}`}
+                    onClick={() => setItemQty(sectionId, item.id, n)}
+                    style={{ width: '33.33%', border: 'none', background: 'none', padding: '7px 0', cursor: 'pointer', fontSize: 14 }}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <TinyBtn
+            data-testid={`inspire-button-${item.id}`}
+            onClick={() => toggleEducationPanel(item.id, 'inspire', item.nameEn)}
+            title="Recipe ideas"
+          ><BulbSvg /></TinyBtn>
+          <TinyBtn title="Edit"><EditSvg /></TinyBtn>
+          <TinyBtn
+            data-testid="delete-item-button"
+            onClick={() => deleteItem(sectionId, item.id)}
+            title="Delete"
+          >
+            <TrashIcon size={13} />
+          </TinyBtn>
         </div>
-        <TinyBtn title="Recipe ideas"><BulbSvg /></TinyBtn>
-        <TinyBtn title="Edit"><EditSvg /></TinyBtn>
-        <TinyBtn
-          data-testid="delete-item-button"
-          onClick={() => deleteItem(sectionId, item.id)}
-          title="Delete"
-        >
-          <TrashIcon size={13} />
-        </TinyBtn>
+        {renderEducationPanel(item.id, sectionId)}
       </div>
     )
   }
 
   function renderClusterItemRow(item: GroceryItem, sectionId: string) {
     return (
-      <div
-        key={item.id}
-        data-testid="grocery-item"
-        data-checked={item.checked ? 'true' : 'false'}
-        style={{
-          display: 'flex', alignItems: 'center', padding: '4px 12px', gap: 6,
-          opacity: item.checked ? 0.55 : 1,
-          borderBottom: `1px solid ${T.border}`,
-        }}
-      >
+      <div key={item.id} style={{ borderBottom: `1px solid ${T.border}` }}>
         <div
-          data-testid="checkbox-touch-target"
-          data-min-height="44"
-          style={{ minHeight: 36, display: 'flex', alignItems: 'center' }}
+          data-testid="grocery-item"
+          data-checked={item.checked ? 'true' : 'false'}
+          style={{
+            display: 'flex', alignItems: 'center', padding: '4px 12px', gap: 6,
+            opacity: item.checked ? 0.55 : 1,
+          }}
         >
-          <RoundCheckbox
-            checked={item.checked}
-            onChange={() => toggleItem(sectionId, item.id)}
-            size={20}
-          />
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <span
-            data-testid="item-name-en"
-            style={{ fontSize: 14, fontWeight: 500, textDecoration: item.checked ? 'line-through' : 'none' }}
+          <div
+            data-testid="checkbox-touch-target"
+            data-min-height="44"
+            style={{ minHeight: 36, display: 'flex', alignItems: 'center' }}
           >
-            {item.nameEn}
-          </span>
-          {item.nameSecondary && (
+            <RoundCheckbox
+              checked={item.checked}
+              onChange={() => toggleItem(sectionId, item.id)}
+              size={20}
+            />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <span
-              data-testid="item-name-secondary"
-              style={{ fontSize: 11, color: T.textTer, marginLeft: 6 }}
+              data-testid={`item-name-en-${item.id}`}
+              style={{ fontSize: 14, fontWeight: 500, textDecoration: item.checked ? 'line-through' : 'none' }}
             >
-              {item.nameSecondary}
+              {item.nameEn}
             </span>
-          )}
+            {item.nameSecondary && (
+              <span
+                data-testid="item-name-secondary"
+                style={{ fontSize: 11, color: T.textTer, marginLeft: 6 }}
+              >
+                {item.nameSecondary}
+              </span>
+            )}
+          </div>
+          <TinyBtn
+            data-testid={`info-button-${item.id}`}
+            onClick={() => toggleEducationPanel(item.id, 'info', item.nameEn)}
+            title="Learn about this item"
+          ><InfoSvg /></TinyBtn>
+          <TinyBtn
+            data-testid={`alternatives-button-${item.id}`}
+            onClick={() => toggleEducationPanel(item.id, 'alternatives', item.nameEn)}
+            title="Alternatives"
+          ><SwapSvg /></TinyBtn>
+          <span style={{ fontSize: 11, color: T.textTer, fontWeight: 600 }}>×{item.quantity}</span>
         </div>
-        <TinyBtn title="Learn about this item"><InfoSvg /></TinyBtn>
-        <TinyBtn title="Alternatives"><SwapSvg /></TinyBtn>
-        <span style={{ fontSize: 11, color: T.textTer, fontWeight: 600 }}>×{item.quantity}</span>
+        {renderEducationPanel(item.id, sectionId)}
       </div>
     )
   }

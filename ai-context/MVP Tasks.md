@@ -14,16 +14,16 @@ Build a demoable web prototype of Smart Grocery — an AI-powered grocery shoppi
 
 ## Phase Overview
 
-| Phase  | Feature            | Verification (User Stories)                                                        |
-| ------ | ------------------ | ---------------------------------------------------------------------------------- |
-| **1A** | List Shell         | User can see, check, edit, and manage a bilingual grocery list                     |
-| **1B** | Smart Suggest      | User taps Suggest → answers Quick Questions → sees recipe clusters → toggles views |
-| **1C** | Per-Item Education | User taps ⓘ / 🔄 / 💡 on any item → sees expandable education panel                |
-| **1D** | Onboarding         | First-time user sets language + dietary + household + taste preferences            |
-| **2A** | API Layer          | Service layer calls OpenRouter, returns parsed typed responses                     |
-| **2B** | Live Suggest       | Suggest returns real AI-generated recipe clusters                                  |
-| **2C** | Live Education     | Inspire, Alternatives, Item Info return real AI content                            |
-| **2D** | Auto-Translation   | Adding an item in Chinese/French auto-translates to bilingual display              |
+| Phase  | Feature            | Verification (User Stories)                                                        | Status   |
+| ------ | ------------------ | ---------------------------------------------------------------------------------- | -------- |
+| **1A** | List Shell         | User can see, check, edit, and manage a bilingual grocery list                     | Finished |
+| **1B** | Smart Suggest      | User taps Suggest → answers Quick Questions → sees recipe clusters → toggles views | Finished |
+| **1C** | Per-Item Education | User taps ⓘ / 🔄 / 💡 on any item → sees expandable education panel                | Finished |
+| **1D** | Onboarding         | First-time user sets language + dietary + household + taste preferences            |          |
+| **2A** | API Layer          | Service layer calls OpenRouter, returns parsed typed responses                     |          |
+| **2B** | Live Suggest       | Suggest returns real AI-generated recipe clusters                                  |          |
+| **2C** | Live Education     | Inspire, Alternatives, Item Info return real AI content                            |          |
+| **2D** | Auto-Translation   | Adding an item in Chinese/French auto-translates to bilingual display              |          |
 
 ---
 
