@@ -11,5 +11,10 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test-setup.ts'],
     passWithNoTests: true,
+    env: {
+      // Clear the API key in tests — Phase 1 tests use mock paths (setTimeout).
+      // Phase 2A tests stub this per-test via vi.stubEnv().
+      VITE_OPENROUTER_API_KEY: '',
+    },
   },
 })

@@ -2,8 +2,9 @@ import { useState } from 'react'
 import type { GroceryItem, ActiveView, Section } from '../types'
 import { BBQ_SUGGEST_RESULT } from '../mock/bbq-suggest'
 import { INITIAL_SECTIONS, genId } from '../mock/initial-sections'
+import { fetchSuggest } from '../services/suggest-service'
 
-export function useGroceryList() {
+export function useGroceryList(onError: (msg: string) => void) {
   const [sections, setSections] = useState<Section[]>(INITIAL_SECTIONS)
   const [editingSectionId, setEditingSectionId] = useState<string | null>(null)
   const [editingSectionName, setEditingSectionName] = useState('')
@@ -103,16 +104,40 @@ export function useGroceryList() {
     setSections(prev =>
       prev.map(s => s.id !== sectionId ? s : { ...s, suggestPhase: 'loading' })
     )
-    setTimeout(() => {
-      setSections(prev =>
-        prev.map(s => s.id !== sectionId ? s : {
-          ...s,
-          suggestPhase: 'done',
-          suggestResult: BBQ_SUGGEST_RESULT,
-          activeView: 'smart',
+
+    const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY
+    if (apiKey) {
+      const section = sections.find(s => s.id === sectionId)
+      if (!section) return
+      fetchSuggest(section)
+        .then(result => {
+          setSections(prev =>
+            prev.map(s => s.id !== sectionId ? s : {
+              ...s,
+              suggestPhase: 'done',
+              suggestResult: result,
+              activeView: 'smart',
+            })
+          )
         })
-      )
-    }, 500)
+        .catch(() => {
+          setSections(prev =>
+            prev.map(s => s.id !== sectionId ? s : { ...s, suggestPhase: 'idle' })
+          )
+          onError('Something went wrong. Please try again.')
+        })
+    } else {
+      setTimeout(() => {
+        setSections(prev =>
+          prev.map(s => s.id !== sectionId ? s : {
+            ...s,
+            suggestPhase: 'done',
+            suggestResult: BBQ_SUGGEST_RESULT,
+            activeView: 'smart',
+          })
+        )
+      }, 500)
+    }
   }
 
   function keepSuggestion(sectionId: string, suggId: string) {

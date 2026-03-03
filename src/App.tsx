@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { GroceryItem, ActiveView, SuggestionEntry } from './types'
 import { T } from './constants/tokens'
 import { ChevDownIcon, TrashIcon, SparklesIcon, CheckIcon, XIcon, InfoSvg } from './components/Icons'
@@ -12,7 +13,9 @@ import { useOnboarding } from './hooks/useOnboarding'
 // ── App ───────────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const grocery = useGroceryList()
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const grocery = useGroceryList(msg => setErrorMessage(msg))
   const {
     sections, setSections,
     editingSectionId, setEditingSectionId, editingSectionName, setEditingSectionName,
@@ -24,7 +27,7 @@ export default function App() {
     keepSuggestion, dismissSuggestion, keepAll, showMore, setView,
   } = grocery
 
-  const { openPanel, panelCache, toggleEducationPanel, useAlternative, addAllToSection } = useEducationPanel(setSections)
+  const { openPanel, panelCache, toggleEducationPanel, useAlternative, addAllToSection } = useEducationPanel(setSections, msg => setErrorMessage(msg))
 
   const {
     appScreen, userProfile,
@@ -80,6 +83,27 @@ export default function App() {
 
   return (
     <div style={{ background: T.bg, minHeight: '100vh', maxWidth: 390, margin: '0 auto', fontFamily: T.font }}>
+
+      {errorMessage && (
+        <div
+          data-testid="error-toast"
+          style={{
+            position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)',
+            background: '#fff', border: '1px solid #f44336', borderRadius: 10,
+            padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10,
+            boxShadow: '0 2px 12px rgba(0,0,0,.12)', zIndex: 100, maxWidth: 340,
+          }}
+        >
+          <span style={{ fontSize: 13, color: '#c62828', flex: 1 }}>{errorMessage}</span>
+          <button
+            data-testid="toast-dismiss"
+            onClick={() => setErrorMessage(null)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#999', padding: 0 }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {appScreen === 'onboarding' && (
         <div data-testid="onboarding-screen" style={{ padding: 24 }}>
