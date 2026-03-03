@@ -230,6 +230,21 @@ interface Section {
   selectedChips: Record<string, string>
 }
 
+interface UserProfile {
+  language: 'en' | 'en_zh' | 'en_fr'
+  dietary: string[]
+  householdSize: number
+  tastePrefs: string
+}
+
+const DIETARY_OPTIONS = [
+  { slug: 'vegetarian', label: 'Vegetarian' },
+  { slug: 'vegan', label: 'Vegan' },
+  { slug: 'gluten-free', label: 'Gluten-Free' },
+  { slug: 'halal', label: 'Halal' },
+  { slug: 'dairy-free', label: 'Dairy-Free' },
+]
+
 // ── Mock Data ────────────────────────────────────────────────────────────────
 
 const BBQ_SUGGEST_RESULT: SuggestResult = {
@@ -267,12 +282,6 @@ const BBQ_SUGGEST_RESULT: SuggestResult = {
     { id: 's7', nameEn: 'Coleslaw', nameSecondary: '卷心菜沙拉', reason: 'Classic BBQ side', clusterId: 'c3', isExtra: true },
   ],
 }
-
-const QUESTIONS = [
-  { id: 'occasion',  label: 'Occasion / 场合',       options: ['Casual / 休闲', 'Party / 聚会', 'Family / 家庭'] },
-  { id: 'headcount', label: 'Headcount / 人数',       options: ['1–2', '3–5', '6+'] },
-  { id: 'sides',     label: 'Sides needed / 需要配菜', options: ['Yes / 是', 'No / 否'] },
-]
 
 // ── Education Mock Data ───────────────────────────────────────────────────────
 
@@ -355,6 +364,49 @@ export default function App() {
   const [openQtyItemId, setOpenQtyItemId] = useState<string | null>(null)
   const [openPanel, setOpenPanel] = useState<{ itemId: string; type: PanelType; loading: boolean } | null>(null)
   const [panelCache, setPanelCache] = useState<Record<string, ItemPanelCache>>({})
+
+  // ── Onboarding state ─────────────────────────────────────────────────────────
+
+  type AppScreen = 'onboarding' | 'list' | 'profile-editor'
+  const [appScreen, setAppScreen] = useState<AppScreen>('onboarding')
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [formLanguage, setFormLanguage] = useState<'en' | 'en_zh' | 'en_fr'>('en_zh')
+  const [formDietary, setFormDietary] = useState<string[]>([])
+  const [formHouseholdSize, setFormHouseholdSize] = useState<number>(2)
+  const [formTastePrefs, setFormTastePrefs] = useState<string>('')
+
+  // ── Language-aware Quick Questions ──────────────────────────────────────────
+
+  const showCJK = userProfile === null || userProfile.language === 'en_zh'
+  const showFR  = userProfile?.language === 'en_fr'
+
+  const QUESTIONS = [
+    {
+      id: 'occasion',
+      label: showCJK ? 'Occasion / 场合' : showFR ? 'Occasion / Occasion' : 'Occasion',
+      options: showCJK
+        ? ['Casual / 休闲', 'Party / 聚会', 'Family / 家庭']
+        : ['Casual', 'Party', 'Family'],
+    },
+    {
+      id: 'headcount',
+      label: showCJK ? 'Headcount / 人数' : showFR ? 'Headcount / Nombre' : 'Headcount',
+      options: ['1–2', '3–5', '6+'],
+    },
+    {
+      id: 'sides',
+      label: showCJK ? 'Sides needed / 需要配菜' : showFR ? 'Sides needed / Accompagnements' : 'Sides needed',
+      options: showCJK ? ['Yes / 是', 'No / 否'] : ['Yes', 'No'],
+    },
+  ]
+
+  // ── showSecondaryName helper ─────────────────────────────────────────────────
+
+  function showSecondaryName(item: GroceryItem): boolean {
+    if (!item.nameSecondary) return false
+    if (userProfile?.language === 'en') return false
+    return true
+  }
 
   // ── Section operations ──────────────────────────────────────────────────────
 
@@ -694,7 +746,7 @@ export default function App() {
             >
               {item.nameEn}
             </span>
-            {item.nameSecondary && (
+            {showSecondaryName(item) && (
               <span
                 data-testid="item-name-secondary"
                 style={{ fontSize: 11, color: T.textTer, marginLeft: 6 }}
@@ -795,7 +847,7 @@ export default function App() {
             >
               {item.nameEn}
             </span>
-            {item.nameSecondary && (
+            {showSecondaryName(item) && (
               <span
                 data-testid="item-name-secondary"
                 style={{ fontSize: 11, color: T.textTer, marginLeft: 6 }}
@@ -821,25 +873,216 @@ export default function App() {
     )
   }
 
+  // ── Onboarding handlers ──────────────────────────────────────────────────────
+
+  function handleCreate() {
+    setUserProfile({ language: formLanguage, dietary: formDietary, householdSize: formHouseholdSize, tastePrefs: formTastePrefs })
+    setAppScreen('list')
+  }
+
+  function handleSkip() {
+    setAppScreen('list')
+  }
+
+  function openEditor() {
+    if (userProfile) {
+      setFormLanguage(userProfile.language)
+      setFormDietary(userProfile.dietary)
+      setFormHouseholdSize(userProfile.householdSize)
+      setFormTastePrefs(userProfile.tastePrefs)
+    }
+    setAppScreen('profile-editor')
+  }
+
+  // ── ProfileForm ──────────────────────────────────────────────────────────────
+
+  function ProfileForm({ isEditor }: { isEditor: boolean }) {
+    const languageOptions: { value: 'en' | 'en_zh' | 'en_fr'; label: string }[] = [
+      { value: 'en', label: 'English only' },
+      { value: 'en_zh', label: 'English + 简体中文' },
+      { value: 'en_fr', label: 'English + Français' },
+    ]
+    return (
+      <div style={{ maxWidth: 390, margin: '0 auto' }}>
+        {!isEditor && (
+          <h2
+            data-testid="onboarding-title"
+            style={{ fontSize: 22, fontWeight: 700, color: T.text, marginBottom: 20 }}
+          >
+            Welcome to Smart Grocery
+          </h2>
+        )}
+
+        {/* Language */}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: T.textSec, marginBottom: 8 }}>Language</div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {languageOptions.map(opt => {
+              const isSelected = formLanguage === opt.value
+              return (
+                <button
+                  key={opt.value}
+                  data-testid={`language-option-${opt.value}`}
+                  data-selected={isSelected ? 'true' : 'false'}
+                  onClick={() => setFormLanguage(opt.value)}
+                  style={{
+                    padding: '7px 14px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 13,
+                    background: isSelected ? T.green : '#fff',
+                    color: isSelected ? '#fff' : T.textSec,
+                    fontWeight: isSelected ? 600 : 400,
+                    boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,.08)',
+                  }}
+                >
+                  {opt.label}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Dietary */}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: T.textSec, marginBottom: 8 }}>Dietary preferences</div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {DIETARY_OPTIONS.map(opt => {
+              const isSelected = formDietary.includes(opt.slug)
+              return (
+                <button
+                  key={opt.slug}
+                  data-testid={`dietary-chip-${opt.slug}`}
+                  data-selected={isSelected ? 'true' : 'false'}
+                  onClick={() => setFormDietary(prev =>
+                    prev.includes(opt.slug) ? prev.filter(s => s !== opt.slug) : [...prev, opt.slug]
+                  )}
+                  style={{
+                    padding: '7px 14px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 13,
+                    background: isSelected ? T.coral : '#fff',
+                    color: isSelected ? '#fff' : T.textSec,
+                    fontWeight: isSelected ? 600 : 400,
+                    boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,.08)',
+                  }}
+                >
+                  {opt.label}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Household size */}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: T.textSec, marginBottom: 8 }}>Household size</div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {([1, 2, 3, 4] as const).map(n => {
+              const isSelected = formHouseholdSize === n
+              return (
+                <button
+                  key={n}
+                  data-testid={`household-size-${n}`}
+                  data-selected={isSelected ? 'true' : 'false'}
+                  onClick={() => setFormHouseholdSize(n)}
+                  style={{
+                    width: 44, height: 44, borderRadius: 22, border: 'none', cursor: 'pointer', fontSize: 14,
+                    background: isSelected ? T.green : '#fff',
+                    color: isSelected ? '#fff' : T.textSec,
+                    fontWeight: isSelected ? 700 : 400,
+                    boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,.08)',
+                  }}
+                >
+                  {n === 4 ? '4+' : n}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Taste prefs */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: T.textSec, marginBottom: 8 }}>Taste preferences</div>
+          <input
+            data-testid="taste-prefs-input"
+            value={formTastePrefs}
+            onChange={e => setFormTastePrefs(e.target.value)}
+            placeholder="e.g. spicy, low-sodium, nut-free…"
+            style={{
+              width: '100%', border: `1px solid ${T.border}`, borderRadius: 10,
+              padding: '10px 14px', fontSize: 14, boxSizing: 'border-box',
+              background: '#fff', color: T.text,
+            }}
+          />
+        </div>
+
+        {/* Actions */}
+        <button
+          data-testid="onboarding-create-button"
+          onClick={handleCreate}
+          style={{
+            width: '100%', padding: '13px 0', background: T.green, color: '#fff',
+            border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: 'pointer', marginBottom: 10,
+          }}
+        >
+          {isEditor ? 'Save Profile' : 'Create Profile'}
+        </button>
+
+        {!isEditor && (
+          <button
+            data-testid="onboarding-skip-button"
+            onClick={handleSkip}
+            style={{
+              width: '100%', padding: '11px 0', background: 'transparent', color: T.textSec,
+              border: `1px solid ${T.border}`, borderRadius: 12, fontSize: 14, cursor: 'pointer',
+            }}
+          >
+            Skip for now
+          </button>
+        )}
+      </div>
+    )
+  }
+
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
     <div style={{ background: T.bg, minHeight: '100vh', maxWidth: 390, margin: '0 auto', fontFamily: T.font }}>
-      {/* App header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 16px 8px' }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: T.text, margin: 0, letterSpacing: '-.3px' }}>
-          Smart Grocery
-        </h1>
-        <button
-          data-testid="add-section-button"
-          onClick={addSection}
-          style={{ background: T.green, color: 'white', border: 'none', borderRadius: 20, width: 32, height: 32, fontSize: 20, cursor: 'pointer', lineHeight: 1 }}
-        >
-          +
-        </button>
-      </div>
 
-      {/* Section list */}
+      {appScreen === 'onboarding' && (
+        <div data-testid="onboarding-screen" style={{ padding: 24 }}>
+          {ProfileForm({ isEditor: false })}
+        </div>
+      )}
+
+      {appScreen === 'profile-editor' && (
+        <div data-testid="profile-editor-screen" style={{ padding: 24 }}>
+          {ProfileForm({ isEditor: true })}
+        </div>
+      )}
+
+      {appScreen === 'list' && (
+        <>
+          {/* App header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 16px 8px' }}>
+            <h1 style={{ fontSize: 22, fontWeight: 700, color: T.text, margin: 0, letterSpacing: '-.3px' }}>
+              Smart Grocery
+            </h1>
+            {userProfile && (
+              <button
+                data-testid="profile-gear-button"
+                onClick={openEditor}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: T.textSec, padding: 4 }}
+              >
+                ⚙
+              </button>
+            )}
+            <button
+              data-testid="add-section-button"
+              onClick={addSection}
+              style={{ background: T.green, color: 'white', border: 'none', borderRadius: 20, width: 32, height: 32, fontSize: 20, cursor: 'pointer', lineHeight: 1 }}
+            >
+              +
+            </button>
+          </div>
+
+          {/* Section list */}
       {sections.map(section => {
         const { suggestPhase, activeView, suggestResult, dismissedIds, keptIds, moreShown, selectedChips } = section
 
@@ -1318,7 +1561,9 @@ export default function App() {
             )}
           </div>
         )
-      })}
+          })}
+        </>
+      )}
     </div>
   )
 }

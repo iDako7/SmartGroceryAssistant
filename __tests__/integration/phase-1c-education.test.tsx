@@ -23,12 +23,14 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect } from "vitest";
 import App from "../../src/App";
+import { skipOnboarding } from "./helpers";
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
-function setup() {
+async function setup() {
   const user = userEvent.setup();
   const utils = render(<App />);
+  await skipOnboarding(user);
   return { user, ...utils };
 }
 
@@ -73,37 +75,37 @@ async function openInspirePanel(
 
 describe("US-1C.1 — Item Info panel on Pork Belly (i2)", () => {
   it("should show item-info-panel when info button is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     const panel = await openInfoPanel(user, "i2");
     expect(panel).toBeInTheDocument();
   });
 
   it("should display taste profile text in the info panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openInfoPanel(user, "i2");
     expect(screen.getByTestId("item-info-taste-profile")).toBeInTheDocument();
   });
 
   it("should display common uses text in the info panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openInfoPanel(user, "i2");
     expect(screen.getByTestId("item-info-common-uses")).toBeInTheDocument();
   });
 
   it("should display how-to-pick text in the info panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openInfoPanel(user, "i2");
     expect(screen.getByTestId("item-info-how-to-pick")).toBeInTheDocument();
   });
 
   it("should display storage tips text in the info panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openInfoPanel(user, "i2");
     expect(screen.getByTestId("item-info-storage-tips")).toBeInTheDocument();
   });
 
   it("should display a fun fact in the info panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openInfoPanel(user, "i2");
     expect(screen.getByTestId("item-info-fun-fact")).toBeInTheDocument();
   });
@@ -113,27 +115,27 @@ describe("US-1C.1 — Item Info panel on Pork Belly (i2)", () => {
 
 describe("US-1C.2 — Alternatives panel on Pork Belly (i2)", () => {
   it("should show alternatives-panel when alternatives button is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     const panel = await openAlternativesPanel(user, "i2");
     expect(panel).toBeInTheDocument();
   });
 
   it("should render 3 alternative items in the alternatives panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openAlternativesPanel(user, "i2");
     const items = screen.getAllByTestId("alternative-item");
     expect(items).toHaveLength(3);
   });
 
   it("should render a match-level-badge on each alternative item", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openAlternativesPanel(user, "i2");
     const badges = screen.getAllByTestId("match-level-badge");
     expect(badges.length).toBeGreaterThanOrEqual(3);
   });
 
   it("should set data-level attribute correctly on the 'Very close' badge", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openAlternativesPanel(user, "i2");
     const badges = screen.getAllByTestId("match-level-badge");
     const veryCloseBadge = badges.find(
@@ -147,7 +149,7 @@ describe("US-1C.2 — Alternatives panel on Pork Belly (i2)", () => {
 
 describe("US-1C.3 — Use This button replaces the original item", () => {
   it("should remove the original item name from the list after Use This is clicked", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openAlternativesPanel(user, "i2");
 
     // Get the original item name text before replacing
@@ -163,7 +165,7 @@ describe("US-1C.3 — Use This button replaces the original item", () => {
   });
 
   it("should show the alternative name in the list after Use This is clicked", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openAlternativesPanel(user, "i2");
 
     // Capture the first alternative name before clicking
@@ -183,20 +185,20 @@ describe("US-1C.3 — Use This button replaces the original item", () => {
 
 describe("US-1C.4 — Inspire panel on Kimchi (i3)", () => {
   it("should show inspire-panel when inspire button is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     const panel = await openInspirePanel(user, "i3");
     expect(panel).toBeInTheDocument();
   });
 
   it("should render 3 recipe cards in the inspire panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openInspirePanel(user, "i3");
     const recipes = screen.getAllByTestId("inspire-recipe");
     expect(recipes).toHaveLength(3);
   });
 
   it("should list missing ingredients inside each recipe card", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openInspirePanel(user, "i3");
     const missingIngredients = screen.getAllByTestId("recipe-missing-ingredient");
     expect(missingIngredients.length).toBeGreaterThanOrEqual(1);
@@ -207,7 +209,7 @@ describe("US-1C.4 — Inspire panel on Kimchi (i3)", () => {
 
 describe("US-1C.5 — Add All adds missing ingredients to the section", () => {
   it("should increase the item count in the section after Add All is clicked", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openInspirePanel(user, "i3");
 
     // Count current flat-list items before add
@@ -220,7 +222,7 @@ describe("US-1C.5 — Add All adds missing ingredients to the section", () => {
   });
 
   it("should show the newly added missing ingredients as items in flat view", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await openInspirePanel(user, "i3");
 
     // Capture the first missing ingredient name
@@ -238,20 +240,20 @@ describe("US-1C.5 — Add All adds missing ingredients to the section", () => {
 
 describe("US-1C.6 — Loading spinner shown on first open, skipped on re-open", () => {
   it("should show education-panel-loading immediately on first tap", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     // Click without awaiting the panel so we catch the loading state
     await user.click(screen.getByTestId("info-button-i2"));
     expect(screen.getByTestId("education-panel-loading")).toBeInTheDocument();
   });
 
   it("should show the info panel after the loading delay resolves", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     const panel = await openInfoPanel(user, "i2");
     expect(panel).toBeInTheDocument();
   });
 
   it("should hide the panel when the same button is tapped again (toggle off)", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     // Open panel
     await openInfoPanel(user, "i2");
     expect(screen.getByTestId("item-info-panel")).toBeInTheDocument();
@@ -262,7 +264,7 @@ describe("US-1C.6 — Loading spinner shown on first open, skipped on re-open", 
   });
 
   it("should NOT show loading spinner when re-opening a cached panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
 
     // First open: waits through the real delay
     await openInfoPanel(user, "i2");
@@ -281,7 +283,7 @@ describe("US-1C.6 — Loading spinner shown on first open, skipped on re-open", 
 
 describe("US-1C.7 — Only one panel open per item at a time", () => {
   it("should close Item Info panel when Alternatives button is tapped on the same item", async () => {
-    const { user } = setup();
+    const { user } = await setup();
 
     // Open Info panel first
     await openInfoPanel(user, "i2");
@@ -294,7 +296,7 @@ describe("US-1C.7 — Only one panel open per item at a time", () => {
   });
 
   it("should close Alternatives panel when Info button is tapped on the same item", async () => {
-    const { user } = setup();
+    const { user } = await setup();
 
     // Open Alternatives panel first
     await openAlternativesPanel(user, "i2");
@@ -311,7 +313,7 @@ describe("US-1C.7 — Only one panel open per item at a time", () => {
 
 describe("US-1C.8 — Education buttons present in smart and aisles views", () => {
   it("should render info button for items in smart-view", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     // In smart view, at least one info button should be present
     const infoButtons = screen.getAllByTestId(/^info-button-/);
@@ -319,14 +321,14 @@ describe("US-1C.8 — Education buttons present in smart and aisles views", () =
   });
 
   it("should render alternatives button for items in smart-view", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     const altButtons = screen.getAllByTestId(/^alternatives-button-/);
     expect(altButtons.length).toBeGreaterThanOrEqual(1);
   });
 
   it("should render info button for items in aisles-view", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     await user.click(screen.getByTestId("view-tab-aisles"));
     const infoButtons = screen.getAllByTestId(/^info-button-/);
@@ -334,7 +336,7 @@ describe("US-1C.8 — Education buttons present in smart and aisles views", () =
   });
 
   it("should render alternatives button for items in aisles-view", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     await user.click(screen.getByTestId("view-tab-aisles"));
     const altButtons = screen.getAllByTestId(/^alternatives-button-/);
@@ -342,14 +344,14 @@ describe("US-1C.8 — Education buttons present in smart and aisles views", () =
   });
 
   it("should NOT render inspire button in smart-view (flat view only)", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     // Inspire buttons should be absent in smart view
     expect(screen.queryAllByTestId(/^inspire-button-/)).toHaveLength(0);
   });
 
   it("should NOT render inspire button in aisles-view (flat view only)", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     await user.click(screen.getByTestId("view-tab-aisles"));
     expect(screen.queryAllByTestId(/^inspire-button-/)).toHaveLength(0);

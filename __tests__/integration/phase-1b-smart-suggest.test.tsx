@@ -22,12 +22,14 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect } from "vitest";
 import App from "../../src/App";
+import { skipOnboarding } from "./helpers";
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
-function setup() {
+async function setup() {
   const user = userEvent.setup();
   const utils = render(<App />);
+  await skipOnboarding(user);
   return { user, ...utils };
 }
 
@@ -47,20 +49,20 @@ async function runSuggest(user: ReturnType<typeof userEvent.setup>) {
 
 describe("US-1B.1 — Tapping Suggest shows the Quick Questions panel", () => {
   it("should show Quick Questions panel when Suggest button is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByTestId("suggest-button"));
     expect(screen.getByTestId("quick-questions-panel")).toBeInTheDocument();
   });
 
   it("should render exactly 3 questions in the Quick Questions panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByTestId("suggest-button"));
     const groups = screen.getAllByTestId("question-chip-group");
     expect(groups).toHaveLength(3);
   });
 
   it("should render bilingual question labels (English + Chinese) in the panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByTestId("suggest-button"));
     const panel = screen.getByTestId("quick-questions-panel");
     // At least one Chinese character should be visible in the questions area
@@ -68,7 +70,7 @@ describe("US-1B.1 — Tapping Suggest shows the Quick Questions panel", () => {
   });
 
   it("should render chip-select options for each question", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByTestId("suggest-button"));
     const chips = screen.getAllByTestId(/^chip-option-/);
     expect(chips.length).toBeGreaterThanOrEqual(3);
@@ -79,7 +81,7 @@ describe("US-1B.1 — Tapping Suggest shows the Quick Questions panel", () => {
 
 describe("US-1B.2 — User can answer chips or skip to trigger suggest", () => {
   it("should allow user to tap a chip and mark it selected", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByTestId("suggest-button"));
     const chips = screen.getAllByTestId(/^chip-option-/);
     await user.click(chips[0]);
@@ -87,19 +89,19 @@ describe("US-1B.2 — User can answer chips or skip to trigger suggest", () => {
   });
 
   it("should render 'Get Suggestions →' button in Quick Questions panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByTestId("suggest-button"));
     expect(screen.getByTestId("get-suggestions-button")).toBeInTheDocument();
   });
 
   it("should render 'Skip →' link in Quick Questions panel", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByTestId("suggest-button"));
     expect(screen.getByTestId("skip-suggest-button")).toBeInTheDocument();
   });
 
   it("should show loading indicator when 'Get Suggestions →' is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByTestId("suggest-button"));
     await user.click(screen.getByTestId("get-suggestions-button"));
     // Loading indicator should appear immediately
@@ -107,7 +109,7 @@ describe("US-1B.2 — User can answer chips or skip to trigger suggest", () => {
   });
 
   it("should show loading indicator when 'Skip →' is tapped without answering", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByTestId("suggest-button"));
     await user.click(screen.getByTestId("skip-suggest-button"));
     // Loading indicator should appear immediately
@@ -119,7 +121,7 @@ describe("US-1B.2 — User can answer chips or skip to trigger suggest", () => {
 
 describe("US-1B.3 — After loading, Smart View appears with recipe clusters", () => {
   it("should show a loading state immediately after skip is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByTestId("suggest-button"));
     await user.click(screen.getByTestId("skip-suggest-button"));
     // Before the loading delay resolves, loading indicator should be visible
@@ -127,7 +129,7 @@ describe("US-1B.3 — After loading, Smart View appears with recipe clusters", (
   });
 
   it("should show view tabs after suggest completes", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     expect(screen.getByTestId("view-tab-flat")).toBeInTheDocument();
     expect(screen.getByTestId("view-tab-smart")).toBeInTheDocument();
@@ -135,26 +137,26 @@ describe("US-1B.3 — After loading, Smart View appears with recipe clusters", (
   });
 
   it("should switch to Smart View after suggest completes", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     expect(screen.getByTestId("smart-view")).toBeInTheDocument();
   });
 
   it("should render at least 3 named recipe clusters", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     const clusters = screen.getAllByTestId("cluster-card");
     expect(clusters.length).toBeGreaterThanOrEqual(3);
   });
 
   it("should render the 'Korean BBQ Core' cluster", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     expect(screen.getByText(/Korean BBQ Core/i)).toBeInTheDocument();
   });
 
   it("should render the 'Western BBQ Station' cluster", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     expect(screen.getByText(/Western BBQ Station/i)).toBeInTheDocument();
   });
@@ -164,35 +166,35 @@ describe("US-1B.3 — After loading, Smart View appears with recipe clusters", (
 
 describe("US-1B.4 — Clusters show existing items normally and suggestions distinctly", () => {
   it("should render suggested items with data-suggestion='true'", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     const suggestionItems = screen.getAllByTestId("suggestion-item");
     expect(suggestionItems.length).toBeGreaterThanOrEqual(1);
   });
 
   it("should render reason text on each suggestion item", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     const reasons = screen.getAllByTestId("suggestion-reason");
     expect(reasons.length).toBeGreaterThanOrEqual(1);
   });
 
   it("should render Keep buttons on each suggestion item", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     const keepButtons = screen.getAllByTestId("keep-button");
     expect(keepButtons.length).toBeGreaterThanOrEqual(1);
   });
 
   it("should render Dismiss buttons on each suggestion item", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     const dismissButtons = screen.getAllByTestId("dismiss-button");
     expect(dismissButtons.length).toBeGreaterThanOrEqual(1);
   });
 
   it("should render a cluster description line inside each cluster card", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     const clusters = screen.getAllByTestId("cluster-card");
     for (const cluster of clusters) {
@@ -206,13 +208,13 @@ describe("US-1B.4 — Clusters show existing items normally and suggestions dist
 
 describe("US-1B.5 — Context block with Keep All button is shown at top of Smart View", () => {
   it("should render a context block at the top of Smart View", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     expect(screen.getByTestId("context-block")).toBeInTheDocument();
   });
 
   it("should render '✓ Keep All' button", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     expect(screen.getByTestId("keep-all-button")).toBeInTheDocument();
   });
@@ -222,7 +224,7 @@ describe("US-1B.5 — Context block with Keep All button is shown at top of Smar
 
 describe("US-1B.6 — Tapping Keep promotes a suggestion to a regular item", () => {
   it("should remove suggestion styling when Keep is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
 
     const initialCount = screen.getAllByTestId("suggestion-item").length;
@@ -239,7 +241,7 @@ describe("US-1B.6 — Tapping Keep promotes a suggestion to a regular item", () 
 
 describe("US-1B.7 — Tapping Dismiss removes a suggestion", () => {
   it("should decrease the suggestion count when a dismiss button is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
 
     const initialCount = screen.getAllByTestId("suggestion-item").length;
@@ -255,7 +257,7 @@ describe("US-1B.7 — Tapping Dismiss removes a suggestion", () => {
 
 describe("US-1B.8 — Tapping Keep All promotes all suggestion items at once", () => {
   it("should remove all suggestion items when Keep All is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
 
     await user.click(screen.getByTestId("keep-all-button"));
@@ -267,13 +269,13 @@ describe("US-1B.8 — Tapping Keep All promotes all suggestion items at once", (
 
 describe("US-1B.9 — More button reveals 2 extra suggestions then disappears", () => {
   it("should render a More button at the bottom of Smart View", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     expect(screen.getByTestId("more-suggestions-button")).toBeInTheDocument();
   });
 
   it("should reveal 2 additional suggestion items when More is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
 
     const before = screen.getAllByTestId("suggestion-item").length;
@@ -284,7 +286,7 @@ describe("US-1B.9 — More button reveals 2 extra suggestions then disappears", 
   });
 
   it("should hide the More button after it is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
 
     await user.click(screen.getByTestId("more-suggestions-button"));
@@ -296,14 +298,14 @@ describe("US-1B.9 — More button reveals 2 extra suggestions then disappears", 
 
 describe("US-1B.10 — Aisles view groups items by department with NEW badge", () => {
   it("should switch to Aisles view when Aisles tab is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     await user.click(screen.getByTestId("view-tab-aisles"));
     expect(screen.getByTestId("aisles-view")).toBeInTheDocument();
   });
 
   it("should group items by store department in Aisles view", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     await user.click(screen.getByTestId("view-tab-aisles"));
     const aisleGroups = screen.getAllByTestId("aisle-group");
@@ -311,7 +313,7 @@ describe("US-1B.10 — Aisles view groups items by department with NEW badge", (
   });
 
   it("should show 'NEW' badge on suggestion items in Aisles view", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     await user.click(screen.getByTestId("view-tab-aisles"));
     const newBadges = screen.getAllByTestId("new-badge");
@@ -323,14 +325,14 @@ describe("US-1B.10 — Aisles view groups items by department with NEW badge", (
 
 describe("US-1B.11 — Switching to Flat view shows the original flat list", () => {
   it("should switch to Flat view when Flat tab is tapped", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     await user.click(screen.getByTestId("view-tab-flat"));
     expect(screen.getByTestId("flat-view")).toBeInTheDocument();
   });
 
   it("should show all 8 original items in Flat view", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
     await user.click(screen.getByTestId("view-tab-flat"));
     const checkboxes = screen.getAllByRole("checkbox");
@@ -342,7 +344,7 @@ describe("US-1B.11 — Switching to Flat view shows the original flat list", () 
 
 describe("US-1B.12 — Checked state syncs across Smart and Flat views", () => {
   it("should reflect item checked in Smart View when switching to Flat view", async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await runSuggest(user);
 
     // In Smart view, find and check the first checkbox
