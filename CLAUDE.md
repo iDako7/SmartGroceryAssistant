@@ -15,7 +15,7 @@ Smart Grocery Assistant is an AI-powered grocery shopping assistant in early pro
 
 ## Commands
 
-The project has not yet been scaffolded. Once `package.json` exists, the expected commands are:
+Available commands:
 
 ```bash
 npm run dev        # Vite dev server
@@ -54,13 +54,14 @@ This project uses a strict two-phase TDD workflow enforced by Claude Code hooks 
 
 ## Architecture
 
-### Layering (once scaffolded)
+### Layering
 ```
-Repository (Prisma/data access) → Service (business logic) → Controller (HTTP) → Routes
+App.tsx → Components (UI) → Hooks (stateful logic) → Services (data/mock functions)
 ```
-- `app.ts` is the ONLY place where `new Repository()`, `new Service()`, `new Controller()` appear (constructor injection)
-- Services throw typed errors extending `AppError` — controllers have NO try/catch
-- List endpoints support pagination: `page`, `limit` → `{ data, pagination }`
+- Components: pure UI, receive props and callbacks, no inline mock data
+- Hooks: encapsulate reusable stateful logic (e.g., `useEducationPanel`)
+- Services: return typed mock data (Phase 1) or real API responses (Phase 2)
+- Mock data: lives in `src/mock/` — never inlined in components or `App.tsx`
 
 ### Key Type Definitions
 ```typescript
@@ -88,9 +89,9 @@ Offline/sync, multi-device, auth, localStorage, drag-and-drop, backend/database,
 
 ## Reference Files
 
-- `project_memory/artifact.jsx` — Complete single-file React prototype. Use as **behavioral reference** for interactions and data flow, but build as a proper multi-file project.
-- `project_memory/MVP Tasks.md` — Full user stories and acceptance criteria per phase.
-- `project_memory/Mock Data.md` — Pre-stored BBQ with Mark demo scenario data.
+- `ai-context/artifact.jsx` — Complete single-file React prototype. Use as **behavioral reference** for interactions and data flow, but build as a proper multi-file project.
+- `ai-context/MVP Tasks.md` — Full user stories and acceptance criteria per phase.
+- `ai-context/Mock Data.md` — Pre-stored BBQ with Mark demo scenario data.
 
 ## Design System
 

@@ -13,8 +13,8 @@ Invoked by: `/project:write-tests [feature description]`
 
 In this phase:
 - Create test files in `__tests__/integration/`
-- Use Supertest for HTTP testing against a real test database
-- Cover happy paths, error cases, auth checks, pagination, and edge cases
+- Use React Testing Library for component interaction testing
+- Cover happy paths, error cases, and edge cases
 - Do not write any implementation code
 - End state: all new tests FAIL
 
@@ -27,7 +27,7 @@ In this phase:
 - Read failing tests to understand expected behavior
 - Write minimum implementation to pass tests
 - Files in `__tests__/` are blocked by a PreToolUse hook — do not attempt to edit them
-- Follow Repository → Service → Controller architecture
+- Follow Components → Hooks → Services architecture
 - End state: all tests PASS
 
 ## When to consult this skill
@@ -41,34 +41,33 @@ In this phase:
 
 | Type | Path pattern | Naming |
 |------|-------------|--------|
-| Integration test | `__tests__/integration/{feature}.test.ts` | kebab-case |
+| Integration test | `__tests__/integration/{phase}-{feature}.test.tsx` | kebab-case |
 | Unit test | `__tests__/unit/{feature}.test.ts` | kebab-case |
-| Controller | `src/controller/{Name}Controller.ts` | PascalCase |
-| Service | `src/services/{Name}Service.ts` | PascalCase |
-| Repository | `src/repositories/{Name}Repository.ts` | PascalCase |
-| Route | `src/routes/{name}.routes.ts` | camelCase |
-| DTO | `src/dtos/response/{Name}DTO.ts` | PascalCase |
-| Constant | `src/constants/{name}.ts` | camelCase |
-| Validation | `src/validation/{name}Validation.ts` | camelCase |
+| Component | `src/components/{Name}.tsx` | PascalCase |
+| Hook | `src/hooks/use{Name}.ts` | camelCase |
+| Service (mock) | `src/services/{feature}Service.ts` | camelCase |
+| Mock data | `src/mock/{feature}.ts` | camelCase |
+| Types | `src/types.ts` | shared types file |
 
-## Dependency injection rule
+## Composition rule
 
-All instantiation happens in `app.ts`. Services receive their dependencies through constructor parameters. Never import and instantiate a repository or service inside another service file.
+`App.tsx` composes top-level state and passes callbacks to child components. Services are pure functions — no class instantiation.
 
 ## Test structure template
 
 ```typescript
 describe('Feature: [feature name]', () => {
-  beforeAll(async () => { /* DB setup, create test users */ });
-  afterAll(async () => { /* cleanup */ });
+  function setup() {
+    const user = userEvent.setup();
+    const utils = render(<App />);
+    return { user, ...utils };
+  }
 
-  describe('POST /api/[resource]', () => {
-    it('should [expected behavior] when [condition]', async () => {
-      // 1. Arrange: set up test data
-      // 2. Act: make HTTP request via supertest
-      // 3. Assert: check response status + body
-      // 4. Assert: verify DB state changed
-    });
+  it('should [expected behavior] when [condition]', async () => {
+    const { user } = setup();
+    // 1. Arrange: identify initial DOM state
+    // 2. Act: simulate user interaction
+    // 3. Assert: check DOM output
   });
 });
 ```

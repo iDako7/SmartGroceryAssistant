@@ -21,21 +21,18 @@ Make all failing tests pass for: $ARGUMENTS
 
 ## Architecture rules
 
-- Repository: data access only, Prisma queries, no business logic
-- Service: business logic, receives repositories/services via constructor injection
-- Controller: HTTP concerns only, parse request → call service → format response
-- Routes: map HTTP methods/paths to controller methods, apply middleware
-- app.ts: the ONLY place where `new Repository()`, `new Service()`, `new Controller()` appear
+- Components (`src/components/`): UI rendering and local state only — receive props and callbacks, no inline mock data
+- Hooks (`src/hooks/`): encapsulate reusable stateful logic (e.g., `useEducationPanel`)
+- Services (`src/services/`): return typed mock data (Phase 1) or real API responses (Phase 2) — no UI concerns
+- `App.tsx`: composes top-level state and passes callbacks to child components — no inline mock data
 
 ## Constraints
 
 - NEVER modify files in `__tests__/` — a hook blocks this and your edit will be rejected
-- Use Prisma `select` over `include` — only fetch fields needed
-- Use Prisma `groupBy` + `_count`/`_avg` for aggregation — no N+1 queries
-- All list endpoints must support pagination (`page`, `limit` → `{ data, pagination }`)
-- Services throw typed errors extending AppError — controllers have NO try/catch
 - Do NOT add npm packages unless the task explicitly requires it
-- Do NOT create new architectural patterns — follow existing codebase patterns
+- Keep components focused — no 300+ line components
+- Mock data lives in `src/mock/` — never inlined in components or `App.tsx`
+- Service functions return typed data matching types in `ai-context/MVP Tasks.md`
 
 ## If a test seems wrong
 
