@@ -44,3 +44,11 @@ Run `npm test` one final time and report:
 - Confirmation all tests pass
 - List of files created or modified
 - Any concerns about test correctness (if applicable)
+
+## Commit
+
+After all tests pass, stage and commit your work:
+1. Run `git status` to identify files you created or modified in this session
+2. Stage only those files (do not use `git add -A`)
+3. Run: `git commit -m "TDD[2:implement] $ARGUMENTS — N tests pass"`
+   Replace N with the actual total test count from the final `npm test` run.

@@ -36,4 +36,11 @@ if [ $TEST_EXIT -ne 0 ]; then
     exit 2
 fi
 
+# Remind agent to commit if there are uncommitted changes
+UNCOMMITTED=$(git -C "$CLAUDE_PROJECT_DIR" status --porcelain 2>/dev/null)
+if [ -n "$UNCOMMITTED" ]; then
+    echo "Reminder: uncommitted changes detected. Did you forget to commit?" >&2
+    echo "$UNCOMMITTED" >&2
+fi
+
 exit 0

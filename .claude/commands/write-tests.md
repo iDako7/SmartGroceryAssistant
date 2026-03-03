@@ -56,3 +56,11 @@ After writing tests, run `npm test` and report:
 - List of test files created
 - Summary of each test case
 - Confirmation that all new tests fail with expected reasons
+
+## Commit
+
+After confirming red state, stage and commit your work:
+1. Run `git status` to identify files you created in this session
+2. Stage only those files (do not use `git add -A`)
+3. Run: `git commit -m "TDD[1:write-tests] $ARGUMENTS — N tests, all red"`
+   Replace N with the actual number of new tests.
