@@ -18,7 +18,7 @@ log = logging.getLogger("worker")
 
 
 async def process(message: aio_pika.IncomingMessage) -> None:
-    async with message.process(requeue_on_error=False):
+    async with message.process(requeue=False):
         try:
             body = json.loads(message.body)
             job_id: str = body["job_id"]
