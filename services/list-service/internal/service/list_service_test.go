@@ -42,29 +42,29 @@ func (m *mockListRepo) DeleteSection(ctx context.Context, id, userID string) err
 	return m.Called(ctx, id, userID).Error(0)
 }
 
-func (m *mockListRepo) GetItems(ctx context.Context, sectionID string) ([]model.Item, error) {
-	args := m.Called(ctx, sectionID)
+func (m *mockListRepo) GetItems(ctx context.Context, sectionID, userID string) ([]model.Item, error) {
+	args := m.Called(ctx, sectionID, userID)
 	return args.Get(0).([]model.Item), args.Error(1)
 }
 
-func (m *mockListRepo) CreateItem(ctx context.Context, sectionID string, req model.CreateItemRequest) (*model.Item, error) {
-	args := m.Called(ctx, sectionID, req)
+func (m *mockListRepo) CreateItem(ctx context.Context, sectionID, userID string, req model.CreateItemRequest) (*model.Item, error) {
+	args := m.Called(ctx, sectionID, userID, req)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
 	return args.Get(0).(*model.Item), args.Error(1)
 }
 
-func (m *mockListRepo) UpdateItem(ctx context.Context, id string, req model.UpdateItemRequest) (*model.Item, error) {
-	args := m.Called(ctx, id, req)
+func (m *mockListRepo) UpdateItem(ctx context.Context, id, userID string, req model.UpdateItemRequest) (*model.Item, error) {
+	args := m.Called(ctx, id, userID, req)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
 	return args.Get(0).(*model.Item), args.Error(1)
 }
 
-func (m *mockListRepo) DeleteItem(ctx context.Context, id string) error {
-	return m.Called(ctx, id).Error(0)
+func (m *mockListRepo) DeleteItem(ctx context.Context, id, userID string) error {
+	return m.Called(ctx, id, userID).Error(0)
 }
 
 func (m *mockListRepo) GetFullList(ctx context.Context, userID string) ([]model.Section, map[string][]model.Item, error) {
@@ -205,9 +205,9 @@ func TestListService_GetItems_Success(t *testing.T) {
 	svc := service.NewListService(repo, pub)
 
 	items := []model.Item{makeItem("i1", "s1", "Milk"), makeItem("i2", "s1", "Eggs")}
-	repo.On("GetItems", mock.Anything, "s1").Return(items, nil)
+	repo.On("GetItems", mock.Anything, "s1", "user-1").Return(items, nil)
 
-	views, err := svc.GetItems(context.Background(), "s1")
+	views, err := svc.GetItems(context.Background(), "user-1", "s1")
 
 	assert.NoError(t, err)
 	assert.Len(t, views, 2)
@@ -221,7 +221,7 @@ func TestListService_CreateItem_PublishesEvent(t *testing.T) {
 
 	item := makeItem("i1", "s1", "Butter")
 	req := model.CreateItemRequest{NameEn: "Butter", Quantity: 2}
-	repo.On("CreateItem", mock.Anything, "s1", req).Return(&item, nil)
+	repo.On("CreateItem", mock.Anything, "s1", "user-1", req).Return(&item, nil)
 	pub.On("Publish", mock.Anything, "user-1", events.ItemCreated, mock.Anything).Return()
 
 	view, err := svc.CreateItem(context.Background(), "user-1", "s1", req)
@@ -240,7 +240,7 @@ func TestListService_UpdateItem_PublishesEvent(t *testing.T) {
 	item := makeItem("i1", "s1", "Milk")
 	item.Checked = true
 	req := model.UpdateItemRequest{Checked: &checked}
-	repo.On("UpdateItem", mock.Anything, "i1", req).Return(&item, nil)
+	repo.On("UpdateItem", mock.Anything, "i1", "user-1", req).Return(&item, nil)
 	pub.On("Publish", mock.Anything, "user-1", events.ItemUpdated, mock.Anything).Return()
 
 	view, err := svc.UpdateItem(context.Background(), "user-1", "i1", req)
@@ -254,7 +254,7 @@ func TestListService_DeleteItem_PublishesEvent(t *testing.T) {
 	pub := new(mockPublisher)
 	svc := service.NewListService(repo, pub)
 
-	repo.On("DeleteItem", mock.Anything, "i1").Return(nil)
+	repo.On("DeleteItem", mock.Anything, "i1", "user-1").Return(nil)
 	pub.On("Publish", mock.Anything, "user-1", events.ItemDeleted, mock.Anything).Return()
 
 	err := svc.DeleteItem(context.Background(), "user-1", "i1")

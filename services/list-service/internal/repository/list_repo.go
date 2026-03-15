@@ -90,13 +90,14 @@ func (r *ListRepo) DeleteSection(ctx context.Context, id, userID string) error {
 
 // ── Items ────────────────────────────────────────────────
 
-func (r *ListRepo) GetItems(ctx context.Context, sectionID string) ([]model.Item, error) {
+func (r *ListRepo) GetItems(ctx context.Context, sectionID, userID string) ([]model.Item, error) {
 	rows, err := r.db.Query(ctx,
-		`SELECT id, section_id, name_en, name_secondary, quantity, checked, deleted_at, created_at, updated_at
-		 FROM items
-		 WHERE section_id = $1 AND deleted_at IS NULL
-		 ORDER BY created_at`,
-		sectionID,
+		`SELECT i.id, i.section_id, i.name_en, i.name_secondary, i.quantity, i.checked, i.deleted_at, i.created_at, i.updated_at
+		 FROM items i
+		 JOIN sections s ON s.id = i.section_id
+		 WHERE i.section_id = $1 AND s.user_id = $2 AND i.deleted_at IS NULL
+		 ORDER BY i.created_at`,
+		sectionID, userID,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("get items: %w", err)
@@ -114,7 +115,7 @@ func (r *ListRepo) GetItems(ctx context.Context, sectionID string) ([]model.Item
 	return items, rows.Err()
 }
 
-func (r *ListRepo) CreateItem(ctx context.Context, sectionID string, req model.CreateItemRequest) (*model.Item, error) {
+func (r *ListRepo) CreateItem(ctx context.Context, sectionID, userID string, req model.CreateItemRequest) (*model.Item, error) {
 	qty := 1
 	if req.Quantity > 0 {
 		qty = req.Quantity
@@ -122,9 +123,10 @@ func (r *ListRepo) CreateItem(ctx context.Context, sectionID string, req model.C
 	var i model.Item
 	err := r.db.QueryRow(ctx,
 		`INSERT INTO items (section_id, name_en, name_secondary, quantity)
-		 VALUES ($1, $2, $3, $4)
+		 SELECT $1, $2, $3, $4
+		 WHERE EXISTS (SELECT 1 FROM sections WHERE id = $1 AND user_id = $5 AND deleted_at IS NULL)
 		 RETURNING id, section_id, name_en, name_secondary, quantity, checked, deleted_at, created_at, updated_at`,
-		sectionID, req.NameEn, req.NameSecondary, qty,
+		sectionID, req.NameEn, req.NameSecondary, qty, userID,
 	).Scan(&i.ID, &i.SectionID, &i.NameEn, &i.NameSecondary, &i.Quantity, &i.Checked, &i.DeletedAt, &i.CreatedAt, &i.UpdatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("create item: %w", err)
@@ -132,7 +134,7 @@ func (r *ListRepo) CreateItem(ctx context.Context, sectionID string, req model.C
 	return &i, nil
 }
 
-func (r *ListRepo) UpdateItem(ctx context.Context, id string, req model.UpdateItemRequest) (*model.Item, error) {
+func (r *ListRepo) UpdateItem(ctx context.Context, id, userID string, req model.UpdateItemRequest) (*model.Item, error) {
 	var i model.Item
 	err := r.db.QueryRow(ctx,
 		`UPDATE items
@@ -141,9 +143,10 @@ func (r *ListRepo) UpdateItem(ctx context.Context, id string, req model.UpdateIt
 		     quantity       = COALESCE($4, quantity),
 		     checked        = COALESCE($5, checked),
 		     updated_at     = NOW()
-		 WHERE id = $1 AND deleted_at IS NULL
-		 RETURNING id, section_id, name_en, name_secondary, quantity, checked, deleted_at, created_at, updated_at`,
-		id, req.NameEn, req.NameSecondary, req.Quantity, req.Checked,
+		 FROM sections s
+		 WHERE items.id = $1 AND items.section_id = s.id AND s.user_id = $6 AND items.deleted_at IS NULL
+		 RETURNING items.id, items.section_id, items.name_en, items.name_secondary, items.quantity, items.checked, items.deleted_at, items.created_at, items.updated_at`,
+		id, req.NameEn, req.NameSecondary, req.Quantity, req.Checked, userID,
 	).Scan(&i.ID, &i.SectionID, &i.NameEn, &i.NameSecondary, &i.Quantity, &i.Checked, &i.DeletedAt, &i.CreatedAt, &i.UpdatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("update item: %w", err)
@@ -151,11 +154,12 @@ func (r *ListRepo) UpdateItem(ctx context.Context, id string, req model.UpdateIt
 	return &i, nil
 }
 
-func (r *ListRepo) DeleteItem(ctx context.Context, id string) error {
+func (r *ListRepo) DeleteItem(ctx context.Context, id, userID string) error {
 	tag, err := r.db.Exec(ctx,
 		`UPDATE items SET deleted_at = NOW(), updated_at = NOW()
-		 WHERE id = $1 AND deleted_at IS NULL`,
-		id,
+		 FROM sections s
+		 WHERE items.id = $1 AND items.section_id = s.id AND s.user_id = $2 AND items.deleted_at IS NULL`,
+		id, userID,
 	)
 	if err != nil {
 		return fmt.Errorf("delete item: %w", err)
@@ -176,7 +180,7 @@ func (r *ListRepo) GetFullList(ctx context.Context, userID string) ([]model.Sect
 
 	itemsBySection := make(map[string][]model.Item)
 	for _, s := range sections {
-		items, err := r.GetItems(ctx, s.ID)
+		items, err := r.GetItems(ctx, s.ID, userID)
 		if err != nil {
 			return nil, nil, err
 		}

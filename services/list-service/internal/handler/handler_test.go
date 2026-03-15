@@ -55,8 +55,8 @@ func (m *mockListSvc) DeleteSection(ctx context.Context, id, userID string) erro
 	return m.Called(ctx, id, userID).Error(0)
 }
 
-func (m *mockListSvc) GetItems(ctx context.Context, sectionID string) ([]model.ItemView, error) {
-	args := m.Called(ctx, sectionID)
+func (m *mockListSvc) GetItems(ctx context.Context, userID, sectionID string) ([]model.ItemView, error) {
+	args := m.Called(ctx, userID, sectionID)
 	return args.Get(0).([]model.ItemView), args.Error(1)
 }
 
@@ -258,7 +258,7 @@ func TestHandler_GetItems_Success(t *testing.T) {
 	r := newRouter(svc)
 
 	items := []model.ItemView{makeItemView("i1", "s1", "Milk")}
-	svc.On("GetItems", mock.Anything, "s1").Return(items, nil)
+	svc.On("GetItems", mock.Anything, "user-1", "s1").Return(items, nil)
 
 	w := doRequest(r, http.MethodGet, "/api/v1/lists/sections/s1/items", "")
 

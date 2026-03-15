@@ -13,10 +13,10 @@ type ListRepository interface {
 	CreateSection(ctx context.Context, userID, name string, position int) (*model.Section, error)
 	UpdateSection(ctx context.Context, id, userID string, req model.UpdateSectionRequest) (*model.Section, error)
 	DeleteSection(ctx context.Context, id, userID string) error
-	GetItems(ctx context.Context, sectionID string) ([]model.Item, error)
-	CreateItem(ctx context.Context, sectionID string, req model.CreateItemRequest) (*model.Item, error)
-	UpdateItem(ctx context.Context, id string, req model.UpdateItemRequest) (*model.Item, error)
-	DeleteItem(ctx context.Context, id string) error
+	GetItems(ctx context.Context, sectionID, userID string) ([]model.Item, error)
+	CreateItem(ctx context.Context, sectionID, userID string, req model.CreateItemRequest) (*model.Item, error)
+	UpdateItem(ctx context.Context, id, userID string, req model.UpdateItemRequest) (*model.Item, error)
+	DeleteItem(ctx context.Context, id, userID string) error
 	GetFullList(ctx context.Context, userID string) ([]model.Section, map[string][]model.Item, error)
 }
 
@@ -78,8 +78,8 @@ func (s *ListService) DeleteSection(ctx context.Context, id, userID string) erro
 
 // ── Items ────────────────────────────────────────────────
 
-func (s *ListService) GetItems(ctx context.Context, sectionID string) ([]model.ItemView, error) {
-	items, err := s.repo.GetItems(ctx, sectionID)
+func (s *ListService) GetItems(ctx context.Context, userID, sectionID string) ([]model.ItemView, error) {
+	items, err := s.repo.GetItems(ctx, sectionID, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +91,7 @@ func (s *ListService) GetItems(ctx context.Context, sectionID string) ([]model.I
 }
 
 func (s *ListService) CreateItem(ctx context.Context, userID, sectionID string, req model.CreateItemRequest) (*model.ItemView, error) {
-	item, err := s.repo.CreateItem(ctx, sectionID, req)
+	item, err := s.repo.CreateItem(ctx, sectionID, userID, req)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func (s *ListService) CreateItem(ctx context.Context, userID, sectionID string, 
 }
 
 func (s *ListService) UpdateItem(ctx context.Context, userID, id string, req model.UpdateItemRequest) (*model.ItemView, error) {
-	item, err := s.repo.UpdateItem(ctx, id, req)
+	item, err := s.repo.UpdateItem(ctx, id, userID, req)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func (s *ListService) UpdateItem(ctx context.Context, userID, id string, req mod
 }
 
 func (s *ListService) DeleteItem(ctx context.Context, userID, id string) error {
-	if err := s.repo.DeleteItem(ctx, id); err != nil {
+	if err := s.repo.DeleteItem(ctx, id, userID); err != nil {
 		return err
 	}
 	s.pub.Publish(ctx, userID, events.ItemDeleted, map[string]string{"id": id})

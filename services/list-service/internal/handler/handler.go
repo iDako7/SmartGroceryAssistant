@@ -18,7 +18,7 @@ type listServicer interface {
 	CreateSection(ctx context.Context, userID string, req model.CreateSectionRequest) (*model.SectionView, error)
 	UpdateSection(ctx context.Context, id, userID string, req model.UpdateSectionRequest) (*model.SectionView, error)
 	DeleteSection(ctx context.Context, id, userID string) error
-	GetItems(ctx context.Context, sectionID string) ([]model.ItemView, error)
+	GetItems(ctx context.Context, userID, sectionID string) ([]model.ItemView, error)
 	CreateItem(ctx context.Context, userID, sectionID string, req model.CreateItemRequest) (*model.ItemView, error)
 	UpdateItem(ctx context.Context, userID, id string, req model.UpdateItemRequest) (*model.ItemView, error)
 	DeleteItem(ctx context.Context, userID, id string) error
@@ -98,7 +98,7 @@ func (h *Handler) DeleteSection(c *gin.Context) {
 // ── Items ────────────────────────────────────────────────
 
 func (h *Handler) GetItems(c *gin.Context) {
-	items, err := h.svc.GetItems(c.Request.Context(), c.Param("id"))
+	items, err := h.svc.GetItems(c.Request.Context(), userID(c), c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch items"})
 		return
