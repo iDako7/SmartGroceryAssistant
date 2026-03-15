@@ -1,145 +1,85 @@
-# Smart Grocery — Phase 1
+# Smart Grocery Assistant
 
-A grocery shopping assistant with AI-powered suggestions, built on a microservices architecture. **Phase 1 is web-first** — a Next.js SPA that talks to the backend through the API Gateway.
-
-## Build Status
-
-| Step | Component | Status |
-|------|-----------|--------|
-| 1 | Infrastructure (PostgreSQL, Redis, RabbitMQ) | ✅ Done |
-| 2 | API Gateway (Node.js / Fastify) | ✅ Done |
-| 3 | User Service (Go / Gin) | ⬜ Next |
-| 4 | List Service (Go / Gin) | ⬜ Pending |
-| 5 | AI Service (Python / FastAPI) | ⬜ Pending |
-| 6 | Web Client UI (Next.js) | ⬜ Pending |
-| 7 | Tilt + Kubernetes | ⬜ Pending |
-
-## Phase 1 Scope
-
-| Service | Language | Purpose |
-|---------|----------|---------|
-| **Web Client** | Next.js 16 / React 19 / Tailwind v4 | SPA frontend — list management, AI features, real-time sync |
-| **API Gateway** | Node.js / Fastify 5 | REST routing, JWT auth, rate limiting, WebSocket proxy |
-| **User Service** | Go / Gin | Accounts, profiles, preferences (PostgreSQL) |
-| **List Service** | Go / Gin | Sections, items, event publishing (PostgreSQL + RabbitMQ) |
-| **AI Service** | Python / FastAPI | Tiered inference router, async workers, Claude API (Redis cache) |
-| **RabbitMQ** | — | Async AI job queue + list change events |
-| **PostgreSQL** | — | Primary data store (user\_db + list\_db) |
-| **Redis** | — | AI response cache |
+A grocery shopping assistant with AI-powered suggestions, built on a polyglot microservices architecture. Phase 1 is web-first — a Next.js SPA that talks to the backend through an API Gateway.
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│              Web Client (Next.js + Tailwind)              │
-│                http://localhost:3000 (web)                │
-└────────────────────────┬────────────────────────────────┘
-                         │ REST + WebSocket
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│                  API Gateway (Fastify)                    │
-│            JWT auth · rate limiting · routing             │
-│                http://localhost:3001                       │
-└──────┬──────────────┬──────────────┬────────────────────┘
-       │              │              │
-       ▼              ▼              ▼
-┌────────────┐ ┌────────────┐ ┌────────────┐
-│   User     │ │   List     │ │    AI      │
-│  Service   │ │  Service   │ │  Service   │
-│  (Go)      │ │  (Go)      │ │ (FastAPI)  │
-└─────┬──────┘ └──┬──────┬──┘ └──┬────┬───┘
-      │           │      │       │    │
-      ▼           ▼      ▼       ▼    ▼
-  ┌────────┐  ┌────────┐     ┌─────┐ ┌──────────┐
-  │Postgres│  │Postgres│     │Redis│ │ RabbitMQ │
-  │(user_db)│ │(list_db)│    │cache│ │  queues  │
-  └────────┘  └────────┘     └─────┘ └──────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              CLIENTS                                        │
+│                        ┌──────────────────┐                                 │
+│                        │  Web Client (SPA) │                                │
+│                        │  Next.js  :3000   │                                │
+│                        └────────┬─────────┘                                 │
+│                            HTTP │ WS                                        │
+└────────────────────────────────┼────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          API Gateway (Fastify :3001)                        │
+│              JWT auth · CORS · rate limiting (100/min) · proxy              │
+│                                                                             │
+│  /api/v1/users/*  → :4001    /api/v1/lists/*  → :4002                      │
+│  /api/v1/ai/*     → :4003    /ws              → :4002                      │
+└──────┬──────────────────────┬───────────────────────┬──────────────────────┘
+       │                      │                       │
+       ▼                      ▼                       ▼
+┌──────────────┐  ┌───────────────────┐  ┌─────────────────────┐
+│ User Service │  │  List Service     │  │   AI Service        │
+│ Go/Gin :4001 │  │  Go/Gin :4002     │  │   FastAPI :4003     │
+│              │  │                   │  │                     │
+│ register     │  │ sections CRUD     │  │ translate (sync)    │
+│ login        │  │ items CRUD        │  │ item-info (sync)    │
+│ profile      │  │ full list         │  │ alternatives (sync) │
+│              │  │ WebSocket         │  │ suggest (async)     │
+│              │  │ event publishing  │  │ inspire (async)     │
+└──────┬───────┘  └──┬─────────┬─────┘  └──┬──────────┬──────┘
+       │             │         │            │          │
+       ▼             ▼         │            │          ▼
+┌──────────┐  ┌──────────┐    │            │   ┌─────────────┐
+│ user_db  │  │ list_db  │    │            │   │   Redis     │
+│ (PG)     │  │ (PG)     │    │            │   │   :6379     │
+│          │  │          │    │            │   │             │
+│ users    │  │ sections │    │            │   │ ai:result:* │
+│ profiles │  │ items    │    │            │   │ TTL 3600s   │
+│          │  │ (soft del)│   │            │   └─────────────┘
+└──────────┘  └──────────┘    │            │
+                               │            │
+                               ▼            ▼
+                      ┌──────────────────────────────┐
+                      │        RabbitMQ :5672         │
+                      │                              │
+                      │  "list" exchange (fanout)    │
+                      │    → list.events queue       │
+                      │                              │
+                      │  "ai" exchange (direct)      │
+                      │    → ai.jobs   (TTL 5min)    │
+                      │    → ai.results (TTL 5min)   │
+                      └──────────────┬───────────────┘
+                                     │
+                                     ▼
+                            ┌─────────────────┐
+                            │   AI Worker      │
+                            │   (Python)       │
+                            │                  │
+                            │ Consumes ai.jobs │
+                            │ Calls OpenRouter │
+                            │ Stores → Redis   │
+                            └─────────────────┘
 ```
 
-## Repo Structure
+## Services
 
-```
-SmartGroceryAssistant/
-├── docker-compose.yml          ← local infra (postgres, redis, rabbitmq)
-├── .env.example                ← copy to .env, fill in secrets
-├── package.json                ← root: husky git hooks only
-├── infra/
-│   ├── postgres/init.sql       ← user_db + list_db schemas
-│   └── rabbitmq/definitions.json ← queues: ai.jobs, ai.results, list.events
-├── web/                        ← Next.js 16 web client
-│   ├── src/app/                ← App Router pages
-│   ├── src/components/
-│   ├── src/hooks/
-│   ├── src/lib/
-│   ├── src/types/
-│   ├── src/test/setup.ts
-│   ├── e2e/                    ← Playwright tests
-│   ├── vitest.config.ts        ← unit tests, 70% coverage threshold
-│   └── playwright.config.ts
-└── services/
-    ├── api-gateway/            ← ✅ Fastify 5, JWT, proxy, WebSocket
-    │   └── src/
-    │       ├── config.ts
-    │       ├── app.ts
-    │       ├── index.ts
-    │       ├── plugins/        ← jwt, cors, rateLimit
-    │       └── routes/         ← auth, users, lists, ai, ws
-    ├── user-service/           ← ⬜ Go / Gin
-    ├── list-service/           ← ⬜ Go / Gin
-    └── ai-service/             ← ⬜ Python / FastAPI
-```
+| Service | Language | Port | Purpose |
+|---------|----------|------|---------|
+| **Web Client** | Next.js 16 / React 19 / Tailwind v4 | 3000 | SPA — list management, AI panel, real-time sync |
+| **API Gateway** | Node.js / Fastify 5 | 3001 | REST proxy, JWT auth, rate limiting, WebSocket relay |
+| **User Service** | Go / Gin | 4001 | Accounts, profiles, preferences (PostgreSQL) |
+| **List Service** | Go / Gin | 4002 | Sections, items, event publishing (PostgreSQL + RabbitMQ) |
+| **AI Service** | Python / FastAPI | 4003 | Sync + async AI inference via OpenRouter (Redis cache) |
+| **AI Worker** | Python | — | Standalone RabbitMQ consumer for async AI jobs |
 
-## API Endpoints
-
-### Auth (via Gateway, no JWT)
-- `POST /api/v1/auth/register` — Create account
-- `POST /api/v1/auth/login` — Login, receive JWT
-
-### Users (JWT required)
-- `GET /api/v1/users/profile` — Get user profile
-- `PUT /api/v1/users/profile` — Update profile + dietary restrictions
-
-### Lists (JWT required)
-- `GET /api/v1/lists/full` — Full list (all sections + items)
-- `GET /api/v1/lists/sections` — List sections
-- `POST /api/v1/lists/sections` — Create section
-- `PUT /api/v1/lists/sections/:id` — Update section
-- `DELETE /api/v1/lists/sections/:id` — Delete section (soft)
-- `GET /api/v1/lists/sections/:id/items` — Get items in section
-- `POST /api/v1/lists/sections/:id/items` — Add item
-- `PUT /api/v1/lists/items/:id` — Update item
-- `DELETE /api/v1/lists/items/:id` — Delete item (soft)
-
-### AI (JWT required)
-- `POST /api/v1/ai/suggest` — Submit suggest job (async, returns jobId)
-- `POST /api/v1/ai/inspire` — Submit inspire job (async)
-- `POST /api/v1/ai/translate` — Translate item (sync)
-- `POST /api/v1/ai/item-info` — Get item info (sync)
-- `POST /api/v1/ai/alternatives` — Get alternatives (sync)
-
-### WebSocket
-- `ws://localhost:3001/ws?token=<jwt>` — Real-time sync + AI result delivery
-
-## Database Schemas
-
-### user\_db
-```sql
-users    (id, email, password_hash, created_at, updated_at)
-profiles (id, user_id, language_preference, dietary_restrictions[], household_size, taste_preferences, created_at, updated_at)
-```
-
-### list\_db
-```sql
-sections (id, user_id, name, position, deleted_at, created_at, updated_at)
-items    (id, section_id, name_en, name_secondary, quantity, checked, deleted_at, created_at, updated_at)
-```
-
-### RabbitMQ Queues
-| Queue | Exchange | Purpose |
-|-------|----------|---------|
-| `ai.jobs` | `ai` (direct) | Inbound AI processing jobs |
-| `ai.results` | `ai` (direct) | Outbound AI results → WebSocket push |
-| `list.events` | `list` (fanout) | List mutation events |
+**Infrastructure:** PostgreSQL :5432 (user_db, list_db) · Redis :6379 · RabbitMQ :5672
 
 ## Quick Start
 
@@ -147,68 +87,191 @@ items    (id, section_id, name_en, name_secondary, quantity, checked, deleted_at
 - Docker Desktop
 - Node.js 20+
 - Go 1.22+
-- Python 3.11+
+- Python 3.11+ with [uv](https://docs.astral.sh/uv/)
 
-### 1. Start infrastructure
+### Option 1: Docker Compose (infrastructure only)
+
 ```bash
-cp .env.example .env          # fill in JWT_SECRET and ANTHROPIC_API_KEY
-docker compose up -d          # postgres + redis + rabbitmq
+cp .env.example .env              # fill in JWT_SECRET and OPENROUTER_API_KEY
+docker compose up -d              # starts postgres, redis, rabbitmq
+
+# Then start each service individually (see commands below)
 ```
 
-### 2. Run API Gateway
+### Option 2: Tilt + Kubernetes (full stack)
+
 ```bash
-cd services/api-gateway
-npm install
-npm run dev                   # http://localhost:3001
+minikube start
+tilt up                           # builds + deploys everything with hot reload
 ```
 
-### 3. Run web client
+### Running Services Individually
+
 ```bash
-cd web
-npm install
-npm run dev                   # http://localhost:3000
+# API Gateway
+cd services/api-gateway && npm install && npm run dev     # :3001
+
+# User Service
+cd services/user-service && go run ./cmd/main.go          # :4001
+
+# List Service
+cd services/list-service && go run ./cmd/main.go          # :4002
+
+# AI Service
+cd services/ai-service && uv sync && uv run uvicorn app.main:app --reload --port 4003
+
+# AI Worker
+cd services/ai-service && uv run python worker.py
+
+# Web Client
+cd web && npm install && npm run dev                      # :3000
 ```
 
-### Service Ports
+## API Endpoints
+
+### Auth (no JWT required)
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/v1/users/register` | Create account |
+| POST | `/api/v1/users/login` | Login, receive JWT |
+
+### Users (JWT required)
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/v1/users/me` | Get profile |
+| PUT | `/api/v1/users/me` | Update profile |
+
+### Lists (JWT required)
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/v1/lists/full` | Full list (all sections + items) |
+| GET | `/api/v1/lists/sections` | List sections |
+| POST | `/api/v1/lists/sections` | Create section |
+| PUT | `/api/v1/lists/sections/:id` | Update section |
+| DELETE | `/api/v1/lists/sections/:id` | Soft-delete section |
+| GET | `/api/v1/lists/sections/:id/items` | Get items in section |
+| POST | `/api/v1/lists/sections/:id/items` | Add item |
+| PUT | `/api/v1/lists/items/:id` | Update item |
+| DELETE | `/api/v1/lists/items/:id` | Soft-delete item |
+
+### AI (JWT required)
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/v1/ai/translate` | Translate item name (sync) |
+| POST | `/api/v1/ai/item-info` | Get item info (sync) |
+| POST | `/api/v1/ai/alternatives` | Get alternatives (sync) |
+| POST | `/api/v1/ai/suggest` | Submit suggest job (async → poll) |
+| POST | `/api/v1/ai/inspire` | Submit inspire job (async → poll) |
+| GET | `/api/v1/ai/jobs/:id` | Poll async job result |
+
+### WebSocket
+- `ws://localhost:3001/ws?token=<jwt>` — real-time list sync
+
+## Database Schemas
+
+### user\_db
+```sql
+users    (id UUID, email, password_hash, created_at, updated_at)
+profiles (id UUID, user_id FK, language_preference, dietary_restrictions[],
+          household_size, taste_preferences, created_at, updated_at)
+```
+
+### list\_db
+```sql
+sections (id UUID, user_id, name, position, deleted_at, created_at, updated_at)
+items    (id UUID, section_id FK, name_en, name_secondary, quantity,
+          checked, deleted_at, created_at, updated_at)
+```
+
+## Testing
+
+```bash
+# Run all tests
+cd web && npm test                                              # Vitest (unit)
+cd services/api-gateway && npm test                             # Vitest (gateway)
+cd services/user-service && go test ./...                       # Go
+cd services/list-service && go test ./...                       # Go
+cd services/ai-service && uv run pytest                         # pytest
+
+# Coverage
+cd web && npm run test:coverage                                 # 70% threshold
+
+# E2E (requires full stack running)
+cd web && npm run test:e2e                                      # Playwright
+```
+
+| Service | Framework | Tests |
+|---------|-----------|-------|
+| Web Client | Vitest + Playwright | Unit (components, API client) + E2E (auth, list, AI) |
+| API Gateway | Vitest | JWT enforcement, CORS, health, invalid tokens |
+| User Service | Go testing + testify | Handlers, service logic, auth middleware |
+| List Service | Go testing + testify | Handlers, service logic, event publishing |
+| AI Service | pytest | Routes, Claude service, worker, queue, cache |
+
+## Repo Structure
+
+```
+SmartGroceryAssistant/
+├── docker-compose.yml              # local infra + all services
+├── Tiltfile                        # K8s dev with hot reload
+├── k8s/                            # Kubernetes manifests
+├── infra/
+│   ├── postgres/init.sql           # user_db + list_db schemas
+│   └── rabbitmq/definitions.json   # exchanges + queues
+├── web/                            # Next.js 16 client
+│   ├── src/app/                    # App Router pages
+│   ├── src/components/             # list/, ai/ components
+│   ├── src/lib/                    # api.ts, auth-context.tsx
+│   ├── e2e/                        # Playwright specs
+│   └── vitest.config.ts
+└── services/
+    ├── api-gateway/                # Fastify 5 proxy
+    │   └── src/
+    │       ├── plugins/            # jwt, cors, rateLimit
+    │       ├── routes/             # auth, users, lists, ai, ws
+    │       └── __tests__/          # gateway.test.ts
+    ├── user-service/               # Go / Gin
+    │   ├── cmd/main.go
+    │   └── internal/               # handler, service, repository, middleware
+    ├── list-service/               # Go / Gin
+    │   ├── cmd/main.go
+    │   └── internal/               # handler, service, repository, events
+    └── ai-service/                 # Python / FastAPI
+        ├── app/                    # main, routes, services, middleware
+        ├── worker.py               # async RabbitMQ consumer
+        └── tests/                  # pytest suite
+```
+
+## Key Design Decisions
+
+- **JWT defense in depth** — verified at Gateway AND each downstream service
+- **Soft deletes** in list_db (`deleted_at` column) — items and sections are never hard-deleted
+- **User ownership enforcement** — all item operations JOIN through sections to verify `user_id`
+- **Async AI jobs** — long-running AI calls go through RabbitMQ → worker → Redis, polled by client
+- **Python deps via uv** — not pip/poetry; uses `pyproject.toml` + `uv.lock`
+- **OpenRouter** as LLM gateway — not direct Anthropic API
+
+## Environment Variables
+
+See `.env.example` for the full list. Minimum required:
+
+```bash
+JWT_SECRET=<any strong secret>
+OPENROUTER_API_KEY=<your key>
+```
+
+All service URLs default to `localhost` if not set.
+
+## Ports
 
 | Service | Port |
 |---------|------|
-| **Web Client** | **3000** |
+| Web Client | 3000 |
 | API Gateway | 3001 |
 | User Service | 4001 |
 | List Service | 4002 |
 | AI Service | 4003 |
-| RabbitMQ Management | 15672 |
 | PostgreSQL | 5432 |
 | Redis | 6379 |
-
-### Web Client Scripts
-```bash
-cd web
-npm run dev            # dev server
-npm run test           # Vitest unit tests
-npm run test:coverage  # with 70% coverage threshold
-npm run test:e2e       # Playwright E2E
-npm run lint           # ESLint
-npm run format         # Prettier
-```
-
-### API Gateway Scripts
-```bash
-cd services/api-gateway
-npm run dev            # tsx watch (hot reload)
-npm run build          # compile TypeScript → dist/
-npm run start          # run compiled build
-npm run lint           # tsc --noEmit type check
-```
-
-## Environment Variables
-
-See `.env.example` for the full list. Minimum required to run:
-
-```bash
-JWT_SECRET=<any strong secret>
-ANTHROPIC_API_KEY=sk-ant-...
-```
-
-All service URLs default to `localhost` if not set.
+| RabbitMQ | 5672 |
+| RabbitMQ Management | 15672 |
