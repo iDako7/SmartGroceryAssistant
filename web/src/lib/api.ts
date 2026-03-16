@@ -1,3 +1,5 @@
+import type { Item, Section } from '../types';
+
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
 // ── Token storage ──────────────────────────────────────────
@@ -60,8 +62,7 @@ export const auth = {
 // ── Lists ──────────────────────────────────────────────────
 
 export const lists = {
-  full: () =>
-    request<{ sections: unknown[]; items: Record<string, unknown[]> }>('/api/v1/lists/full'),
+  full: () => request<{ sections: (Section & { items?: Item[] })[] }>('/api/v1/lists/full'),
   createSection: (name: string, position: number) =>
     request('/api/v1/lists/sections', { method: 'POST', body: JSON.stringify({ name, position }) }),
   updateSection: (id: string, data: { name?: string; position?: number }) =>

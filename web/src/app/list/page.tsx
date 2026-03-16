@@ -31,8 +31,13 @@ export default function ListPage() {
     lists
       .full()
       .then((data) => {
-        setSections(data.sections as Section[]);
-        setItemsMap(data.items as Record<string, Item[]>);
+        const secs = data.sections as (Section & { items?: Item[] })[];
+        setSections(secs.map(({ items, ...s }) => s));
+        const map: Record<string, Item[]> = {};
+        for (const sec of secs) {
+          map[sec.id] = sec.items ?? [];
+        }
+        setItemsMap(map);
       })
       .finally(() => setLoadingList(false));
   }, [user]);
@@ -143,7 +148,9 @@ export default function ListPage() {
               section={section}
               items={itemsMap[section.id] ?? []}
               selectedItem={selectedItem}
-              onSelectItem={setSelectedItem}
+              onSelectItem={(item) =>
+                setSelectedItem((prev) => (prev?.id === item.id ? null : item))
+              }
               onItemUpdated={handleItemUpdated}
               onItemDeleted={handleItemDeleted}
               onItemCreated={handleItemCreated}

@@ -17,11 +17,6 @@ export default function ItemRow({ item, selected, onSelect, onUpdated, onDeleted
   const [name, setName] = useState(item.name_en);
   const [qty, setQty] = useState(item.quantity);
 
-  async function toggleCheck() {
-    const updated = await lists.updateItem(item.id, { checked: !item.checked });
-    onUpdated(updated as Item);
-  }
-
   async function saveEdit() {
     const updated = await lists.updateItem(item.id, { name_en: name, quantity: qty });
     onUpdated(updated as Item);
@@ -68,17 +63,7 @@ export default function ItemRow({ item, selected, onSelect, onUpdated, onDeleted
       }`}
       onClick={() => onSelect(item)}
     >
-      <input
-        type="checkbox"
-        checked={item.checked}
-        onChange={toggleCheck}
-        onClick={(e) => e.stopPropagation()}
-        className="h-4 w-4 cursor-pointer accent-emerald-600"
-      />
-
-      <span
-        className={`flex-1 text-sm ${item.checked ? 'text-zinc-400 line-through' : 'text-zinc-800 dark:text-zinc-200'}`}
-      >
+      <span className="flex-1 text-sm text-zinc-800 dark:text-zinc-200">
         {item.name_en}
         {item.name_secondary && (
           <span className="ml-1.5 text-xs text-zinc-400">{item.name_secondary}</span>

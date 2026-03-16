@@ -258,9 +258,34 @@ See `.env.example` for the full list. Minimum required:
 ```bash
 JWT_SECRET=<any strong secret>
 OPENROUTER_API_KEY=<your key>
+OPENROUTER_MODEL=qwen/qwen3-235b-a22b-2507   # or any OpenRouter model
 ```
 
 All service URLs default to `localhost` if not set.
+
+### Setting up the OpenRouter API Key
+
+The AI features (translate, item-info, alternatives, suggest, inspire) require an [OpenRouter](https://openrouter.ai/) API key.
+
+1. Create an account at [openrouter.ai](https://openrouter.ai/) and generate an API key
+2. Configure the key depending on your environment:
+
+**Local dev (docker-compose):**
+```bash
+# Add to .env at the project root
+OPENROUTER_API_KEY=sk-or-v1-...
+OPENROUTER_MODEL=qwen/qwen3-235b-a22b-2507
+```
+
+**Kubernetes (Tilt + minikube):**
+```bash
+# 1. Paste your key in k8s/secret.yaml under openrouter-api-key
+# 2. Apply the secret and restart
+kubectl apply -f k8s/secret.yaml
+kubectl rollout restart deployment/ai-service deployment/ai-worker -n sga
+```
+
+> **Note:** `k8s/secret.yaml` is gitignored — never commit real API keys.
 
 ## Ports
 
