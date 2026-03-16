@@ -41,6 +41,9 @@ Thumbs.db
 *.swp
 *.swo
 
+# Kubernetes secrets
+k8s/secret.yaml
+
 # Claude
 .claude
 CLAUDE.md
