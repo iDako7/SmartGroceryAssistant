@@ -32,7 +32,9 @@ export default function ListPage() {
       .full()
       .then((data) => {
         const secs = data.sections as (Section & { items?: Item[] })[];
-        setSections(secs.map(({ items, ...s }) => s));
+        setSections(
+          secs.map((s) => ({ id: s.id, user_id: s.user_id, name: s.name, position: s.position }))
+        );
         const map: Record<string, Item[]> = {};
         for (const sec of secs) {
           map[sec.id] = sec.items ?? [];
