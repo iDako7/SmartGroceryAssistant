@@ -11,6 +11,7 @@ router = APIRouter(prefix="/api/v1/ai", tags=["ai"])
 
 # ── Request models ────────────────────────────────────────
 
+
 class TranslateRequest(BaseModel):
     name_en: str
     target_language: str
@@ -36,6 +37,7 @@ class InspireRequest(BaseModel):
 
 # ── Sync endpoints ────────────────────────────────────────
 
+
 @router.post("/translate")
 async def translate(req: TranslateRequest, _: str = Depends(verify_token)):
     return await claude.translate_item(req.name_en, req.target_language)
@@ -53,6 +55,7 @@ async def alternatives(req: AlternativesRequest, _: str = Depends(verify_token))
 
 # ── Async endpoints ────────────────────────────────────────
 
+
 @router.post("/suggest")
 async def suggest(req: SuggestRequest, _: str = Depends(verify_token)):
     job_id = await queue.publish_job("suggest", {"sections": req.sections})
@@ -61,9 +64,7 @@ async def suggest(req: SuggestRequest, _: str = Depends(verify_token)):
 
 @router.post("/inspire")
 async def inspire(req: InspireRequest, _: str = Depends(verify_token)):
-    job_id = await queue.publish_job(
-        "inspire", {"sections": req.sections, "preferences": req.preferences}
-    )
+    job_id = await queue.publish_job("inspire", {"sections": req.sections, "preferences": req.preferences})
     return {"job_id": job_id, "status": "queued"}
 
 

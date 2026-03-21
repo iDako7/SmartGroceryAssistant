@@ -1,7 +1,5 @@
 """Unit tests for claude service helpers (pure functions — no I/O)."""
 
-import pytest
-
 
 class TestParseJson:
     """Tests for the _parse_json private helper via public functions' fallback behaviour."""
@@ -19,9 +17,7 @@ class TestParseJson:
                 return_value=_make_client("NOT JSON AT ALL"),
             ),
         ):
-            result = asyncio.get_event_loop().run_until_complete(
-                _import_and_call("translate_item", "Milk", "Chinese")
-            )
+            result = asyncio.get_event_loop().run_until_complete(_import_and_call("translate_item", "Milk", "Chinese"))
         assert result["name_translated"] == "Milk"
         assert result["notes"] == ""
 
@@ -37,9 +33,7 @@ class TestParseJson:
                 return_value=_make_client("garbage"),
             ),
         ):
-            result = asyncio.get_event_loop().run_until_complete(
-                _import_and_call("item_info", "Milk")
-            )
+            result = asyncio.get_event_loop().run_until_complete(_import_and_call("item_info", "Milk"))
         assert result["category"] == ""
 
     def test_alternatives_fallback_on_invalid_json(self):
@@ -54,9 +48,7 @@ class TestParseJson:
                 return_value=_make_client("broken"),
             ),
         ):
-            result = asyncio.get_event_loop().run_until_complete(
-                _import_and_call("alternatives", "Milk")
-            )
+            result = asyncio.get_event_loop().run_until_complete(_import_and_call("alternatives", "Milk"))
         assert result["alternatives"] == []
 
     def test_translate_uses_cache_hit(self):
@@ -70,9 +62,7 @@ class TestParseJson:
             patch("app.services.claude.cache_get", new=AsyncMock(return_value=cached)),
             patch("app.services.claude.get_client") as mock_client,
         ):
-            result = asyncio.get_event_loop().run_until_complete(
-                _import_and_call("translate_item", "Milk", "Chinese")
-            )
+            result = asyncio.get_event_loop().run_until_complete(_import_and_call("translate_item", "Milk", "Chinese"))
         mock_client.assert_not_called()
         assert result["name_translated"] == "牛奶"
 
@@ -90,13 +80,12 @@ class TestParseJson:
                 return_value=_make_client(raw),
             ),
         ):
-            result = asyncio.get_event_loop().run_until_complete(
-                _import_and_call("translate_item", "Milk", "French")
-            )
+            result = asyncio.get_event_loop().run_until_complete(_import_and_call("translate_item", "Milk", "French"))
         assert result["name_translated"] == "Lait"
 
 
 # ── Helpers ───────────────────────────────────────────────
+
 
 def _make_client(content: str):
     """Returns a mock AsyncOpenAI client that returns `content` as message text."""
@@ -114,5 +103,6 @@ def _make_client(content: str):
 
 async def _import_and_call(fn_name: str, *args):
     import importlib
+
     mod = importlib.import_module("app.services.claude")
     return await getattr(mod, fn_name)(*args)

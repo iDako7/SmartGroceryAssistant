@@ -24,11 +24,13 @@ def _make_message(body: dict) -> MagicMock:
 @patch("worker.cache_set", new_callable=AsyncMock)
 @patch("worker.suggest_items", new_callable=AsyncMock, return_value='["Milk","Eggs"]')
 async def test_process_suggest(mock_suggest: AsyncMock, mock_cache: AsyncMock) -> None:
-    msg = _make_message({
-        "job_id": "j1",
-        "type": "suggest",
-        "payload": {"sections": [{"name": "Dairy", "items": ["Butter"]}]},
-    })
+    msg = _make_message(
+        {
+            "job_id": "j1",
+            "type": "suggest",
+            "payload": {"sections": [{"name": "Dairy", "items": ["Butter"]}]},
+        }
+    )
 
     await process(msg)
 
@@ -40,11 +42,13 @@ async def test_process_suggest(mock_suggest: AsyncMock, mock_cache: AsyncMock) -
 @patch("worker.cache_set", new_callable=AsyncMock)
 @patch("worker.inspire_meals", new_callable=AsyncMock, return_value='["Pasta"]')
 async def test_process_inspire(mock_inspire: AsyncMock, mock_cache: AsyncMock) -> None:
-    msg = _make_message({
-        "job_id": "j2",
-        "type": "inspire",
-        "payload": {"sections": [], "preferences": "vegetarian"},
-    })
+    msg = _make_message(
+        {
+            "job_id": "j2",
+            "type": "inspire",
+            "payload": {"sections": [], "preferences": "vegetarian"},
+        }
+    )
 
     await process(msg)
 
@@ -55,11 +59,13 @@ async def test_process_inspire(mock_inspire: AsyncMock, mock_cache: AsyncMock) -
 @pytest.mark.asyncio
 @patch("worker.cache_set", new_callable=AsyncMock)
 async def test_process_unknown_type_skips(mock_cache: AsyncMock) -> None:
-    msg = _make_message({
-        "job_id": "j3",
-        "type": "unknown_job",
-        "payload": {},
-    })
+    msg = _make_message(
+        {
+            "job_id": "j3",
+            "type": "unknown_job",
+            "payload": {},
+        }
+    )
 
     await process(msg)
 
@@ -70,11 +76,13 @@ async def test_process_unknown_type_skips(mock_cache: AsyncMock) -> None:
 @patch("worker.cache_set", new_callable=AsyncMock)
 @patch("worker.suggest_items", new_callable=AsyncMock, side_effect=RuntimeError("LLM down"))
 async def test_process_exception_is_caught(mock_suggest: AsyncMock, mock_cache: AsyncMock) -> None:
-    msg = _make_message({
-        "job_id": "j4",
-        "type": "suggest",
-        "payload": {"sections": []},
-    })
+    msg = _make_message(
+        {
+            "job_id": "j4",
+            "type": "suggest",
+            "payload": {"sections": []},
+        }
+    )
 
     # Should not raise — worker catches exceptions
     await process(msg)

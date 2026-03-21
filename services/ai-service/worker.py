@@ -3,6 +3,7 @@ Async worker — consumes ai.jobs queue, calls the AI model, stores results in R
 Run independently alongside the API server:
   python worker.py
 """
+
 import asyncio
 import json
 import logging
@@ -29,9 +30,7 @@ async def process(message: aio_pika.IncomingMessage) -> None:
             if job_type == "suggest":
                 result = await suggest_items(payload["sections"])
             elif job_type == "inspire":
-                result = await inspire_meals(
-                    payload["sections"], payload.get("preferences", "")
-                )
+                result = await inspire_meals(payload["sections"], payload.get("preferences", ""))
             else:
                 log.warning("unknown job type: %s — skipping", job_type)
                 return

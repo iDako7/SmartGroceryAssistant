@@ -2,14 +2,14 @@
 
 from unittest.mock import AsyncMock, patch
 
-
 # ── Sync endpoints ────────────────────────────────────────
+
 
 class TestTranslate:
     def test_success(self, client, auth_headers):
-        with patch("app.routes.ai.claude.translate_item", new=AsyncMock(
-            return_value={"name_translated": "牛奶", "notes": ""}
-        )):
+        with patch(
+            "app.routes.ai.claude.translate_item", new=AsyncMock(return_value={"name_translated": "牛奶", "notes": ""})
+        ):
             resp = client.post(
                 "/api/v1/ai/translate",
                 json={"name_en": "Milk", "target_language": "Chinese"},
@@ -95,6 +95,7 @@ class TestAlternatives:
 
 # ── Async endpoints ───────────────────────────────────────
 
+
 class TestSuggest:
     def test_returns_job_id(self, client, auth_headers):
         with patch("app.routes.ai.queue.publish_job", new=AsyncMock(return_value="job-abc-123")):
@@ -141,6 +142,7 @@ class TestInspire:
 
 # ── Job status ────────────────────────────────────────────
 
+
 class TestGetJob:
     def test_pending(self, client, auth_headers):
         with patch("app.routes.ai.cache.cache_get", new=AsyncMock(return_value=None)):
@@ -152,6 +154,7 @@ class TestGetJob:
 
     def test_done_with_json_result(self, client, auth_headers):
         import json
+
         result = json.dumps({"suggestions": [{"name_en": "Bread", "category": "Bakery", "reason": "staple"}]})
         with patch("app.routes.ai.cache.cache_get", new=AsyncMock(return_value=result)):
             resp = client.get("/api/v1/ai/jobs/job-456", headers=auth_headers)
