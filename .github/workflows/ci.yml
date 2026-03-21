@@ -11,9 +11,39 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # ─── Detect changed services ──────────────────────────
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      web: ${{ steps.filter.outputs.web }}
+      api-gateway: ${{ steps.filter.outputs.api-gateway }}
+      user-service: ${{ steps.filter.outputs.user-service }}
+      list-service: ${{ steps.filter.outputs.list-service }}
+      ai-service: ${{ steps.filter.outputs.ai-service }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            web:
+              - 'web/**'
+            api-gateway:
+              - 'services/api-gateway/**'
+            user-service:
+              - 'services/user-service/**'
+            list-service:
+              - 'services/list-service/**'
+            ai-service:
+              - 'services/ai-service/**'
+
   # ─── Web (Next.js) ────────────────────────────────────
   web:
     name: Web
+    needs: [changes]
+    if: needs.changes.outputs.web == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -50,6 +80,8 @@ jobs:
   # ─── API Gateway (Fastify) ────────────────────────────
   api-gateway:
     name: API Gateway
+    needs: [changes]
+    if: needs.changes.outputs.api-gateway == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -77,6 +109,8 @@ jobs:
   # ─── User Service (Go) ────────────────────────────────
   user-service:
     name: User Service
+    needs: [changes]
+    if: needs.changes.outputs.user-service == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -103,6 +137,8 @@ jobs:
   # ─── List Service (Go) ────────────────────────────────
   list-service:
     name: List Service
+    needs: [changes]
+    if: needs.changes.outputs.list-service == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -129,6 +165,8 @@ jobs:
   # ─── AI Service (Python/FastAPI) ───────────────────────
   ai-service:
     name: AI Service
+    needs: [changes]
+    if: needs.changes.outputs.ai-service == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -153,3 +191,21 @@ jobs:
 
       - name: Test
         run: uv run pytest -v
+
+  # ─── Gate job for branch protection ────────────────────
+  ci-pass:
+    name: CI Pass
+    if: always()
+    needs: [web, api-gateway, user-service, list-service, ai-service]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        run: |
+          results="${{ needs.web.result }} ${{ needs.api-gateway.result }} ${{ needs.user-service.result }} ${{ needs.list-service.result }} ${{ needs.ai-service.result }}"
+          for r in $results; do
+            if [ "$r" = "failure" ] || [ "$r" = "cancelled" ]; then
+              echo "Job failed or was cancelled: $r"
+              exit 1
+            fi
+          done
+          echo "All jobs passed or were skipped"
