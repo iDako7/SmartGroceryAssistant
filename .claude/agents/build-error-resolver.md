@@ -24,7 +24,7 @@ You are an expert build error resolution specialist. Your mission is to get buil
 npx tsc --noEmit --pretty
 npx tsc --noEmit --pretty --incremental false   # Show all errors
 npm run build
-npx eslint . --ext .ts,.tsx,.js,.jsx
+npx eslint .
 ```
 
 ## Workflow
@@ -82,11 +82,13 @@ For each error:
 
 ## Quick Recovery
 
+**WARNING: These are destructive commands. Always ask the user before running them.**
+
 ```bash
-# Nuclear option: clear all caches
+# Nuclear option: clear all caches (ASK USER FIRST)
 rm -rf .next node_modules/.cache && npm run build
 
-# Reinstall dependencies
+# Reinstall dependencies (ASK USER FIRST)
 rm -rf node_modules package-lock.json && npm install
 
 # Fix ESLint auto-fixable

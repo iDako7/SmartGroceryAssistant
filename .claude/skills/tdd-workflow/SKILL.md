@@ -254,17 +254,13 @@ src/
 
 ## Mocking External Services
 
-### Supabase Mock
+### Database Mock
 ```typescript
-jest.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => Promise.resolve({
-          data: [{ id: 1, name: 'Test Market' }],
-          error: null
-        }))
-      }))
+jest.mock('@/lib/db', () => ({
+  pool: {
+    query: jest.fn(() => Promise.resolve({
+      rows: [{ id: 1, name: 'Apples', quantity: 3 }],
+      rowCount: 1
     }))
   }
 }))
@@ -280,12 +276,12 @@ jest.mock('@/lib/redis', () => ({
 }))
 ```
 
-### OpenAI Mock
+### OpenRouter Mock
 ```typescript
-jest.mock('@/lib/openai', () => ({
-  generateEmbedding: jest.fn(() => Promise.resolve(
-    new Array(1536).fill(0.1) // Mock 1536-dim embedding
-  ))
+jest.mock('@/lib/openrouter', () => ({
+  generateSuggestions: jest.fn(() => Promise.resolve([
+    { name: 'Bananas', category: 'Produce' }
+  ]))
 }))
 ```
 

@@ -47,22 +47,25 @@ interface MarketRepository {
   delete(id: string): Promise<void>
 }
 
-class SupabaseMarketRepository implements MarketRepository {
-  async findAll(filters?: MarketFilters): Promise<Market[]> {
-    let query = supabase.from('markets').select('*')
+class PostgresItemRepository implements ItemRepository {
+  constructor(private pool: Pool) {}
 
-    if (filters?.status) {
-      query = query.eq('status', filters.status)
+  async findAll(filters?: ItemFilters): Promise<Item[]> {
+    let query = 'SELECT * FROM items WHERE deleted_at IS NULL'
+    const params: unknown[] = []
+
+    if (filters?.sectionId) {
+      params.push(filters.sectionId)
+      query += ` AND section_id = $${params.length}`
     }
 
     if (filters?.limit) {
-      query = query.limit(filters.limit)
+      params.push(filters.limit)
+      query += ` LIMIT $${params.length}`
     }
 
-    const { data, error } = await query
-
-    if (error) throw new Error(error.message)
-    return data
+    const { rows } = await this.pool.query(query, params)
+    return rows
   }
 
   // Other methods...
@@ -132,17 +135,13 @@ export default withAuth(async (req, res) => {
 
 ```typescript
 // ✅ GOOD: Select only needed columns
-const { data } = await supabase
-  .from('markets')
-  .select('id, name, status, volume')
-  .eq('status', 'active')
-  .order('volume', { ascending: false })
-  .limit(10)
+const { rows } = await pool.query(
+  'SELECT id, name, quantity FROM items WHERE section_id = $1 AND deleted_at IS NULL LIMIT 10',
+  [sectionId]
+)
 
 // ❌ BAD: Select everything
-const { data } = await supabase
-  .from('markets')
-  .select('*')
+const { rows } = await pool.query('SELECT * FROM items')
 ```
 
 ### N+1 Query Prevention
@@ -168,39 +167,37 @@ markets.forEach(market => {
 ### Transaction Pattern
 
 ```typescript
-async function createMarketWithPosition(
-  marketData: CreateMarketDto,
-  positionData: CreatePositionDto
+async function createSectionWithItems(
+  pool: Pool,
+  sectionData: CreateSectionDto,
+  items: CreateItemDto[]
 ) {
-  // Use Supabase transaction
-  const { data, error } = await supabase.rpc('create_market_with_position', {
-    market_data: marketData,
-    position_data: positionData
-  })
+  const client = await pool.connect()
 
-  if (error) throw new Error('Transaction failed')
-  return data
+  try {
+    await client.query('BEGIN')
+
+    const { rows: [section] } = await client.query(
+      'INSERT INTO sections (name, user_id) VALUES ($1, $2) RETURNING *',
+      [sectionData.name, sectionData.userId]
+    )
+
+    for (const item of items) {
+      await client.query(
+        'INSERT INTO items (name, quantity, section_id) VALUES ($1, $2, $3)',
+        [item.name, item.quantity, section.id]
+      )
+    }
+
+    await client.query('COMMIT')
+    return section
+  } catch (error) {
+    await client.query('ROLLBACK')
+    throw error
+  } finally {
+    client.release()
+  }
 }
-
-// SQL function in Supabase
-CREATE OR REPLACE FUNCTION create_market_with_position(
-  market_data jsonb,
-  position_data jsonb
-)
-RETURNS jsonb
-LANGUAGE plpgsql
-AS $$
-BEGIN
-  -- Start transaction automatically
-  INSERT INTO markets VALUES (market_data);
-  INSERT INTO positions VALUES (position_data);
-  RETURN jsonb_build_object('success', true);
-EXCEPTION
-  WHEN OTHERS THEN
-    -- Rollback happens automatically
-    RETURN jsonb_build_object('success', false, 'error', SQLERRM);
-END;
-$$;
 ```
 
 ## Caching Strategies

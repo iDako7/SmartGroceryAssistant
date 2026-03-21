@@ -372,7 +372,7 @@ name = user.name
  * @param query - Natural language search query
  * @param limit - Maximum number of results (default: 10)
  * @returns Array of markets sorted by similarity score
- * @throws {Error} If OpenAI API fails or Redis unavailable
+ * @throws {Error} If OpenRouter API fails or Redis unavailable
  *
  * @example
  * ```typescript
@@ -427,15 +427,12 @@ export function Dashboard() {
 
 ```typescript
 // ✅ GOOD: Select only needed columns
-const { data } = await supabase
-  .from('markets')
-  .select('id, name, status')
-  .limit(10)
+const { rows } = await pool.query(
+  'SELECT id, name, quantity FROM items WHERE deleted_at IS NULL LIMIT 10'
+)
 
 // ❌ BAD: Select everything
-const { data } = await supabase
-  .from('markets')
-  .select('*')
+const { rows } = await pool.query('SELECT * FROM items')
 ```
 
 ## Testing Standards
@@ -461,7 +458,7 @@ test('calculates similarity correctly', () => {
 ```typescript
 // ✅ GOOD: Descriptive test names
 test('returns empty array when no markets match query', () => { })
-test('throws error when OpenAI API key is missing', () => { })
+test('throws error when OpenRouter API key is missing', () => { })
 test('falls back to substring search when Redis unavailable', () => { })
 
 // ❌ BAD: Vague test names

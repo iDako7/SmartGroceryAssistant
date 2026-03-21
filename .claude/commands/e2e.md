@@ -17,7 +17,7 @@ This command invokes the **e2e-runner** agent to generate, maintain, and execute
 ## When to Use
 
 Use `/e2e` when:
-- Testing critical user journeys (login, trading, payments)
+- Testing critical user journeys (login, list management, AI suggestions)
 - Verifying multi-step flows work end-to-end
 - Testing UI interactions and navigation
 - Validating integration between frontend and backend
@@ -37,121 +37,75 @@ The e2e-runner agent will:
 ## Example Usage
 
 ```
-User: /e2e Test the market search and view flow
+User: /e2e Test the grocery list item management flow
 
 Agent (e2e-runner):
-# E2E Test Generation: Market Search and View Flow
+# E2E Test Generation: Grocery List Item Management
 
 ## Test Scenario Identified
 
-**User Journey:** Market Search → View Results → Click Market → View Details
+**User Journey:** Login → View Lists → Add Section → Add Items → Edit Item → Delete Item
 
 **Test Coverage:**
-1. Navigate to markets page
-2. Perform semantic search
-3. Verify search results
-4. Click on first result
-5. Verify market details page loads
-6. Verify chart renders
+1. Navigate to grocery list page
+2. Create a new section
+3. Add items to section
+4. Edit an item
+5. Delete an item (soft delete)
+6. Verify list state
 
 ## Generated Test Code
 
 ```typescript
-// tests/e2e/markets/search-and-view.spec.ts
+// e2e/grocery-list/item-management.spec.ts
 import { test, expect } from '@playwright/test'
-import { MarketsPage } from '../../pages/MarketsPage'
-import { MarketDetailsPage } from '../../pages/MarketDetailsPage'
 
-test.describe('Market Search and View Flow', () => {
-  test('user can search markets and view details', async ({ page }) => {
-    // 1. Navigate to markets page
-    const marketsPage = new MarketsPage(page)
-    await marketsPage.goto()
+test.describe('Grocery List Item Management', () => {
+  test('user can add, edit, and delete items', async ({ page }) => {
+    // 1. Navigate to grocery list
+    await page.goto('/')
+    await expect(page).toHaveTitle(/Grocery/)
 
-    // Verify page loaded
-    await expect(page).toHaveTitle(/Markets/)
-    await expect(page.locator('h1')).toContainText('Markets')
+    // 2. Create a new section
+    await page.click('[data-testid="add-section"]')
+    await page.fill('[data-testid="section-name"]', 'Produce')
+    await page.click('[data-testid="save-section"]')
+    await expect(page.locator('text=Produce')).toBeVisible()
 
-    // 2. Perform semantic search
-    await marketsPage.searchMarkets('election')
+    // 3. Add an item to the section
+    await page.click('[data-testid="add-item"]')
+    await page.fill('[data-testid="item-name"]', 'Apples')
+    await page.click('[data-testid="save-item"]')
 
     // Wait for API response
     await page.waitForResponse(resp =>
-      resp.url().includes('/api/markets/search') && resp.status() === 200
+      resp.url().includes('/api/v1/items') && resp.status() === 201
     )
 
-    // 3. Verify search results
-    const marketCards = marketsPage.marketCards
-    await expect(marketCards.first()).toBeVisible()
-    const resultCount = await marketCards.count()
-    expect(resultCount).toBeGreaterThan(0)
+    await expect(page.locator('text=Apples')).toBeVisible()
 
-    // Take screenshot of search results
-    await page.screenshot({ path: 'artifacts/search-results.png' })
+    // Take screenshot of list with item
+    await page.screenshot({ path: 'artifacts/list-with-item.png' })
 
-    // 4. Click on first result
-    const firstMarketTitle = await marketCards.first().textContent()
-    await marketCards.first().click()
+    // 4. Edit the item
+    await page.click('[data-testid="edit-item"]')
+    await page.fill('[data-testid="item-name"]', 'Green Apples')
+    await page.click('[data-testid="save-item"]')
+    await expect(page.locator('text=Green Apples')).toBeVisible()
 
-    // 5. Verify market details page loads
-    await expect(page).toHaveURL(/\/markets\/[a-z0-9-]+/)
+    // 5. Delete the item (soft delete)
+    await page.click('[data-testid="delete-item"]')
+    await expect(page.locator('text=Green Apples')).not.toBeVisible()
 
-    const detailsPage = new MarketDetailsPage(page)
-    await expect(detailsPage.marketName).toBeVisible()
-    await expect(detailsPage.marketDescription).toBeVisible()
-
-    // 6. Verify chart renders
-    await expect(detailsPage.priceChart).toBeVisible()
-
-    // Verify market name matches
-    const detailsTitle = await detailsPage.marketName.textContent()
-    expect(detailsTitle?.toLowerCase()).toContain(
-      firstMarketTitle?.toLowerCase().substring(0, 20) || ''
-    )
-
-    // Take screenshot of market details
-    await page.screenshot({ path: 'artifacts/market-details.png' })
+    // Take screenshot of empty section
+    await page.screenshot({ path: 'artifacts/section-after-delete.png' })
   })
 
-  test('search with no results shows empty state', async ({ page }) => {
-    const marketsPage = new MarketsPage(page)
-    await marketsPage.goto()
-
-    // Search for non-existent market
-    await marketsPage.searchMarkets('xyznonexistentmarket123456')
+  test('shows empty state when no items exist', async ({ page }) => {
+    await page.goto('/')
 
     // Verify empty state
-    await expect(page.locator('[data-testid="no-results"]')).toBeVisible()
-    await expect(page.locator('[data-testid="no-results"]')).toContainText(
-      /no.*results|no.*markets/i
-    )
-
-    const marketCount = await marketsPage.marketCards.count()
-    expect(marketCount).toBe(0)
-  })
-
-  test('can clear search and see all markets again', async ({ page }) => {
-    const marketsPage = new MarketsPage(page)
-    await marketsPage.goto()
-
-    // Initial market count
-    const initialCount = await marketsPage.marketCards.count()
-
-    // Perform search
-    await marketsPage.searchMarkets('trump')
-    await page.waitForLoadState('networkidle')
-
-    // Verify filtered results
-    const filteredCount = await marketsPage.marketCards.count()
-    expect(filteredCount).toBeLessThan(initialCount)
-
-    // Clear search
-    await marketsPage.searchInput.clear()
-    await page.waitForLoadState('networkidle')
-
-    // Verify all markets shown again
-    const finalCount = await marketsPage.marketCards.count()
-    expect(finalCount).toBe(initialCount)
+    await expect(page.locator('[data-testid="empty-list"]')).toBeVisible()
   })
 })
 ```
@@ -160,19 +114,18 @@ test.describe('Market Search and View Flow', () => {
 
 ```bash
 # Run the generated test
-npx playwright test tests/e2e/markets/search-and-view.spec.ts
+npx playwright test e2e/grocery-list/item-management.spec.ts
 
-Running 3 tests using 3 workers
+Running 2 tests using 2 workers
 
-  ✓  [chromium] › search-and-view.spec.ts:5:3 › user can search markets and view details (4.2s)
-  ✓  [chromium] › search-and-view.spec.ts:52:3 › search with no results shows empty state (1.8s)
-  ✓  [chromium] › search-and-view.spec.ts:67:3 › can clear search and see all markets again (2.9s)
+  ✓  [chromium] › item-management.spec.ts:5:3 › user can add, edit, and delete items (4.2s)
+  ✓  [chromium] › item-management.spec.ts:47:3 › shows empty state when no items exist (1.3s)
 
-  3 passed (9.1s)
+  2 passed (5.7s)
 
 Artifacts generated:
-- artifacts/search-results.png
-- artifacts/market-details.png
+- artifacts/list-with-item.png
+- artifacts/section-after-delete.png
 - playwright-report/index.html
 ```
 
@@ -183,11 +136,11 @@ Artifacts generated:
 ║                    E2E Test Results                          ║
 ╠══════════════════════════════════════════════════════════════╣
 ║ Status:     ✅ ALL TESTS PASSED                              ║
-║ Total:      3 tests                                          ║
-║ Passed:     3 (100%)                                         ║
+║ Total:      2 tests                                          ║
+║ Passed:     2 (100%)                                         ║
 ║ Failed:     0                                                ║
 ║ Flaky:      0                                                ║
-║ Duration:   9.1s                                             ║
+║ Duration:   5.7s                                             ║
 ╚══════════════════════════════════════════════════════════════╝
 
 Artifacts:
@@ -235,12 +188,12 @@ open artifacts/search-results.png
 If a test fails intermittently:
 
 ```
-⚠️  FLAKY TEST DETECTED: tests/e2e/markets/trade.spec.ts
+⚠️  FLAKY TEST DETECTED: e2e/grocery-list/item-management.spec.ts
 
 Test passed 7/10 runs (70% pass rate)
 
 Common failure:
-"Timeout waiting for element '[data-testid="confirm-btn"]'"
+"Timeout waiting for element '[data-testid="save-item"]'"
 
 Recommended fixes:
 1. Add explicit wait: await page.waitForSelector('[data-testid="confirm-btn"]')
@@ -281,25 +234,24 @@ Add to your CI pipeline:
     path: playwright-report/
 ```
 
-## PMX-Specific Critical Flows
+## SmartGroceryAssistant Critical Flows
 
-For PMX, prioritize these E2E tests:
+Prioritize these E2E tests for SmartGroceryAssistant:
 
 **🔴 CRITICAL (Must Always Pass):**
-1. User can connect wallet
-2. User can browse markets
-3. User can search markets (semantic search)
-4. User can view market details
-5. User can place trade (with test funds)
-6. Market resolves correctly
-7. User can withdraw funds
+1. User can sign up and log in
+2. User can create grocery list sections
+3. User can add items to a section
+4. User can edit and delete items (soft delete)
+5. User can view their grocery lists
+6. API Gateway correctly proxies requests with JWT auth
 
 **🟡 IMPORTANT:**
-1. Market creation flow
+1. AI suggestion flow (POST → queue → poll for result)
 2. User profile updates
-3. Real-time price updates
-4. Chart rendering
-5. Filter and sort markets
+3. Search and filter items
+4. Section reordering
+5. Cross-service auth (JWT verified at gateway + downstream)
 6. Mobile responsive layout
 
 ## Best Practices
@@ -322,11 +274,11 @@ For PMX, prioritize these E2E tests:
 
 ## Important Notes
 
-**CRITICAL for PMX:**
-- E2E tests involving real money MUST run on testnet/staging only
-- Never run trading tests against production
-- Set `test.skip(process.env.NODE_ENV === 'production')` for financial tests
-- Use test wallets with small test funds only
+**CRITICAL for SmartGroceryAssistant:**
+- E2E tests must have the full stack running (postgres, redis, rabbitmq + all services)
+- Use `docker compose up` or `tilt up` to start the full stack before running E2E tests
+- Tests that trigger AI suggestions need RabbitMQ and the AI worker running
+- Use test user accounts, not real user data
 
 ## Integration with Other Commands
 
@@ -349,7 +301,7 @@ For manual installs, the source file lives at:
 npx playwright test
 
 # Run specific test file
-npx playwright test tests/e2e/markets/search.spec.ts
+npx playwright test e2e/grocery-list/item-management.spec.ts
 
 # Run in headed mode (see browser)
 npx playwright test --headed
