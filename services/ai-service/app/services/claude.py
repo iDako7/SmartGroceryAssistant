@@ -22,7 +22,7 @@ def get_client() -> AsyncOpenAI:
 
 
 def _cache_key(prefix: str, data: str) -> str:
-    digest = hashlib.sha256(data.encode()).hexdigest()[:16]
+    digest = hashlib.sha256(data.encode()).hexdigest()[:32]
     return f"ai:{prefix}:{digest}"
 
 
@@ -55,11 +55,12 @@ def _parse_json(raw: str, fallback: dict) -> dict:
 
 # ── Sync endpoints ────────────────────────────────────────
 
+
 async def translate_item(name_en: str, target_language: str) -> dict:
     key = _cache_key("translate", f"{name_en}:{target_language}")
     raw = await _call(
         prompt=f'Translate the grocery item "{name_en}" to {target_language}. '
-               f'Return JSON: {{"name_translated": "...", "notes": "..."}}',
+        f'Return JSON: {{"name_translated": "...", "notes": "..."}}',
         system="You are a grocery item translator. Respond with JSON only.",
         cache_key=key,
         ttl=86400,
@@ -71,13 +72,16 @@ async def item_info(name_en: str) -> dict:
     key = _cache_key("info", name_en)
     raw = await _call(
         prompt=f'Provide information about the grocery item "{name_en}". '
-               f'Return JSON: {{"category": "...", "typical_unit": "...", '
-               f'"storage_tip": "...", "nutrition_note": "..."}}',
+        f'Return JSON: {{"category": "...", "typical_unit": "...", '
+        f'"storage_tip": "...", "nutrition_note": "..."}}',
         system="You are a grocery expert. Respond with JSON only.",
         cache_key=key,
         ttl=86400,
     )
-    return _parse_json(raw, {"category": "", "typical_unit": "", "storage_tip": "", "nutrition_note": ""})
+    return _parse_json(
+        raw,
+        {"category": "", "typical_unit": "", "storage_tip": "", "nutrition_note": ""},
+    )
 
 
 async def alternatives(name_en: str, reason: str = "") -> dict:
@@ -85,7 +89,7 @@ async def alternatives(name_en: str, reason: str = "") -> dict:
     ctx = f" Reason: {reason}" if reason else ""
     raw = await _call(
         prompt=f'Suggest alternatives for the grocery item "{name_en}".{ctx} '
-               f'Return JSON: {{"alternatives": [{{"name": "...", "reason": "..."}}]}}',
+        f'Return JSON: {{"alternatives": [{{"name": "...", "reason": "..."}}]}}',
         system="You are a grocery expert. Respond with JSON only.",
         cache_key=key,
         ttl=3600,
@@ -94,6 +98,7 @@ async def alternatives(name_en: str, reason: str = "") -> dict:
 
 
 # ── Async worker helpers ───────────────────────────────────
+
 
 async def _long_call(prompt: str, system: str) -> str:
     response = await get_client().chat.completions.create(

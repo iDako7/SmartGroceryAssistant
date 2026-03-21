@@ -4,12 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/model"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/jackc/pgx/v5/pgtype"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -83,15 +84,13 @@ func (s *UserService) Login(ctx context.Context, req model.LoginRequest) (*model
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(req.Password)); err != nil {
-		return nil, ErrInvalidCreds
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			return nil, ErrInvalidCreds
+		}
+		return nil, fmt.Errorf("verify password: %w", err)
 	}
 
-	userIDStr := fmt.Sprintf("%x-%x-%x-%x-%x",
-		user.ID.Bytes[0:4], user.ID.Bytes[4:6],
-		user.ID.Bytes[6:8], user.ID.Bytes[8:10],
-		user.ID.Bytes[10:16])
-
-	profile, err := s.repo.GetProfileByUserID(ctx, userIDStr)
+	profile, err := s.repo.GetProfileByUserID(ctx, uuidString(user.ID))
 	if err != nil {
 		return nil, err
 	}
@@ -139,13 +138,8 @@ func (s *UserService) UpdateProfile(ctx context.Context, userID string, req mode
 }
 
 func (s *UserService) issueToken(user *model.User) (string, error) {
-	userIDStr := fmt.Sprintf("%x-%x-%x-%x-%x",
-		user.ID.Bytes[0:4], user.ID.Bytes[4:6],
-		user.ID.Bytes[6:8], user.ID.Bytes[8:10],
-		user.ID.Bytes[10:16])
-
 	claims := jwt.MapClaims{
-		"sub": userIDStr,
+		"sub": uuidString(user.ID),
 		"exp": time.Now().Add(s.jwtTTL).Unix(),
 		"iat": time.Now().Unix(),
 	}
@@ -153,13 +147,8 @@ func (s *UserService) issueToken(user *model.User) (string, error) {
 }
 
 func toProfileView(user *model.User, profile *model.Profile) model.ProfileView {
-	userIDStr := fmt.Sprintf("%x-%x-%x-%x-%x",
-		user.ID.Bytes[0:4], user.ID.Bytes[4:6],
-		user.ID.Bytes[6:8], user.ID.Bytes[8:10],
-		user.ID.Bytes[10:16])
-
 	return model.ProfileView{
-		ID:                  userIDStr,
+		ID:                  uuidString(user.ID),
 		Email:               user.Email,
 		LanguagePreference:  profile.LanguagePreference,
 		DietaryRestrictions: profile.DietaryRestrictions,
@@ -168,6 +157,14 @@ func toProfileView(user *model.User, profile *model.Profile) model.ProfileView {
 	}
 }
 
+func uuidString(id pgtype.UUID) string {
+	return fmt.Sprintf("%x-%x-%x-%x-%x",
+		id.Bytes[0:4], id.Bytes[4:6],
+		id.Bytes[6:8], id.Bytes[8:10],
+		id.Bytes[10:16])
+}
+
 func isUniqueViolation(err error) bool {
-	return err != nil && strings.Contains(err.Error(), "23505") // Postgres unique_violation SQLSTATE
+	var pgErr *pgconn.PgError
+	return errors.As(err, &pgErr) && pgErr.Code == "23505"
 }

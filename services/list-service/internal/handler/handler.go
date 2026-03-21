@@ -32,15 +32,24 @@ func New(svc listServicer) *Handler {
 	return &Handler{svc: svc}
 }
 
-func userID(c *gin.Context) string {
-	v, _ := c.Get("userID")
-	return v.(string)
+func userID(c *gin.Context) (string, bool) {
+	v, ok := c.Get("userID")
+	if !ok {
+		return "", false
+	}
+	s, ok := v.(string)
+	return s, ok
 }
 
 // ── Full list ────────────────────────────────────────────
 
 func (h *Handler) GetFullList(c *gin.Context) {
-	resp, err := h.svc.GetFullList(c.Request.Context(), userID(c))
+	uid, ok := userID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing user identity"})
+		return
+	}
+	resp, err := h.svc.GetFullList(c.Request.Context(), uid)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch list"})
 		return
@@ -51,7 +60,12 @@ func (h *Handler) GetFullList(c *gin.Context) {
 // ── Sections ─────────────────────────────────────────────
 
 func (h *Handler) GetSections(c *gin.Context) {
-	sections, err := h.svc.GetSections(c.Request.Context(), userID(c))
+	uid, ok := userID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing user identity"})
+		return
+	}
+	sections, err := h.svc.GetSections(c.Request.Context(), uid)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch sections"})
 		return
@@ -60,12 +74,17 @@ func (h *Handler) GetSections(c *gin.Context) {
 }
 
 func (h *Handler) CreateSection(c *gin.Context) {
-	var req model.CreateSectionRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	uid, ok := userID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing user identity"})
 		return
 	}
-	section, err := h.svc.CreateSection(c.Request.Context(), userID(c), req)
+	var req model.CreateSectionRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
+	section, err := h.svc.CreateSection(c.Request.Context(), uid, req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not create section"})
 		return
@@ -74,12 +93,17 @@ func (h *Handler) CreateSection(c *gin.Context) {
 }
 
 func (h *Handler) UpdateSection(c *gin.Context) {
-	var req model.UpdateSectionRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	uid, ok := userID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing user identity"})
 		return
 	}
-	section, err := h.svc.UpdateSection(c.Request.Context(), c.Param("id"), userID(c), req)
+	var req model.UpdateSectionRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
+	section, err := h.svc.UpdateSection(c.Request.Context(), c.Param("id"), uid, req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not update section"})
 		return
@@ -88,7 +112,12 @@ func (h *Handler) UpdateSection(c *gin.Context) {
 }
 
 func (h *Handler) DeleteSection(c *gin.Context) {
-	if err := h.svc.DeleteSection(c.Request.Context(), c.Param("id"), userID(c)); err != nil {
+	uid, ok := userID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing user identity"})
+		return
+	}
+	if err := h.svc.DeleteSection(c.Request.Context(), c.Param("id"), uid); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not delete section"})
 		return
 	}
@@ -98,7 +127,12 @@ func (h *Handler) DeleteSection(c *gin.Context) {
 // ── Items ────────────────────────────────────────────────
 
 func (h *Handler) GetItems(c *gin.Context) {
-	items, err := h.svc.GetItems(c.Request.Context(), userID(c), c.Param("id"))
+	uid, ok := userID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing user identity"})
+		return
+	}
+	items, err := h.svc.GetItems(c.Request.Context(), uid, c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch items"})
 		return
@@ -107,12 +141,17 @@ func (h *Handler) GetItems(c *gin.Context) {
 }
 
 func (h *Handler) CreateItem(c *gin.Context) {
-	var req model.CreateItemRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	uid, ok := userID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing user identity"})
 		return
 	}
-	item, err := h.svc.CreateItem(c.Request.Context(), userID(c), c.Param("id"), req)
+	var req model.CreateItemRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
+	item, err := h.svc.CreateItem(c.Request.Context(), uid, c.Param("id"), req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not create item"})
 		return
@@ -121,12 +160,17 @@ func (h *Handler) CreateItem(c *gin.Context) {
 }
 
 func (h *Handler) UpdateItem(c *gin.Context) {
-	var req model.UpdateItemRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	uid, ok := userID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing user identity"})
 		return
 	}
-	item, err := h.svc.UpdateItem(c.Request.Context(), userID(c), c.Param("id"), req)
+	var req model.UpdateItemRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
+	item, err := h.svc.UpdateItem(c.Request.Context(), uid, c.Param("id"), req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not update item"})
 		return
@@ -135,7 +179,12 @@ func (h *Handler) UpdateItem(c *gin.Context) {
 }
 
 func (h *Handler) DeleteItem(c *gin.Context) {
-	if err := h.svc.DeleteItem(c.Request.Context(), userID(c), c.Param("id")); err != nil {
+	uid, ok := userID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing user identity"})
+		return
+	}
+	if err := h.svc.DeleteItem(c.Request.Context(), uid, c.Param("id")); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not delete item"})
 		return
 	}

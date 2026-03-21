@@ -3,6 +3,7 @@ Async worker — consumes ai.jobs queue, calls the AI model, stores results in R
 Run independently alongside the API server:
   python worker.py
 """
+
 import asyncio
 import json
 import logging
@@ -19,9 +20,10 @@ log = logging.getLogger("worker")
 
 async def process(message: aio_pika.IncomingMessage) -> None:
     async with message.process(requeue=False):
+        job_id: str | None = None
         try:
             body = json.loads(message.body)
-            job_id: str = body["job_id"]
+            job_id = body["job_id"]
             job_type: str = body["type"]
             payload: dict = body["payload"]
             log.info("processing job=%s type=%s", job_id, job_type)
@@ -38,14 +40,19 @@ async def process(message: aio_pika.IncomingMessage) -> None:
 
             await cache_set(f"ai:result:{job_id}", result, ttl=3600)
             log.info("job=%s done", job_id)
-        except Exception:
-            log.exception("job failed")
+        except Exception as exc:
+            log.exception("job failed job_id=%s", job_id or "?")
+            if job_id:
+                error_payload = json.dumps({"status": "failed", "error": str(exc)})
+                await cache_set(f"ai:result:{job_id}", error_payload, ttl=3600)
 
 
 async def main() -> None:
     for attempt in range(1, 11):
         try:
-            connection = await aio_pika.connect_robust(settings.rabbitmq_url)
+            connection = await aio_pika.connect_robust(
+                settings.rabbitmq_url, timeout=10
+            )
             break
         except Exception as exc:
             log.warning("RabbitMQ not ready (attempt %d/10): %s", attempt, exc)
@@ -55,7 +62,9 @@ async def main() -> None:
     async with connection:
         channel = await connection.channel()
         await channel.set_qos(prefetch_count=4)
-        q = await channel.declare_queue("ai.jobs", durable=True, arguments={"x-message-ttl": 300000})
+        q = await channel.declare_queue(
+            "ai.jobs", durable=True, arguments={"x-message-ttl": 300000}
+        )
         await q.consume(process)
         log.info("worker ready — waiting for jobs")
         await asyncio.Future()  # run forever

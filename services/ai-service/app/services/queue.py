@@ -19,7 +19,9 @@ async def connect() -> None:
     global _connection, _channel, _exchange
     for attempt in range(1, 11):
         try:
-            _connection = await aio_pika.connect_robust(settings.rabbitmq_url)
+            _connection = await aio_pika.connect_robust(
+                settings.rabbitmq_url, timeout=10
+            )
             _channel = await _connection.channel()
             _exchange = await _channel.declare_exchange(
                 "ai", aio_pika.ExchangeType.DIRECT, durable=True

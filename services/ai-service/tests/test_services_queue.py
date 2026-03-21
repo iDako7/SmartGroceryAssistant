@@ -29,7 +29,10 @@ async def test_publish_job_sends_to_exchange() -> None:
     mock_exchange.publish.assert_awaited_once()
     call_args = mock_exchange.publish.call_args
     # Verify routing key
-    assert call_args.kwargs.get("routing_key") == "jobs" or call_args[1].get("routing_key") == "jobs"
+    assert (
+        call_args.kwargs.get("routing_key") == "jobs"
+        or call_args[1].get("routing_key") == "jobs"
+    )
     # Verify message body
     msg = call_args[0][0]
     body = json.loads(msg.body)

@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-sga}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sga_secret}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -24,13 +24,13 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
-    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_secret}
+    command: redis-server --requirepass ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
     volumes:
       - redis_data:/data
     ports:
       - "6379:6379"
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redis_secret}", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}", "ping"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -41,7 +41,7 @@ services:
     restart: unless-stopped
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-sga}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-sga_secret}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?Set RABBITMQ_PASSWORD in .env}
       RABBITMQ_DEFAULT_VHOST: /
       RABBITMQ_VM_MEMORY_HIGH_WATERMARK: "0.4"
     volumes:
@@ -60,8 +60,8 @@ services:
     build: ./services/user-service
     restart: unless-stopped
     environment:
-      USER_DB_URL: postgres://sga:${POSTGRES_PASSWORD:-sga_secret}@postgres:5432/user_db?sslmode=disable
-      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      USER_DB_URL: postgres://sga:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/user_db?sslmode=disable
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       USER_SERVICE_PORT: "4001"
     ports:
       - "4001:4001"
@@ -74,9 +74,9 @@ services:
     build: ./services/list-service
     restart: unless-stopped
     environment:
-      LIST_DB_URL: postgres://sga:${POSTGRES_PASSWORD:-sga_secret}@postgres:5432/list_db?sslmode=disable
-      RABBITMQ_URL: amqp://sga:${RABBITMQ_PASSWORD:-sga_secret}@rabbitmq:5672/
-      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      LIST_DB_URL: postgres://sga:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/list_db?sslmode=disable
+      RABBITMQ_URL: amqp://sga:${RABBITMQ_PASSWORD:?Set RABBITMQ_PASSWORD in .env}@rabbitmq:5672/
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       LIST_SERVICE_PORT: "4002"
     ports:
       - "4002:4002"
@@ -95,9 +95,9 @@ services:
     environment:
       REDIS_HOST: redis
       SGA_REDIS_PORT: "6379"
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_secret}
-      RABBITMQ_URL: amqp://sga:${RABBITMQ_PASSWORD:-sga_secret}@rabbitmq:5672/
-      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
+      RABBITMQ_URL: amqp://sga:${RABBITMQ_PASSWORD:?Set RABBITMQ_PASSWORD in .env}@rabbitmq:5672/
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-anthropic/claude-opus-4.6}
     ports:
@@ -116,9 +116,9 @@ services:
     environment:
       REDIS_HOST: redis
       SGA_REDIS_PORT: "6379"
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_secret}
-      RABBITMQ_URL: amqp://sga:${RABBITMQ_PASSWORD:-sga_secret}@rabbitmq:5672/
-      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
+      RABBITMQ_URL: amqp://sga:${RABBITMQ_PASSWORD:?Set RABBITMQ_PASSWORD in .env}@rabbitmq:5672/
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-anthropic/claude-opus-4.6}
     depends_on:
@@ -132,7 +132,7 @@ services:
     build: ./services/api-gateway
     restart: unless-stopped
     environment:
-      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       USER_SERVICE_URL: http://user-service:4001
       LIST_SERVICE_URL: http://list-service:4002
       AI_SERVICE_URL: http://ai-service:4003

@@ -9,7 +9,9 @@ _bearer = HTTPBearer()
 
 def verify_token(credentials: HTTPAuthorizationCredentials = Security(_bearer)) -> str:
     try:
-        payload = jwt.decode(credentials.credentials, settings.jwt_secret, algorithms=["HS256"])
+        payload = jwt.decode(
+            credentials.credentials, settings.jwt_secret, algorithms=["HS256"]
+        )
         user_id: str | None = payload.get("sub")
         if not user_id:
             raise HTTPException(status_code=401, detail="invalid token")

@@ -1,7 +1,5 @@
 """Unit tests for claude service helpers (pure functions — no I/O)."""
 
-import pytest
-
 
 class TestParseJson:
     """Tests for the _parse_json private helper via public functions' fallback behaviour."""
@@ -98,6 +96,7 @@ class TestParseJson:
 
 # ── Helpers ───────────────────────────────────────────────
 
+
 def _make_client(content: str):
     """Returns a mock AsyncOpenAI client that returns `content` as message text."""
     from unittest.mock import AsyncMock, MagicMock
@@ -114,5 +113,6 @@ def _make_client(content: str):
 
 async def _import_and_call(fn_name: str, *args):
     import importlib
+
     mod = importlib.import_module("app.services.claude")
     return await getattr(mod, fn_name)(*args)

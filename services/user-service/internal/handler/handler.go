@@ -31,7 +31,7 @@ func New(svc userServicer) *Handler {
 func (h *Handler) Register(c *gin.Context) {
 	var req model.RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 		return
 	}
 
@@ -51,7 +51,7 @@ func (h *Handler) Register(c *gin.Context) {
 func (h *Handler) Login(c *gin.Context) {
 	var req model.LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 		return
 	}
 
@@ -68,10 +68,23 @@ func (h *Handler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-func (h *Handler) GetProfile(c *gin.Context) {
-	userID, _ := c.Get("userID")
+func mustUserID(c *gin.Context) (string, bool) {
+	v, ok := c.Get("userID")
+	if !ok {
+		return "", false
+	}
+	s, ok := v.(string)
+	return s, ok
+}
 
-	profile, err := h.svc.GetProfile(c.Request.Context(), userID.(string))
+func (h *Handler) GetProfile(c *gin.Context) {
+	uid, ok := mustUserID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing user identity"})
+		return
+	}
+
+	profile, err := h.svc.GetProfile(c.Request.Context(), uid)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch profile"})
 		return
@@ -81,15 +94,19 @@ func (h *Handler) GetProfile(c *gin.Context) {
 }
 
 func (h *Handler) UpdateProfile(c *gin.Context) {
-	userID, _ := c.Get("userID")
-
-	var req model.UpdateProfileRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	uid, ok := mustUserID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing user identity"})
 		return
 	}
 
-	profile, err := h.svc.UpdateProfile(c.Request.Context(), userID.(string), req)
+	var req model.UpdateProfileRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
+
+	profile, err := h.svc.UpdateProfile(c.Request.Context(), uid, req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not update profile"})
 		return

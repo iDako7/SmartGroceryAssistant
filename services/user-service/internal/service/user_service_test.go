@@ -7,6 +7,7 @@ import (
 
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/model"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/service"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -113,7 +114,7 @@ func TestUserService_Register_EmailTaken(t *testing.T) {
 	repo := new(mockUserRepo)
 	svc := service.NewUserService(repo, "test-secret")
 
-	pgErr := errors.New("ERROR: duplicate key value violates unique constraint (SQLSTATE 23505)")
+	pgErr := &pgconn.PgError{Code: "23505"}
 	repo.On("CreateUser", mock.Anything, mock.Anything, mock.Anything).Return(nil, pgErr)
 
 	_, err := svc.Register(context.Background(), model.RegisterRequest{
