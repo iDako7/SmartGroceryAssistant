@@ -63,7 +63,19 @@ export default function ItemRow({ item, selected, onSelect, onUpdated, onDeleted
       }`}
       onClick={() => onSelect(item)}
     >
-      <span className="flex-1 text-sm text-zinc-800 dark:text-zinc-200">
+      <input
+        type="checkbox"
+        checked={item.checked}
+        onClick={(e) => e.stopPropagation()}
+        onChange={async () => {
+          const updated = await lists.updateItem(item.id, { checked: !item.checked });
+          onUpdated(updated as Item);
+        }}
+        className="h-4 w-4 accent-emerald-600"
+      />
+      <span
+        className={`flex-1 text-sm ${item.checked ? 'text-zinc-400 line-through' : 'text-zinc-800 dark:text-zinc-200'}`}
+      >
         {item.name_en}
         {item.name_secondary && (
           <span className="ml-1.5 text-xs text-zinc-400">{item.name_secondary}</span>

@@ -29,6 +29,7 @@ describe('request helper', () => {
   const fetchMock = vi.fn();
 
   beforeEach(() => {
+    fetchMock.mockClear();
     vi.stubGlobal('fetch', fetchMock);
     localStorage.clear();
   });
@@ -120,6 +121,7 @@ describe('auth API', () => {
   const fetchMock = vi.fn();
 
   beforeEach(() => {
+    fetchMock.mockClear();
     vi.stubGlobal('fetch', fetchMock);
     localStorage.clear();
   });
@@ -170,6 +172,7 @@ describe('lists API', () => {
   const fetchMock = vi.fn();
 
   beforeEach(() => {
+    fetchMock.mockClear();
     vi.stubGlobal('fetch', fetchMock);
     fetchMock.mockResolvedValue({
       ok: true,
