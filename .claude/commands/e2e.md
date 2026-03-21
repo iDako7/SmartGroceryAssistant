@@ -196,7 +196,7 @@ Common failure:
 "Timeout waiting for element '[data-testid="save-item"]'"
 
 Recommended fixes:
-1. Add explicit wait: await page.waitForSelector('[data-testid="confirm-btn"]')
+1. Add explicit wait: await page.waitForSelector('[data-testid="save-item"]')
 2. Increase timeout: { timeout: 10000 }
 3. Check for race conditions in component
 4. Verify element is not hidden by animation
