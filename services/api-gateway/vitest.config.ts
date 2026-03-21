@@ -8,6 +8,7 @@ export default defineConfig({
       LIST_SERVICE_URL: 'http://localhost:49002',
       AI_SERVICE_URL: 'http://localhost:49003',
     },
+    exclude: ['dist/**', 'node_modules/**'],
     testTimeout: 10000,
     hookTimeout: 10000,
   },

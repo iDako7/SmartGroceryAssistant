@@ -21,7 +21,10 @@ const baseItem: Item = {
   checked: false,
 };
 
-function renderItem(overrides: Partial<Item> = {}, handlers?: Partial<Parameters<typeof ItemRow>[0]>) {
+function renderItem(
+  overrides: Partial<Item> = {},
+  handlers?: Partial<Parameters<typeof ItemRow>[0]>
+) {
   const item = { ...baseItem, ...overrides };
   const onSelect = vi.fn();
   const onUpdated = vi.fn();
@@ -54,7 +57,13 @@ describe('ItemRow', () => {
 
   it('shows quantity badge only when quantity > 1', () => {
     const { rerender } = render(
-      <ItemRow item={baseItem} selected={false} onSelect={vi.fn()} onUpdated={vi.fn()} onDeleted={vi.fn()} />
+      <ItemRow
+        item={baseItem}
+        selected={false}
+        onSelect={vi.fn()}
+        onUpdated={vi.fn()}
+        onDeleted={vi.fn()}
+      />
     );
     expect(screen.queryByText(/×/)).toBeNull();
 
@@ -138,13 +147,25 @@ describe('ItemRow', () => {
   it('has selected styling when selected prop is true', () => {
     const item = baseItem;
     const { rerender } = render(
-      <ItemRow item={item} selected={false} onSelect={vi.fn()} onUpdated={vi.fn()} onDeleted={vi.fn()} />
+      <ItemRow
+        item={item}
+        selected={false}
+        onSelect={vi.fn()}
+        onUpdated={vi.fn()}
+        onDeleted={vi.fn()}
+      />
     );
     const li = screen.getByRole('listitem');
     expect(li.className).not.toMatch(/emerald/);
 
     rerender(
-      <ItemRow item={item} selected={true} onSelect={vi.fn()} onUpdated={vi.fn()} onDeleted={vi.fn()} />
+      <ItemRow
+        item={item}
+        selected={true}
+        onSelect={vi.fn()}
+        onUpdated={vi.fn()}
+        onDeleted={vi.fn()}
+      />
     );
     expect(li.className).toMatch(/emerald/);
   });

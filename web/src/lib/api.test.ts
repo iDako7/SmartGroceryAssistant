@@ -142,7 +142,9 @@ describe('auth API', () => {
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toContain('/api/v1/users/register');
     expect(JSON.parse((init as RequestInit).body as string)).toEqual({
-      email: 'a@b.com', password: 'password123', name: 'Alice',
+      email: 'a@b.com',
+      password: 'password123',
+      name: 'Alice',
     });
   });
 
@@ -184,7 +186,10 @@ describe('lists API', () => {
 
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toContain('/api/v1/lists/sections');
-    expect(JSON.parse((init as RequestInit).body as string)).toEqual({ name: 'Produce', position: 1 });
+    expect(JSON.parse((init as RequestInit).body as string)).toEqual({
+      name: 'Produce',
+      position: 1,
+    });
   });
 
   it('deleteItem sends DELETE to correct path', async () => {

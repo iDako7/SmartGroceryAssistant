@@ -121,7 +121,13 @@ describe('SectionCard', () => {
   });
 
   it('creates item on form submit', async () => {
-    const newItem: Item = { id: 'item-3', section_id: 'section-1', name_en: 'Grapes', quantity: 1, checked: false };
+    const newItem: Item = {
+      id: 'item-3',
+      section_id: 'section-1',
+      name_en: 'Grapes',
+      quantity: 1,
+      checked: false,
+    };
     vi.mocked(lists.createItem).mockResolvedValue(newItem as never);
 
     const handlers = renderSection();
