@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: list-service
+  namespace: sga
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: list-service
+  template:
+    metadata:
+      labels:
+        app: list-service
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:16-alpine
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: postgres-password
+          command:
+            - sh
+            - -c
+            - until psql -h postgres -U sga -d list_db -c "SELECT 1" > /dev/null 2>&1; do echo "waiting for list_db..."; sleep 3; done
+      containers:
+        - name: list-service
+          image: sga/list-service
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 4002
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: postgres-password
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: rabbitmq-password
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: jwt-secret
+            - name: LIST_DB_URL
+              value: postgres://sga:$(POSTGRES_PASSWORD)@postgres:5432/list_db?sslmode=disable
+            - name: RABBITMQ_URL
+              value: amqp://sga:$(RABBITMQ_PASSWORD)@rabbitmq:5672/
+            - name: LIST_SERVICE_PORT
+              value: "4002"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 4002
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: list-service
+  namespace: sga
+spec:
+  selector:
+    app: list-service
+  ports:
+    - port: 4002
+      targetPort: 4002

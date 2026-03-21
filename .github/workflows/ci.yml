@@ -1,0 +1,213 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─── Detect changed services ──────────────────────────
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      web: ${{ steps.filter.outputs.web }}
+      api-gateway: ${{ steps.filter.outputs.api-gateway }}
+      user-service: ${{ steps.filter.outputs.user-service }}
+      list-service: ${{ steps.filter.outputs.list-service }}
+      ai-service: ${{ steps.filter.outputs.ai-service }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            web:
+              - 'web/**'
+            api-gateway:
+              - 'services/api-gateway/**'
+            user-service:
+              - 'services/user-service/**'
+            list-service:
+              - 'services/list-service/**'
+            ai-service:
+              - 'services/ai-service/**'
+
+  # ─── Web (Next.js) ────────────────────────────────────
+  web:
+    name: Web
+    needs: [changes]
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm run test
+
+      # Uncomment when ready for E2E tests:
+      # - name: Install Playwright browsers
+      #   run: npx playwright install --with-deps
+      # - name: E2E tests
+      #   run: npm run test:e2e
+
+  # ─── API Gateway (Fastify) ────────────────────────────
+  api-gateway:
+    name: API Gateway
+    needs: [changes]
+    if: needs.changes.outputs.api-gateway == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/api-gateway
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: services/api-gateway/package-lock.json
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm run test
+
+  # ─── User Service (Go) ────────────────────────────────
+  user-service:
+    name: User Service
+    needs: [changes]
+    if: needs.changes.outputs.user-service == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/user-service
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+          cache-dependency-path: services/user-service/go.sum
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          working-directory: services/user-service
+
+      - name: Build
+        run: go build ./...
+
+      - name: Test
+        run: go test -v -race ./...
+
+  # ─── List Service (Go) ────────────────────────────────
+  list-service:
+    name: List Service
+    needs: [changes]
+    if: needs.changes.outputs.list-service == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/list-service
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+          cache-dependency-path: services/list-service/go.sum
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          working-directory: services/list-service
+
+      - name: Build
+        run: go build ./...
+
+      - name: Test
+        run: go test -v -race ./...
+
+  # ─── AI Service (Python/FastAPI) ───────────────────────
+  ai-service:
+    name: AI Service
+    needs: [changes]
+    if: needs.changes.outputs.ai-service == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/ai-service
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Format check
+        run: uv run ruff format --check .
+
+      - name: Test
+        run: uv run pytest -v
+
+  # ─── Gate job for branch protection ────────────────────
+  ci-pass:
+    name: CI Pass
+    if: always()
+    needs: [web, api-gateway, user-service, list-service, ai-service]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        run: |
+          results="${{ needs.web.result }} ${{ needs.api-gateway.result }} ${{ needs.user-service.result }} ${{ needs.list-service.result }} ${{ needs.ai-service.result }}"
+          for r in $results; do
+            if [ "$r" = "failure" ] || [ "$r" = "cancelled" ]; then
+              echo "Job failed or was cancelled: $r"
+              exit 1
+            fi
+          done
+          echo "All jobs passed or were skipped"

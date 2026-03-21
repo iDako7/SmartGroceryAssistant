@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: sga
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:16-alpine
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: postgres-password
+          command:
+            - sh
+            - -c
+            - until psql -h postgres -U sga -d user_db -c "SELECT 1" > /dev/null 2>&1; do echo "waiting for user_db..."; sleep 3; done
+      containers:
+        - name: user-service
+          image: sga/user-service
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 4001
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: postgres-password
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: sga-secret
+                  key: jwt-secret
+            - name: USER_DB_URL
+              value: postgres://sga:$(POSTGRES_PASSWORD)@postgres:5432/user_db?sslmode=disable
+            - name: USER_SERVICE_PORT
+              value: "4001"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 4001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: sga
+spec:
+  selector:
+    app: user-service
+  ports:
+    - port: 4001
+      targetPort: 4001

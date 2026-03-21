@@ -1,0 +1,162 @@
+name: smart-grocery
+
+services:
+  # ── PostgreSQL ──────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sga}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sga_secret}
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sga}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Redis ───────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_secret}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redis_secret}", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── RabbitMQ ────────────────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-sga}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-sga_secret}
+      RABBITMQ_DEFAULT_VHOST: /
+      RABBITMQ_VM_MEMORY_HIGH_WATERMARK: "0.4"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"    # AMQP
+      - "15672:15672"  # Management UI
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  # ── User Service ────────────────────────────────────────────
+  user-service:
+    build: ./services/user-service
+    restart: unless-stopped
+    environment:
+      USER_DB_URL: postgres://sga:${POSTGRES_PASSWORD:-sga_secret}@postgres:5432/user_db?sslmode=disable
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      USER_SERVICE_PORT: "4001"
+    ports:
+      - "4001:4001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── List Service ────────────────────────────────────────────
+  list-service:
+    build: ./services/list-service
+    restart: unless-stopped
+    environment:
+      LIST_DB_URL: postgres://sga:${POSTGRES_PASSWORD:-sga_secret}@postgres:5432/list_db?sslmode=disable
+      RABBITMQ_URL: amqp://sga:${RABBITMQ_PASSWORD:-sga_secret}@rabbitmq:5672/
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      LIST_SERVICE_PORT: "4002"
+    ports:
+      - "4002:4002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      user-service:
+        condition: service_started
+
+  # ── AI Service ──────────────────────────────────────────────
+  ai-service:
+    build: ./services/ai-service
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      SGA_REDIS_PORT: "6379"
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_secret}
+      RABBITMQ_URL: amqp://sga:${RABBITMQ_PASSWORD:-sga_secret}@rabbitmq:5672/
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-anthropic/claude-opus-4.6}
+    ports:
+      - "4003:4003"
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  # ── AI Worker ───────────────────────────────────────────────
+  ai-worker:
+    build: ./services/ai-service
+    restart: unless-stopped
+    command: ["python", "worker.py"]
+    environment:
+      REDIS_HOST: redis
+      SGA_REDIS_PORT: "6379"
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_secret}
+      RABBITMQ_URL: amqp://sga:${RABBITMQ_PASSWORD:-sga_secret}@rabbitmq:5672/
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-anthropic/claude-opus-4.6}
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  # ── API Gateway ─────────────────────────────────────────────
+  api-gateway:
+    build: ./services/api-gateway
+    restart: unless-stopped
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      USER_SERVICE_URL: http://user-service:4001
+      LIST_SERVICE_URL: http://list-service:4002
+      AI_SERVICE_URL: http://ai-service:4003
+      API_GATEWAY_PORT: "3001"
+    ports:
+      - "3001:3001"
+    depends_on:
+      - user-service
+      - list-service
+      - ai-service
+
+  # ── Web ─────────────────────────────────────────────────────
+  web:
+    build:
+      context: ./web
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3001
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
