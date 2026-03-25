@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../lib/auth-context';
 import { lists } from '../../lib/api';
@@ -110,7 +111,12 @@ export default function ListPage() {
           🛒 Smart Grocery
         </h1>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-zinc-500">{user?.email}</span>
+          <Link
+            href="/profile"
+            className="text-sm text-zinc-500 transition hover:text-emerald-600"
+          >
+            {user?.email}
+          </Link>
           <button
             onClick={() => setAiOpen((o) => !o)}
             className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${

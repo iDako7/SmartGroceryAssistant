@@ -18,7 +18,7 @@ export default function RegisterPage() {
     const fd = new FormData(e.currentTarget);
     try {
       await register(fd.get('email') as string, fd.get('password') as string);
-      router.replace('/list');
+      router.replace('/onboarding');
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -64,7 +64,7 @@ export default function RegisterPage() {
             disabled={loading}
             className="mt-1 rounded-lg bg-emerald-600 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:opacity-50"
           >
-            {loading ? 'Creating account…' : 'Create account'}
+            {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
 
