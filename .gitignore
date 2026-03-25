@@ -47,4 +47,6 @@ k8s/secret.yaml
 # Claude (track project-scoped commands/agents/skills, ignore local settings)
 .claude/settings.local.json
 
+# Local chat exports
+chat_history/
 
