@@ -7,7 +7,7 @@ function required(key: string): string {
 }
 
 export const config = {
-  port: Number(process.env.API_GATEWAY_PORT ?? 3000),
+  port: Number(process.env.API_GATEWAY_PORT ?? 3001),
   host: process.env.HOST ?? '0.0.0.0',
 
   jwt: {
