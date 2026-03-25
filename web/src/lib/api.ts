@@ -100,15 +100,15 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 
 export const auth = {
   register: (email: string, password: string) =>
-    request<{ token: string; user: User }>(
-      '/api/v1/users/register',
-      { method: 'POST', body: JSON.stringify({ email, password }) }
-    ),
+    request<{ token: string; user: User }>('/api/v1/users/register', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    }),
   login: (email: string, password: string) =>
-    request<{ token: string; user: User }>(
-      '/api/v1/users/login',
-      { method: 'POST', body: JSON.stringify({ email, password }) }
-    ),
+    request<{ token: string; user: User }>('/api/v1/users/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    }),
   me: () => request<User>('/api/v1/users/me'),
   updateProfile: (data: ProfileUpdate) =>
     request<User>('/api/v1/users/me', {
