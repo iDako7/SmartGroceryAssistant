@@ -52,5 +52,6 @@ k8s/secret.yaml
 
 # Local document
 chat_history/
+private_docs/
 private_docs_AI_service/
 
