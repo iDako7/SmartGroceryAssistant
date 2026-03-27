@@ -2,6 +2,23 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Documentation
+
+- **[MVP Blueprint](docs/MVP-PRD.md)** — gold standard for architecture, scope, and decisions
+- **AI Service detailed docs** in `private_docs/AI_service/` — phased plan, design decisions, open questions
+- Historical docs archived in `docs/archive/`
+
+## Team Ownership
+
+| Owner | Services |
+|-------|----------|
+| Person A | Frontend (`web/`) + API Gateway (`services/api-gateway/`) |
+| Person B | User Service (`services/user-service/`) + List Service (`services/list-service/`) |
+| Person C | AI Service (`services/ai-service/`) + AI Worker + KB module |
+
+- **Same-service PR:** owner can self-merge after CI passes
+- **Cross-service PR:** both affected owners must review
+
 ## Build & Test Commands
 
 ### Web (Next.js 16 / React 19) — `cd web`
@@ -66,15 +83,17 @@ Polyglot microservices behind a single API Gateway:
 ```
 Web (:3000) → API Gateway (:3001) → User Service (:4001) → user_db (PostgreSQL)
                                    → List Service (:4002) → list_db (PostgreSQL) + RabbitMQ publisher
-                                   → AI Service (:4003)   → Redis cache + RabbitMQ consumer
+                                   → AI Service (:4003)   → SQLite KB + Redis cache + Celery worker
                                                              ↓
-                                                          AI Worker → OpenRouter API
+                                                          AI Worker (Celery) → OpenRouter API
 ```
 
 - **Gateway** proxies all requests and enforces JWT auth, CORS, rate limiting (100/min)
-- **Async AI flow**: client POSTs to `/api/v1/ai/suggest` or `/inspire` → job queued in RabbitMQ → worker processes via OpenRouter → result stored in Redis → client polls `/api/v1/ai/jobs/:id`
+- **Async AI flow**: client POSTs to `/api/v1/ai/suggest` or `/inspire` → job queued via Celery → worker processes via OpenRouter → result stored in Redis → client polls `/api/v1/ai/jobs/:id`
 - **Two separate PostgreSQL databases**: `user_db` (users, profiles) and `list_db` (sections, items). Schemas in `infra/postgres/init.sql`
-- **RabbitMQ exchanges/queues**: defined in `infra/rabbitmq/definitions.json`
+- **RabbitMQ exchanges/queues**: defined in `infra/rabbitmq/definitions.json` (used by List Service for event publishing)
+- **AI async pipeline** uses Celery for task queuing (broker is an implementation detail — see `private_docs/AI_service/` for details)
+- **Knowledge Base module** inside AI Service — SQLite with curated recipe/product data for 3-5 cuisines. Tier routing: cache → KB → LLM (see Blueprint for details)
 
 ## Key Design Decisions
 
@@ -101,6 +120,13 @@ Web (:3000) → API Gateway (:3001) → User Service (:4001) → user_db (Postgr
 - **API Gateway**: Vitest with hardcoded test env (`JWT_SECRET='test-secret'`, service URLs on ports 49001-49003). Config at `services/api-gateway/vitest.config.ts`
 - **Go services**: `testing` + `testify` assertions. CI runs with `-race` flag
 - **AI Service**: pytest + pytest-asyncio + httpx for async HTTP testing
+
+## Git Workflow
+
+- **Branches:** `feat/<service>/<description>`, `fix/<service>/<description>`, `docs/<topic>`, `chore/<topic>`
+- **Commits:** Conventional commits — `feat:`, `fix:`, `docs:`, `chore:`
+- **PRs:** Use template at `.github/pull_request_template.md`
+- **Pre-commit:** husky + lint-staged. Run `npm install` at repo root to activate hooks
 
 ## CI/CD
 

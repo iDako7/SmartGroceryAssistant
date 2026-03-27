@@ -44,9 +44,12 @@ Thumbs.db
 # Kubernetes secrets
 k8s/secret.yaml
 
-# Claude (track project-scoped commands/agents/skills, ignore local settings)
+# Claude
 .claude/settings.local.json
+.claude/skills/
+.claude/commands/
+.claude/agents/
 
-# Local chat exports
+# Local document
 chat_history/
 
