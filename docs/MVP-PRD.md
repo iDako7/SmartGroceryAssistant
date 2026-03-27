@@ -89,14 +89,17 @@ Goal: 70%+ of requests served without an LLM call.
 Two separate PostgreSQL databases on the same server:
 
 **user_db:**
+
 - `users` -- id (UUID), email, password_hash, created_at, updated_at
 - `profiles` -- id (UUID), user_id (FK), language_preference, dietary_restrictions, household_size, taste_preferences, created_at, updated_at
 
 **list_db:**
+
 - `sections` -- id (UUID), user_id (no FK, cross-db), name, position, deleted_at, created_at, updated_at
 - `items` -- id (UUID), section_id (FK), name_en, name_secondary, quantity, checked, deleted_at, created_at, updated_at
 
 Key constraints:
+
 - Soft deletes in list_db -- items and sections use `deleted_at` column, never hard-deleted
 - User ownership enforcement -- item operations JOIN through sections to verify `user_id`
 - Cross-db boundary -- `sections.user_id` references a user in `user_db` but has no FK constraint (PostgreSQL does not support cross-database FKs)
@@ -153,20 +156,3 @@ Client POST --> AI Service enqueues --> RabbitMQ --> AI Worker consumes --> Open
 - Deploy without passing tests
 - Call LLM for queries the KB can answer (cost/speed violation)
 - Skip pre-commit hooks (`--no-verify`)
-
----
-
-## 5. Open Questions
-
-These are MVP-scoped unknowns that have not been verified yet.
-
-- **KB schema:** What fields per recipe/product entry? How to model cuisine --> recipe --> ingredient relationships?
-- **Prompt engineering:** Flat prompt vs. 3-step structured reasoning chain (gap analysis --> cultural match --> recipe bridge). Experiment not yet run.
-- **Cache invalidation:** How fresh does product/recipe data need to be? What TTL for Redis cache?
-- **Tier routing thresholds:** When exactly does a request fall through from KB to LLM? Confidence score? Missing data?
-- **LLM model selection:** Currently using `qwen/qwen3-235b-a22b-2507` via OpenRouter. Is this the right model for production?
-- **Suggest response format:** Flat list vs. recipe clusters with context blocks. Depends on prompt experiment results.
-- **In-store aisle mapping:** How to model store layout data? Static per-store config or dynamic?
-- **KB population process:** Exact workflow for script + LLM generation + human review. Quality bar for curated data.
-- **Cost budget:** Target $50-100/month for LLM calls. What is the per-request cost target?
-- **Load testing targets:** What concurrent user count must the async pipeline handle? Initial experiment tests 1, 5, and 20 concurrent users.
