@@ -1,0 +1,12 @@
+# Code Ownership — auto-requests reviewers on PRs
+# Keep in sync with ownership map in workflows/ownership-review.yml
+
+# Catch-all: shared paths require any team member
+*                            @William-g7 @KaiyueWei @iDako7
+
+# Service ownership (last-match-wins, these override catch-all)
+/web/                        @William-g7
+/services/api-gateway/       @William-g7
+/services/user-service/      @KaiyueWei
+/services/list-service/      @KaiyueWei
+/services/ai-service/        @iDako7
