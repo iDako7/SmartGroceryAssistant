@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Documentation
 
-- **[MVP Blueprint](docs/MVP-Blueprint.md)** — gold standard for architecture, scope, and decisions
+- **[MVP Blueprint](docs/MVP-PRD.md)** — gold standard for architecture, scope, and decisions
 - **AI Service detailed docs** in `private_docs/AI_service/` — phased plan, design decisions, open questions
 - Historical docs archived in `docs/archive/`
 
