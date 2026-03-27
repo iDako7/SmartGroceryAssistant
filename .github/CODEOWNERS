@@ -1,5 +1,5 @@
 # Code Ownership — auto-requests reviewers on PRs
-# Keep in sync with ownership map in workflows/ownership-review.yml
+# Single source of truth: ownership-review.yml parses this file at runtime
 
 # Catch-all: shared paths require any team member
 *                            @William-g7 @KaiyueWei @iDako7

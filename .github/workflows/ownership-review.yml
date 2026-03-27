@@ -19,19 +19,34 @@ jobs:
     name: Ownership Review
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout CODEOWNERS
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/CODEOWNERS
+          sparse-checkout-cone-mode: false
+
       - name: Check ownership and reviews
         uses: actions/github-script@v7
         with:
           script: |
-            // === OWNERSHIP MAP ===
-            // Keep in sync with .github/CODEOWNERS
-            const OWNERSHIP = {
-              'web/':                   'William-g7',
-              'services/api-gateway/':  'William-g7',
-              'services/user-service/': 'KaiyueWei',
-              'services/list-service/': 'KaiyueWei',
-              'services/ai-service/':   'iDako7',
-            };
+            // === PARSE OWNERSHIP FROM CODEOWNERS ===
+            const fs = require('fs');
+            const codeowners = fs.readFileSync('.github/CODEOWNERS', 'utf8');
+            const OWNERSHIP = {};
+            for (const line of codeowners.split('\n')) {
+              const trimmed = line.trim();
+              if (!trimmed || trimmed.startsWith('#')) continue;
+              // Skip catch-all rule (e.g. "* @user1 @user2")
+              const parts = trimmed.split(/\s+/);
+              const pattern = parts[0];
+              if (pattern === '*') continue;
+              // Strip leading slash — CODEOWNERS uses /web/, we match web/
+              const prefix = pattern.replace(/^\//, '');
+              // Take the first (and only) owner, strip @
+              const owner = parts[1].replace(/^@/, '');
+              OWNERSHIP[prefix] = owner;
+            }
+            console.log('Parsed ownership map:', OWNERSHIP);
 
             // === GET PR INFO ===
             const pr = context.payload.pull_request;
