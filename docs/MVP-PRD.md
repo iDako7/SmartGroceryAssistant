@@ -1,6 +1,6 @@
 # MVP Blueprint -- Smart Grocery Assistant
 
-**Last updated:** 2026-03-26
+**Last updated:** 2026-03-27
 **Status:** Living document. Verified decisions only. Unknowns live in Open Questions.
 
 ---
@@ -61,8 +61,8 @@ Web (:3000) --> API Gateway (:3001) --> User Service (:4001) --> user_db (Postgr
                                       --> List Service (:4002) --> list_db (PostgreSQL)
                                       --> AI Service (:4003)  --> SQLite KB (Knowledge Base)
                                            |                  --> Redis (cache)
-                                           |                  --> RabbitMQ (job queue)
-                                      AI Worker               --> OpenRouter LLM
+                                           |                  --> Celery (Redis broker)
+                                      AI Worker (Celery)      --> OpenRouter LLM
 ```
 
 ### Services
@@ -71,7 +71,7 @@ Web (:3000) --> API Gateway (:3001) --> User Service (:4001) --> user_db (Postgr
 - **API Gateway** (Fastify 5 / TypeScript): JWT auth, CORS, rate limiting (100/min), HTTP proxying to downstream services. JWT verified here AND in each downstream service (defense in depth). CommonJS.
 - **User Service** (Go / Gin): Registration, login, JWT issuance, profiles, dietary preferences, onboarding data. Owns `user_db`.
 - **List Service** (Go / Gin): Sections and items CRUD. Soft deletes (`deleted_at`, never hard-delete). User ownership enforcement via section JOIN on `user_id`. Owns `list_db`. Publishes events to RabbitMQ.
-- **AI Service** (Python / FastAPI): The brain. Contains the Knowledge Base module (SQLite), tier routing logic, sync AI features (translate, item-info, alternatives), async job submission (suggest, inspire). AI Worker is a separate process consuming from RabbitMQ, calling OpenRouter LLM, storing results in Redis. Client polls for async results.
+- **AI Service** (Python / FastAPI): The brain. Contains the Knowledge Base module (SQLite), tier routing logic, sync AI features (translate, item-info, alternatives), async job submission (suggest, inspire). AI Worker is a Celery worker process (Redis broker for MVP, RabbitMQ broker experiment in Phase 4), calling OpenRouter LLM, storing results in Redis. Client polls for async results.
 
 ### Tier Routing Strategy
 
@@ -108,12 +108,11 @@ Key constraints:
 ### Async Pipeline (Suggest / Inspire)
 
 ```
-Client POST --> AI Service enqueues --> RabbitMQ --> AI Worker consumes --> OpenRouter LLM --> Redis --> Client polls
+Client POST --> AI Service enqueues --> Celery (Redis broker) --> AI Worker --> OpenRouter LLM --> Redis --> Client polls
 ```
 
-- RabbitMQ exchange: `ai` (direct), routing key: `jobs`
-- Queue: `ai.jobs` (durable, TTL 5 min, prefetch 4)
-- Worker calls OpenRouter (model: `qwen/qwen3-235b-a22b-2507`, max_tokens: 1024)
+- Celery abstracts the message broker. MVP uses Redis as broker (zero additional infrastructure). Phase 4 experiments with RabbitMQ broker for production features (dead letter queues, priority routing).
+- Worker calls OpenRouter (model: `TBD (see Open Questions)`, max_tokens: 1024)
 - Results stored in Redis with key `ai:result:{job_id}`, TTL 3600s
 - Client polls `GET /api/v1/ai/jobs/:id` every 2s
 
@@ -132,7 +131,7 @@ Client POST --> AI Service enqueues --> RabbitMQ --> AI Worker consumes --> Open
 ### Always Do
 
 - TDD -- write tests first, maintain 70%+ coverage across lines/functions/branches/statements
-- Load test the async pipeline (RabbitMQ --> Worker --> Redis --> poll)
+- Load test the async pipeline (Celery --> Worker --> Redis --> poll)
 - JWT auth verification at both Gateway and downstream services
 - Soft deletes only -- never hard-delete user data
 - Integration tests proving services work together end-to-end
