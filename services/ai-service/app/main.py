@@ -4,15 +4,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes import ai, health
-from app.services import cache, queue
+from app.services import cache
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await queue.connect()
     yield
     await cache.close_redis()
-    await queue.close_queue()
 
 
 app = FastAPI(title="SmartGrocery AI Service", lifespan=lifespan)

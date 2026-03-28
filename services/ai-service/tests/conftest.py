@@ -20,12 +20,10 @@ def make_token(user_id: str = "user-test-123", secret: str = "test-secret") -> s
 
 @pytest.fixture(scope="session")
 def client():
-    """TestClient with mocked external services (RabbitMQ, Redis)."""
+    """TestClient with mocked external services (Redis)."""
     from app.main import app
 
     with (
-        patch("app.services.queue.connect", new=AsyncMock()),
-        patch("app.services.queue.close_queue", new=AsyncMock()),
         patch("app.services.cache.close_redis", new=AsyncMock()),
     ):
         with TestClient(app) as c:

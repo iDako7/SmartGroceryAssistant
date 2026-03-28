@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from app.middleware.auth import verify_token
-from app.services import cache, claude, queue
+from app.services import cache, claude
 
 router = APIRouter(prefix="/api/v1/ai", tags=["ai"])
 
@@ -26,15 +26,6 @@ class AlternativesRequest(BaseModel):
     reason: str = ""
 
 
-class SuggestRequest(BaseModel):
-    sections: dict  # {section_name: [item_name, ...]}
-
-
-class InspireRequest(BaseModel):
-    sections: dict
-    preferences: str = ""
-
-
 # ── Sync endpoints ────────────────────────────────────────
 
 
@@ -51,21 +42,6 @@ async def item_info(req: ItemInfoRequest, _: str = Depends(verify_token)):
 @router.post("/alternatives")
 async def alternatives(req: AlternativesRequest, _: str = Depends(verify_token)):
     return await claude.alternatives(req.name_en, req.reason)
-
-
-# ── Async endpoints ────────────────────────────────────────
-
-
-@router.post("/suggest")
-async def suggest(req: SuggestRequest, _: str = Depends(verify_token)):
-    job_id = await queue.publish_job("suggest", {"sections": req.sections})
-    return {"job_id": job_id, "status": "queued"}
-
-
-@router.post("/inspire")
-async def inspire(req: InspireRequest, _: str = Depends(verify_token)):
-    job_id = await queue.publish_job("inspire", {"sections": req.sections, "preferences": req.preferences})
-    return {"job_id": job_id, "status": "queued"}
 
 
 @router.get("/jobs/{job_id}")
