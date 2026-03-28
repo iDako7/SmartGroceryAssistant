@@ -1,4 +1,4 @@
-"""Tests for AI routes — sync endpoints, async endpoints, and job status."""
+"""Tests for AI routes — sync endpoints and job status."""
 
 from unittest.mock import AsyncMock, patch
 
@@ -88,53 +88,6 @@ class TestAlternatives:
             resp = client.post(
                 "/api/v1/ai/alternatives",
                 json={"name_en": "Milk"},
-                headers=auth_headers,
-            )
-        assert resp.status_code == 200
-
-
-# ── Async endpoints ───────────────────────────────────────
-
-
-class TestSuggest:
-    def test_returns_job_id(self, client, auth_headers):
-        with patch("app.routes.ai.queue.publish_job", new=AsyncMock(return_value="job-abc-123")):
-            resp = client.post(
-                "/api/v1/ai/suggest",
-                json={"sections": {"Produce": ["Apples", "Bananas"]}},
-                headers=auth_headers,
-            )
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["job_id"] == "job-abc-123"
-        assert data["status"] == "queued"
-
-    def test_unauthenticated(self, client):
-        resp = client.post(
-            "/api/v1/ai/suggest",
-            json={"sections": {}},
-        )
-        assert resp.status_code == 403
-
-
-class TestInspire:
-    def test_returns_job_id(self, client, auth_headers):
-        with patch("app.routes.ai.queue.publish_job", new=AsyncMock(return_value="job-xyz-456")):
-            resp = client.post(
-                "/api/v1/ai/inspire",
-                json={"sections": {"Produce": ["Apples"]}, "preferences": "vegan"},
-                headers=auth_headers,
-            )
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["job_id"] == "job-xyz-456"
-        assert data["status"] == "queued"
-
-    def test_no_preferences(self, client, auth_headers):
-        with patch("app.routes.ai.queue.publish_job", new=AsyncMock(return_value="job-001")):
-            resp = client.post(
-                "/api/v1/ai/inspire",
-                json={"sections": {}},
                 headers=auth_headers,
             )
         assert resp.status_code == 200

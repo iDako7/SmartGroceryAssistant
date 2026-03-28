@@ -23,7 +23,7 @@ Request → Cache (Redis) → KB (SQLite + FTS5) → LLM (OpenRouter)
 ```
 
 - **Sync endpoints** (translate, item-info, alternatives): tier routing Cache → KB → LLM, respond directly
-- **Async endpoints** (suggest, inspire): enqueue via Celery → worker processes with KB-grounded prompts → result in Redis → client polls
+- **Async endpoints** (suggest, inspire): planned for Phase 3 (Celery + Redis broker) — not yet implemented
 - **Tier routing**: explicit request-type routing as backbone, confidence-based scoring only inside KB tier for fuzzy search
 - **LLM output**: structured JSON mode across all tiers (uniform interface)
 - **KB**: read-only SQLite deployed as file alongside code, populated offline
@@ -42,8 +42,6 @@ app/
   services/
     cache.py           # Redis cache layer
     claude.py          # LLM integration (OpenRouter)
-    queue.py           # Job queue integration
-worker.py              # Async job worker (Celery)
 tests/                 # pytest + pytest-asyncio + httpx
 ```
 
@@ -52,7 +50,6 @@ tests/                 # pytest + pytest-asyncio + httpx
 ```bash
 uv sync                                              # Install deps (not pip/poetry)
 uv run uvicorn app.main:app --reload --port 4003     # Dev server
-uv run python worker.py                              # Async job worker
 uv run pytest                                        # All tests
 uv run pytest tests/test_routes_ai.py                # Single test file
 uv run pytest -k "test_name"                         # Single test by name
