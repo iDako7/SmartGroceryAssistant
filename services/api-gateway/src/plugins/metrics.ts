@@ -8,6 +8,9 @@ import {
   collectDefaultMetrics,
 } from 'prom-client';
 
+// NOTE: /metrics endpoint is unauthenticated by design — in production,
+// restrict access via reverse proxy or network policy (e.g. internal-only ingress).
+
 const register = new Registry();
 
 collectDefaultMetrics({ register });
@@ -26,16 +29,6 @@ const httpRequestsTotal = new Counter({
   name: 'http_requests_total',
   help: 'Total number of HTTP requests',
   labelNames: ['method', 'route', 'status_code'] as const,
-  registers: [register],
-});
-
-// ── Upstream proxy metrics ────────────────────────────────
-
-const upstreamDuration = new Histogram({
-  name: 'upstream_request_duration_seconds',
-  help: 'Duration of upstream proxy requests in seconds',
-  labelNames: ['method', 'upstream_service', 'status_code'] as const,
-  buckets: [0.01, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10],
   registers: [register],
 });
 
@@ -66,13 +59,6 @@ function normalizeRoute(url: string): string {
     .split('?')[0];
 }
 
-function resolveUpstreamService(url: string): string {
-  if (url.startsWith('/api/v1/users') || url.startsWith('/api/v1/auth')) return 'user-service';
-  if (url.startsWith('/api/v1/lists')) return 'list-service';
-  if (url.startsWith('/api/v1/ai')) return 'ai-service';
-  return 'unknown';
-}
-
 // ── Plugin ────────────────────────────────────────────────
 
 export default fp(async (app: FastifyInstance) => {
@@ -98,12 +84,6 @@ export default fp(async (app: FastifyInstance) => {
 
     httpRequestDuration.observe({ method, route, status_code: statusCode }, durationSec);
     httpRequestsTotal.inc({ method, route, status_code: statusCode });
-
-    // Track upstream duration for proxied routes (same as total for now)
-    if (route.startsWith('/api/v1/')) {
-      const upstream = resolveUpstreamService(route);
-      upstreamDuration.observe({ method, upstream_service: upstream, status_code: statusCode }, durationSec);
-    }
 
     // Track rate-limited responses
     if (reply.statusCode === 429) {
