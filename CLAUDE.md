@@ -124,7 +124,7 @@ Web (:3000) → API Gateway (:3001) → User Service (:4001) → user_db (Postgr
 ## Git Workflow
 
 - **Branches:** `feat/<service>/<description>`, `fix/<service>/<description>`, `docs/<topic>`, `chore/<topic>`
-- **Commits:** Conventional commits — `feat:`, `fix:`, `docs:`, `chore:`
+- **Commits:** Conventional commits — `feat:`, `fix:`, `docs:`, `chore:`. **NEVER** add `Co-Authored-By` lines mentioning Claude or any AI tool — commits must be attributed to team members only
 - **PRs:** Use template at `.github/pull_request_template.md`
 - **Pre-commit:** husky + lint-staged. Run `npm install` at repo root to activate hooks
 

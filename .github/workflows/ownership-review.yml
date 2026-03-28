@@ -42,9 +42,9 @@ jobs:
               if (pattern === '*') continue;
               // Strip leading slash — CODEOWNERS uses /web/, we match web/
               const prefix = pattern.replace(/^\//, '');
-              // Take the first (and only) owner, strip @
-              const owner = parts[1].replace(/^@/, '');
-              OWNERSHIP[prefix] = owner;
+              // Collect all owners, strip @
+              const owners = parts.slice(1).map(o => o.replace(/^@/, ''));
+              OWNERSHIP[prefix] = owners;
             }
             console.log('Parsed ownership map:', OWNERSHIP);
 
@@ -89,15 +89,16 @@ jobs:
             let touchesShared = false;
 
             for (const file of files) {
-              const owner = getOwner(file);
-              if (owner === null) {
+              const owners = getOwner(file);
+              if (owners === null) {
                 touchesShared = true;
-                console.log(`  ${file} -> SHARED`);
-              } else if (owner !== author) {
-                requiredReviewers.add(owner);
-                console.log(`  ${file} -> owned by @${owner} (needs review)`);
-              } else {
+                console.log(`  ${file} -> SHARED (no match)`);
+              } else if (owners.includes(author)) {
                 console.log(`  ${file} -> owned by @${author} (author)`);
+              } else {
+                // Author is not an owner — need review from one of the owners
+                for (const o of owners) requiredReviewers.add(o);
+                console.log(`  ${file} -> owned by @${owners.join(', @')} (needs review)`);
               }
             }
 

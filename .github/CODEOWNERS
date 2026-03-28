@@ -4,6 +4,11 @@
 # Catch-all: shared paths require any team member
 *                            @William-g7 @KaiyueWei @iDako7
 
+# Shared paths — any team member can self-merge
+/docs/                       @William-g7 @KaiyueWei @iDako7
+/infra/                      @William-g7 @KaiyueWei @iDako7
+/.github/                    @William-g7 @KaiyueWei @iDako7
+
 # Service ownership (last-match-wins, these override catch-all)
 /web/                        @William-g7
 /services/api-gateway/       @William-g7
