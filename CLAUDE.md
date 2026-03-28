@@ -10,11 +10,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Team Ownership
 
-| Owner | Services |
-|-------|----------|
-| Person A | Frontend (`web/`) + API Gateway (`services/api-gateway/`) |
-| Person B | User Service (`services/user-service/`) + List Service (`services/list-service/`) |
-| Person C | AI Service (`services/ai-service/`) + AI Worker + KB module |
+| Owner | GitHub | Services |
+|-------|--------|----------|
+| William | @William-g7 | Frontend (`web/`) + API Gateway (`services/api-gateway/`) |
+| Kaiyue | @KaiyueWei | User Service (`services/user-service/`) + List Service (`services/list-service/`) |
+| Dako | @iDako7 | AI Service (`services/ai-service/`) + AI Worker + KB module |
 
 - **Same-service PR:** owner can self-merge after CI passes
 - **Cross-service PR:** both affected owners must review
