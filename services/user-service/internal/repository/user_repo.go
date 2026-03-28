@@ -3,7 +3,9 @@ package repository
 import (
 	"context"
 	"fmt"
+	"time"
 
+	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/metrics"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/model"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -16,9 +18,20 @@ func NewUserRepo(db *pgxpool.Pool) *UserRepo {
 	return &UserRepo{db: db}
 }
 
-func (r *UserRepo) CreateUser(ctx context.Context, email, passwordHash string) (*model.User, error) {
+// observeQuery records query duration and, on error, increments the error counter.
+func observeQuery(operation string, start time.Time, err error) {
+	metrics.DBQueryDuration.WithLabelValues(operation).Observe(time.Since(start).Seconds())
+	if err != nil {
+		metrics.DBQueryErrors.WithLabelValues(operation).Inc()
+	}
+}
+
+func (r *UserRepo) CreateUser(ctx context.Context, email, passwordHash string) (_ *model.User, err error) {
+	start := time.Now()
+	defer func() { observeQuery("create_user", start, err) }()
+
 	var u model.User
-	err := r.db.QueryRow(ctx,
+	err = r.db.QueryRow(ctx,
 		`INSERT INTO users (email, password_hash)
 		 VALUES ($1, $2)
 		 RETURNING id, email, password_hash, created_at, updated_at`,
@@ -30,9 +43,12 @@ func (r *UserRepo) CreateUser(ctx context.Context, email, passwordHash string) (
 	return &u, nil
 }
 
-func (r *UserRepo) GetUserByID(ctx context.Context, id string) (*model.User, error) {
+func (r *UserRepo) GetUserByID(ctx context.Context, id string) (_ *model.User, err error) {
+	start := time.Now()
+	defer func() { observeQuery("get_user_by_id", start, err) }()
+
 	var u model.User
-	err := r.db.QueryRow(ctx,
+	err = r.db.QueryRow(ctx,
 		`SELECT id, email, password_hash, created_at, updated_at
 		 FROM users WHERE id = $1`,
 		id,
@@ -43,9 +59,12 @@ func (r *UserRepo) GetUserByID(ctx context.Context, id string) (*model.User, err
 	return &u, nil
 }
 
-func (r *UserRepo) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
+func (r *UserRepo) GetUserByEmail(ctx context.Context, email string) (_ *model.User, err error) {
+	start := time.Now()
+	defer func() { observeQuery("get_user_by_email", start, err) }()
+
 	var u model.User
-	err := r.db.QueryRow(ctx,
+	err = r.db.QueryRow(ctx,
 		`SELECT id, email, password_hash, created_at, updated_at
 		 FROM users WHERE email = $1`,
 		email,
@@ -56,9 +75,12 @@ func (r *UserRepo) GetUserByEmail(ctx context.Context, email string) (*model.Use
 	return &u, nil
 }
 
-func (r *UserRepo) CreateProfile(ctx context.Context, userID model.User) (*model.Profile, error) {
+func (r *UserRepo) CreateProfile(ctx context.Context, userID model.User) (_ *model.Profile, err error) {
+	start := time.Now()
+	defer func() { observeQuery("create_profile", start, err) }()
+
 	var p model.Profile
-	err := r.db.QueryRow(ctx,
+	err = r.db.QueryRow(ctx,
 		`INSERT INTO profiles (user_id)
 		 VALUES ($1)
 		 RETURNING id, user_id, language_preference, dietary_restrictions, household_size, taste_preferences, created_at, updated_at`,
@@ -70,9 +92,12 @@ func (r *UserRepo) CreateProfile(ctx context.Context, userID model.User) (*model
 	return &p, nil
 }
 
-func (r *UserRepo) GetProfileByUserID(ctx context.Context, userID string) (*model.Profile, error) {
+func (r *UserRepo) GetProfileByUserID(ctx context.Context, userID string) (_ *model.Profile, err error) {
+	start := time.Now()
+	defer func() { observeQuery("get_profile_by_user_id", start, err) }()
+
 	var p model.Profile
-	err := r.db.QueryRow(ctx,
+	err = r.db.QueryRow(ctx,
 		`SELECT id, user_id, language_preference, dietary_restrictions, household_size, taste_preferences, created_at, updated_at
 		 FROM profiles WHERE user_id = $1`,
 		userID,
@@ -83,9 +108,12 @@ func (r *UserRepo) GetProfileByUserID(ctx context.Context, userID string) (*mode
 	return &p, nil
 }
 
-func (r *UserRepo) UpdateProfile(ctx context.Context, userID string, req model.UpdateProfileRequest) (*model.Profile, error) {
+func (r *UserRepo) UpdateProfile(ctx context.Context, userID string, req model.UpdateProfileRequest) (_ *model.Profile, err error) {
+	start := time.Now()
+	defer func() { observeQuery("update_profile", start, err) }()
+
 	var p model.Profile
-	err := r.db.QueryRow(ctx,
+	err = r.db.QueryRow(ctx,
 		`UPDATE profiles
 		 SET language_preference  = COALESCE(NULLIF($2, ''), language_preference),
 		     dietary_restrictions = CASE WHEN $3::text[] IS NOT NULL THEN $3 ELSE dietary_restrictions END,
