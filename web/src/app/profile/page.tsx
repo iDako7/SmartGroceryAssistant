@@ -4,36 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../lib/auth-context';
-
-const DIETARY_OPTIONS = [
-  'Vegetarian',
-  'Vegan',
-  'Gluten-Free',
-  'Dairy-Free',
-  'Nut-Free',
-  'Halal',
-  'Kosher',
-  'Low-Sodium',
-  'Keto',
-  'Pescatarian',
-];
-
-const LANGUAGE_OPTIONS = [
-  { value: 'en', label: 'English' },
-  { value: 'zh', label: 'Chinese' },
-  { value: 'es', label: 'Spanish' },
-];
-
-const TASTE_OPTIONS = [
-  'Spicy',
-  'Savory',
-  'Sweet',
-  'Sour',
-  'Umami',
-  'Mild',
-  'Smoky',
-  'Herbal',
-];
+import { DIETARY_OPTIONS, LANGUAGE_OPTIONS, TASTE_OPTIONS } from '../../lib/profile-options';
+import ToggleChip from '../../components/profile/ToggleChip';
 
 export default function ProfilePage() {
   const { user, loading, updateProfile } = useAuth();
@@ -135,26 +107,18 @@ export default function ProfilePage() {
             Dietary Restrictions
           </h2>
           <div className="flex flex-wrap gap-2">
-            {DIETARY_OPTIONS.map((opt) => {
-              const selected = dietary.includes(opt);
-              return (
-                <button
-                  key={opt}
-                  onClick={() =>
-                    setDietary((prev) =>
-                      selected ? prev.filter((d) => d !== opt) : [...prev, opt]
-                    )
-                  }
-                  className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
-                    selected
-                      ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
-                      : 'border-zinc-200 text-zinc-600 hover:border-zinc-300 dark:border-zinc-700 dark:text-zinc-400'
-                  }`}
-                >
-                  {opt}
-                </button>
-              );
-            })}
+            {DIETARY_OPTIONS.map((opt) => (
+              <ToggleChip
+                key={opt}
+                label={opt}
+                selected={dietary.includes(opt)}
+                onClick={() =>
+                  setDietary((prev) =>
+                    prev.includes(opt) ? prev.filter((d) => d !== opt) : [...prev, opt]
+                  )
+                }
+              />
+            ))}
           </div>
         </section>
 
@@ -191,26 +155,18 @@ export default function ProfilePage() {
             Taste Preferences
           </h2>
           <div className="flex flex-wrap gap-2">
-            {TASTE_OPTIONS.map((opt) => {
-              const selected = tastes.includes(opt);
-              return (
-                <button
-                  key={opt}
-                  onClick={() =>
-                    setTastes((prev) =>
-                      selected ? prev.filter((t) => t !== opt) : [...prev, opt]
-                    )
-                  }
-                  className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
-                    selected
-                      ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
-                      : 'border-zinc-200 text-zinc-600 hover:border-zinc-300 dark:border-zinc-700 dark:text-zinc-400'
-                  }`}
-                >
-                  {opt}
-                </button>
-              );
-            })}
+            {TASTE_OPTIONS.map((opt) => (
+              <ToggleChip
+                key={opt}
+                label={opt}
+                selected={tastes.includes(opt)}
+                onClick={() =>
+                  setTastes((prev) =>
+                    prev.includes(opt) ? prev.filter((t) => t !== opt) : [...prev, opt]
+                  )
+                }
+              />
+            ))}
           </div>
         </section>
 
