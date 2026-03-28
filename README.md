@@ -79,7 +79,7 @@ A grocery shopping assistant with AI-powered suggestions, built on a polyglot mi
 | **AI Service** | Python / FastAPI | 4003 | Sync + async AI inference via OpenRouter (Redis cache) |
 | **AI Worker** | Python | — | Standalone RabbitMQ consumer for async AI jobs |
 
-**Infrastructure:** PostgreSQL :5432 (user_db, list_db) · Redis :6379 · RabbitMQ :5672
+**Infrastructure:** PostgreSQL :5432 (user_db, list_db) · Redis :6379 · RabbitMQ :5672 · Prometheus :9090 · Grafana :3333
 
 ## Quick Start
 
@@ -217,7 +217,8 @@ SmartGroceryAssistant/
 ├── k8s/                            # Kubernetes manifests
 ├── infra/
 │   ├── postgres/init.sql           # user_db + list_db schemas
-│   └── rabbitmq/definitions.json   # exchanges + queues
+│   ├── rabbitmq/definitions.json   # exchanges + queues
+│   └── prometheus/prometheus.yml   # Prometheus scrape config
 ├── web/                            # Next.js 16 client
 │   ├── src/app/                    # App Router pages
 │   ├── src/components/             # list/, ai/ components
@@ -250,6 +251,50 @@ SmartGroceryAssistant/
 - **Async AI jobs** — long-running AI calls go through RabbitMQ → worker → Redis, polled by client
 - **Python deps via uv** — not pip/poetry; uses `pyproject.toml` + `uv.lock`
 - **OpenRouter** as LLM gateway — not direct Anthropic API
+
+## Observability
+
+The User Service exposes Prometheus metrics at `GET /metrics`. Prometheus scrapes these every 15 seconds, and Grafana provides dashboards on top.
+
+### Metrics Collected
+
+| Metric | Type | Labels | Description |
+|--------|------|--------|-------------|
+| `user_service_http_requests_total` | Counter | method, route, status | Total HTTP requests |
+| `user_service_http_request_duration_seconds` | Histogram | method, route, status | Request latency |
+| `user_service_http_requests_in_flight` | Gauge | — | Currently active requests |
+| `user_service_db_query_duration_seconds` | Histogram | operation | DB query latency |
+| `user_service_db_query_errors_total` | Counter | operation | Failed DB queries |
+| `user_service_db_pool_total_conns` | Gauge | — | Total pool connections |
+| `user_service_db_pool_idle_conns` | Gauge | — | Idle pool connections |
+| `user_service_db_pool_acquired_conns` | Gauge | — | In-use pool connections |
+
+### Accessing
+
+Both `docker compose up` and `tilt up` start Prometheus and Grafana automatically.
+
+| Tool | URL | Credentials |
+|------|-----|-------------|
+| Prometheus | [localhost:9090](http://localhost:9090) | — |
+| Grafana | [localhost:3333](http://localhost:3333) | admin / admin |
+
+In Grafana (K8s), the Prometheus datasource is auto-provisioned. In Docker Compose, add it manually: **Configuration > Data Sources > Add Prometheus** with URL `http://prometheus:9090`.
+
+### Example Prometheus Queries
+
+```promql
+# Request rate per endpoint (last 5 min)
+rate(user_service_http_requests_total[5m])
+
+# Average request latency per route
+rate(user_service_http_request_duration_seconds_sum[5m]) / rate(user_service_http_request_duration_seconds_count[5m])
+
+# Error rate (5xx responses)
+rate(user_service_http_requests_total{status=~"5.."}[5m])
+
+# Slowest DB operations
+rate(user_service_db_query_duration_seconds_sum[5m]) / rate(user_service_db_query_duration_seconds_count[5m])
+```
 
 ## Environment Variables
 
@@ -300,3 +345,5 @@ kubectl rollout restart deployment/ai-service deployment/ai-worker -n sga
 | Redis | 6379 |
 | RabbitMQ | 5672 |
 | RabbitMQ Management | 15672 |
+| Prometheus | 9090 |
+| Grafana | 3333 |
