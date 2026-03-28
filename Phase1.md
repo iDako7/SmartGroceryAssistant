@@ -92,8 +92,8 @@ SmartGroceryAssistant/
 ## API Endpoints
 
 ### Auth (via Gateway, no JWT)
-- `POST /api/v1/users/register` — Create account
-- `POST /api/v1/users/login` — Login, receive JWT
+- `POST /api/v1/auth/register` — Create account
+- `POST /api/v1/auth/login` — Login, receive JWT
 
 ### Users (JWT required)
 - `GET /api/v1/users/profile` — Get user profile
