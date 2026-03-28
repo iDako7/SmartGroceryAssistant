@@ -3,36 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../lib/auth-context';
-
-const DIETARY_OPTIONS = [
-  'Vegetarian',
-  'Vegan',
-  'Gluten-Free',
-  'Dairy-Free',
-  'Nut-Free',
-  'Halal',
-  'Kosher',
-  'Low-Sodium',
-  'Keto',
-  'Pescatarian',
-];
-
-const LANGUAGE_OPTIONS = [
-  { value: 'en', label: 'English' },
-  { value: 'zh', label: 'Chinese' },
-  { value: 'es', label: 'Spanish' },
-];
-
-const TASTE_OPTIONS = [
-  'Spicy',
-  'Savory',
-  'Sweet',
-  'Sour',
-  'Umami',
-  'Mild',
-  'Smoky',
-  'Herbal',
-];
+import { DIETARY_OPTIONS, LANGUAGE_OPTIONS, TASTE_OPTIONS } from '../../lib/profile-options';
+import ToggleChip from '../../components/profile/ToggleChip';
 
 type Step = 'welcome' | 'language' | 'dietary' | 'household' | 'taste';
 
@@ -48,6 +20,7 @@ export default function OnboardingPage() {
   const [householdSize, setHouseholdSize] = useState(2);
   const [tastes, setTastes] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) router.replace('/login');
@@ -66,6 +39,7 @@ export default function OnboardingPage() {
 
   async function handleFinish() {
     setSaving(true);
+    setError(null);
     try {
       await updateProfile({
         language_preference: language,
@@ -75,8 +49,8 @@ export default function OnboardingPage() {
       });
       router.replace('/list');
     } catch {
-      // Profile save failed — still navigate, user can edit later
-      router.replace('/list');
+      setError('Failed to save profile. You can try again or skip for now.');
+      setSaving(false);
     }
   }
 
@@ -174,26 +148,18 @@ export default function OnboardingPage() {
               Select any that apply. AI suggestions will respect these.
             </p>
             <div className="flex flex-wrap gap-2">
-              {DIETARY_OPTIONS.map((opt) => {
-                const selected = dietary.includes(opt);
-                return (
-                  <button
-                    key={opt}
-                    onClick={() =>
-                      setDietary((prev) =>
-                        selected ? prev.filter((d) => d !== opt) : [...prev, opt]
-                      )
-                    }
-                    className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
-                      selected
-                        ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
-                        : 'border-zinc-200 text-zinc-600 hover:border-zinc-300 dark:border-zinc-700 dark:text-zinc-400'
-                    }`}
-                  >
-                    {opt}
-                  </button>
-                );
-              })}
+              {DIETARY_OPTIONS.map((opt) => (
+                <ToggleChip
+                  key={opt}
+                  label={opt}
+                  selected={dietary.includes(opt)}
+                  onClick={() =>
+                    setDietary((prev) =>
+                      prev.includes(opt) ? prev.filter((d) => d !== opt) : [...prev, opt]
+                    )
+                  }
+                />
+              ))}
             </div>
             {dietary.length === 0 && (
               <p className="text-xs text-zinc-400">None selected — that&apos;s fine too!</p>
@@ -243,27 +209,32 @@ export default function OnboardingPage() {
               What flavors do you enjoy? This helps AI suggest recipes you&apos;ll love.
             </p>
             <div className="flex flex-wrap gap-2">
-              {TASTE_OPTIONS.map((opt) => {
-                const selected = tastes.includes(opt);
-                return (
-                  <button
-                    key={opt}
-                    onClick={() =>
-                      setTastes((prev) =>
-                        selected ? prev.filter((t) => t !== opt) : [...prev, opt]
-                      )
-                    }
-                    className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
-                      selected
-                        ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
-                        : 'border-zinc-200 text-zinc-600 hover:border-zinc-300 dark:border-zinc-700 dark:text-zinc-400'
-                    }`}
-                  >
-                    {opt}
-                  </button>
-                );
-              })}
+              {TASTE_OPTIONS.map((opt) => (
+                <ToggleChip
+                  key={opt}
+                  label={opt}
+                  selected={tastes.includes(opt)}
+                  onClick={() =>
+                    setTastes((prev) =>
+                      prev.includes(opt) ? prev.filter((t) => t !== opt) : [...prev, opt]
+                    )
+                  }
+                />
+              ))}
             </div>
+          </div>
+        )}
+
+        {/* Error message */}
+        {error && (
+          <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-400">
+            <p>{error}</p>
+            <button
+              onClick={handleSkip}
+              className="mt-1 text-xs underline hover:no-underline"
+            >
+              Skip and continue to list
+            </button>
           </div>
         )}
 
