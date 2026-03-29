@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { WebSocket } from 'ws';
 import { config } from '../config.js';
+import { activeWsConnections } from '../plugins/metrics.js';
 
 export default async function wsRoutes(app: FastifyInstance) {
   app.get('/ws', { websocket: true }, (socket, request) => {
@@ -18,13 +19,18 @@ export default async function wsRoutes(app: FastifyInstance) {
       return;
     }
 
+    activeWsConnections.inc();
+
     // Open upstream connection to list-service WebSocket
     const upstream = new WebSocket(`${config.services.list.replace('http', 'ws')}/ws`);
 
     upstream.on('message', (data: Buffer) => socket.send(data));
     socket.on('message', (data: Buffer) => upstream.send(data));
 
-    socket.on('close', () => upstream.close());
+    socket.on('close', () => {
+      activeWsConnections.dec();
+      upstream.close();
+    });
     upstream.on('close', () => socket.close());
 
     upstream.on('error', () => socket.close(1011, 'Upstream error'));

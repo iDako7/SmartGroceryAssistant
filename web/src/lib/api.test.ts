@@ -135,18 +135,17 @@ describe('auth API', () => {
     fetchMock.mockResolvedValue({
       ok: true,
       status: 200,
-      json: async () => ({ token: 'tok', user: { id: '1', email: 'a@b.com', name: 'A' } }),
+      json: async () => ({ token: 'tok', user: { id: '1', email: 'a@b.com' } }),
     });
 
     const { auth } = await import('./api');
-    await auth.register('a@b.com', 'password123', 'Alice');
+    await auth.register('a@b.com', 'password123');
 
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toContain('/api/v1/users/register');
     expect(JSON.parse((init as RequestInit).body as string)).toEqual({
       email: 'a@b.com',
       password: 'password123',
-      name: 'Alice',
     });
   });
 

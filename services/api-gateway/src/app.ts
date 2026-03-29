@@ -5,6 +5,7 @@ import fastifyWebsocket from '@fastify/websocket';
 import jwtPlugin from './plugins/jwt.js';
 import corsPlugin from './plugins/cors.js';
 import rateLimitPlugin from './plugins/rateLimit.js';
+import metricsPlugin from './plugins/metrics.js';
 
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
@@ -26,6 +27,7 @@ export function buildApp() {
   app.register(corsPlugin);
   app.register(rateLimitPlugin);
   app.register(jwtPlugin);
+  app.register(metricsPlugin);
   app.register(fastifyReplyFrom);
   app.register(fastifyWebsocket);
 
