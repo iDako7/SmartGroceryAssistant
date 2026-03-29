@@ -13,6 +13,16 @@ data:
         url: http://prometheus:9090
         isDefault: true
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-admin-credentials
+  namespace: sga
+type: Opaque
+stringData:
+  admin-user: admin
+  admin-password: admin
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,9 +45,15 @@ spec:
             - containerPort: 3000
           env:
             - name: GF_SECURITY_ADMIN_USER
-              value: "admin"
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-admin-credentials
+                  key: admin-user
             - name: GF_SECURITY_ADMIN_PASSWORD
-              value: "admin"
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-admin-credentials
+                  key: admin-password
           volumeMounts:
             - name: datasources
               mountPath: /etc/grafana/provisioning/datasources
