@@ -1,7 +1,17 @@
 export interface User {
   id: string;
   email: string;
-  name: string;
+  language_preference: string;
+  dietary_restrictions: string[];
+  household_size: number;
+  taste_preferences: string;
+}
+
+export interface ProfileUpdate {
+  language_preference?: string;
+  dietary_restrictions?: string[];
+  household_size?: number;
+  taste_preferences?: string;
 }
 
 export interface Section {

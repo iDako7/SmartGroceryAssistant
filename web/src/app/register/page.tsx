@@ -17,11 +17,7 @@ export default function RegisterPage() {
     setLoading(true);
     const fd = new FormData(e.currentTarget);
     try {
-      await register(
-        fd.get('email') as string,
-        fd.get('password') as string,
-        fd.get('name') as string
-      );
+      await register(fd.get('email') as string, fd.get('password') as string);
       router.replace('/list');
     } catch (err) {
       setError((err as Error).message);
@@ -38,17 +34,6 @@ export default function RegisterPage() {
         </h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Name</label>
-            <input
-              name="name"
-              type="text"
-              required
-              autoComplete="name"
-              className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
-            />
-          </div>
-
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Email</label>
             <input
