@@ -15,6 +15,7 @@ interface Props {
   onItemCreated: (sectionId: string, item: Item) => void;
   onSectionDeleted: (id: string) => void;
   onSectionUpdated: (section: Section) => void;
+  onSuggest?: (sectionId: string) => void;
 }
 
 export default function SectionCard({
@@ -27,6 +28,7 @@ export default function SectionCard({
   onItemCreated,
   onSectionDeleted,
   onSectionUpdated,
+  onSuggest,
 }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [editingName, setEditingName] = useState(false);
@@ -87,6 +89,15 @@ export default function SectionCard({
         <span className="text-xs text-zinc-400">
           {doneCount}/{items.length}
         </span>
+
+        {onSuggest && (
+          <button
+            onClick={() => onSuggest(section.id)}
+            className="rounded-lg border border-emerald-200 px-2.5 py-1 text-xs font-medium text-emerald-600 transition hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-950"
+          >
+            ✦ Suggest
+          </button>
+        )}
 
         <button
           onClick={() => onSectionDeleted(section.id)}
