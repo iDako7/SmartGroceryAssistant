@@ -1,3 +1,4 @@
+/** Merged view of `users` + `profiles` tables as returned by the backend API. */
 export interface User {
   id: string;
   email: string;
