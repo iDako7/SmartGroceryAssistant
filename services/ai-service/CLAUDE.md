@@ -8,15 +8,10 @@ Person C — AI Service + AI Worker + KB module
 
 ## Documentation
 
-- **[Phased Plan](docs_AI_service/phased_plan.md)** — implementation phases with architecture diagrams
-- **[Design Decisions](docs_AI_service/design_decisions.md)** — all architecture decisions with reasoning
-- **[Open Questions](docs_AI_service/open_questions.md)** — unresolved decisions indexed OQ-1 through OQ-7
-- **[Prototype](../../docs/smart-grocery-prototype.jsx)** — original prototype with reference prompts and UI flow
+- **[Phased Plan](../../private_docs/AI_service/phased_plan.md)** — implementation phases with architecture diagrams
+- **[Design Decisions](../../private_docs/AI_service/design_decisions.md)** — all architecture decisions with reasoning
+- **[Open Questions](../../private_docs/AI_service/open_questions.md)** — unresolved decisions indexed OQ-1 through OQ-6
 - **[MVP Blueprint](../../docs/MVP-PRD.md)** — project-wide architecture and scope
-
-## Status
-
-**Being rewritten from scratch** with OOP architecture and TDD methodology. The previous functional-style code had significant gaps from the original prototype. New phased plan to be defined separately.
 
 ## Architecture
 
@@ -27,17 +22,13 @@ Request → Cache (Redis) → KB (SQLite + FTS5) → LLM (OpenRouter)
           instant/free     fast/free             slow/costs tokens
 ```
 
-- **Sync endpoints** (translate, item-info, alternatives, per-item inspire, clarify): tier routing Cache → KB → LLM, respond directly
-- **Async endpoints** (suggest, per-list inspire): Celery + Redis broker, async job lifecycle
-- **Two-step suggest flow**: clarify endpoint (sync, 1-3 questions with chip options) → suggest endpoint (async, user context from answers fed into suggestion call)
-- **Two inspire modes**: per-item (sync — "recipes using this item") and per-list (async — "meal ideas from full grocery list")
+- **Sync endpoints** (translate, item-info, alternatives): tier routing Cache → KB → LLM, respond directly
+- **Async endpoints** (suggest, inspire): planned for Phase 3 (Celery + Redis broker) — not yet implemented
 - **Tier routing**: explicit request-type routing as backbone, confidence-based scoring only inside KB tier for fuzzy search
 - **LLM output**: structured JSON mode across all tiers (uniform interface)
 - **KB**: read-only SQLite deployed as file alongside code, populated offline
 
 ## Project Structure
-
-> **Note:** Being redesigned as part of the rewrite. Structure below is the previous layout and will change.
 
 ```
 app/
