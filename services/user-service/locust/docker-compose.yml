@@ -1,0 +1,29 @@
+services:
+  locust-master:
+    build: .
+    container_name: locust-master
+    command:
+      - --master
+      - --host=http://user-service:4001
+      - --expect-workers=${LOCUST_WORKERS:-3}
+    ports:
+      - "8089:8089"   # Web UI
+      - "5557:5557"   # Master-worker communication
+    networks:
+      - smart-grocery_default
+
+  locust-worker:
+    build: .
+    command:
+      - --worker
+      - --master-host=locust-master
+    deploy:
+      replicas: ${LOCUST_WORKERS:-3}
+    depends_on:
+      - locust-master
+    networks:
+      - smart-grocery_default
+
+networks:
+  smart-grocery_default:
+    external: true
