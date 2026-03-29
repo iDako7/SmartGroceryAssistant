@@ -1,6 +1,6 @@
 # MVP Blueprint -- Smart Grocery Assistant
 
-**Last updated:** 2026-03-27
+**Last updated:** 2026-03-28
 **Status:** Living document. Verified decisions only. Unknowns live in Open Questions.
 
 ---
@@ -40,10 +40,16 @@
 ### Plan
 
 - Create sections (produce, dairy, etc.) and add items with quantities
-- Request AI suggestions -- system analyzes gaps in the list and suggests items grounded in KB recipes
-- Request AI inspiration -- system suggests 3 meal ideas with missing ingredients
-- Accept, dismiss, or modify suggestions before adding to list
-- Per-item AI features (translate, item info, alternatives) available on demand
+- Request AI suggestions -- two-step flow:
+  1. System asks 1-3 clarifying questions with tappable chip options (e.g., "Is this a BBQ party or weekly restock?"). Adaptive: 1 question for straightforward lists, 2-3 for ambiguous ones. User can skip.
+  2. User answers feed as context into the suggestion call. System returns recipe clusters (Smart View), ungrouped items, and store aisle layout (List View) -- all from a single API call.
+- Accept, dismiss, or modify suggestions before adding to list. Editable context block allows regeneration.
+- Request AI inspiration (per-list) -- system suggests 3 meal ideas with missing ingredients based on full grocery list
+- Per-item AI features available on demand:
+  - **Translate** -- bidirectional translation (detects input language, returns both name_en and secondary language name)
+  - **Inspire** (per-item) -- 3 recipe ideas using that specific item, each with missing ingredients and "Add All" button
+  - **Item Info** -- taste profile, common uses, how to pick, storage tips, fun/cultural fact
+  - **Alternatives** -- 3-4 substitutes with match level (Very close / Similar / Different but works), description, and aisle hint
 
 ### Shop
 
@@ -71,7 +77,7 @@ Web (:3000) --> API Gateway (:3001) --> User Service (:4001) --> user_db (Postgr
 - **API Gateway** (Fastify 5 / TypeScript): JWT auth, CORS, rate limiting (100/min), HTTP proxying to downstream services. JWT verified here AND in each downstream service (defense in depth). CommonJS.
 - **User Service** (Go / Gin): Registration, login, JWT issuance, profiles, dietary preferences, onboarding data. Owns `user_db`.
 - **List Service** (Go / Gin): Sections and items CRUD. Soft deletes (`deleted_at`, never hard-delete). User ownership enforcement via section JOIN on `user_id`. Owns `list_db`. Publishes events to RabbitMQ.
-- **AI Service** (Python / FastAPI): The brain. Contains the Knowledge Base module (SQLite), tier routing logic, sync AI features (translate, item-info, alternatives), async job submission (suggest, inspire). AI Worker is a Celery worker process (Redis broker for MVP, RabbitMQ broker experiment in Phase 4), calling OpenRouter LLM, storing results in Redis. Client polls for async results.
+- **AI Service** (Python / FastAPI): The brain. Contains the Knowledge Base module (SQLite), tier routing logic, sync AI features (translate, item-info, alternatives, per-item inspire, clarifying questions), async job submission (suggest, per-list inspire). AI Worker is a Celery worker process (Redis broker for MVP, RabbitMQ broker experiment in Phase 4), calling OpenRouter LLM, storing results in Redis. Client polls for async results.
 
 ### Tier Routing Strategy
 
@@ -105,16 +111,46 @@ Key constraints:
 - Cross-db boundary -- `sections.user_id` references a user in `user_db` but has no FK constraint (PostgreSQL does not support cross-database FKs)
 - JWT defense in depth -- verified at Gateway AND each downstream service
 
-### Async Pipeline (Suggest / Inspire)
+### Async Pipeline (Suggest / Per-List Inspire)
 
 ```
-Client POST --> AI Service enqueues --> Celery (Redis broker) --> AI Worker --> OpenRouter LLM --> Redis --> Client polls
+Client POST --> AI Service (optional clarifying questions) --> enqueues --> Celery (Redis broker) --> AI Worker --> OpenRouter LLM --> Redis --> Client polls
 ```
 
+- **Suggest flow is two-step:** Client first calls clarify endpoint (sync, returns 1-3 questions with chip options). Client submits answers, then suggest is enqueued as async job with user context.
 - Celery abstracts the message broker. MVP uses Redis as broker (zero additional infrastructure). Phase 4 experiments with RabbitMQ broker for production features (dead letter queues, priority routing).
 - Worker calls OpenRouter (model: `TBD (see Open Questions)`, max_tokens: 1024)
 - Results stored in Redis with key `ai:result:{job_id}`, TTL 3600s
 - Client polls `GET /api/v1/ai/jobs/:id` every 2s
+
+**Suggest response schema** (powers both Smart View and List View from a single call):
+
+```json
+{
+  "reason": "1-2 sentence context summary (editable by user for regeneration)",
+  "clusters": [
+    {
+      "name": "Dish Name", "emoji": "🍜", "desc": "Short description",
+      "items": [
+        { "name_en": "...", "name_zh": "...", "existing": true, "why": "" },
+        { "name_en": "...", "name_zh": "...", "existing": false, "why": "Reason (max 15 words)" }
+      ]
+    }
+  ],
+  "ungrouped": [{ "name_en": "...", "name_zh": "...", "existing": true }],
+  "storeLayout": [
+    {
+      "category": "Aisle Name", "emoji": "🥩",
+      "items": [{ "name_en": "...", "name_zh": "...", "existing": true }]
+    }
+  ]
+}
+```
+
+- 2-4 recipe clusters, 3-6 new suggested items total
+- Every existing item appears in one cluster or ungrouped
+- `storeLayout` contains ALL items (existing + suggested) for List View
+- Smart View / List View toggle is client-side (no additional API call)
 
 ### Knowledge Base Module (Inside AI Service)
 
@@ -123,6 +159,34 @@ Client POST --> AI Service enqueues --> Celery (Redis broker) --> AI Worker --> 
 - Populated offline via script + LLM generation + human review
 - Serves as the grounding layer for AI suggestions -- LLM reasons over KB data, not from scratch
 - Initial target: 50 common Costco products for Tier 1
+
+### Per-Item AI Feature Response Schemas
+
+**Item Info:**
+```json
+{ "taste": "...", "usage": "...", "picking": "...", "storage": "...", "funFact": "..." }
+```
+All fields bilingual when user is in bilingual mode.
+
+**Alternatives:**
+```json
+{
+  "note": "Why alternatives are needed",
+  "alts": [
+    { "name_en": "...", "name_zh": "...", "match": "Very close|Similar|Different but works", "desc": "...", "where": "Aisle hint" }
+  ]
+}
+```
+
+**Per-Item Inspire:**
+```json
+{
+  "recipes": [
+    { "name": "...", "name_zh": "...", "emoji": "🍳", "desc": "Short description", "add": [{ "name_en": "...", "name_zh": "..." }] }
+  ]
+}
+```
+Each recipe includes 2-3 missing ingredients with "Add All" support.
 
 ---
 

@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Documentation
 
 - **[MVP Blueprint](docs/MVP-PRD.md)** — gold standard for architecture, scope, and decisions
-- **AI Service detailed docs** in `private_docs/AI_service/` — phased plan, design decisions, open questions
+- **AI Service detailed docs** in `services/ai-service/docs_AI_service/` — phased plan, design decisions, open questions, prototype
 - Historical docs archived in `docs/archive/`
 
 ## Team Ownership
@@ -89,10 +89,11 @@ Web (:3000) → API Gateway (:3001) → User Service (:4001) → user_db (Postgr
 ```
 
 - **Gateway** proxies all requests and enforces JWT auth, CORS, rate limiting (100/min)
-- **Async AI flow**: client POSTs to `/api/v1/ai/suggest` or `/inspire` → job queued via Celery → worker processes via OpenRouter → result stored in Redis → client polls `/api/v1/ai/jobs/:id`
+- **Sync AI features**: translate (bidirectional), item-info, alternatives, per-item inspire — all served directly by the AI Service
+- **Async AI flow (two-step suggest)**: client calls `/api/v1/ai/clarify` for optional clarifying questions (sync) → POSTs to `/api/v1/ai/suggest` or `/api/v1/ai/inspire` with user context → job queued via Celery → worker processes via OpenRouter → result stored in Redis → client polls `/api/v1/ai/jobs/:id`
 - **Two separate PostgreSQL databases**: `user_db` (users, profiles) and `list_db` (sections, items). Schemas in `infra/postgres/init.sql`
 - **RabbitMQ exchanges/queues**: defined in `infra/rabbitmq/definitions.json` (used by List Service for event publishing)
-- **AI async pipeline** uses Celery for task queuing (broker is an implementation detail — see `private_docs/AI_service/` for details)
+- **AI async pipeline** uses Celery for task queuing (broker is an implementation detail — see `services/ai-service/docs_AI_service/` for details)
 - **Knowledge Base module** inside AI Service — SQLite with curated recipe/product data for 3-5 cuisines. Tier routing: cache → KB → LLM (see Blueprint for details)
 
 ## Key Design Decisions
