@@ -17,6 +17,7 @@ export default function ProfilePage() {
   const [tastes, setTastes] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) router.replace('/login');
@@ -34,6 +35,7 @@ export default function ProfilePage() {
   async function handleSave() {
     setSaving(true);
     setSaved(false);
+    setError(null);
     try {
       await updateProfile({
         language_preference: language,
@@ -43,6 +45,8 @@ export default function ProfilePage() {
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
+    } catch {
+      setError('Failed to save profile. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -180,6 +184,7 @@ export default function ProfilePage() {
             {saving ? 'Saving...' : 'Save changes'}
           </button>
           {saved && <span className="text-sm text-emerald-600">Saved!</span>}
+          {error && <span className="text-sm text-red-500">{error}</span>}
         </div>
       </main>
     </div>
