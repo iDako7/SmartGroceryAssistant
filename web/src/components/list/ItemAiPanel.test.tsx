@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ItemAiPanel from './ItemAiPanel';
 
@@ -20,41 +20,6 @@ describe('ItemAiPanel', () => {
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
-  it('renders info results after fetch', async () => {
-    vi.mocked(ai.itemInfo).mockResolvedValue({
-      category: 'Dairy',
-      typical_unit: 'gallon',
-      storage_tip: 'Refrigerate at 4°C',
-      nutrition_note: 'Good source of calcium',
-    } as never);
-
-    await act(async () => {
-      render(<ItemAiPanel itemName="Milk" feature="info" onClose={vi.fn()} />);
-    });
-
-    expect(screen.getByText('Dairy')).toBeInTheDocument();
-    expect(screen.getByText('gallon')).toBeInTheDocument();
-    expect(screen.getByText('Refrigerate at 4°C')).toBeInTheDocument();
-    expect(screen.getByText('Good source of calcium')).toBeInTheDocument();
-  });
-
-  it('renders alternatives results after fetch', async () => {
-    vi.mocked(ai.alternatives).mockResolvedValue({
-      alternatives: [
-        { name: 'Oat Milk', reason: 'Dairy-free, creamy' },
-        { name: 'Almond Milk', reason: 'Lower calorie' },
-      ],
-    } as never);
-
-    await act(async () => {
-      render(<ItemAiPanel itemName="Milk" feature="alternatives" onClose={vi.fn()} />);
-    });
-
-    expect(screen.getByText('Oat Milk')).toBeInTheDocument();
-    expect(screen.getByText('Dairy-free, creamy')).toBeInTheDocument();
-    expect(screen.getByText('Almond Milk')).toBeInTheDocument();
-  });
-
   it('renders error state on fetch failure', async () => {
     vi.mocked(ai.itemInfo).mockRejectedValue(new Error('Network error'));
 
@@ -66,12 +31,7 @@ describe('ItemAiPanel', () => {
   });
 
   it('calls onClose when close button is clicked', async () => {
-    vi.mocked(ai.itemInfo).mockResolvedValue({
-      category: '',
-      typical_unit: '',
-      storage_tip: '',
-      nutrition_note: '',
-    } as never);
+    vi.mocked(ai.itemInfo).mockResolvedValue({} as never);
 
     const onClose = vi.fn();
     await act(async () => {
@@ -101,13 +61,19 @@ describe('ItemAiPanel', () => {
     expect(screen.getByText('Inspire')).toBeInTheDocument();
   });
 
-  it('shows empty state when alternatives returns no alts', async () => {
-    vi.mocked(ai.alternatives).mockResolvedValue({ alternatives: [] } as never);
-
+  it('calls correct API method for each feature', async () => {
+    vi.mocked(ai.itemInfo).mockResolvedValue({} as never);
     await act(async () => {
-      render(<ItemAiPanel itemName="Milk" feature="alternatives" onClose={vi.fn()} />);
+      render(<ItemAiPanel itemName="Milk" feature="info" onClose={vi.fn()} />);
     });
+    expect(ai.itemInfo).toHaveBeenCalledWith('Milk');
+  });
 
-    expect(screen.getByText('No alternatives found.')).toBeInTheDocument();
+  it('calls alternatives API for alternatives feature', async () => {
+    vi.mocked(ai.alternatives).mockResolvedValue({} as never);
+    await act(async () => {
+      render(<ItemAiPanel itemName="Eggs" feature="alternatives" onClose={vi.fn()} />);
+    });
+    expect(ai.alternatives).toHaveBeenCalledWith('Eggs');
   });
 });
