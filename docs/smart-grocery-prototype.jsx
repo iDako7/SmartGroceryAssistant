@@ -1,3 +1,6 @@
+// Reference prototype — not part of the build. See docs/MVP-PRD.md for the authoritative spec.
+// This file captures the original UI/UX design and mock AI responses used during prototyping.
+
 import { useState, useEffect, useRef } from "react";
 
 // ─── Icons ───
