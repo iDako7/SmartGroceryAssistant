@@ -72,29 +72,70 @@ uv run locust -f locustfile.py --host http://localhost:4001 \
   --csv results/baseline --html results/baseline.html
 ```
 
-### Suggested Test Tiers
+### Test Tiers
 
 | Tier | Users | Ramp Rate | Duration | Purpose |
 |---|---|---|---|---|
-| Baseline | 100 | 10/s | 2m | Normal operating conditions |
-| Moderate | 500 | 25/s | 5m | Peak traffic simulation |
-| Stress | 1000+ | 50/s | 5m | Find breaking point |
+| Baseline | 100 | 10/s | 1m | Normal operating conditions |
+| Moderate | 500 | 25/s | 1m | Peak traffic simulation |
+| Stress | 1000+ | 50/s | 1m | Find breaking point |
 
-## Baseline Results (1 user)
+## Load Test Results
 
-| Endpoint | Median | p95 | p99 | # Requests | # Fails |
-|---|---|---|---|---|---|
-| `GET /api/v1/users/me` | 17ms | 41ms | 78ms | 219 | 0 |
-| `PUT /api/v1/users/me` | 21ms | 37ms | 220ms | 60 | 0 |
-| `POST /api/v1/users/login` | 89ms | 110ms | 310ms | 58 | 0 |
-| `GET /health` | 8ms | 25ms | 25ms | 15 | 0 |
-| **Aggregated** | **21ms** | **97ms** | **220ms** | **353** | **0** |
+All tests run with Docker (1 master + 5 workers), 1-minute duration, ramp rate matching user count / 20.
+
+### 100 Users (Baseline) — 29.9 RPS
+
+| Endpoint | # Requests | Median | Avg | RPS |
+|---|---|---|---|---|
+| `GET /api/v1/users/me` | 1,039 | 2ms | 3.2ms | 18.1 |
+| `POST /api/v1/users/login` | 314 | 69ms | 73.4ms | 3.3 |
+| `PUT /api/v1/users/me` | 239 | 2ms | 4.5ms | 4.9 |
+| `POST /api/v1/users/register` | 106 | 65ms | 75.8ms | 2.0 |
+| `GET /health` | 74 | 1ms | 1.7ms | 1.6 |
+| **Aggregated** | **1,862** | **3ms** | **25.6ms** | **29.9** |
+
+**0 failures. Service handles this comfortably.**
+
+![Grafana — 100 users baseline](results/baseline_100_grafana.png)
+
+### 500 Users (Moderate) — 146.1 RPS
+
+| Endpoint | # Requests | Median | Avg | RPS |
+|---|---|---|---|---|
+| `GET /api/v1/users/me` | 4,873 | 1ms | 80ms | 88.1 |
+| `POST /api/v1/users/login` | 1,521 | 65ms | 343ms | 20.1 |
+| `PUT /api/v1/users/me` | 1,105 | 1ms | 50.5ms | 20.9 |
+| `POST /api/v1/users/register` | 505 | 60ms | 219ms | 9.3 |
+| `GET /health` | 403 | 1ms | 5.4ms | 7.7 |
+| **Aggregated** | **8,857** | **2ms** | **190ms** | **146.1** |
+
+**0 failures. Latencies climbing — login avg 5x slower, setup registration at 1.3s.**
+
+![Grafana — 500 users moderate](results/500_grafana.png)
+
+### 1000 Users (Stress) — 288.8 RPS
+
+| Endpoint | # Requests | Median | Avg | RPS |
+|---|---|---|---|---|
+| `GET /api/v1/users/me` | 7,171 | 2ms | 549ms | 176.8 |
+| `POST /api/v1/users/login` | 2,466 | 160ms | 1,600ms | 39.2 |
+| `PUT /api/v1/users/me` | 1,604 | 2ms | 300ms | 41.5 |
+| `POST /api/v1/users/register` | 743 | 72ms | 948ms | 17.6 |
+| `GET /health` | 544 | 1ms | 11.2ms | 13.7 |
+| **Aggregated** | **13,428** | **7ms** | **930ms** | **288.8** |
+
+**0 failures, but severe latency degradation across all endpoints.**
+
+![Grafana — 1000 users stress](results/1000_grafana.png)
 
 ### Key Observations
 
-- **Login is the slowest** (89ms median) — bcrypt password hashing is CPU-intensive
-- **Profile reads are fast** (17ms median) — simple DB lookup
-- **Zero failures** at low load — service is stable
+1. **Bcrypt is the bottleneck** — login and register use password hashing; avg latency explodes from ~70ms (100u) → 1.6s (1000u)
+2. **Reads stay fast at median** — `GET /users/me` median holds at 1–2ms even at 1000 users, but avg spikes to 549ms due to queuing behind bcrypt-heavy requests
+3. **No failures at any tier** — the service degrades gracefully (slower, not broken)
+4. **Throughput scales linearly** — 30 → 146 → 289 RPS across tiers
+5. **Setup registration** at 1000 users takes 3.8s avg — bcrypt under heavy CPU contention
 
 ## Grafana Monitoring
 

@@ -6,6 +6,9 @@ services:
       - --master
       - --host=http://user-service:4001
       - --expect-workers=${LOCUST_WORKERS:-3}
+      - -u 1000
+      - -r 50
+      - --run-time=60s
     ports:
       - "8089:8089"   # Web UI
       - "5557:5557"   # Master-worker communication
@@ -18,7 +21,7 @@ services:
       - --worker
       - --master-host=locust-master
     deploy:
-      replicas: ${LOCUST_WORKERS:-3}
+      replicas: ${LOCUST_WORKERS:-5}
     depends_on:
       - locust-master
     networks:
