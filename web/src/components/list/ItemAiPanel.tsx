@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ai } from '../../lib/api';
+import type { AlternativesResponse, ItemInfoResponse, PerItemInspireResponse } from '../../types';
 
 type AiFeature = 'info' | 'alternatives' | 'inspire';
 
@@ -25,8 +26,7 @@ export default function ItemAiPanel({ itemName, feature, onClose }: Props) {
         } else if (feature === 'alternatives') {
           setResult(await ai.alternatives(itemName));
         } else if (feature === 'inspire') {
-          // Per-item inspire uses suggest-like sections but we just pass the single item
-          setResult(await ai.itemInfo(itemName)); // placeholder — inspire per-item TBD
+          setResult(await ai.itemInfo(itemName)); // placeholder until per-item inspire endpoint exists
         }
       } catch (err) {
         setError((err as Error).message);
@@ -60,18 +60,21 @@ export default function ItemAiPanel({ itemName, feature, onClose }: Props) {
 }
 
 function ResultContent({ feature, data }: { feature: AiFeature; data: unknown }) {
-  const d = data as Record<string, unknown>;
-
   if (feature === 'info') {
-    const fields = ['category', 'typical_unit', 'storage_tip', 'nutrition_note'] as const;
+    const d = data as ItemInfoResponse;
+    const fields: { key: keyof ItemInfoResponse; label: string }[] = [
+      { key: 'taste', label: 'Taste' },
+      { key: 'usage', label: 'Usage' },
+      { key: 'picking', label: 'How to pick' },
+      { key: 'storage', label: 'Storage' },
+      { key: 'funFact', label: 'Fun fact' },
+    ];
     return (
       <dl className="space-y-1">
-        {fields.map((k) => (
-          <div key={k} className="flex gap-2">
-            <dt className="shrink-0 text-xs font-medium text-zinc-400 capitalize">
-              {k.replace(/_/g, ' ')}:
-            </dt>
-            <dd className="text-xs text-zinc-700 dark:text-zinc-300">{String(d[k] ?? '—')}</dd>
+        {fields.map(({ key, label }) => (
+          <div key={key} className="flex gap-2">
+            <dt className="shrink-0 text-xs font-medium text-zinc-400">{label}:</dt>
+            <dd className="text-xs text-zinc-700 dark:text-zinc-300">{String(d[key] ?? '—')}</dd>
           </div>
         ))}
       </dl>
@@ -79,20 +82,54 @@ function ResultContent({ feature, data }: { feature: AiFeature; data: unknown })
   }
 
   if (feature === 'alternatives') {
-    const alts = (d.alternatives as { name: string; reason: string }[]) ?? [];
+    const d = data as AlternativesResponse;
+    const alts = d.alts ?? [];
     if (alts.length === 0) return <p className="text-xs text-zinc-400">No alternatives found.</p>;
     return (
-      <ul className="space-y-1.5">
-        {alts.map((a, i) => (
-          <li key={i} className="flex items-baseline gap-2">
-            <span className="text-xs font-medium text-zinc-700 dark:text-zinc-200">{a.name}</span>
-            <span className="text-xs text-zinc-400">{a.reason}</span>
+      <div>
+        {d.note && <p className="mb-2 text-xs text-zinc-500">{d.note}</p>}
+        <ul className="space-y-1.5">
+          {alts.map((a, i) => (
+            <li key={i} className="rounded-md bg-white px-2 py-1.5 dark:bg-zinc-800">
+              <div className="flex items-baseline gap-2">
+                <span className="text-xs font-medium text-zinc-700 dark:text-zinc-200">
+                  {a.name_en}
+                </span>
+                {a.name_zh && <span className="text-xs text-zinc-400">{a.name_zh}</span>}
+                <span className="ml-auto text-xs text-emerald-600">{a.match}</span>
+              </div>
+              {a.desc && <p className="mt-0.5 text-xs text-zinc-500">{a.desc}</p>}
+              {a.where && <p className="mt-0.5 text-xs text-zinc-400">📍 {a.where}</p>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  if (feature === 'inspire') {
+    const d = data as PerItemInspireResponse;
+    const recipes = d.recipes ?? [];
+    if (recipes.length === 0) return <p className="text-xs text-zinc-400">No recipes found.</p>;
+    return (
+      <ul className="space-y-2">
+        {recipes.map((r, i) => (
+          <li key={i} className="rounded-md bg-white px-2 py-1.5 dark:bg-zinc-800">
+            <p className="text-xs font-medium text-zinc-700 dark:text-zinc-200">
+              {r.emoji} {r.name}
+              {r.name_zh && <span className="ml-1 text-zinc-400">{r.name_zh}</span>}
+            </p>
+            {r.desc && <p className="mt-0.5 text-xs text-zinc-500">{r.desc}</p>}
+            {r.add?.length > 0 && (
+              <p className="mt-1 text-xs text-amber-600">
+                Missing: {r.add.map((a) => a.name_en).join(', ')}
+              </p>
+            )}
           </li>
         ))}
       </ul>
     );
   }
 
-  // inspire — reuse info display for now, will update when per-item inspire endpoint is ready
   return <pre className="text-xs text-zinc-500">{JSON.stringify(data, null, 2)}</pre>;
 }
