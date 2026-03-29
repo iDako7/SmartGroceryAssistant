@@ -476,6 +476,7 @@ class LLMClient:
 ```
 
 > **What's happening:**
+>
 > - `AsyncOpenAI` is the official SDK client. We point it at OpenRouter's URL instead of OpenAI's.
 > - `response_format={"type": "json_object"}` tells the model to output valid JSON.
 > - We separate API errors from parsing errors so error messages are clear.
@@ -692,6 +693,8 @@ Expected: **11 passed**. Creating new files doesn't break existing tests.
 ### Setup -- Create infrastructure files
 
 These files need to exist before we write the route test.
+
+<!-- ! current progress -->
 
 Create `app/dependencies.py`:
 
@@ -1713,6 +1716,7 @@ Expected: JSON with `taste`, `usage`, `picking`, `storage`, `funFact` fields.
 ### Phase 1 complete
 
 You've built a working AI service with:
+
 - 3 endpoints (health, translate, item-info)
 - JWT authentication
 - Structured JSON responses from OpenRouter LLM
