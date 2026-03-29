@@ -8,10 +8,7 @@ Dako (@iDako7) -- AI Service + AI Worker + KB module
 
 ## Documentation
 
-- **[Phased Plan](docs_AI_service/phased_plan.md)** -- 5-phase LLM-first implementation roadmap
-- **[Design Decisions](docs_AI_service/human_reference/design_decisions.md)** -- all architecture decisions with reasoning
-- **[Open Questions](docs_AI_service/open_questions.md)** -- unresolved decisions indexed OQ-1 through OQ-7
-- **[Dev Log](docs_AI_service/human_reference/dev_log.md)** -- session-level decisions and experiment results
+- **[AI Service Docs](docs_AI_service/INDEX.md)** -- phased plan, design decisions, open questions, dev log
 - **[Prototype](../../docs/smart-grocery-prototype.jsx)** -- original prototype with reference prompts and UI flow
 - **[MVP Blueprint](../../docs/MVP-PRD.md)** -- project-wide architecture and scope
 
