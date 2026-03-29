@@ -161,6 +161,10 @@ export default function ListPage() {
               onItemCreated={handleItemCreated}
               onSectionDeleted={handleDeleteSection}
               onSectionUpdated={handleSectionUpdated}
+              onSuggest={(sectionId) => {
+                // TODO: integrate with clarify → suggest two-step flow
+                setAiOpen(true);
+              }}
             />
           ))}
 
