@@ -46,12 +46,18 @@ Request → KB (SQLite + FTS5) → LLM (OpenRouter)
 ## KB Schema (Proposed, needs finalization)
 
 ```sql
-products        — id, name_en, name_zh, name_ko, name_es, category, aisle_hint, store, unit, typical_quantity
+products        — id, name_en, name_zh, name_ko, name_es, category, component_role, aisle_hint, store, unit, typical_quantity
+                  component_role: 'protein' | 'carb' | 'vegetable' | 'sauce' | 'dairy' | 'pantry'
 products_fts    — FTS5 virtual table on products (name_en, name_zh, name_ko, name_es, category)
-recipes         — id, name, cuisine, serves, description
+recipes         — id, name, cuisine, flavor_profile, serves, description
+                  flavor_profile: e.g. 'spicy-savory', 'sweet-umami', 'sour-fresh'
 recipe_ingredients — recipe_id, product_id, quantity, optional
 substitutions   — original_id, substitute_id, notes
+flavor_tags     — product_id (FK products), tag TEXT
+                  tag: 'spicy' | 'umami' | 'sweet' | 'savory' | 'sour' | 'smoky' | 'creamy'
 ```
+
+> **Why these extra columns?** They don't affect MVP endpoints but are tagged during seed to avoid costly re-seeding later. They enable the future `/restock` endpoint (OQ-7) which reasons about component balance and flavor preferences. See OQ-7 in open_questions.md for full context.
 
 ## Open Questions Blocking Phase 1
 

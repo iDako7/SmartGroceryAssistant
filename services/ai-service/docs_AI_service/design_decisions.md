@@ -84,6 +84,18 @@
 
 ---
 
+## KB Schema: Flavor & Component Tagging in MVP
+
+**Decision:** Add `component_role` on products, `flavor_tags` junction table, and `flavor_profile` on recipes to the Phase 1 KB schema — populated during seed, not exercised by any MVP endpoint.
+
+**Why:** These columns are the data foundation for a future `/restock` endpoint (OQ-7) that recommends balanced grocery runs based on current inventory and flavor preferences. Tagging during initial seed costs ~30 seconds per product. Retrofitting later requires a full re-seed or data migration.
+
+**Key insight:** Flavor profiles (spicy-umami, sweet-savory) are more useful than cuisine labels for cross-cultural recommendations. Inspired by Cookwell's component-slot model (PCSV: Protein, Carb, Sauce, Vegetable).
+
+**Trade-off:** Slight schema complexity with no immediate user-facing benefit. Justified by near-zero marginal cost during seed vs high cost of retroactive tagging.
+
+---
+
 ## RAG: Deferred to Future Phase
 
 **Decision:** MVP uses structured SQLite + FTS5. RAG (embeddings + vector search) is a future phase.
