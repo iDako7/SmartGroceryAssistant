@@ -1,6 +1,6 @@
 # AI Service -- Open Questions
 
-**Last updated:** 2026-03-27
+**Last updated:** 2026-03-28
 **Purpose:** Unresolved decisions that need research or experimentation before implementation.
 
 ---
@@ -8,7 +8,7 @@
 ## OQ-1: LLM Model Selection
 
 **Status:** Unresolved
-**Blocks:** Phase 1 (need a model to call via OpenRouter)
+**Blocks:** Phase 1 (resolve by testing prompts against candidate models)
 
 **Context:** Using OpenRouter as the LLM gateway. Need to select 1-2 models optimized for grocery domain tasks.
 
@@ -50,7 +50,7 @@
 ## OQ-3: KB Seed Data - Cuisines and Recipes
 
 **Status:** Unresolved
-**Blocks:** Phase 1 (need recipe data for KB)
+**Blocks:** Phase 4 (need recipe data for KB seed)
 
 **Context:** Starting with 2-3 cuisines. Target audience is new immigrants, so cuisine selection should reflect common immigrant communities near Costco locations.
 
@@ -68,7 +68,7 @@
 ## OQ-4: Confidence Threshold for KB Fuzzy Search
 
 **Status:** Unresolved -- needs experimentation
-**Blocks:** Phase 1 (affects KB tier routing quality)
+**Blocks:** Phase 4 (affects KB tier routing quality)
 
 **Context:** FTS5 returns ranked results with a relevance score. The hybrid tier routing uses this score to decide whether the KB match is "good enough" or should fall through to LLM.
 
@@ -84,7 +84,7 @@
 ## OQ-5: Cache TTL Values Per Request Type
 
 **Status:** Unresolved -- needs experimentation
-**Blocks:** Phase 2
+**Blocks:** Phase 5
 
 **Context:** Different request types have different freshness needs. Starting values needed, then tune based on measured hit rates.
 
