@@ -16,6 +16,8 @@
 
 **Endpoints:** `POST /translate`, `POST /item-info`, `GET /health`
 
+**Success Story:** A user calls `/translate` with "鸡胸肉" and gets back `{name_en, name_zh}`. They call `/item-info` with "Ranch Dressing" and get `{taste, usage, picking, storage, funFact}`. Both return structured JSON from the LLM, JWT-protected.
+
 **Scope:**
 - FastAPI project skeleton with config (Pydantic Settings)
 - LLM client class (wraps OpenRouter via `openai` SDK, handles retries, structured JSON output)
@@ -54,6 +56,8 @@ POST /item-info  --> ItemInfoService   --> llm_client.chat()   --> structured JS
 
 **Endpoints:** `POST /alternatives`, `POST /inspire` (per-item), `POST /clarify`
 
+**Success Story:** A user calls `/alternatives` and gets ranked substitutes. `/inspire` (per-item) returns 3 recipes with missing ingredients. `/clarify` returns 1-3 adaptive questions with tappable chip options. All 5 sync endpoints respect user profile context.
+
 **Scope:**
 - AlternativesService, InspireService, ClarifyService -- same OOP pattern as Phase 1
 - Prompt engineering for complex outputs:
@@ -79,6 +83,8 @@ POST /item-info  --> ItemInfoService   --> llm_client.chat()   --> structured JS
 **Goal:** The two heavy AI features work as async jobs. The two-step suggest flow (clarify --> suggest) is wired end-to-end.
 
 **Endpoints:** `POST /suggest`, `POST /inspire` (per-list), `GET /jobs/:id`
+
+**Success Story:** A user POSTs to `/suggest` with their grocery list + clarify answers. They get back a `job_id`, poll `/jobs/:id`, and receive `{reason, clusters, ungrouped, storeLayout}` within 15s. Per-list `/inspire` works the same way — async job returning 3 meal ideas.
 
 **Scope:**
 - Celery app with Redis as broker
@@ -153,6 +159,8 @@ graph TD
 ## Phase 4: Knowledge Base + Tier Routing
 
 **Goal:** Common queries are served from KB without hitting LLM. The AI service is cheaper and faster for known data.
+
+**Success Story:** `/translate` and `/item-info` for known products (e.g. "Kirkland Olive Oil") return instantly from SQLite KB — no LLM call. Unknown items fall back to LLM with KB context injected into the prompt. Retrieval interface is pluggable.
 
 **Scope:**
 - SQLite KB schema: products (with `component_role`), recipes (with `flavor_profile`), recipe_ingredients, substitutions, `flavor_tags` junction table
@@ -232,6 +240,8 @@ graph TD
 ## Phase 5: Cache + Optimization + RabbitMQ Experiment
 
 **Goal:** Full 3-tier routing is wired. The system is production-hardened with load test data.
+
+**Success Story:** Repeated requests are served from Redis cache (milliseconds). Full 3-tier routing: Cache → KB → LLM. 70%+ cache hit rate target. System handles 50 concurrent users with broker comparison data (Redis vs RabbitMQ).
 
 **Scope:**
 - Redis response cache as Tier 1 (in front of KB and LLM)
