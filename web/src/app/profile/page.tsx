@@ -77,7 +77,7 @@ export default function ProfilePage() {
       <main className="mx-auto w-full max-w-lg space-y-8 p-6">
         {/* Email (read-only) */}
         <section>
-          <h2 className="mb-1 text-xs font-medium uppercase tracking-wider text-zinc-400">
+          <h2 className="mb-1 text-xs font-medium tracking-wider text-zinc-400 uppercase">
             Account
           </h2>
           <p className="text-sm text-zinc-700 dark:text-zinc-300">{user?.email}</p>
@@ -85,7 +85,7 @@ export default function ProfilePage() {
 
         {/* Language */}
         <section>
-          <h2 className="mb-3 text-xs font-medium uppercase tracking-wider text-zinc-400">
+          <h2 className="mb-3 text-xs font-medium tracking-wider text-zinc-400 uppercase">
             Language
           </h2>
           <div className="flex gap-2">
@@ -107,7 +107,7 @@ export default function ProfilePage() {
 
         {/* Dietary */}
         <section>
-          <h2 className="mb-3 text-xs font-medium uppercase tracking-wider text-zinc-400">
+          <h2 className="mb-3 text-xs font-medium tracking-wider text-zinc-400 uppercase">
             Dietary Restrictions
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -128,7 +128,7 @@ export default function ProfilePage() {
 
         {/* Household */}
         <section>
-          <h2 className="mb-3 text-xs font-medium uppercase tracking-wider text-zinc-400">
+          <h2 className="mb-3 text-xs font-medium tracking-wider text-zinc-400 uppercase">
             Household Size
           </h2>
           <div className="flex items-center gap-4">
@@ -155,7 +155,7 @@ export default function ProfilePage() {
 
         {/* Taste */}
         <section>
-          <h2 className="mb-3 text-xs font-medium uppercase tracking-wider text-zinc-400">
+          <h2 className="mb-3 text-xs font-medium tracking-wider text-zinc-400 uppercase">
             Taste Preferences
           </h2>
           <div className="flex flex-wrap gap-2">

@@ -91,8 +91,8 @@ export default function OnboardingPage() {
               Welcome to Smart Grocery
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Let&apos;s set up your profile so we can personalize your grocery experience.
-              This takes about 30 seconds.
+              Let&apos;s set up your profile so we can personalize your grocery experience. This
+              takes about 30 seconds.
             </p>
             <div className="mt-4 flex w-full flex-col gap-2">
               <button
@@ -173,9 +173,7 @@ export default function OnboardingPage() {
             <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
               Household size
             </h2>
-            <p className="text-sm text-zinc-500">
-              Helps AI suggest the right quantities.
-            </p>
+            <p className="text-sm text-zinc-500">Helps AI suggest the right quantities.</p>
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setHouseholdSize((s) => Math.max(1, s - 1))}
@@ -229,10 +227,7 @@ export default function OnboardingPage() {
         {error && (
           <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-400">
             <p>{error}</p>
-            <button
-              onClick={handleSkip}
-              className="mt-1 text-xs underline hover:no-underline"
-            >
+            <button onClick={handleSkip} className="mt-1 text-xs underline hover:no-underline">
               Skip and continue to list
             </button>
           </div>

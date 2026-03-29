@@ -111,10 +111,7 @@ export default function ListPage() {
           🛒 Smart Grocery
         </h1>
         <div className="flex items-center gap-3">
-          <Link
-            href="/profile"
-            className="text-sm text-zinc-500 transition hover:text-emerald-600"
-          >
+          <Link href="/profile" className="text-sm text-zinc-500 transition hover:text-emerald-600">
             {user?.email}
           </Link>
           <button
