@@ -1,0 +1,8 @@
+[project]
+name = "user-service-loadtest"
+version = "0.1.0"
+description = "Locust load tests for the User Service"
+requires-python = ">=3.12"
+dependencies = [
+    "locust>=2.29",
+]
