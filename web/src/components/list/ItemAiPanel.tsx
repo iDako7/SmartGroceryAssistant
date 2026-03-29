@@ -54,7 +54,7 @@ export default function ItemAiPanel({ itemName, feature, onClose }: Props) {
 
       {loading && <p className="text-xs text-zinc-400">Loading...</p>}
       {error && <p className="text-xs text-red-500">{error}</p>}
-      {!loading && !error && result && <ResultContent feature={feature} data={result} />}
+      {!loading && !error && result != null && <ResultContent feature={feature} data={result} />}
     </div>
   );
 }
