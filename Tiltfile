@@ -46,6 +46,8 @@ k8s_yaml([
     'k8s/ai-worker.yaml',
     'k8s/api-gateway.yaml',
     'k8s/web.yaml',
+    'k8s/prometheus.yaml',
+    'k8s/grafana.yaml',
 ])
 
 # ── Resources & port-forwards ─────────────────────────────
@@ -87,4 +89,16 @@ k8s_resource(
     'web',
     port_forwards=['3000:3000'],
     resource_deps=['api-gateway'],
+)
+
+k8s_resource(
+    'prometheus',
+    port_forwards=['9090:9090'],
+    resource_deps=['user-service'],
+)
+
+k8s_resource(
+    'grafana',
+    port_forwards=['3333:3333'],
+    resource_deps=['prometheus'],
 )
