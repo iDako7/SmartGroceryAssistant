@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ai } from '../../lib/api';
 
 type AiFeature = 'info' | 'alternatives' | 'inspire';
@@ -17,24 +17,27 @@ export default function ItemAiPanel({ itemName, feature, onClose }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   // Auto-fetch on mount
-  useState(() => {
+  useEffect(() => {
+    let cancelled = false;
     (async () => {
       try {
-        if (feature === 'info') {
-          setResult(await ai.itemInfo(itemName));
+        let data: unknown;
+        if (feature === 'info' || feature === 'inspire') {
+          data = await ai.itemInfo(itemName);
         } else if (feature === 'alternatives') {
-          setResult(await ai.alternatives(itemName));
-        } else if (feature === 'inspire') {
-          // Per-item inspire uses suggest-like sections but we just pass the single item
-          setResult(await ai.itemInfo(itemName)); // placeholder — inspire per-item TBD
+          data = await ai.alternatives(itemName);
         }
+        if (!cancelled) setResult(data);
       } catch (err) {
-        setError((err as Error).message);
+        if (!cancelled) setError((err as Error).message);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     })();
-  });
+    return () => {
+      cancelled = true;
+    };
+  }, [itemName, feature]);
 
   return (
     <div className="mt-1 mb-1 ml-6 rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-sm dark:border-zinc-700 dark:bg-zinc-800/50">
