@@ -115,3 +115,53 @@
 - Secrets management: AWS Secrets Manager for API keys, JWT secret
 
 **Next action:** Defer detailed planning until Phase 3 is complete. Sketch high-level network topology as a reference.
+
+---
+
+## OQ-7: Routine Grocery Shopping (Scenario 1) — Post-MVP Feature
+
+**Status:** Deferred — post-MVP
+**Blocks:** Nothing in current phases
+
+**Context:** The current MVP solves Scenario 2: grocery shopping for a specific plan (e.g., BBQ party, weekly meal prep). But there's an unaddressed Scenario 1: **routine, flexible grocery shopping** — where the user has no specific meal plan, shops on a regular cadence, and needs guidance based on what they already have, what they're running low on, and what variety they want.
+
+**Real-world example:** User has plenty of vegetables and carbs but has been eating shrimp and ground beef for weeks. They want protein variety suggestions and a balanced restock list — not a recipe-driven shopping list.
+
+**Inspiration:** The [Cookwell](https://www.cookwell.com/) PCSV framework (Protein, Carb, Sauce, Vegetable) treats meals as **swappable component slots** rather than fixed recipes. Key insights:
+- **Flavor profiles > cuisine labels** — aroma profiles (spicy-umami, sweet-savory, sour-fresh) define food identity better than cuisine names. Gochujang and doubanjiang are both "spicy-umami" — a user who likes one will likely enjoy the other, regardless of Korean vs Chinese labeling.
+- **Component-slot thinking** — any meal = protein + carb + sauce + vegetable. Shopping becomes "fill the slots" rather than "follow the recipe."
+- **Grocery loop** — leftovers inform next purchase → purchases inform cooking → cooking creates new leftovers → loop. Requires purchase history and consumption awareness.
+- Cookwell tags ingredients by **molecular role** (protein, fat, carb) AND **taste function** (spicy, umami, sweet, sour, creamy, crispy) simultaneously, enabling substitutions based on *why* an ingredient is in a dish.
+
+**Proposed endpoint (future):**
+```
+POST /api/v1/ai/restock
+{
+  "current_inventory": [
+    {"name": "shrimp", "component_role": "protein"},
+    {"name": "ground beef", "component_role": "protein"},
+    {"name": "celery", "component_role": "vegetable"},
+    ...
+  ],
+  "preferences": {
+    "flavor_likes": ["spicy", "umami"],
+    "avoid": ["shrimp"],           // tired of it
+    "component_gaps": ["protein"]  // detected or user-specified
+  }
+}
+```
+
+**Data model prep (included in Phase 1 KB schema):** To avoid costly re-seeding later, the following are tagged during initial seed:
+- `component_role` column on `products` — tags each product as protein/carb/vegetable/sauce/dairy/pantry
+- `flavor_tags` junction table — maps products to flavor descriptors (spicy, umami, sweet, savory, sour, smoky, creamy)
+- `flavor_profile` column on `recipes` — e.g., "spicy-savory", enabling cross-cuisine recommendations
+
+These columns are **not exercised by any MVP endpoint** but are populated during seed because the marginal cost is near zero while the data is already being handled.
+
+**What's NOT needed until this feature is built:**
+- Inventory tracking / purchase history (product feature, not AI service concern)
+- Gap detection algorithm (which component slots are underrepresented)
+- Grocery loop intelligence (feedback between purchases and consumption)
+- Mood-based discovery (Cookwell's "Bad Day", "Lazy", "Date Night" tags — nice-to-have, purely additive)
+
+**Next action:** Finish MVP (Phases 1-3). Then design the `/restock` endpoint, gap detection logic, and inventory integration. The data model groundwork is already in place.

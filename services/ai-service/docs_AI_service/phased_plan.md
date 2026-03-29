@@ -19,7 +19,7 @@
 
 **Deliverables:**
 - FastAPI project structure with health check endpoint
-- SQLite KB schema: products, recipes, recipe_ingredients, substitutions tables
+- SQLite KB schema: products (with component_role), recipes (with flavor_profile), recipe_ingredients, substitutions, flavor_tags tables
 - FTS5 full-text search index on products
 - KB seed data: ~50 Costco products, 2-3 cuisines, 10 recipes per cuisine
 - Tier 2 (KB) with structured queries + FTS5 fuzzy search
