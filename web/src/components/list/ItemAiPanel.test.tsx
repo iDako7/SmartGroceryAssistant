@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ItemAiPanel from './ItemAiPanel';
 
@@ -28,11 +28,11 @@ describe('ItemAiPanel', () => {
       nutrition_note: 'Good source of calcium',
     } as never);
 
-    render(<ItemAiPanel itemName="Milk" feature="info" onClose={vi.fn()} />);
-
-    await waitFor(() => {
-      expect(screen.getByText('Dairy')).toBeInTheDocument();
+    await act(async () => {
+      render(<ItemAiPanel itemName="Milk" feature="info" onClose={vi.fn()} />);
     });
+
+    expect(screen.getByText('Dairy')).toBeInTheDocument();
     expect(screen.getByText('gallon')).toBeInTheDocument();
     expect(screen.getByText('Refrigerate at 4°C')).toBeInTheDocument();
     expect(screen.getByText('Good source of calcium')).toBeInTheDocument();
@@ -46,11 +46,11 @@ describe('ItemAiPanel', () => {
       ],
     } as never);
 
-    render(<ItemAiPanel itemName="Milk" feature="alternatives" onClose={vi.fn()} />);
-
-    await waitFor(() => {
-      expect(screen.getByText('Oat Milk')).toBeInTheDocument();
+    await act(async () => {
+      render(<ItemAiPanel itemName="Milk" feature="alternatives" onClose={vi.fn()} />);
     });
+
+    expect(screen.getByText('Oat Milk')).toBeInTheDocument();
     expect(screen.getByText('Dairy-free, creamy')).toBeInTheDocument();
     expect(screen.getByText('Almond Milk')).toBeInTheDocument();
   });
@@ -58,11 +58,11 @@ describe('ItemAiPanel', () => {
   it('renders error state on fetch failure', async () => {
     vi.mocked(ai.itemInfo).mockRejectedValue(new Error('Network error'));
 
-    render(<ItemAiPanel itemName="Milk" feature="info" onClose={vi.fn()} />);
-
-    await waitFor(() => {
-      expect(screen.getByText('Network error')).toBeInTheDocument();
+    await act(async () => {
+      render(<ItemAiPanel itemName="Milk" feature="info" onClose={vi.fn()} />);
     });
+
+    expect(screen.getByText('Network error')).toBeInTheDocument();
   });
 
   it('calls onClose when close button is clicked', async () => {
@@ -74,10 +74,8 @@ describe('ItemAiPanel', () => {
     } as never);
 
     const onClose = vi.fn();
-    render(<ItemAiPanel itemName="Milk" feature="info" onClose={onClose} />);
-
-    await waitFor(() => {
-      expect(screen.queryByText('Loading...')).toBeNull();
+    await act(async () => {
+      render(<ItemAiPanel itemName="Milk" feature="info" onClose={onClose} />);
     });
 
     screen.getByText('Close').click();
@@ -106,10 +104,10 @@ describe('ItemAiPanel', () => {
   it('shows empty state when alternatives returns no alts', async () => {
     vi.mocked(ai.alternatives).mockResolvedValue({ alternatives: [] } as never);
 
-    render(<ItemAiPanel itemName="Milk" feature="alternatives" onClose={vi.fn()} />);
-
-    await waitFor(() => {
-      expect(screen.getByText('No alternatives found.')).toBeInTheDocument();
+    await act(async () => {
+      render(<ItemAiPanel itemName="Milk" feature="alternatives" onClose={vi.fn()} />);
     });
+
+    expect(screen.getByText('No alternatives found.')).toBeInTheDocument();
   });
 });
