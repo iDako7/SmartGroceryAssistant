@@ -6,6 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **[MVP Blueprint](docs/MVP-PRD.md)** — gold standard for architecture, scope, and decisions
 - **AI Service detailed docs** in `services/ai-service/docs_AI_service/` — phased plan, design decisions, open questions, prototype
+- **Homework submissions** in `docs/homework/` — exempt from ownership review, any team member can merge
 - Historical docs archived in `docs/archive/`
 
 ## Team Ownership

@@ -74,6 +74,16 @@ jobs:
             }
             console.log(`Changed files (${files.length}):`);
 
+            // === FILTER EXEMPT PATHS (no review needed) ===
+            const EXEMPT_PREFIXES = ['docs/homework/'];
+            const reviewableFiles = files.filter(
+              f => !EXEMPT_PREFIXES.some(p => f.startsWith(p))
+            );
+            if (reviewableFiles.length === 0) {
+              console.log('All changed files are in exempt paths. No review required.');
+              return;
+            }
+
             // === CLASSIFY FILES ===
             function getOwner(filepath) {
               const prefixes = Object.keys(OWNERSHIP).sort((a, b) => b.length - a.length);
@@ -88,7 +98,7 @@ jobs:
             const requiredReviewers = new Set();
             let touchesShared = false;
 
-            for (const file of files) {
+            for (const file of reviewableFiles) {
               const owner = getOwner(file);
               if (owner === null) {
                 touchesShared = true;
