@@ -28,7 +28,9 @@ Three experiments, one per service owner:
 
 **Experiment 1 (William — Gateway):** Gateway throughput and per-service latency under increasing concurrency (1, 5, 20, 50 users). Evaluates whether the Gateway itself becomes a bottleneck and which downstream service limits system throughput.
 
-**Experiment 2 (Sylvia — User/List Service):** Concurrent write consistency under simultaneous list edits. Evaluates whether the database layer correctly serializes concurrent writes and whether cross-database user ownership checks hold under load. 
+**Experiment 2a (Sylvia — List Service):** Concurrent write serialization under simultaneous list edits. Evaluates whether the List Service correctly serializes concurrent writes to the same list without lost updates, duplicate items, or phantom entries.
+
+**Experiment 2b (Sylvia — User/List Service):** Cross-database ownership enforcement under load. Evaluates whether ownership checks that span two databases (list_db sections referencing user_db users) remain correct under concurrent access, and quantifies the trade-offs between the shared-database and database-per-service patterns.
 
 **Experiment 3 (Dako — AI Service):** Tier routing effectiveness — cache hit rate, per-tier latency distribution, and estimated cost savings vs. a pure-LLM baseline. Evaluates whether the three-tier architecture delivers its promised speed and cost benefits.
 
@@ -264,15 +266,57 @@ This experiment measures how the API Gateway performs as an entry point under in
 
 ### 5.3 Experiment Design — User & List Service (Sylvia)
 
-Experiment: Concurrent Write Consistency Under Simultaneous List Edits
+Two experiments target different aspects of the data layer: write correctness under contention and cross-database ownership enforcement.
 
-This experiment tests whether the List Service correctly serializes concurrent writes to the same list and whether cross-database ownership checks (list_db sections referencing user_db users) hold under load.
+#### Experiment 2a: Concurrent Write Serialization
 
-- Independent variable: Number of concurrent writers (1, 5, 10) editing the same list simultaneously
-- Dependent variables: Data integrity (no lost updates, no phantom items), ownership check failure rate, DB query latency under contention
-- Controlled variables: Same list target, same hardware, 60-second duration, PostgreSQL on Docker Compose
-- Setup: Locust spawns N concurrent users, each repeatedly adding/removing items from the same list section. After each run, query list_db directly and verify item count matches expected state. Compare with single-writer baseline.
-- Tradeoffs evaluated: Separate databases (current) vs single database — separate DBs prevent cross-service coupling but require application-level consistency enforcement; single DB enables FK constraints but couples services at the data layer.
+**Question:** Does the List Service correctly serialize concurrent writes to the same list without lost updates, duplicate items, or phantom entries?
+
+When multiple users (or the same user on multiple devices) add, update, or remove items in the same list section simultaneously, PostgreSQL must serialize those writes. This experiment measures whether the application and database layer together preserve data integrity under contention.
+
+- **Independent variable:** Number of concurrent writers (1, 5, 10) targeting the same list section
+- **Dependent variables:**
+  - Data integrity — after each run, query `list_db` directly and compare actual item count and item state against the expected count derived from the operations log. Any mismatch indicates a lost update, duplicate insert, or phantom item.
+  - Write latency — per-operation p50/p95/p99 latency for `POST /items` (add) and `PATCH /items/:id` (update) under contention vs. single-writer baseline
+  - Error rate — HTTP 409 (conflict) or 500 (internal error) responses that indicate serialization failures at the application level
+- **Controlled variables:** Same list section target, same hardware (MacBook Pro), 60-second test duration, PostgreSQL on Docker Compose, all writers authenticated as the list owner
+- **Setup:**
+  1. Pre-create a user, a list section, and seed it with 10 items.
+  2. Locust spawns N concurrent writers. Each writer runs a loop: pick a random existing item → update its name (PATCH), then add a new item (POST), then soft-delete a random item (DELETE). Each operation is logged with a client-side sequence number.
+  3. After the 60-second run, a verification script queries `list_db` and reconciles the final state against the operations log. Specifically: (a) total active items = seed count + adds − deletes, (b) no item has two concurrent name values, (c) no soft-deleted item reappears.
+  4. Repeat at 1, 5, and 10 concurrent writers and compare latency and integrity results.
+- **Expected outcome:** PostgreSQL row-level locking should serialize writes correctly at all tested concurrency levels. Latency is expected to increase at 10 writers due to lock contention, but no data integrity violations should occur. If violations are found, it indicates a bug in the application-level transaction handling (e.g., a missing `SELECT ... FOR UPDATE` or a TOCTOU race).
+
+#### Experiment 2b: Cross-Database Ownership Enforcement Under Load
+
+**Question:** Do ownership checks that span two databases (list_db and user_db) remain correct under concurrent access, and what are the trade-offs between the shared-database and database-per-service patterns?
+
+In the current architecture, `list_db` stores sections and items, while `user_db` stores user accounts. When a user creates or accesses a list section, the List Service must verify that the requesting user exists and owns that section. Because there are no cross-database foreign keys, this ownership check is enforced in application code — the List Service JOINs `sections.user_id` against the JWT-extracted user ID. This experiment tests whether that application-level enforcement holds under load and evaluates the trade-off against a single-database design.
+
+- **Independent variable:** Number of concurrent users (1, 5, 10), each attempting to access or modify list sections — a mix of legitimate owners and unauthorized users
+- **Dependent variables:**
+  - Ownership enforcement correctness — no unauthorized user should successfully create, read, update, or delete another user's list items. After each run, verify that every item in `list_db` traces back to the correct `user_id` via the section.
+  - Ownership check latency — time for the List Service to validate `user_id` from the JWT against `sections.user_id` in `list_db` under contention
+  - False rejection rate — legitimate requests that fail due to timing issues (e.g., JWT issued before user record fully propagated)
+- **Controlled variables:** Same hardware, 60-second duration, both PostgreSQL instances on Docker Compose, fixed ratio of legitimate (80%) to unauthorized (20%) requests
+- **Setup:**
+  1. Pre-create 5 users in `user_db`, each owning 2 list sections in `list_db`.
+  2. Locust spawns N virtual users. 80% of requests use the correct owner's JWT to perform list operations. 20% of requests deliberately use a different user's JWT to attempt access to sections they don't own.
+  3. After each run, verify: (a) all 20% unauthorized requests received HTTP 403/404, (b) no item in `list_db` was created or modified by a non-owner, (c) legitimate owner operations all succeeded.
+  4. Repeat at 1, 5, and 10 concurrent users.
+- **Trade-offs evaluated — shared database vs. database-per-service:**
+
+  | Dimension | Shared Database | Database-per-Service (current) |
+  |-----------|----------------|-------------------------------|
+  | Referential integrity | Native FK constraints — `sections.user_id REFERENCES users(id)` enforced by PostgreSQL, zero application code needed | No cross-database FKs — ownership enforced in application code (JWT + section JOIN), must be tested explicitly |
+  | Query flexibility | Single JOIN across users and sections — simple ownership queries | Cannot JOIN across databases — requires two queries or trusts the JWT as source of truth |
+  | Service coupling | Services share a schema — changes to `users` table can break List Service queries | Full data isolation — each service owns its schema, can evolve independently |
+  | Independent scaling | Both services scale the same database — connection pool contention under load | Each database scales independently — User Service load doesn't affect List Service DB |
+  | Operational simplicity | One connection string, one backup, one migration pipeline | Two databases to manage, monitor, and back up separately |
+  | Failure isolation | If the shared DB goes down, both services fail simultaneously | If `user_db` goes down, List Service can still serve cached/existing data (degraded mode) |
+  | Eventual consistency | Not applicable — single source of truth | Gap exists: if a user is deleted in `user_db` while List Service is down, orphaned list data persists until a cleanup job or event-driven saga runs |
+
+- **Expected outcome:** Ownership checks should hold at all concurrency levels — the JWT-based enforcement doesn't depend on cross-database queries at request time, so it should be resilient. The primary risk is a race condition where a user is deleted in `user_db` mid-experiment and List Service continues to accept their JWT (since JWTs are stateless). This would demonstrate the eventual consistency gap inherent in the database-per-service pattern.
 
 ### 5.4 Experiment Design — AI Service (Dako)
 
@@ -346,33 +390,104 @@ Remaining work for Experiment 1:
 - Extend to 100+ users to find the actual breaking point
 - Separate user registration from the test flow to eliminate auth-related false failures
 
-### 6.2 Results — User Service (Sylvia)
+### 6.2 Results — Experiment 2a: Concurrent Write Serialization (Sylvia)
 
-[User Service Load Test Report](https://github.com/iDako7/SmartGroceryAssistant/blob/main/services/user-service/locust/load_test.md)
+#### User Service Load Test (Completed)
 
-### 6.3 Results — List Service (Sylvia)
+Before testing concurrent list writes, we load-tested the User Service to establish a baseline for the Go/Gin + PostgreSQL stack. Tests ran on Docker (1 master + 5 workers), 1-minute duration each.
 
-Consistency
+**Workload model:** 90% returning users (login, profile read/update) and 10% new signups. Request mix: ~60% `GET /users/me`, ~15% login, ~15% profile update, ~5% register, ~5% health check.
 
-In this project, users is in user_db and sections/items are in list_db — two separate PostgreSQL databases. The alternative would be putting everything in one database.
-Separate databases (current approach):
+**100 Users (Baseline) — 29.9 RPS**
 
-- Each microservice owns its data independently — user-service can't accidentally query list tables and vice versa
+| Endpoint | # Requests | Median | Avg | RPS |
+|---|---|---|---|---|
+| `GET /api/v1/users/me` | 1,039 | 2ms | 3.2ms | 18.1 |
+| `POST /api/v1/users/login` | 314 | 69ms | 73.4ms | 3.3 |
+| `PUT /api/v1/users/me` | 239 | 2ms | 4.5ms | 4.9 |
+| `POST /api/v1/users/register` | 106 | 65ms | 75.8ms | 2.0 |
+| `GET /health` | 74 | 1ms | 1.7ms | 1.6 |
+| **Aggregated** | **1,862** | **3ms** | **25.6ms** | **29.9** |
+
+0 failures. Service handles this comfortably.
+
+![Grafana — 100 users baseline](https://github.com/iDako7/SmartGroceryAssistant/blob/main/services/user-service/locust/results/baseline_100_grafana.png?raw=true)
+
+**500 Users (Moderate) — 146.1 RPS**
+
+| Endpoint | # Requests | Median | Avg | RPS |
+|---|---|---|---|---|
+| `GET /api/v1/users/me` | 4,873 | 1ms | 80ms | 88.1 |
+| `POST /api/v1/users/login` | 1,521 | 65ms | 343ms | 20.1 |
+| `PUT /api/v1/users/me` | 1,105 | 1ms | 50.5ms | 20.9 |
+| `POST /api/v1/users/register` | 505 | 60ms | 219ms | 9.3 |
+| `GET /health` | 403 | 1ms | 5.4ms | 7.7 |
+| **Aggregated** | **8,857** | **2ms** | **190ms** | **146.1** |
+
+0 failures. Latencies climbing — login avg 5x slower, registration avg at 219ms.
+
+![Grafana — 500 users moderate](https://github.com/iDako7/SmartGroceryAssistant/blob/main/services/user-service/locust/results/500_grafana.png?raw=true)
+
+**1000 Users (Stress) — 288.8 RPS**
+
+| Endpoint | # Requests | Median | Avg | RPS |
+|---|---|---|---|---|
+| `GET /api/v1/users/me` | 7,171 | 2ms | 549ms | 176.8 |
+| `POST /api/v1/users/login` | 2,466 | 160ms | 1,600ms | 39.2 |
+| `PUT /api/v1/users/me` | 1,604 | 2ms | 300ms | 41.5 |
+| `POST /api/v1/users/register` | 743 | 72ms | 948ms | 17.6 |
+| `GET /health` | 544 | 1ms | 11.2ms | 13.7 |
+| **Aggregated** | **13,428** | **7ms** | **930ms** | **288.8** |
+
+0 failures, but severe latency degradation across all endpoints.
+
+![Grafana — 1000 users stress](https://github.com/iDako7/SmartGroceryAssistant/blob/main/services/user-service/locust/results/1000_grafana.png?raw=true)
+
+**Key observations from User Service load tests:**
+
+1. **Bcrypt is the bottleneck** — login and register use password hashing; avg latency explodes from ~70ms (100u) to 1.6s (1000u)
+2. **Reads stay fast at median** — `GET /users/me` median holds at 1-2ms even at 1000 users, but avg spikes to 549ms due to queuing behind bcrypt-heavy requests
+3. **No failures at any tier** — the service degrades gracefully (slower, not broken)
+4. **Throughput scales linearly** — 30 → 146 → 289 RPS across tiers
+
+#### List Service Concurrent Write Test (Planned)
+
+The concurrent write serialization experiment for List Service is planned but not yet executed.
+
+What has been verified so far:
+- List Service CRUD endpoints (sections and items) are functional with soft deletes and user ownership enforcement via section JOIN
+- Single-user write path works correctly — items are created, updated, and soft-deleted as expected
+- PostgreSQL row-level locking is the default isolation mechanism; no explicit `SELECT ... FOR UPDATE` has been added yet
+
+Remaining work:
+- Build Locust test script that spawns N concurrent writers targeting the same list section with interleaved add/update/delete operations
+- Build a post-run verification script that queries `list_db` and reconciles final state against the operations log
+- Run at 1, 5, and 10 concurrent writers and collect latency + integrity results
+- If data integrity violations are found, add explicit row-level locking or transaction isolation level changes
+
+### 6.3 Results — Experiment 2b: Cross-Database Ownership Enforcement (Sylvia)
+
+Preliminary: The cross-database ownership experiment has not yet been executed. However, the architectural analysis of the shared-database vs. database-per-service trade-off is complete.
+
+**Current architecture:** Users are stored in `user_db` and sections/items in `list_db` — two separate PostgreSQL databases.
+
+Why we chose database-per-service:
+- Each microservice owns its data independently — User Service can't accidentally query list tables and vice versa
 - Services can be scaled, deployed, or migrated independently
-- No cross-database foreign keys, so referential integrity is enforced in application code
-- Can't do a single SQL JOIN across users and sections
+- Aligns with the microservice principle of loose coupling at the data layer
 
-Single database:
+What we give up:
+- No cross-database foreign keys — `sections.user_id` cannot reference `users(id)`, so referential integrity must be enforced in application code
+- Cannot do a single SQL JOIN across users and sections — ownership verification relies on the JWT as the source of truth
+- Operational overhead — two databases to manage, monitor, and back up
 
-- Foreign keys work naturally (sections.user_id REFERENCES users(id))
-- Can JOIN across all tables in one query
-- Simpler ops — one connection string, one backup, one migration pipeline
-- But services become coupled at the data layer, which undermines the point of microservices
+**Known eventual consistency gap:** If User Service deletes a user while List Service is down, orphaned list data persists in `list_db`. No cleanup mechanism exists yet. The planned mitigation is either a periodic cleanup job or an event-driven saga via RabbitMQ dead-letter queue.
 
-The tradeoff is data isolation and independent scalability vs referential integrity and query simplicity. This project chose separation to align with the microservice architecture — each service fully owns its database.
-
-Currently, no delete feature.
-Eventual consistency gaps — If user-service deletes a user but list-service is down, there's no mechanism to propagate that change. We'd need to build a cleanup job or event-driven sync.
+Remaining work:
+- Build Locust test script with a mix of legitimate owner requests (80%) and unauthorized cross-user requests (20%)
+- Run at 1, 5, and 10 concurrent users and verify that all unauthorized requests are rejected (HTTP 403/404)
+- Test the eventual consistency gap: delete a user in `user_db` mid-test and verify whether List Service continues to accept their (still-valid) JWT
+- Add Prometheus metrics (`smartgrocery_db_query_duration_seconds`, `smartgrocery_http_requests_total`) to both Go services for observability during experiments
 
 ### 6.4 Results — AI Service (Dako)
 
