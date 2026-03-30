@@ -1,8 +1,10 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import { ChevronDown, ChevronRight, Plus, Wand2, X } from 'lucide-react';
 import { lists } from '../../lib/api';
-import type { Item, Section } from '../../types';
+import type { ClarifyQuestion, Item, Section } from '../../types';
+import ClarifyPanel from './ClarifyPanel';
 import ItemRow from './ItemRow';
 
 interface Props {
@@ -35,6 +37,8 @@ export default function SectionCard({
   const [sectionName, setSectionName] = useState(section.name);
   const [addingItem, setAddingItem] = useState(false);
   const [newItemName, setNewItemName] = useState('');
+  const [showClarify, setShowClarify] = useState(false);
+  const [clarifyQuestions, setClarifyQuestions] = useState<ClarifyQuestion[]>([]);
 
   async function saveSectionName() {
     if (sectionName.trim() === section.name) {
@@ -55,6 +59,57 @@ export default function SectionCard({
     setAddingItem(false);
   }
 
+  async function handleSuggestClick() {
+    // TODO: replace mock with `POST /api/v1/ai/clarify` when API is ready
+    const mockQuestions: ClarifyQuestion[] = [
+      {
+        text: 'What kind of meal are you planning?',
+        text_zh: '你打算做什么类型的饭菜？',
+        options: [
+          { label: 'Weeknight dinner', label_zh: '工作日晚餐' },
+          { label: 'BBQ / Party', label_zh: '烧烤/聚会' },
+          { label: 'Meal prep', label_zh: '提前备餐' },
+          { label: 'Other...', label_zh: '其他...' },
+        ],
+      },
+      {
+        text: 'How many people will be eating?',
+        text_zh: '有多少人一起吃？',
+        options: [
+          { label: 'Just 2 of us', label_zh: '就我们两个' },
+          { label: 'Small group (4-6)', label_zh: '小聚会(4-6人)' },
+          { label: 'Larger party (7+)', label_zh: '大聚会(7人以上)' },
+          { label: 'Other...', label_zh: '其他...' },
+        ],
+      },
+      {
+        text: 'Are you missing anything?',
+        text_zh: '还缺什么吗？',
+        options: [
+          { label: 'Vegetables', label_zh: '蔬菜' },
+          { label: 'Drinks', label_zh: '饮料' },
+          { label: 'Sauces & seasonings', label_zh: '酱料调味' },
+          { label: 'All set', label_zh: '都齐了' },
+          { label: 'Other...', label_zh: '其他...' },
+        ],
+      },
+    ];
+    setClarifyQuestions(mockQuestions);
+    setShowClarify(true);
+    setCollapsed(false);
+  }
+
+  function handleClarifySubmit(answers: Record<number, string[]>) {
+    // TODO: submit answers as context to suggest endpoint
+    setShowClarify(false);
+    if (onSuggest) onSuggest(section.id);
+  }
+
+  function handleClarifySkip() {
+    setShowClarify(false);
+    if (onSuggest) onSuggest(section.id);
+  }
+
   const doneCount = items.filter((i) => i.checked).length;
 
   return (
@@ -65,7 +120,7 @@ export default function SectionCard({
           onClick={() => setCollapsed((c) => !c)}
           className="text-zinc-400 transition hover:text-zinc-700 dark:hover:text-zinc-200"
         >
-          {collapsed ? '▶' : '▼'}
+          {collapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
         </button>
 
         {editingName ? (
@@ -92,19 +147,20 @@ export default function SectionCard({
 
         {onSuggest && (
           <button
-            onClick={() => onSuggest(section.id)}
-            className="rounded-lg border border-emerald-200 px-2.5 py-1 text-xs font-medium text-emerald-600 transition hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-950"
+            onClick={handleSuggestClick}
+            className="flex items-center gap-1 rounded-lg border border-emerald-200 px-2.5 py-1 text-xs font-medium text-emerald-600 transition hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-950"
           >
-            ✦ Suggest
+            <Wand2 size={12} />
+            Suggest
           </button>
         )}
 
         <button
           onClick={() => onSectionDeleted(section.id)}
-          className="text-zinc-300 transition hover:text-red-500 dark:text-zinc-600"
+          className="rounded p-0.5 text-zinc-300 transition hover:text-red-500 dark:text-zinc-600"
           title="Delete section"
         >
-          ✕
+          <X size={14} />
         </button>
       </div>
 
@@ -123,6 +179,14 @@ export default function SectionCard({
               />
             ))}
           </ul>
+
+          {showClarify && (
+            <ClarifyPanel
+              questions={clarifyQuestions}
+              onSubmit={handleClarifySubmit}
+              onSkip={handleClarifySkip}
+            />
+          )}
 
           {addingItem ? (
             <form onSubmit={handleAddItem} className="mt-2 flex gap-2">
@@ -150,9 +214,10 @@ export default function SectionCard({
           ) : (
             <button
               onClick={() => setAddingItem(true)}
-              className="mt-2 text-sm text-zinc-400 hover:text-emerald-600"
+              className="mt-2 flex items-center gap-1 text-sm text-zinc-400 hover:text-emerald-600"
             >
-              + Add item
+              <Plus size={14} />
+              Add item
             </button>
           )}
         </div>
