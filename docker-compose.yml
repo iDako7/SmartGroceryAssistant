@@ -43,7 +43,7 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-sga}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-sga_secret}
       RABBITMQ_DEFAULT_VHOST: /
-      RABBITMQ_VM_MEMORY_HIGH_WATERMARK: "0.4"
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbit vm_memory_high_watermark 0.4"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     ports:
