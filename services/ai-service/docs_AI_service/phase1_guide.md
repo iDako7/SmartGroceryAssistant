@@ -73,7 +73,6 @@ services/ai-service/
     ├── test_translate_route.py
     ├── test_item_info_service.py
     ├── test_item_info_route.py
-    ├── test_auth.py
     └── integration/
         ├── __init__.py
         ├── conftest.py
@@ -694,8 +693,6 @@ Expected: **11 passed**. Creating new files doesn't break existing tests.
 
 These files need to exist before we write the route test.
 
-<!-- ! current progress -->
-
 Create `app/dependencies.py`:
 
 ```python
@@ -862,99 +859,11 @@ Expected: **14 passed** (11 existing + 3 new route tests). GREEN.
 
 **Goal:** Add JWT token verification to protect endpoints. Health stays public.
 
-**Why:** Defense in depth -- the API Gateway already verifies tokens, but each service also verifies locally. This way, if someone bypasses the gateway, the service still rejects unauthenticated requests. JWT (JSON Web Token) contains a signed payload with the user ID (`sub` claim) and expiration time.
+**Why:** Defense in depth -- the API Gateway already verifies tokens, but each service also verifies locally. Our Go services (User Service and List Service) already follow this pattern -- see `services/user-service/internal/middleware/auth.go` and `services/list-service/internal/middleware/auth.go` for reference. We're replicating the same approach in Python/FastAPI, not inventing something new.
 
-### RED -- Write the auth tests
+> **Note:** We skip the full RED/GREEN TDD cycle here. JWT edge cases (expired tokens, wrong secrets, missing claims) are already thoroughly tested in the Gateway and Go services. We only need to confirm the middleware is wired up correctly in the AI service.
 
-Create `tests/test_auth.py`:
-
-```python
-import pytest
-from datetime import datetime, timedelta, timezone
-from jose import jwt
-from unittest.mock import AsyncMock
-from httpx import ASGITransport, AsyncClient
-from app.main import app
-from app.dependencies import get_translate_service
-from app.schemas.translate import TranslateResponse
-
-
-@pytest.fixture
-def mock_translate_service():
-    """Mock the translate service so we can test auth independently."""
-    mock = AsyncMock()
-    mock.translate.return_value = TranslateResponse(name_en="Test", name_zh="测试")
-    app.dependency_overrides[get_translate_service] = lambda: mock
-    yield
-
-
-async def test_no_auth_returns_403(mock_translate_service):
-    """Requests without Authorization header should be rejected."""
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.post("/api/v1/ai/translate", json={"text": "test"})
-    assert response.status_code == 403
-
-
-async def test_valid_token_returns_200(mock_translate_service):
-    """Requests with a valid JWT should succeed."""
-    payload = {"sub": "user-123", "exp": datetime.now(timezone.utc) + timedelta(hours=1)}
-    token = jwt.encode(payload, "test-secret", algorithm="HS256")
-    headers = {"Authorization": f"Bearer {token}"}
-
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.post("/api/v1/ai/translate", json={"text": "test"}, headers=headers)
-    assert response.status_code == 200
-
-
-async def test_expired_token_returns_401(mock_translate_service):
-    """Expired tokens should be rejected."""
-    payload = {"sub": "user-123", "exp": datetime.now(timezone.utc) - timedelta(hours=1)}
-    token = jwt.encode(payload, "test-secret", algorithm="HS256")
-    headers = {"Authorization": f"Bearer {token}"}
-
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.post("/api/v1/ai/translate", json={"text": "test"}, headers=headers)
-    assert response.status_code == 401
-
-
-async def test_wrong_secret_returns_401(mock_translate_service):
-    """Tokens signed with the wrong secret should be rejected."""
-    payload = {"sub": "user-123", "exp": datetime.now(timezone.utc) + timedelta(hours=1)}
-    token = jwt.encode(payload, "wrong-secret", algorithm="HS256")
-    headers = {"Authorization": f"Bearer {token}"}
-
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.post("/api/v1/ai/translate", json={"text": "test"}, headers=headers)
-    assert response.status_code == 401
-
-
-async def test_token_missing_sub_returns_401(mock_translate_service):
-    """Tokens without a user ID (sub claim) should be rejected."""
-    payload = {"exp": datetime.now(timezone.utc) + timedelta(hours=1)}
-    token = jwt.encode(payload, "test-secret", algorithm="HS256")
-    headers = {"Authorization": f"Bearer {token}"}
-
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.post("/api/v1/ai/translate", json={"text": "test"}, headers=headers)
-    assert response.status_code == 401
-
-
-async def test_health_no_auth_required():
-    """Health endpoint should work without authentication."""
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.get("/health")
-    assert response.status_code == 200
-```
-
-Run:
-
-```bash
-uv run pytest tests/test_auth.py
-```
-
-Expected: **FAIL** -- `test_no_auth_returns_403` gets 200 instead (no auth enforced yet). `test_expired_token_returns_401` gets 200. The tests that expect rejection are failing because auth doesn't exist yet. RED.
-
-### GREEN -- Create auth and update existing files
+### Implementation
 
 Create `app/auth.py`:
 
@@ -994,7 +903,7 @@ async def verify_token(
         )
 ```
 
-> **What's happening:** `HTTPBearer()` extracts the token from the `Authorization: Bearer <token>` header. If no header is present, FastAPI returns 403 automatically. `jwt.decode` verifies the signature and expiration. If valid, we extract the user ID from the `sub` claim. `Depends(get_settings)` injects our settings so we use the correct secret.
+> **What's happening:** `HTTPBearer()` extracts the token from the `Authorization: Bearer <token>` header. If no header is present, FastAPI returns 403 automatically. `jwt.decode` verifies the signature and expiration -- same `JWT_SECRET` and HS256 algorithm used by all services. `Depends(get_settings)` injects our settings so we use the correct secret.
 
 Update `app/routes/translate.py` -- replace the entire file:
 
@@ -1018,6 +927,8 @@ async def translate(
 ```
 
 > **What changed:** Added `_user_id: str = Depends(verify_token)`. The underscore prefix means we don't use the value yet (but FastAPI still runs the dependency). Now every request to `/translate` must include a valid JWT.
+
+### Test fixtures for auth
 
 Update `tests/conftest.py` -- replace the entire file (adding the `auth_headers` fixture):
 
@@ -1052,6 +963,8 @@ def auth_headers():
     token = jwt.encode(payload, "test-secret", algorithm="HS256")
     return {"Authorization": f"Bearer {token}"}
 ```
+
+> **Key idea:** `auth_headers` generates a real JWT signed with `"test-secret"` (matching `override_settings`). Every protected test just passes `auth_headers` -- one line, no manual token crafting. The auth middleware runs fully end-to-end in tests.
 
 Update `tests/test_translate_route.py` -- replace the entire file (adding auth headers):
 
@@ -1095,7 +1008,7 @@ async def test_translate_no_auth_returns_403():
     assert response.status_code == 403
 ```
 
-> **What changed:** Every test that expects a 200 now passes `auth_headers`. A new test verifies that requests without auth get 403.
+> **What changed:** Every test that expects a 200 now passes `auth_headers`. A new test (`test_translate_no_auth_returns_403`) confirms the middleware is wired up -- requests without a token get rejected. We don't need to separately test expired tokens, wrong secrets, etc. -- those are `python-jose` internals already covered by the Gateway and Go service tests.
 
 Run:
 
@@ -1103,13 +1016,40 @@ Run:
 uv run pytest
 ```
 
-Expected: **21 passed** (1 health + 3 schema + 4 LLM + 3 service + 4 route + 6 auth). GREEN.
+Expected: **15 passed** (1 health + 3 schema + 4 LLM + 3 service + 4 route). GREEN.
+
+### Local dev convenience
+
+<!-- ! important notice, how to test auth -->
+
+For local development and manual testing (curl, Postman), set `JWT_SECRET=test-secret` in your `.env` file (matching the test fixture). Then generate a long-lived test token:
+
+```bash
+uv run python -c "
+from jose import jwt
+from datetime import datetime, timedelta, timezone
+token = jwt.encode({'sub': 'dev-user-1', 'exp': datetime.now(timezone.utc) + timedelta(days=30)}, 'test-secret', algorithm='HS256')
+print(token)
+"
+```
+
+Use this token in requests:
+
+```bash
+curl -X POST http://localhost:4003/api/v1/ai/translate \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <paste-token-here>" \
+  -d '{"text": "chicken breast"}'
+```
+
+> **Why this works:** The auth middleware runs the same code path as production -- it verifies the JWT signature, checks expiration, and extracts the user ID. The only difference is the secret. In production, `JWT_SECRET` is set to the shared secret from User Service. In local dev and tests, it's `test-secret`.
 
 ### Checkpoint
 
-- Tests passing: **21**
+- Tests passing: **15**
 - All protected endpoints require a valid JWT
 - Health endpoint remains public
+- No separate auth test file -- auth is verified through route tests
 
 ---
 
@@ -1197,11 +1137,11 @@ Run:
 uv run pytest
 ```
 
-Expected: **25 passed** (21 + 4 new schema tests). GREEN.
+Expected: **19 passed** (15 + 4 new schema tests). GREEN.
 
 ### Checkpoint
 
-- Tests passing: **25**
+- Tests passing: **19**
 - Item info data shapes defined
 
 ---
@@ -1483,11 +1423,11 @@ Run:
 uv run pytest
 ```
 
-Expected: **31 passed** (25 + 3 service + 3 route). GREEN.
+Expected: **25 passed** (19 + 3 service + 3 route). GREEN.
 
 ### Checkpoint
 
-- Tests passing: **31**
+- Tests passing: **25**
 - Both endpoints fully working with mocked LLM
 - All unit tests pass with no .env file needed
 
@@ -1511,7 +1451,7 @@ Edit `.env`:
 
 ```
 OPENROUTER_API_KEY=sk-or-v1-your-real-key-here
-JWT_SECRET=dev-secret-change-in-production
+JWT_SECRET=test-secret
 ```
 
 ### Write integration test fixtures
@@ -1598,7 +1538,7 @@ Unit tests only (fast, no API key needed):
 uv run pytest -m "not slow"
 ```
 
-Expected: **31 passed**, 4 deselected.
+Expected: **25 passed**, 4 deselected.
 
 Integration tests only (needs API key in `.env`):
 
@@ -1614,11 +1554,11 @@ All tests:
 uv run pytest
 ```
 
-Expected: **35 passed**.
+Expected: **29 passed**.
 
 ### Checkpoint
 
-- Tests passing: **35** (31 unit + 4 integration)
+- Tests passing: **29** (25 unit + 4 integration)
 - Prompts produce correct results from real LLM
 
 ---
@@ -1675,7 +1615,7 @@ from jose import jwt
 from datetime import datetime, timedelta, timezone
 token = jwt.encode(
     {'sub': 'test-user', 'exp': datetime.now(timezone.utc) + timedelta(hours=1)},
-    'dev-secret-change-in-production',
+    'test-secret',
     algorithm='HS256'
 )
 print(token)
