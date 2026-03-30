@@ -107,9 +107,7 @@ export default function ListPage() {
     <div className="flex min-h-screen flex-col bg-zinc-50 dark:bg-zinc-950">
       {/* Top bar */}
       <header className="flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-3 dark:border-zinc-800 dark:bg-zinc-900">
-        <h1 className="text-base font-semibold text-zinc-800 dark:text-zinc-100">
-          🛒 Smart Grocery
-        </h1>
+        <h1 className="text-base font-semibold text-zinc-800 dark:text-zinc-100">Smart Grocery</h1>
         <div className="flex items-center gap-3">
           <Link href="/profile" className="text-sm text-zinc-500 transition hover:text-emerald-600">
             {user?.email}
@@ -122,7 +120,7 @@ export default function ListPage() {
                 : 'border border-zinc-200 text-zinc-600 hover:border-emerald-300 hover:text-emerald-600 dark:border-zinc-700'
             }`}
           >
-            ✨ AI
+            AI
           </button>
           <button
             onClick={() => {
@@ -142,8 +140,9 @@ export default function ListPage() {
         <main className="flex flex-1 flex-col gap-3 overflow-y-auto">
           {sections.length === 0 && !addingSection && (
             <div className="flex flex-col items-center gap-3 py-16 text-center">
-              <p className="text-2xl">🛒</p>
-              <p className="text-zinc-500">Your list is empty. Add a section to get started.</p>
+              <p className="text-sm text-zinc-400">
+                Your list is empty. Add a section to get started.
+              </p>
             </div>
           )}
 

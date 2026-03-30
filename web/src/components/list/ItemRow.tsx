@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ArrowLeftRight, Info, Lightbulb, Pencil, Trash2 } from 'lucide-react';
 import { lists } from '../../lib/api';
 import type { Item } from '../../types';
 import ItemAiPanel from './ItemAiPanel';
@@ -62,6 +63,10 @@ export default function ItemRow({ item, selected, onSelect, onUpdated, onDeleted
     );
   }
 
+  const iconBase = 'rounded p-1 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100';
+  const iconIdle = 'text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300';
+  const iconActive = 'text-emerald-600 !opacity-100';
+
   return (
     <li>
       <div
@@ -91,39 +96,29 @@ export default function ItemRow({ item, selected, onSelect, onUpdated, onDeleted
           )}
         </span>
 
-        <div className="flex items-center gap-1">
-          {/* AI buttons */}
+        <div className="flex items-center gap-0.5">
           <button
             onClick={(e) => {
               e.stopPropagation();
               toggleAi('info');
             }}
-            className={`rounded p-0.5 text-sm transition ${
-              aiFeature === 'info'
-                ? 'text-emerald-600'
-                : 'text-zinc-300 hover:text-zinc-600 dark:text-zinc-600 dark:hover:text-zinc-300'
-            }`}
+            className={`${iconBase} ${aiFeature === 'info' ? iconActive : iconIdle}`}
             title="Item Info"
           >
-            &#9432;
+            <Info size={14} />
           </button>
           <button
             onClick={(e) => {
               e.stopPropagation();
               toggleAi('alternatives');
             }}
-            className={`rounded p-0.5 text-sm transition ${
-              aiFeature === 'alternatives'
-                ? 'text-emerald-600'
-                : 'text-zinc-300 hover:text-zinc-600 dark:text-zinc-600 dark:hover:text-zinc-300'
-            }`}
+            className={`${iconBase} ${aiFeature === 'alternatives' ? iconActive : iconIdle}`}
             title="Alternatives"
           >
-            &#8644;
+            <ArrowLeftRight size={14} />
           </button>
 
-          {/* Quantity badge */}
-          <span className="min-w-[1.5rem] text-center text-xs font-medium text-zinc-500">
+          <span className="min-w-[1.5rem] text-center text-xs font-medium text-zinc-400">
             {item.quantity}
           </span>
 
@@ -132,41 +127,34 @@ export default function ItemRow({ item, selected, onSelect, onUpdated, onDeleted
               e.stopPropagation();
               toggleAi('inspire');
             }}
-            className={`rounded p-0.5 text-sm transition ${
-              aiFeature === 'inspire'
-                ? 'text-emerald-600'
-                : 'text-zinc-300 hover:text-zinc-600 dark:text-zinc-600 dark:hover:text-zinc-300'
-            }`}
+            className={`${iconBase} ${aiFeature === 'inspire' ? iconActive : iconIdle}`}
             title="Inspire"
           >
-            &#128161;
+            <Lightbulb size={14} />
           </button>
-
-          {/* Edit & Delete */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               setEditing(true);
             }}
-            className="rounded p-0.5 text-zinc-300 hover:text-zinc-700 dark:text-zinc-600 dark:hover:text-zinc-200"
+            className={`${iconBase} ${iconIdle}`}
             title="Edit"
           >
-            &#9998;
+            <Pencil size={14} />
           </button>
           <button
             onClick={(e) => {
               e.stopPropagation();
               handleDelete();
             }}
-            className="rounded p-0.5 text-zinc-300 hover:text-red-500 dark:text-zinc-600 dark:hover:text-red-400"
+            className={`${iconBase} text-zinc-400 hover:text-red-500 dark:text-zinc-500 dark:hover:text-red-400`}
             title="Delete"
           >
-            &#128465;
+            <Trash2 size={14} />
           </button>
         </div>
       </div>
 
-      {/* Inline AI panel */}
       {aiFeature && (
         <ItemAiPanel
           itemName={item.name_en}

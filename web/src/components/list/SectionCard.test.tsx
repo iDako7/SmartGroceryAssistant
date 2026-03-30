@@ -65,16 +65,19 @@ describe('SectionCard', () => {
 
   it('collapses and hides items when collapse button clicked', () => {
     renderSection();
-    fireEvent.click(screen.getByText('▼'));
+    // Collapse button is the first button in the header
+    const buttons = screen.getAllByRole('button');
+    fireEvent.click(buttons[0]); // collapse toggle
     expect(screen.queryByText('Apples')).toBeNull();
     expect(screen.queryByText('Bananas')).toBeNull();
   });
 
   it('expands again when collapse button clicked twice', () => {
     renderSection();
-    const toggle = screen.getByText('▼');
-    fireEvent.click(toggle);
-    fireEvent.click(screen.getByText('▶'));
+    const buttons = screen.getAllByRole('button');
+    fireEvent.click(buttons[0]); // collapse
+    const collapsedButtons = screen.getAllByRole('button');
+    fireEvent.click(collapsedButtons[0]); // expand
     expect(screen.getByText('Apples')).toBeInTheDocument();
   });
 
@@ -115,7 +118,7 @@ describe('SectionCard', () => {
 
   it('shows add item form when "+ Add item" is clicked', () => {
     renderSection();
-    fireEvent.click(screen.getByText('+ Add item'));
+    fireEvent.click(screen.getByText('Add item'));
     expect(screen.getByPlaceholderText('Item name')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Add' })).toBeInTheDocument();
   });
@@ -131,7 +134,7 @@ describe('SectionCard', () => {
     vi.mocked(lists.createItem).mockResolvedValue(newItem as never);
 
     const handlers = renderSection();
-    fireEvent.click(screen.getByText('+ Add item'));
+    fireEvent.click(screen.getByText('Add item'));
     const input = screen.getByPlaceholderText('Item name');
     await userEvent.type(input, 'Grapes');
     fireEvent.submit(input.closest('form')!);
@@ -142,15 +145,15 @@ describe('SectionCard', () => {
 
   it('does not create item when name is empty', async () => {
     renderSection();
-    fireEvent.click(screen.getByText('+ Add item'));
+    fireEvent.click(screen.getByText('Add item'));
     fireEvent.submit(screen.getByPlaceholderText('Item name').closest('form')!);
     expect(lists.createItem).not.toHaveBeenCalled();
   });
 
   it('cancels add item form', () => {
     renderSection();
-    fireEvent.click(screen.getByText('+ Add item'));
+    fireEvent.click(screen.getByText('Add item'));
     fireEvent.click(screen.getByText('Cancel'));
-    expect(screen.getByText('+ Add item')).toBeInTheDocument();
+    expect(screen.getByText('Add item')).toBeInTheDocument();
   });
 });
