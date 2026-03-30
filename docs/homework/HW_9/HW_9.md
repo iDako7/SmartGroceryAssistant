@@ -18,7 +18,7 @@ Smart Grocery addresses this by combining a curated domain knowledge base (Costc
 
 Dako (Qi Wei) — AI Service (Python/FastAPI, OpenRouter API). Responsible for the three-tier inference pipeline (Cache → KB → LLM), Knowledge Base module (SQLite + FTS5), Celery async worker, and all AI endpoints (translate, item-info, alternatives, inspire, suggest, clarify).
 
-Kaiyue (Sylvia) — User Service + List Service (Go/Gin). Responsible for user registration, JWT issuance, dietary profiles, and all shopping list CRUD operations (sections, items, soft deletes, ownership enforcement).
+Sylvia (Kaiyue Wei) — User Service + List Service (Go/Gin). Responsible for user registration, JWT issuance, dietary profiles, and all shopping list CRUD operations (sections, items, soft deletes, ownership enforcement). Infrastructure Setup and Observability for User and List Service.
 
 William (Xing) — API Gateway (Node.js/Fastify) + Frontend (Next.js/React). Responsible for JWT auth enforcement, rate limiting, HTTP proxying, Prometheus metrics integration, and the full web UI including the two-step AI suggest flow and per-item AI panels.
 
@@ -28,7 +28,7 @@ Three experiments, one per service owner:
 
 **Experiment 1 (William — Gateway):** Gateway throughput and per-service latency under increasing concurrency (1, 5, 20, 50 users). Evaluates whether the Gateway itself becomes a bottleneck and which downstream service limits system throughput.
 
-**Experiment 2 (Sylvia — User/List Service):** Concurrent write consistency under simultaneous list edits. Evaluates whether the database layer correctly serializes concurrent writes and whether cross-database user ownership checks hold under load.
+**Experiment 2 (Sylvia — User/List Service):** Concurrent write consistency under simultaneous list edits. Evaluates whether the database layer correctly serializes concurrent writes and whether cross-database user ownership checks hold under load. 
 
 **Experiment 3 (Dako — AI Service):** Tier routing effectiveness — cache hit rate, per-tier latency distribution, and estimated cost savings vs. a pure-LLM baseline. Evaluates whether the three-tier architecture delivers its promised speed and cost benefits.
 
