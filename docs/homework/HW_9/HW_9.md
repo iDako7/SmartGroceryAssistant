@@ -192,15 +192,27 @@ Eventual consistency gap: if User Service deletes a user while List Service is u
 
 ### 4.1 Course Readings
 
-CAP Theorem (Brewer) — Our system makes explicit CAP trade-offs per feature. Shopping list sync chooses AP (available and partition-tolerant) via CRDTs, while user account operations choose CP (consistent and partition-tolerant) via synchronous database writes. This per-feature approach aligns with the course's teaching that real systems don't make a single global CAP choice but rather decide per data path.
+**Parnas, "On the Criteria To Be Used in Decomposing Systems into Modules" (1972)** — Parnas's principle of information hiding is the foundational justification for our microservice boundaries. Each service (User, List, AI) encapsulates its own data store and internal logic behind a well-defined API. The User Service hides bcrypt hashing and JWT issuance details; the List Service hides soft-delete mechanics and section-based ownership; the AI Service hides the three-tier routing pipeline. No service needs to know another's implementation — only its HTTP contract. This is Parnas's module decomposition applied at the network boundary rather than the function boundary.
 
-Prometheus & Grafana Documentation — Our observability stack follows the Prometheus pull-based metrics model. Each service exposes a /metrics endpoint with standardized naming conventions (e.g., `smartgrocery_gateway_request_duration_seconds`), and Grafana dashboards aggregate these into service-level and system-level views. The course's emphasis on observability as a "sociotechnical problem" (citing Cindy Sridharan) guided our decision to define metrics naming conventions early, before individual service implementation began.
+**CAP Theorem (Brewer)** — Our system makes explicit CAP trade-offs per data path. User account operations (registration, login, profile updates) choose CP — synchronous PostgreSQL writes with immediate consistency, at the cost of unavailability if the database is down. Shopping list operations currently also choose CP via synchronous writes to `list_db`, but the long-term roadmap (§3.2) targets AP for list sync via CRDTs (OR-Set for items, LWW-Register for metadata), accepting temporary inconsistency across devices in exchange for offline availability. The per-feature CAP approach aligns with the course's teaching that real systems don't make a single global CAP choice but rather decide per data path.
 
 ### 4.2 External References
 
-Reference 1: Prometheus & Grafana Documentation — see §4.1 above.
+**[Microservices Patterns — Chris Richardson](https://microservices.io/patterns/microservices.html)** — Reference for the API Gateway, Database-per-Service, and Circuit Breaker patterns used in our architecture. Our Gateway implements the API Gateway pattern (single entry point, JWT enforcement, rate limiting, request routing), and our separate `user_db`/`list_db` databases follow the Database-per-Service pattern.
 
-Reference 2: [https://microservices.io/patterns/microservices.html](https://microservices.io/patterns/microservices.html)
+**Circuit Breaker Pattern (Nygard, *Release It!*)** — The AI Service wraps all OpenRouter LLM calls in a circuit breaker. When error rate exceeds 20% within a 30-second window, the breaker opens and subsequent requests immediately return a degraded response (cached result or KB fallback) instead of waiting for a slow or failing external API. This prevents a single slow dependency (the LLM at 2-5s per call) from cascading into full service outage.
+
+**Database-per-Service Pattern** — Our architecture uses separate PostgreSQL databases (`user_db` and `list_db`) rather than a shared database. This enforces service independence at the data layer — User Service cannot accidentally query list tables and vice versa — but sacrifices cross-database foreign keys and JOIN capability. Ownership enforcement (`sections.user_id`) must be validated in application code rather than by database constraints. This trade-off is central to Experiment 2 (§5.3).
+
+**AI Inference Optimization — Tiered Caching for LLM Cost Control** — The AI Service implements a tiered inference pipeline (Cache → KB → LLM) to minimize latency and cost. This approach draws from the broader pattern of hierarchical caching in distributed systems: serve from the fastest, cheapest layer possible and only escalate to expensive computation (cloud LLM calls at ~$0.003/request and 2-3s latency) when local layers miss. The Redis cache layer (~2ms) and SQLite KB layer (~30ms) together aim to handle 70%+ of requests without any LLM call. This is analogous to CPU cache hierarchies (L1 → L2 → L3 → main memory) applied to AI inference — each tier trades capacity for speed.
+
+**[Prometheus Documentation](https://prometheus.io/docs/)** — Reference for our pull-based metrics collection, histogram instrumentation, and PromQL alerting rules. Each service exposes standardized metrics following Prometheus naming conventions (`smartgrocery_{service}_{metric}_{unit}`). The course's emphasis on observability as a "sociotechnical problem" (citing Cindy Sridharan) guided our decision to define metrics naming conventions early, before individual service implementation began.
+
+**[Grafana Documentation](https://grafana.com/docs/grafana/latest/)** — Reference for our dashboard auto-provisioning and visualization. Grafana dashboards are defined as JSON files in `infra/grafana/provisioning/` and auto-loaded on container start, providing service-level and system-level views of request rates, latency distributions, and error rates across all services.
+
+**[OpenRouter API Documentation](https://openrouter.ai/docs)** — The AI Service uses OpenRouter as an LLM gateway rather than calling Anthropic's API directly. This allows model routing (selecting Claude or other models per request type) through a single integration point, using the OpenAI Python SDK with a base URL override.
+
+**[Celery Documentation](https://docs.celeryq.dev/)** — Reference for the async job pipeline in the AI Service. Long-running LLM calls (suggest, inspire) are offloaded to Celery workers to prevent blocking the FastAPI event loop. Results are stored in Redis and polled by the client.
 
 ### 4.3 Related Piazza Projects
 
@@ -534,13 +546,5 @@ The entire system runs with a single docker-compose up. No AWS account or API ke
 We welcome classmates to test Smart Grocery in two ways. As end users: install the Expo Go app, scan the QR code we will provide, and try creating a shared shopping list with a partner — especially with one device in airplane mode to exercise the offline sync. As load testers: clone the repo, run docker-compose up, and point Locust at the Gateway. Our Locust scripts are included in the repository. If classmates run tests on different hardware configurations, the comparison would strengthen our throughput analysis.
 
 The GitHub repository, setup instructions, and Locust scripts will be linked in our final Piazza post.
-
----
-
-## Appendix
-
-- [Architecture diagram]
-- [Links to GitHub repo, CI/CD dashboard, Grafana dashboard]
-- [Any supplementary data tables or charts]
 
 \*\*
