@@ -1,40 +1,29 @@
-"""Shared fixtures for ai-service tests."""
-
-import os
-import time
-from unittest.mock import AsyncMock, patch
-
 import pytest
-from fastapi.testclient import TestClient
+from datetime import datetime, timedelta, timezone
 from jose import jwt
-
-os.environ.setdefault("JWT_SECRET", "test-secret")
-os.environ.setdefault("SGA_REDIS_PORT", "6379")
-os.environ.setdefault("OPENROUTER_API_KEY", "test-key")
-
-
-def make_token(user_id: str = "user-test-123", secret: str = "test-secret") -> str:
-    payload = {"sub": user_id, "exp": int(time.time()) + 3600}
-    return jwt.encode(payload, secret, algorithm="HS256")
+from app.main import app
+from app.dependencies import get_settings
+from app.config import Settings
 
 
-@pytest.fixture(scope="session")
-def client():
-    """TestClient with mocked external services (Redis)."""
-    from app.main import app
-
-    with (
-        patch("app.services.cache.close_redis", new=AsyncMock()),
-    ):
-        with TestClient(app) as c:
-            yield c
+@pytest.fixture(autouse=True)
+def override_settings():
+    """Provide fake settings for all unit tests. No .env file needed."""
+    test_settings = Settings(
+        openrouter_api_key="test-key-not-real",
+        jwt_secret="test-secret",
+    )
+    app.dependency_overrides[get_settings] = lambda: test_settings
+    yield
+    app.dependency_overrides.clear()
 
 
 @pytest.fixture
-def auth_headers() -> dict:
-    return {"Authorization": f"Bearer {make_token()}"}
-
-
-@pytest.fixture
-def bad_auth_headers() -> dict:
-    return {"Authorization": "Bearer invalid.token.here"}
+def auth_headers():
+    """Create a valid JWT token for testing protected endpoints."""
+    payload = {
+        "sub": "test-user-123",
+        "exp": datetime.now(timezone.utc) + timedelta(hours=1),
+    }
+    token = jwt.encode(payload, "test-secret", algorithm="HS256")
+    return {"Authorization": f"Bearer {token}"}
