@@ -13,7 +13,9 @@ def get_settings() -> Settings:
     return Settings()
 
 
-def get_llm_client(settings: Settings = Depends(get_settings)) -> LLMClient:
+@lru_cache
+def get_llm_client() -> LLMClient:
+    settings = get_settings()
     return LLMClient(
         api_key=settings.openrouter_api_key,
         base_url=settings.openrouter_base_url,

@@ -17,12 +17,15 @@ async def test_item_info_success(auth_headers):
     )
     app.dependency_overrides[get_item_info_service] = lambda: mock_service
 
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.post(
-            "/api/v1/ai/item-info",
-            json={"name_en": "Chicken breast"},
-            headers=auth_headers,
-        )
+    try:
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            response = await client.post(
+                "/api/v1/ai/item-info",
+                json={"name_en": "Chicken breast"},
+                headers=auth_headers,
+            )
+    finally:
+        app.dependency_overrides.pop(get_item_info_service, None)
 
     assert response.status_code == 200
     data = response.json()
@@ -42,12 +45,15 @@ async def test_item_info_passes_all_fields(auth_headers):
     )
     app.dependency_overrides[get_item_info_service] = lambda: mock_service
 
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.post(
-            "/api/v1/ai/item-info",
-            json={"name_en": "Ranch", "name_zh": "牧场酱", "language_preference": "en-zh"},
-            headers=auth_headers,
-        )
+    try:
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            response = await client.post(
+                "/api/v1/ai/item-info",
+                json={"name_en": "Ranch", "name_zh": "牧场酱", "language_preference": "en-zh"},
+                headers=auth_headers,
+            )
+    finally:
+        app.dependency_overrides.pop(get_item_info_service, None)
 
     assert response.status_code == 200
     mock_service.get_info.assert_called_once_with(name_en="Ranch", name_zh="牧场酱", language_preference="en-zh")
