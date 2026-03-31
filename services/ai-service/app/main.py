@@ -1,17 +1,26 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from contextlib import asynccontextmanager
 
-from app.llm.client import LLMError
-from app.routes import health, translate, item_info
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="AI Service", version="0.1.0")
+from app.routes import ai, health
+from app.services import cache
 
 
-@app.exception_handler(LLMError)
-async def llm_error_handler(request: Request, exc: LLMError):
-    return JSONResponse(status_code=502, content={"detail": str(exc)})
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    await cache.close_redis()
 
+
+app = FastAPI(title="SmartGrocery AI Service", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(health.router)
-app.include_router(translate.router, prefix="/api/v1/ai")
-app.include_router(item_info.router, prefix="/api/v1/ai")
+app.include_router(ai.router)

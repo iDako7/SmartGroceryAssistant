@@ -16,7 +16,7 @@ Dako (@iDako7) -- AI Service + AI Worker + KB module
 
 **Being rewritten from scratch** with hybrid code style (OOP where needed, functions for pure logic) and TDD methodology. LLM-first approach: all endpoints work with LLM before adding KB and cache layers.
 
-Current phase: **Phase 1** -- Foundation + translate + item-info endpoints.
+Current phase: **Phase 2** -- All sync endpoints (translate, item-info, alternatives, per-item inspire, clarify) with LLMClient + domain functions architecture, two-tier model config, and optional user profile support.
 
 ## Architecture
 
@@ -60,3 +60,6 @@ uv run ruff format --check .                         # Format check
 - **JWT defense in depth** -- tokens verified at Gateway AND locally in auth middleware
 - **Celery broker is an implementation detail** -- MVP uses Redis, Phase 5 experiments with RabbitMQ
 - **KB is read-only in production** -- seeded offline, deployed as `.db` file, no write path in service code
+- **LLMClient class + domain functions** -- infrastructure (client, cache, JSON parsing) in `llm_client.py`, prompt logic in `domains.py`
+- **Two-tier model config** -- `OPENROUTER_MODEL_FAST` for simple tasks, `OPENROUTER_MODEL_FULL` for complex tasks
+- **User profile in request body** -- optional `profile` field on all endpoints, temporary until User Service integration

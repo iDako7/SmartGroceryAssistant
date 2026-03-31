@@ -6,7 +6,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **[MVP Blueprint](docs/MVP-PRD.md)** — gold standard for architecture, scope, and decisions
 - **AI Service detailed docs** in `services/ai-service/docs_AI_service/` — phased plan, design decisions, open questions, prototype
-- **Homework submissions** in `docs/homework/` — exempt from ownership review, any team member can merge
 - Historical docs archived in `docs/archive/`
 
 ## Team Ownership
@@ -91,7 +90,7 @@ Web (:3000) → API Gateway (:3001) → User Service (:4001) → user_db (Postgr
 
 - **Gateway** proxies all requests and enforces JWT auth, CORS, rate limiting (100/min)
 - **Sync AI features**: translate (bidirectional), item-info, alternatives, per-item inspire, clarifying questions — all served directly by the AI Service
-- **Async AI flow (two-step suggest)**: client calls `/api/v1/ai/clarify` for optional clarifying questions (sync) → POSTs to `/api/v1/ai/suggest` or `/api/v1/ai/inspire` with user context → job queued via Celery → worker processes via OpenRouter → result stored in Redis → client polls `/api/v1/ai/jobs/:id`
+- **Async AI flow**: client calls `/api/v1/ai/clarify` for optional clarifying questions (sync) → POSTs to `/api/v1/ai/suggest` or `/api/v1/ai/inspire` with user context → job queued via Celery → worker processes via OpenRouter → result stored in Redis → client polls `/api/v1/ai/jobs/:id`
 - **Two separate PostgreSQL databases**: `user_db` (users, profiles) and `list_db` (sections, items). Schemas in `infra/postgres/init.sql`
 - **RabbitMQ exchanges/queues**: defined in `infra/rabbitmq/definitions.json` (used by List Service for event publishing)
 - **AI async pipeline** uses Celery for task queuing (broker is an implementation detail — see `services/ai-service/docs_AI_service/` for details)

@@ -1,6 +1,6 @@
 # AI Service -- High Level Architecture Design Decisions
 
-**Last updated:** 2026-03-27
+**Last updated:** 2026-03-31
 **Purpose:** Concise reference for interviews and tech presentations. Each decision includes reasoning and why alternatives were rejected.
 
 ---
@@ -139,3 +139,71 @@
 - No scalability consideration: Hardcoded localhost, in-process state, synchronous everything -- works for 1 user, collapses at 10. Rearchitecting later is expensive.
 
 **Trade-off:** Will need infrastructure work if load actually grows. That's a good problem to have, and the interface design makes scaling a deployment change, not an architecture change.
+
+---
+
+## Service Layer: LLMClient Class + Domain Functions (Phase 2)
+
+**Decision:** Extract shared LLM infrastructure (OpenAI client, caching, JSON parsing) into an `LLMClient` class. Keep endpoint-specific logic (prompt construction, response shaping) as standalone async domain functions that receive the client as a parameter.
+
+**Why:** Phase 1 implemented everything as module-level functions in a single `claude.py` file, mixing infrastructure (client creation, cache lookup, JSON parsing) with domain logic (prompt text, response schemas). As the service grows from 3 to 5+ endpoints, this becomes harder to test and modify. Separating infrastructure from domain logic means:
+- Prompt changes don't touch infrastructure code
+- `LLMClient` can be mocked cleanly in domain function tests
+- When KB tier is added in Phase 4, `LLMClient` becomes one tier behind a router — domain functions don't change
+- The owner can test prompts directly by calling `LLMClient.call()` with arbitrary prompt strings
+
+**Why not alternatives:**
+
+- One service class per endpoint (AlternativesService, InspireService, etc.): Over-engineered for 7 endpoints that share identical infrastructure. Each class would duplicate the same constructor (`__init__(self, llm_client)`) and the same call-parse-fallback pattern. Creates unnecessary boilerplate.
+- Single AIService class with all methods: Simpler short-term, but becomes a god-class (15+ methods by Phase 5). Harder to test individual endpoints in isolation. Method count grows linearly with endpoints.
+- Keep module-level functions (status quo): Works for Phase 1's 3 endpoints, but the shared infrastructure (client, cache, JSON parsing) becomes implicit global state. Harder to test, harder to swap implementations.
+
+**Trade-off:** Two files instead of one (`llm_client.py` + `domains.py` vs `claude.py`). Slightly more indirection. Justified by testability and the clean Phase 4 upgrade path.
+
+---
+
+## Two-Tier Model Configuration (Phase 2)
+
+**Decision:** Configure two model tiers via environment variables: `OPENROUTER_MODEL_FAST` for simple tasks (translate, item-info) and `OPENROUTER_MODEL_FULL` for complex tasks (alternatives, inspire, clarify).
+
+**Why:** Different endpoints have vastly different complexity requirements. Translate and item-info are simple lookups — a smaller, cheaper model handles them well. Alternatives, inspire, and clarify require multi-step reasoning, recipe knowledge, and adaptive question generation — they benefit from a more capable model. Two tiers allow testing cheaper models on simple tasks without degrading complex task quality, finding the best cost/quality balance.
+
+**Why not alternatives:**
+
+- Single model for everything (Phase 1 status quo): Forces a choice between overpaying for simple tasks or under-serving complex ones. No room to optimize cost.
+- Per-endpoint model override (e.g., `OPENROUTER_MODEL_TRANSLATE`, `OPENROUTER_MODEL_CLARIFY`): Maximum flexibility but 7+ env vars to manage. Most endpoints within the same complexity tier will use the same model anyway. Premature granularity.
+
+**Trade-off:** Two env vars instead of one. If a third tier emerges (e.g., "reasoning" for suggest), it's a simple addition to the config and `LLMClient`.
+
+---
+
+## User Profile Delivery: Request Body (Temporary) (Phase 2)
+
+**Decision:** Accept an optional `profile` object (dietary restrictions, household_size, taste preferences) in the request body of all AI endpoints. Services use it if present, work without it.
+
+**Why:** User profile context improves AI response quality (e.g., suggesting vegan alternatives for a vegan user). The ideal approach is fetching the profile from User Service using the JWT's `user_id`, but User Service doesn't expose a profile endpoint with the needed fields yet. Embedding profile in the request body is a zero-dependency approach that unblocks prompt engineering work now.
+
+**Why not alternatives:**
+
+- AI Service fetches from User Service: Requires User Service to expose a new endpoint, adds inter-service HTTP call latency, needs caching and graceful degradation. Correct long-term solution, but blocked by cross-team dependency.
+- Gateway attaches profile to forwarded request: Adds business logic to the Gateway (which should only handle auth, routing, rate limiting). Violates Gateway's single responsibility.
+- Skip profile entirely for now: Delays prompt quality improvements. Profile context is the difference between generic and personalized suggestions.
+
+**Trade-off:** Clients must send profile data with each request (redundant payload). When User Service adds the profile endpoint, refactor to server-side fetch and remove the field from request bodies. The optional nature of the field means no breaking change when switching.
+
+---
+
+**Timeline:** 2026-03-30 — Phase 1 Reflection
+
+## Dependency Injection (DI) for Layer Boundaries (Phase 1)
+
+**Decision:** Use dependency injection as the core boundary pattern between route handlers, service/domain logic, and the LLM client layer.
+
+**Why:** DI keeps each layer focused on one responsibility and removes hidden global coupling. Dependencies can be replaced in tests, which makes behavior isolation and failure-path testing straightforward. This becomes more valuable as endpoint count grows and shared infrastructure evolves.
+
+**Why not alternatives:**
+
+- Implicit module-level globals: Faster to start, but harder to test and reason about as files grow.
+- Tight direct imports across layers: Creates rigid coupling where route changes can ripple into service and client internals.
+
+**Trade-off:** Slightly more constructor/wiring boilerplate. The added structure pays off in maintainability and testability as the system scales beyond the initial Phase 1 endpoints.

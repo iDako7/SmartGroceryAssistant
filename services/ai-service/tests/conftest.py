@@ -1,29 +1,60 @@
+"""Shared fixtures for ai-service tests."""
+
+import os
+import time
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from datetime import datetime, timedelta, timezone
+from fastapi.testclient import TestClient
 from jose import jwt
-from app.main import app
-from app.dependencies import get_settings
-from app.config import Settings
+
+os.environ.setdefault("JWT_SECRET", "test-secret")
+os.environ.setdefault("SGA_REDIS_PORT", "6379")
+os.environ.setdefault("OPENROUTER_API_KEY", "test-key")
 
 
-@pytest.fixture(autouse=True)
-def override_settings():
-    """Provide fake settings for all unit tests. No .env file needed."""
-    test_settings = Settings(
-        openrouter_api_key="test-key-not-real",
-        jwt_secret="test-secret",
-    )
-    app.dependency_overrides[get_settings] = lambda: test_settings
-    yield
-    app.dependency_overrides.clear()
+def make_token(user_id: str = "user-test-123", secret: str = "test-secret") -> str:
+    payload = {"sub": user_id, "exp": int(time.time()) + 3600}
+    return jwt.encode(payload, secret, algorithm="HS256")
+
+
+@pytest.fixture(scope="session")
+def client():
+    """TestClient with mocked external services (Redis)."""
+    from app.main import app
+
+    with (
+        patch("app.services.cache.close_redis", new=AsyncMock()),
+    ):
+        with TestClient(app) as c:
+            yield c
 
 
 @pytest.fixture
-def auth_headers():
-    """Create a valid JWT token for testing protected endpoints."""
-    payload = {
-        "sub": "test-user-123",
-        "exp": datetime.now(timezone.utc) + timedelta(hours=1),
-    }
-    token = jwt.encode(payload, "test-secret", algorithm="HS256")
-    return {"Authorization": f"Bearer {token}"}
+def auth_headers() -> dict:
+    return {"Authorization": f"Bearer {make_token()}"}
+
+
+@pytest.fixture
+def bad_auth_headers() -> dict:
+    return {"Authorization": "Bearer invalid.token.here"}
+
+
+@pytest.fixture
+def mock_llm_client():
+    """A mock LLMClient for domain function tests."""
+    from app.services.llm_client import LLMClient
+
+    client = MagicMock(spec=LLMClient)
+    client.call = AsyncMock(return_value="{}")
+    client.cache_key = MagicMock(side_effect=lambda prefix, data: f"ai:{prefix}:{data[:8]}")
+    client.parse_json = LLMClient.parse_json  # use real parse_json
+    return client
+
+
+@pytest.fixture
+def sample_profile():
+    """A sample UserProfile for tests that need profile data."""
+    from app.models import UserProfile
+
+    return UserProfile(dietary=["vegan", "gluten-free"], household_size=4, taste="spicy")
