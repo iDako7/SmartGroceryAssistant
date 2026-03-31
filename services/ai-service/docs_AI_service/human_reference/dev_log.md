@@ -31,3 +31,41 @@ For full reasoning, see `design_decisions.md`. For open items, see `open_questio
 **Data:** `services/ai-service/data/costco_raw/` (one JSON per department + metadata.json)
 
 **Fields per product:** productId, name, size, brandName, category, retailerRef, imageUrl, available
+
+---
+
+## 2026-03-30 — Phase 1 Reflection
+
+### System Design Decision
+
+**Dependency Injection (DI) as the core design decision for Phase 1.**
+
+I chose DI to keep clear boundaries between route, service, and LLM client layers. This lets me replace dependencies in tests, isolate behavior more easily, and keep the codebase maintainable as we add more endpoints in later phases.
+
+### Personal Learning
+
+I wanted to learn deeply during implementation. If I learned and wrote everything from scratch, this phase could take around one week.
+So I asked Claude Code to generate a very detailed implementation guide (around 1,500 lines, with step-by-step code and explanations).
+My expectation was: if I followed line by line, I could fully understand the whole codebase.
+
+What I learned:
+
+1. I now understand the overall code structure better.
+2. This method is low-efficiency for delivery speed, especially for test code.
+   - I usually spend most of my time writing functional code, so test code is still a different pattern for me.
+   - I spent a lot of time understanding mock setup and test data wiring.
+3. Too much detail at once can make me get lost in the "jungle of details."
+4. The step-by-step guide was heavily TDD-oriented, but in practice I sometimes missed the bigger architecture view.
+5. Processing all tasks + implementation + tests in two days was too heavy.
+
+So in the next phase, I will step back and change my workflow:
+
+1. Ask AI for a high-level implementation plan first (architecture and boundaries).
+2. Then ask AI for targeted test coverage by feature/user story.
+3. Then use AI to implement directly with TDD, but not copy/paste line by line across every file.
+
+I had a similar experience last year when I used AI-generated implementation guidance and learned a lot, especially in auth.
+The downside is speed: it is still too slow for my current delivery target.
+
+My focus going forward is clear: deliver a useful, usable product with a robust codebase I can maintain.
+This Phase 1 method helped me learn, but it is not fast enough, so I will improve the execution style in Phase 2.
