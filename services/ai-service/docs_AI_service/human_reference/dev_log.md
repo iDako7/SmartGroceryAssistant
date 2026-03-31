@@ -36,12 +36,6 @@ For full reasoning, see `design_decisions.md`. For open items, see `open_questio
 
 ## 2026-03-30 — Phase 1 Reflection
 
-### System Design Decision
-
-**Dependency Injection (DI) as the core design decision for Phase 1.**
-
-I chose DI to keep clear boundaries between route, service, and LLM client layers. This lets me replace dependencies in tests, isolate behavior more easily, and keep the codebase maintainable as we add more endpoints in later phases.
-
 ### Personal Learning
 
 I wanted to learn deeply during implementation. If I learned and wrote everything from scratch, this phase could take around one week.

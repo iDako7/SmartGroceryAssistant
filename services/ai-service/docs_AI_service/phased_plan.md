@@ -1,6 +1,6 @@
 # AI Service -- Phased Implementation Plan
 
-**Last updated:** 2026-03-28
+**Last updated:** 2026-03-30
 **Owner:** Dako (@iDako7)
 **Status:** Rewrite from scratch. LLM-first approach with TDD methodology.
 
@@ -19,7 +19,7 @@
 **Scope:**
 - FastAPI project skeleton with config (Pydantic Settings)
 - LLM client class (wraps OpenRouter via `openai` SDK, handles retries, structured JSON output)
-- Service layer classes (TranslateService, ItemInfoService) that hold LLM client reference
+- Module-level domain functions for translate and item-info (prompt construction, response shaping)
 - JWT auth middleware (local verification with shared secret, no dependency on User Service)
 - Prompt engineering: test prompts via raw API calls first, then integrate
 - Structured JSON output from LLM for uniform interface
@@ -29,13 +29,13 @@
 
 **Architecture:**
 ```
-Route (function) --> Service (class) --> LLM Client (class) --> OpenRouter API
+Route (function) --> domain function --> LLM Client (class) --> OpenRouter API
                                                                      |
-POST /translate  --> TranslateService  --> llm_client.chat()   --> structured JSON
-POST /item-info  --> ItemInfoService   --> llm_client.chat()   --> structured JSON
+POST /translate  --> translate()      --> llm_client.chat()   --> structured JSON
+POST /item-info  --> get_item_info()  --> llm_client.chat()   --> structured JSON
 ```
 
-**TDD workflow:** Write endpoint tests (mock LLM client) --> implement service --> implement route --> pass tests. Separately: integration tests with real LLM calls (marked slow, skipped in CI).
+**TDD workflow:** Write endpoint tests (mock LLM client) --> implement domain function --> implement route --> pass tests. Separately: integration tests with real LLM calls (marked slow, skipped in CI).
 
 **Open questions to resolve:** OQ-1 (LLM model selection -- resolve by testing prompts against candidate models)
 
@@ -50,27 +50,40 @@ POST /item-info  --> ItemInfoService   --> llm_client.chat()   --> structured JS
 
 ## Phase 2: Remaining Sync Endpoints
 
-**Goal:** All sync AI features from the prototype are working.
+**Goal:** All sync AI features from the prototype are working. LLMClient extracted as shared infrastructure; domain logic stays as standalone functions.
 
-**Endpoints:** `POST /alternatives`, `POST /inspire` (per-item), `POST /clarify`
+**Endpoints:** `POST /alternatives` (upgraded), `POST /inspire/item` (new), `POST /clarify` (new)
 
 **Scope:**
-- AlternativesService, InspireService, ClarifyService -- same OOP pattern as Phase 1
+- **LLMClient refactor:** Extract shared infrastructure (HTTP client, response caching, JSON parsing, retries) into an LLMClient class. Domain logic (prompt construction, response shaping) remains as standalone functions -- same pattern as Phase 1, not service classes.
+- **Two-tier model config:** `OPENROUTER_MODEL_FAST` for simple tasks (translate, item-info), `OPENROUTER_MODEL_FULL` for complex tasks (alternatives, inspire, clarify). Both configurable via env vars.
+- **User profile:** Optional `profile` field in request body (`{dietary, household_size, taste}`). Temporary approach -- will switch to fetching from User Service later. All endpoints use profile if present, work without it.
+- **Update existing endpoints:** translate and item-info also get optional profile support and use two-tier model config (`OPENROUTER_MODEL_FAST`).
+- **English-only:** All inputs assumed English for Phase 2. Bilingual output deferred. Normalization layer (dictionary-based, NOT LLM) comes in Phase 4 with KB.
 - Prompt engineering for complex outputs:
-  - Alternatives: match levels (Very close / Similar / Different but works), aisle hints
+  - Alternatives: match levels (Very close / Similar / Different but works), aisle hints. Breaking schema change from Phase 1.
   - Per-item inspire: 3 recipes with missing ingredients and "Add All" support
   - Clarify: 1-3 adaptive questions with tappable chip options, `allowOther` flag
-- User profile context (dietary restrictions, household size, language) fed into all prompts
+- **Inspire split:** Two separate paths -- `POST /inspire/item` (sync, Phase 2) and `POST /inspire/list` (async, Phase 3). NOT a single endpoint with mode detection.
 
-**Not in scope:** cache, KB, async
+**Not in scope:** cache, KB, async, bilingual output, input normalization
 
-**TDD workflow:** Same as Phase 1. By now the OOP pattern is familiar.
+**Architecture:**
+```
+Route (function) --> domain function --> LLMClient --> OpenRouter API
+                                             |
+                                        Redis Cache
+```
+
+**TDD workflow:** Same as Phase 1 -- write endpoint tests (mock LLMClient) --> implement domain function --> implement route --> pass tests. Domain functions are easy to test in isolation.
 
 **Exit criteria:**
-- `/alternatives` returns `{note, alts: [{name_en, name_zh, match, desc, where}]}`
-- `/inspire` (per-item) returns `{recipes: [{name, name_zh, emoji, desc, add}]}`
+- `/alternatives` returns `{note, alts: [{name_en, match, desc, where}]}`
+- `/inspire/item` returns `{recipes: [{name, emoji, desc, add: [{name_en}]}]}`
 - `/clarify` returns `{questions: [{q, options, allowOther}]}` with 1-3 adaptive questions
-- All 5 sync endpoints working with LLM, user profile context included
+- All 5 sync endpoints working with LLM
+- Optional user profile context supported in all endpoints
+- Two-tier model config operational
 
 ---
 
@@ -78,7 +91,7 @@ POST /item-info  --> ItemInfoService   --> llm_client.chat()   --> structured JS
 
 **Goal:** The two heavy AI features work as async jobs. The two-step suggest flow (clarify --> suggest) is wired end-to-end.
 
-**Endpoints:** `POST /suggest`, `POST /inspire` (per-list), `GET /jobs/:id`
+**Endpoints:** `POST /suggest`, `POST /inspire/list`, `GET /jobs/:id`
 
 **Scope:**
 - Celery app with Redis as broker
@@ -99,15 +112,15 @@ graph TD
 
     subgraph AIService[AI Service :4003]
         subgraph SyncFlow[Sync Endpoints - Phase 1 & 2]
-            SyncRoutes[Routes: translate, item-info, alternatives, inspire, clarify]
-            Services[Service Classes]
+            SyncRoutes[Routes: translate, item-info, alternatives, inspire/item, clarify]
+            DomainFns[Domain Functions]
             LLMClient[LLM Client]
 
-            SyncRoutes --> Services --> LLMClient
+            SyncRoutes --> DomainFns --> LLMClient
         end
 
         subgraph AsyncFlow[Async Endpoints]
-            AsyncRoutes[Routes: suggest, inspire per-list]
+            AsyncRoutes[Routes: suggest, inspire/list]
             CeleryBroker[(Redis Broker)]
 
             AsyncRoutes -->|enqueue task| CeleryBroker
@@ -125,7 +138,7 @@ graph TD
     CeleryBroker --> CeleryTask
 
     Client -->|POST sync endpoints| SyncRoutes
-    Services -->|structured JSON| Client
+    DomainFns -->|structured JSON| Client
     Client -->|POST suggest / inspire| AsyncRoutes
     AsyncRoutes -->|job_id, status: pending| Client
     Client -.->|poll GET /jobs/:id| ResultStore
