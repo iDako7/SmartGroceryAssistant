@@ -100,7 +100,7 @@ export default function AiPanel({ sections, items, selectedItem }: Props) {
     <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
       {/* Header */}
       <div className="border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-        <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">✨ AI Assistant</p>
+        <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">AI Assistant</p>
         {selectedItem && (
           <p className="mt-0.5 truncate text-xs text-zinc-400">
             Selected: <span className="font-medium text-emerald-600">{selectedItem.name_en}</span>

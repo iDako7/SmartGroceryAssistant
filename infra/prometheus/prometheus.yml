@@ -1,0 +1,20 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "api-gateway"
+    static_configs:
+      - targets: ["api-gateway:3001"]
+
+  - job_name: "user-service"
+    static_configs:
+      - targets: ["user-service:4001"]
+
+  - job_name: "list-service"
+    static_configs:
+      - targets: ["list-service:4002"]
+
+  - job_name: "ai-service"
+    static_configs:
+      - targets: ["ai-service:4003"]

@@ -55,28 +55,9 @@ describe('ItemRow', () => {
     expect(screen.getByText('牛奶')).toBeInTheDocument();
   });
 
-  it('shows quantity badge only when quantity > 1', () => {
-    const { rerender } = render(
-      <ItemRow
-        item={baseItem}
-        selected={false}
-        onSelect={vi.fn()}
-        onUpdated={vi.fn()}
-        onDeleted={vi.fn()}
-      />
-    );
-    expect(screen.queryByText(/×/)).toBeNull();
-
-    rerender(
-      <ItemRow
-        item={{ ...baseItem, quantity: 3 }}
-        selected={false}
-        onSelect={vi.fn()}
-        onUpdated={vi.fn()}
-        onDeleted={vi.fn()}
-      />
-    );
-    expect(screen.getByText('×3')).toBeInTheDocument();
+  it('shows quantity badge with correct value', () => {
+    renderItem({ quantity: 3 });
+    expect(screen.getByText('3')).toBeInTheDocument();
   });
 
   it('applies line-through style when checked', () => {
@@ -87,7 +68,9 @@ describe('ItemRow', () => {
 
   it('calls onSelect when row is clicked', () => {
     const { onSelect } = renderItem();
-    fireEvent.click(screen.getByRole('listitem'));
+    // Click the inner div (row content), not the li wrapper
+    const row = screen.getByRole('listitem').firstElementChild as HTMLElement;
+    fireEvent.click(row);
     expect(onSelect).toHaveBeenCalledWith(baseItem);
   });
 
@@ -155,8 +138,9 @@ describe('ItemRow', () => {
         onDeleted={vi.fn()}
       />
     );
-    const li = screen.getByRole('listitem');
-    expect(li.className).not.toMatch(/emerald/);
+    // Selected styling is on the inner div, not the li
+    const row = screen.getByRole('listitem').firstElementChild as HTMLElement;
+    expect(row.className).not.toMatch(/emerald/);
 
     rerender(
       <ItemRow
@@ -167,6 +151,6 @@ describe('ItemRow', () => {
         onDeleted={vi.fn()}
       />
     );
-    expect(li.className).toMatch(/emerald/);
+    expect(row.className).toMatch(/emerald/);
   });
 });

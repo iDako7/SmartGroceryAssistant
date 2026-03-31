@@ -1,0 +1,95 @@
+{
+  "title": "API Gateway Overview",
+  "uid": "gateway-overview",
+  "tags": ["gateway", "observability"],
+  "timezone": "browser",
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "panels": [
+    {
+      "title": "Request Rate (req/s)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{job=\"api-gateway\"}[1m])",
+          "legendFormat": "{{method}} {{route}} {{status_code}}",
+          "datasource": { "type": "prometheus" }
+        }
+      ]
+    },
+    {
+      "title": "Request Latency p50 / p95 / p99",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket{job=\"api-gateway\"}[1m]))",
+          "legendFormat": "p50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=\"api-gateway\"}[1m]))",
+          "legendFormat": "p95"
+        },
+        {
+          "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{job=\"api-gateway\"}[1m]))",
+          "legendFormat": "p99"
+        }
+      ]
+    },
+    {
+      "title": "Upstream Latency by Service (p95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, rate(gateway_upstream_duration_seconds_bucket{job=\"api-gateway\"}[1m])) by (service)",
+          "legendFormat": "{{service}}"
+        }
+      ]
+    },
+    {
+      "title": "Error Rate by Service",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "expr": "rate(gateway_upstream_errors_total{job=\"api-gateway\"}[1m])",
+          "legendFormat": "{{service}} {{route}}"
+        }
+      ]
+    },
+    {
+      "title": "In-Flight Requests",
+      "type": "gauge",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 16 },
+      "targets": [
+        {
+          "expr": "gateway_in_flight_requests{job=\"api-gateway\"}"
+        }
+      ]
+    },
+    {
+      "title": "Rate Limit Hits",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 16 },
+      "targets": [
+        {
+          "expr": "sum(rate(rate_limit_hits_total{job=\"api-gateway\"}[1m]))"
+        }
+      ]
+    },
+    {
+      "title": "Upstream Latency Summary (p50/p95)",
+      "type": "table",
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 16 },
+      "targets": [
+        {
+          "expr": "gateway_request_latency_summary{job=\"api-gateway\"}",
+          "legendFormat": "{{service}} p{{quantile}}"
+        }
+      ]
+    }
+  ]
+}
