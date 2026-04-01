@@ -1,0 +1,239 @@
+# Test fixtures for the alternatives endpoint eval.
+# 5 cases covering dietary constraints, cuisine preferences, and general substitution.
+# Each case has: is-json schema check, javascript structure validation, and 2x llm-rubric judges.
+# Variables (name_en, reason, taste, profile_context) map to the prompt template.
+
+# Case 1: General alternative (no constraints)
+- description: "sriracha — general alternative with no constraints"
+  vars:
+    name_en: "sriracha"
+    reason: ""
+    taste: ""
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["note", "alts"]
+        properties:
+          note: { type: string }
+          alts:
+            type: array
+            minItems: 3
+            maxItems: 4
+            items:
+              type: object
+              required: ["name_en", "match", "desc", "where"]
+              properties:
+                name_en: { type: string }
+                match: { type: string }
+                desc: { type: string }
+                where: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const matchValues = ['Very close', 'Similar', 'Different but works'];
+        const valid = d.note && d.alts && d.alts.length >= 3 && d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match && matchValues.includes(a.match) && a.desc && a.where);
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid structure or match values' };
+    - type: llm-rubric
+      value: |
+        Alternatives are genuinely available in North American grocery stores. Match levels are honest — 'Very close' should be another hot sauce, not a completely different condiment. Each alternative should be a real product. 'where' gives useful store location.
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Alternatives are genuinely available in North American grocery stores. Match levels are honest — 'Very close' should be another hot sauce, not a completely different condiment. Each alternative should be a real product. 'where' gives useful store location.
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
+
+# Case 2: Dietary constraint (lactose intolerant)
+- description: "butter + lactose intolerant — all alts must be dairy-free"
+  vars:
+    name_en: "butter"
+    reason: "lactose intolerant"
+    taste: ""
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["note", "alts"]
+        properties:
+          note: { type: string }
+          alts:
+            type: array
+            minItems: 3
+            maxItems: 4
+            items:
+              type: object
+              required: ["name_en", "match", "desc", "where"]
+              properties:
+                name_en: { type: string }
+                match: { type: string }
+                desc: { type: string }
+                where: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const matchValues = ['Very close', 'Similar', 'Different but works'];
+        const valid = d.note && d.alts && d.alts.length >= 3 && d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match && matchValues.includes(a.match) && a.desc && a.where);
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid structure or match values' };
+    - type: llm-rubric
+      value: |
+        ALL alternatives must be dairy-free/lactose-free since the user specified lactose intolerant. Suggesting regular margarine without checking dairy content is not acceptable. Match levels should be honest — plant-based butters are 'Similar' not 'Very close' for baking. The note should acknowledge the lactose constraint.
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        ALL alternatives must be dairy-free/lactose-free since the user specified lactose intolerant. Suggesting regular margarine without checking dairy content is not acceptable. Match levels should be honest — plant-based butters are 'Similar' not 'Very close' for baking. The note should acknowledge the lactose constraint.
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
+
+# Case 3: General substitution (vinegar)
+- description: "rice vinegar — general substitution for acidic condiment"
+  vars:
+    name_en: "rice vinegar"
+    reason: ""
+    taste: ""
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["note", "alts"]
+        properties:
+          note: { type: string }
+          alts:
+            type: array
+            minItems: 3
+            maxItems: 4
+            items:
+              type: object
+              required: ["name_en", "match", "desc", "where"]
+              properties:
+                name_en: { type: string }
+                match: { type: string }
+                desc: { type: string }
+                where: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const matchValues = ['Very close', 'Similar', 'Different but works'];
+        const valid = d.note && d.alts && d.alts.length >= 3 && d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match && matchValues.includes(a.match) && a.desc && a.where);
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid structure or match values' };
+    - type: llm-rubric
+      value: |
+        Alternatives should be other vinegars or acidic condiments that work in similar recipes. Match levels are honest. Alternatives are available in North American stores. 'where' gives useful location (condiment aisle, Asian section).
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Alternatives should be other vinegars or acidic condiments that work in similar recipes. Match levels are honest. Alternatives are available in North American stores. 'where' gives useful location (condiment aisle, Asian section).
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
+
+# Case 4: Vegetarian protein substitution
+- description: "chicken breast + vegetarian — all alts must be meat-free"
+  vars:
+    name_en: "chicken breast"
+    reason: "vegetarian"
+    taste: ""
+    profile_context: "\nDietary: vegetarian."
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["note", "alts"]
+        properties:
+          note: { type: string }
+          alts:
+            type: array
+            minItems: 3
+            maxItems: 4
+            items:
+              type: object
+              required: ["name_en", "match", "desc", "where"]
+              properties:
+                name_en: { type: string }
+                match: { type: string }
+                desc: { type: string }
+                where: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const matchValues = ['Very close', 'Similar', 'Different but works'];
+        const valid = d.note && d.alts && d.alts.length >= 3 && d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match && matchValues.includes(a.match) && a.desc && a.where);
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid structure or match values' };
+    - type: llm-rubric
+      value: |
+        ALL alternatives must be vegetarian — no meat, poultry, or fish. This is a protein substitution test. Alternatives like tofu, tempeh, seitan, or plant-based chicken are expected. Match levels should reflect that these are 'Different but works' or 'Similar' — not 'Very close' since texture/flavor differ significantly from chicken.
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        ALL alternatives must be vegetarian — no meat, poultry, or fish. This is a protein substitution test. Alternatives like tofu, tempeh, seitan, or plant-based chicken are expected. Match levels should reflect that these are 'Different but works' or 'Similar' — not 'Very close' since texture/flavor differ significantly from chicken.
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
+
+# Case 5: Cuisine-specific preference
+- description: "fish sauce + Korean taste — cuisine-appropriate alternatives"
+  vars:
+    name_en: "fish sauce"
+    reason: ""
+    taste: "Korean"
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["note", "alts"]
+        properties:
+          note: { type: string }
+          alts:
+            type: array
+            minItems: 3
+            maxItems: 4
+            items:
+              type: object
+              required: ["name_en", "match", "desc", "where"]
+              properties:
+                name_en: { type: string }
+                match: { type: string }
+                desc: { type: string }
+                where: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const matchValues = ['Very close', 'Similar', 'Different but works'];
+        const valid = d.note && d.alts && d.alts.length >= 3 && d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match && matchValues.includes(a.match) && a.desc && a.where);
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid structure or match values' };
+    - type: llm-rubric
+      value: |
+        Since the user has Korean taste preference, alternatives should be cuisine-appropriate. Korean alternatives like 국간장 (soup soy sauce) or 액젓 (Korean fish sauce/anchovy sauce) are ideal. Non-Korean alternatives are acceptable but should work in Korean cooking. Match levels are honest.
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Since the user has Korean taste preference, alternatives should be cuisine-appropriate. Korean alternatives like 국간장 (soup soy sauce) or 액젓 (Korean fish sauce/anchovy sauce) are ideal. Non-Korean alternatives are acceptable but should work in Korean cooking. Match levels are honest.
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0

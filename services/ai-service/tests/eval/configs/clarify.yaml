@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+# Clarify eval config — Scenario 1: OpenAI tier comparison (current prompt).
+# Tests clarifying question generation for grocery lists of varying ambiguity.
+# Run: npx promptfoo@latest eval -c configs/clarify.yaml --env-file ../../.env --no-cache
+
+description: "Clarify — Scenario 1: OpenAI tier comparison (current prompt)"
+
+prompts:
+  - file://../prompts/current/clarify.json
+
+providers:
+  - id: openrouter:openai/gpt-5.4-nano
+    label: "GPT-5.4 Nano ($0.20/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 600
+  - id: openrouter:openai/gpt-5.4-mini
+    label: "GPT-5.4 Mini ($0.75/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 600
+
+tests: file://../fixtures/clarify_cases.yaml

@@ -1,0 +1,503 @@
+Description,name_en,other_items,taste,profile_context,"[GPT-5.4 Nano ($0.20/M)] prompts/current/inspire_item.json: [{""role"":""system"",""content"":""You are a creative cooking assistant. Respond with JSON only.""},{""role"":""user"",""content"":""Cooking assistant. User has \""{{name_en}}\"".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther items: {{other_items}}{% if profile_context %}{{profile_context}}{% endif %}\n3 recipe ideas, each with 2-3 extra ingredients the user does NOT already have.\nRecipes must span different cooking styles (e.g., not two salads or two stir-fries).{% if profile_context %}\nIf the focal item conflicts with the user's dietary restrictions, acknowledge the conflict and adapt all recipes to the restriction.{% endif %}\nONLY JSON: {\""recipes\"": [{\""name\"": \""Name\"", \""emoji\"": \""🍳\"", \""desc\"": \""Max 8 words\"", \""add\"": [{\""name_en\"": \""Item\""}]}]}""}]",Status,Score,Named Scores,Grader Reason,Comment,"[Gemini 2.5 Flash ($0.30/M)] prompts/current/inspire_item.json: [{""role"":""system"",""content"":""You are a creative cooking assistant. Respond with JSON only.""},{""role"":""user"",""content"":""Cooking assistant. User has \""{{name_en}}\"".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther items: {{other_items}}{% if profile_context %}{{profile_context}}{% endif %}\n3 recipe ideas, each with 2-3 extra ingredients the user does NOT already have.\nRecipes must span different cooking styles (e.g., not two salads or two stir-fries).{% if profile_context %}\nIf the focal item conflicts with the user's dietary restrictions, acknowledge the conflict and adapt all recipes to the restriction.{% endif %}\nONLY JSON: {\""recipes\"": [{\""name\"": \""Name\"", \""emoji\"": \""🍳\"", \""desc\"": \""Max 8 words\"", \""add\"": [{\""name_en\"": \""Item\""}]}]}""}]",Status,Score,Named Scores,Grader Reason,Comment,"[Claude Haiku 4.5 ($1.00/M)] prompts/current/inspire_item.json: [{""role"":""system"",""content"":""You are a creative cooking assistant. Respond with JSON only.""},{""role"":""user"",""content"":""Cooking assistant. User has \""{{name_en}}\"".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther items: {{other_items}}{% if profile_context %}{{profile_context}}{% endif %}\n3 recipe ideas, each with 2-3 extra ingredients the user does NOT already have.\nRecipes must span different cooking styles (e.g., not two salads or two stir-fries).{% if profile_context %}\nIf the focal item conflicts with the user's dietary restrictions, acknowledge the conflict and adapt all recipes to the restriction.{% endif %}\nONLY JSON: {\""recipes\"": [{\""name\"": \""Name\"", \""emoji\"": \""🍳\"", \""desc\"": \""Max 8 words\"", \""add\"": [{\""name_en\"": \""Item\""}]}]}""}]",Status,Score,Named Scores,Grader Reason,Comment
+salmon + rice/soy sauce — simple Japanese direction,salmon,"rice, soy sauce",,,"{
+  ""recipes"": [
+    {
+      ""name"": ""Teriyaki Salmon Rice Bowl"",
+      ""emoji"": ""🍣"",
+      ""desc"": ""Glazed salmon over savory rice."",
+      ""add"": [
+        {
+          ""name_en"": ""Honey""
+        },
+        {
+          ""name_en"": ""Garlic""
+        },
+        {
+          ""name_en"": ""Ginger""
+        }
+      ]
+    },
+    {
+      ""name"": ""Soy-Glazed Pan-Seared Salmon"",
+      ""emoji"": ""🍳"",
+      ""desc"": ""Crispy skin, salty-sweet soy glaze."",
+      ""add"": [
+        {
+          ""name_en"": ""Butter""
+        },
+        {
+          ""name_en"": ""Lime""
+        },
+        {
+          ""name_en"": ""Green onions""
+        }
+      ]
+    },
+    {
+      ""name"": ""Baked Miso Salmon with Rice"",
+      ""emoji"": ""🔥"",
+      ""desc"": ""Broiled miso crust, tender salmon."",
+      ""add"": [
+        {
+          ""name_en"": ""Miso paste""
+        },
+        {
+          ""name_en"": ""Brown sugar""
+        },
+        {
+          ""name_en"": ""Sesame oil""
+        }
+      ]
+    }
+  ]
+}",PASS,1.00,,All assertions passed,,"{
+  ""recipes"": [
+    {
+      ""name"": ""Teriyaki Salmon Bowl"",
+      ""emoji"": ""🍣"",
+      ""desc"": ""Sweet and savory, easy weeknight meal."",
+      ""add"": [
+        {
+          ""name_en"": ""Broccoli""
+        },
+        {
+          ""name_en"": ""Honey""
+        },
+        {
+          ""name_en"": ""Ginger""
+        }
+      ]
+    },
+    {
+      ""name"": ""Spicy Salmon Tacos"",
+      ""emoji"": ""🌮"",
+      ""desc"": ""Flavorful, fresh, and fun taco night."",
+      ""add"": [
+        {
+          ""name_en"": ""Tortillas""
+        },
+        {
+          ""name_en"": ""Avocado""
+        },
+        {
+          ""name_en"": ""Lime""
+        }
+      ]
+    },
+    {
+      ""name"": ""Creamy Salmon Pasta"",
+      ""emoji"": ""🍝"",
+      ""desc"": ""Rich, comforting, and elegant pasta dish."",
+      ""add"": [
+        {
+          ""name_en"": ""Pasta""
+        },
+        {
+          ""name_en"": ""Heavy Cream""
+        },
+        {
+          ""name_en"": ""Spinach""
+        }
+      ]
+    }
+  ]
+}",PASS,0.95,,All assertions passed,,"{
+  ""recipes"": [
+    {
+      ""name"": ""Teriyaki Glazed Salmon"",
+      ""emoji"": ""🍳"",
+      ""desc"": ""Pan-seared with sticky sweet glaze"",
+      ""add"": [
+        {""name_en"": ""Mirin""},
+        {""name_en"": ""Ginger""},
+        {""name_en"": ""Garlic""}
+      ]
+    },
+    {
+      ""name"": ""Salmon Poke Bowl"",
+      ""emoji"": ""🥗"",
+      ""desc"": ""Fresh raw salmon over rice"",
+      ""add"": [
+        {""name_en"": ""Sesame oil""},
+        {""name_en"": ""Cucumber""},
+        {""name_en"": ""Avocado""}
+      ]
+    },
+    {
+      ""name"": ""Baked Salmon en Papillote"",
+      ""emoji"": ""📦"",
+      ""desc"": ""Steamed in parchment with vegetables"",
+      ""add"": [
+        {""name_en"": ""Lemon""},
+        {""name_en"": ""Asparagus""},
+        {""name_en"": ""Butter""}
+      ]
+    }
+  ]
+}",PASS,0.97,,All assertions passed,
+tofu + gochujang/sesame oil/rice — Korean direction,tofu,"gochujang, sesame oil, rice",,,"{""recipes"":[{""name"":""Gochujang Sesame Tofu Stir-Fry"",""emoji"":""🍜"",""desc"":""Sweet-spicy tofu with sesame aroma"",""add"":[{""name_en"":""soy sauce""},{""name_en"":""garlic""},{""name_en"":""green onions""}]},{""name"":""Crispy Baked Gochujang Tofu Bites"",""emoji"":""🔥"",""desc"":""Sticky glaze, crunchy outside, tender inside"",""add"":[{""name_en"":""cornstarch""},{""name_en"":""brown sugar""},{""name_en"":""rice vinegar""}]},{""name"":""Tofu Rice Bowl with Sesame Gochujang Sauce"",""emoji"":""🥗"",""desc"":""Warm rice bowl with tangy tofu"",""add"":[{""name_en"":""cucumber""},{""name_en"":""carrot""},{""name_en"":""soy sauce""}]}]}",FAIL,0.84,,"All three recipes are practical home-cooking and clearly center tofu. The added ingredients avoid gochujang, sesame oil, and rice. Descriptions are concise and under 8 words. The recipes are Korean-influenced due to gochujang and sesame flavoring, but only one or possibly two are recognizably Korean dishes; names like 'stir-fry' and 'rice bowl' are generic rather than clearly Korean dish types, so the requirement that at least 2 of 3 be recognizably Korean is not fully satisfied.",,"{
+  ""recipes"": [
+    {
+      ""name"": ""Spicy Gochujang Tofu Stir-fry"",
+      ""emoji"": ""🥢"",
+      ""desc"": ""Quick, flavorful, and easy weeknight meal."",
+      ""add"": [
+        {
+          ""name_en"": ""Broccoli""
+        },
+        {
+          ""name_en"": ""Bell Pepper""
+        },
+        {
+          ""name_en"": ""Soy Sauce""
+        }
+      ]
+    },
+    {
+      ""name"": ""Crispy Tofu Rice Bowl"",
+      ""emoji"": ""🍚"",
+      ""desc"": ""Hearty, healthy, and satisfying vegan bowl."",
+      ""add"": [
+        {
+          ""name_en"": ""Avocado""
+        },
+        {
+          ""name_en"": ""Cucumber""
+        },
+        {
+          ""name_en"": ""Sriracha""
+        }
+      ]
+    },
+    {
+      ""name"": ""Gochujang Tofu Skewers"",
+      ""emoji"": ""🍢"",
+      ""desc"": ""Grilled, smoky, and deliciously marinated tofu."",
+      ""add"": [
+        {
+          ""name_en"": ""Pineapple Chunks""
+        },
+        {
+          ""name_en"": ""Red Onion""
+        },
+        {
+          ""name_en"": ""Lime""
+        }
+      ]
+    }
+  ]
+}",FAIL,0.81,,"While the recipes are practical, use tofu as a key ingredient, don't duplicate user's existing ingredients, and have concise descriptions, they fail the Korean-influence requirement. Only Recipe 1 (Gochujang Stir-fry) is recognizably Korean. Recipe 2 (with avocado, cucumber, sriracha) is a generic fusion bowl, and Recipe 3 (with pineapple and lime) is tropical/fusion. The rubric requires at least 2 of 3 to be recognizably Korean dishes, which is not met.",,"{
+  ""recipes"": [
+    {
+      ""name"": ""Crispy Tofu Steak with Garlic"",
+      ""emoji"": ""🍳"",
+      ""desc"": ""Pan-seared tofu with crispy golden exterior"",
+      ""add"": [
+        {""name_en"": ""Garlic""},
+        {""name_en"": ""Soy sauce""}
+      ]
+    },
+    {
+      ""name"": ""Silken Tofu Soup"",
+      ""emoji"": ""🍲"",
+      ""desc"": ""Warm broth with soft tofu cubes"",
+      ""add"": [
+        {""name_en"": ""Vegetable broth""},
+        {""name_en"": ""Green onions""},
+        {""name_en"": ""Ginger""}
+      ]
+    },
+    {
+      ""name"": ""Baked Gochujang Tofu"",
+      ""emoji"": ""🔥"",
+      ""desc"": ""Spicy baked tofu with crispy edges"",
+      ""add"": [
+        {""name_en"": ""Honey""},
+        {""name_en"": ""Garlic""}
+      ]
+    }
+  ]
+}",FAIL,0.74,,"While the recipes are practical, use tofu as a key ingredient, avoid listing already-owned ingredients, and have concise descriptions, they fail the Korean-influence requirement. Only 1 of 3 recipes (Baked Gochujang Tofu) is recognizably Korean. The other two are generic (Crispy Tofu Steak, Silken Tofu Soup) despite the user having gochujang and sesame oil, which should drive Korean-influenced suggestions.",
+avocado + no other items — should produce diverse recipes,avocado,none,,,"{
+  ""recipes"": [
+    {
+      ""name"": ""Creamy Avocado Toast"",
+      ""emoji"": ""🥑"",
+      ""desc"": ""Toasty crunch with creamy avocado mash"",
+      ""add"": [
+        { ""name_en"": ""bread"" },
+        { ""name_en"": ""lemon juice"" },
+        { ""name_en"": ""salt"" }
+      ]
+    },
+    {
+      ""name"": ""Spicy Avocado Taco Filling"",
+      ""emoji"": ""🌮"",
+      ""desc"": ""Zesty avocado bites for taco nights"",
+      ""add"": [
+        { ""name_en"": ""tortillas"" },
+        { ""name_en"": ""lime juice"" },
+        { ""name_en"": ""cumin"" }
+      ]
+    },
+    {
+      ""name"": ""Avocado Smoothie (Green Boost)"",
+      ""emoji"": ""🥤"",
+      ""desc"": ""Creamy smoothie with a fresh tang"",
+      ""add"": [
+        { ""name_en"": ""milk"" },
+        { ""name_en"": ""honey"" },
+        { ""name_en"": ""ice"" }
+      ]
+    }
+  ]
+}",PASS,1.00,,All assertions passed,,"{
+  ""recipes"": [
+    {
+      ""name"": ""Avocado Toast with Everything Bagel Seasoning"",
+      ""emoji"": ""🍞"",
+      ""desc"": ""Quick, creamy, crunchy breakfast or snack."",
+      ""add"": [
+        { ""name_en"": ""Sourdough bread"" },
+        { ""name_en"": ""Everything bagel seasoning"" }
+      ]
+    },
+    {
+      ""name"": ""Spicy Shrimp and Avocado Salad"",
+      ""emoji"": ""🍤"",
+      ""desc"": ""Fresh, zesty, and satisfying lunch or light dinner."",
+      ""add"": [
+        { ""name_en"": ""Cooked shrimp"" },
+        { ""name_en"": ""Lime"" },
+        { ""name_en"": ""Cilantro"" }
+      ]
+    },
+    {
+      ""name"": ""Grilled Chicken with Avocado Salsa"",
+      ""emoji"": ""🍗"",
+      ""desc"": ""Flavorful, healthy main course with fresh salsa."",
+      ""add"": [
+        { ""name_en"": ""Chicken breasts"" },
+        { ""name_en"": ""Red onion"" },
+        { ""name_en"": ""Jalapeño"" }
+      ]
+    }
+  ]
+}",FAIL,0.85,,"Recipes are practical and avocado-centric, descriptions are concise (≤8 words). However, diversity is weak: the shrimp salad (lime, cilantro) and grilled chicken with avocado salsa (jalapeño, cilantro) are both Latin/Mexican-influenced. Only the avocado toast represents a distinctly different style. The rubric emphasizes diversity as 'the key test,' and two of three recipes share a very similar cuisine profile.",,"{
+  ""recipes"": [
+    {
+      ""name"": ""Creamy Avocado Pasta"",
+      ""emoji"": ""🍝"",
+      ""desc"": ""Smooth pasta with garlic and lemon"",
+      ""add"": [
+        {""name_en"": ""Pasta""},
+        {""name_en"": ""Garlic""},
+        {""name_en"": ""Lemon""}
+      ]
+    },
+    {
+      ""name"": ""Baked Avocado Eggs"",
+      ""emoji"": ""🥚"",
+      ""desc"": ""Roasted avocado halves with baked eggs"",
+      ""add"": [
+        {""name_en"": ""Eggs""},
+        {""name_en"": ""Salt""},
+        {""name_en"": ""Black pepper""}
+      ]
+    },
+    {
+      ""name"": ""Avocado Chocolate Mousse"",
+      ""emoji"": ""🍫"",
+      ""desc"": ""Creamy dessert with cocoa and honey"",
+      ""add"": [
+        {""name_en"": ""Cocoa powder""},
+        {""name_en"": ""Honey""},
+        {""name_en"": ""Vanilla extract""}
+      ]
+    }
+  ]
+}",PASS,0.96,,All assertions passed,
+chicken thigh + Mexican items + vegetarian profile — conflict handling,chicken thigh,"tortillas, cilantro, lime",,"
+Dietary: vegetarian.","{
+  ""recipes"": [
+    {
+      ""name"": ""Chicken-less Lime Cilantro Taco Bowl"",
+      ""emoji"": ""🌮"",
+      ""desc"": ""Smoky lime cilantro taco bowl"",
+      ""add"": [
+        { ""name_en"": ""black beans"" },
+        { ""name_en"": ""chopped red onion"" },
+        { ""name_en"": ""shredded lettuce"" }
+      ]
+    },
+    {
+      ""name"": ""Cilantro Lime Tortilla Soup (Vegetarian)"",
+      ""emoji"": ""🍲"",
+      ""desc"": ""Warm tortilla soup with lime-cilantro"",
+      ""add"": [
+        { ""name_en"": ""vegetable broth"" },
+        { ""name_en"": ""diced tomatoes"" },
+        { ""name_en"": ""garlic"" }
+      ]
+    },
+    {
+      ""name"": ""Grilled-Style Cilantro Lime Veggie Wrap"",
+      ""emoji"": ""🥙"",
+      ""desc"": ""Charred veggie wraps with lime zing"",
+      ""add"": [
+        { ""name_en"": ""bell peppers"" },
+        { ""name_en"": ""zucchini"" },
+        { ""name_en"": ""olive oil"" }
+      ]
+    }
+  ]
+}",PASS,0.93,,All assertions passed,,"{
+  ""recipes"": [
+    {
+      ""name"": ""Spicy Black Bean Tostadas"",
+      ""emoji"": ""🌮"",
+      ""desc"": ""Crispy tostadas with flavorful black beans."",
+      ""add"": [
+        {
+          ""name_en"": ""Black Beans""
+        },
+        {
+          ""name_en"": ""Cotija Cheese""
+        },
+        {
+          ""name_en"": ""Avocado""
+        }
+      ]
+    },
+    {
+      ""name"": ""Lime-Cilantro Rice Bowls"",
+      ""emoji"": ""🍚"",
+      ""desc"": ""Fresh, zesty rice bowls with vibrant veggies."",
+      ""add"": [
+        {
+          ""name_en"": ""Brown Rice""
+        },
+        {
+          ""name_en"": ""Bell Peppers""
+        },
+        {
+          ""name_en"": ""Corn""
+        }
+      ]
+    },
+    {
+      ""name"": ""Veggie & Lime Skewers"",
+      ""emoji"": ""🍢"",
+      ""desc"": ""Grilled skewers with a tangy lime marinade."",
+      ""add"": [
+        {
+          ""name_en"": ""Zucchini""
+        },
+        {
+          ""name_en"": ""Red Onion""
+        },
+        {
+          ""name_en"": ""Halloumi Cheese""
+        }
+      ]
+    }
+  ]
+}",FAIL,0.64,,"The model provided vegetarian alternatives but did NOT explicitly acknowledge the conflict between the user's chicken thigh request and their vegetarian dietary restriction. The rubric states 'ignoring the conflict entirely is NOT acceptable' — while the model implicitly applied the vegetarian restriction, it never noted or addressed the tension, which constitutes ignoring the conflict. Other criteria (no duplicate ingredients, mostly Mexican-leaning, concise descriptions) are met.",,"{
+  ""conflict"": ""Chicken thigh conflicts with vegetarian diet"",
+  ""adapted_to"": ""vegetarian"",
+  ""recipes"": [
+    {
+      ""name"": ""Crispy Tofu Tacos"",
+      ""emoji"": ""🌮"",
+      ""desc"": ""Golden tofu with cilantro lime crunch"",
+      ""add"": [
+        {""name_en"": ""Extra-firm tofu""},
+        {""name_en"": ""Cornstarch""},
+        {""name_en"": ""Chipotle mayo""}
+      ]
+    },
+    {
+      ""name"": ""Cilantro Lime Rice Bowl"",
+      ""emoji"": ""🍚"",
+      ""desc"": ""Fluffy rice with roasted vegetables medley"",
+      ""add"": [
+        {""name_en"": ""White rice""},
+        {""name_en"": ""Bell peppers""},
+        {""name_en"": ""Black beans""}
+      ]
+    },
+    {
+      ""name"": ""Charred Vegetable Quesadillas"",
+      ""emoji"": ""🔥"",
+      ""desc"": ""Melted cheese with grilled squash inside"",
+      ""add"": [
+        {""name_en"": ""Zucchini""},
+        {""name_en"": ""Oaxaca cheese""},
+        {""name_en"": ""Jalapeños""}
+      ]
+    }
+  ]
+}",PASS,0.99,,All assertions passed,
+"bok choy + garlic/oyster sauce — authentic Chinese, not fusion",bok choy,"garlic, oyster sauce",,,"{""recipes"":[{""name"":""Garlic Oyster Bok Choy Stir-Fry"",""emoji"":""🥢"",""desc"":""Savory quick stir-fry, tender-crisp bok choy"",""add"":[{""name_en"":""sesame oil""},{""name_en"":""white pepper""},{""name_en"":""cornstarch""}]},{""name"":""Oyster Sauce Braised Bok Choy (Quick Simmer)"",""emoji"":""🍲"",""desc"":""Silky braise with garlicky oyster goodness"",""add"":[{""name_en"":""chicken stock""},{""name_en"":""light soy sauce""},{""name_en"":""sugar""}]},{""name"":""Bok Choy Garlic-Oyster Sheet Pan Roast"",""emoji"":""🔥"",""desc"":""Roasted edges, glossy garlic-oyster finish"",""add"":[{""name_en"":""chili flakes""},{""name_en"":""olive oil""},{""name_en"":""toasted sesame seeds""}]}]}",PASS,0.86,,All assertions passed,,"{
+  ""recipes"": [
+    {
+      ""name"": ""Bok Choy with Garlic & Oyster Sauce Stir-fry"",
+      ""emoji"": ""🥢"",
+      ""desc"": ""Quick, savory, classic stir-fry"",
+      ""add"": [
+        { ""name_en"": ""Sesame Oil"" },
+        { ""name_en"": ""Soy Sauce"" }
+      ]
+    },
+    {
+      ""name"": ""Steamed Bok Choy with Savory Topping"",
+      ""emoji"": ""♨️"",
+      ""desc"": ""Healthy, simple, elegant side dish"",
+      ""add"": [
+        { ""name_en"": ""Fresh Ginger"" },
+        { ""name_en"": ""Chili Flakes"" }
+      ]
+    },
+    {
+      ""name"": ""Bok Choy Noodle Soup"",
+      ""emoji"": ""🍜"",
+      ""desc"": ""Comforting, hearty, flavorful soup"",
+      ""add"": [
+        { ""name_en"": ""Chicken Broth"" },
+        { ""name_en"": ""Ramen Noodles"" },
+        { ""name_en"": ""Mushrooms"" }
+      ]
+    }
+  ]
+}",PASS,0.92,,All assertions passed,,"{
+  ""recipes"": [
+    {
+      ""name"": ""Garlic Oyster Bok Choy Stir-Fry"",
+      ""emoji"": ""🍳"",
+      ""desc"": ""Quick wok-tossed greens with savory sauce"",
+      ""add"": [
+        {""name_en"": ""Sesame oil""},
+        {""name_en"": ""Red chili flakes""}
+      ]
+    },
+    {
+      ""name"": ""Creamy Bok Choy Soup"",
+      ""emoji"": ""🍲"",
+      ""desc"": ""Silky broth with tender greens"",
+      ""add"": [
+        {""name_en"": ""Chicken broth""},
+        {""name_en"": ""Heavy cream""},
+        {""name_en"": ""Ginger""}
+      ]
+    },
+    {
+      ""name"": ""Roasted Bok Choy with Garlic"",
+      ""emoji"": ""🔥"",
+      ""desc"": ""Caramelized leaves with crispy edges"",
+      ""add"": [
+        {""name_en"": ""Olive oil""},
+        {""name_en"": ""Lemon""}
+      ]
+    }
+  ]
+}",FAIL,0.65,,Only 1 of 3 recipes (the stir-fry) is recognizably Chinese. 'Creamy Bok Choy Soup' with heavy cream and 'Roasted Bok Choy with Garlic' using olive oil and lemon are clearly Western/fusion dishes. The rubric requires at least 2 of 3 to be recognizably Chinese and explicitly states recipes should not be westernized. This is a significant failure on the core authenticity requirements.,

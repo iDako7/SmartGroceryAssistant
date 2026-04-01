@@ -1,0 +1,4042 @@
+evalId: eval-IWu-2026-04-01T02:39:31
+results:
+  version: 3
+  timestamp: '2026-04-01T02:39:31.934Z'
+  prompts:
+    - raw: >-
+        [{"role":"system","content":"You are a grocery expert. Respond with JSON
+        only."},{"role":"user","content":"Find 3-4 alternatives for
+        \"{{name_en}}\" available in North American stores.{% if reason %} User
+        reason: {{reason}}.{% endif %}{% if taste %} User taste: {{taste}}.{%
+        endif %}{% if profile_context %}{{profile_context}}{% endif %}\nONLY
+        JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\":
+        \"Name\", \"match\": \"Very close|Similar|Different but works\",
+        \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+      label: >-
+        prompts/current/alternatives.json: [{"role":"system","content":"You are
+        a grocery expert. Respond with JSON
+        only."},{"role":"user","content":"Find 3-4 alternatives for
+        \"{{name_en}}\" available in North American stores.{% if reason %} User
+        reason: {{reason}}.{% endif %}{% if taste %} User taste: {{taste}}.{%
+        endif %}{% if profile_context %}{{profile_context}}{% endif %}\nONLY
+        JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\":
+        \"Name\", \"match\": \"Very close|Similar|Different but works\",
+        \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+      id: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      provider: GPT-5.4 Nano ($0.20/M)
+      metrics:
+        score: 3.99
+        testPassCount: 1
+        testFailCount: 4
+        testErrorCount: 0
+        assertPassCount: 14
+        assertFailCount: 6
+        totalLatencyMs: 319570
+        tokenUsage:
+          prompt: 469
+          completion: 1743
+          cached: 0
+          total: 2212
+          numRequests: 5
+          completionDetails:
+            reasoning: 0
+            acceptedPrediction: 0
+            rejectedPrediction: 0
+          assertions:
+            total: 7344
+            prompt: 5585
+            completion: 1759
+            cached: 0
+            numRequests: 0
+            completionDetails:
+              reasoning: 0
+              acceptedPrediction: 0
+              rejectedPrediction: 0
+        namedScores: {}
+        namedScoresCount: {}
+        cost: 0
+    - raw: >-
+        [{"role":"system","content":"You are a grocery expert. Respond with JSON
+        only."},{"role":"user","content":"Find 3-4 alternatives for
+        \"{{name_en}}\" available in North American stores.{% if reason %} User
+        reason: {{reason}}.{% endif %}{% if taste %} User taste: {{taste}}.{%
+        endif %}{% if profile_context %}{{profile_context}}{% endif %}\nONLY
+        JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\":
+        \"Name\", \"match\": \"Very close|Similar|Different but works\",
+        \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+      label: >-
+        prompts/current/alternatives.json: [{"role":"system","content":"You are
+        a grocery expert. Respond with JSON
+        only."},{"role":"user","content":"Find 3-4 alternatives for
+        \"{{name_en}}\" available in North American stores.{% if reason %} User
+        reason: {{reason}}.{% endif %}{% if taste %} User taste: {{taste}}.{%
+        endif %}{% if profile_context %}{{profile_context}}{% endif %}\nONLY
+        JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\":
+        \"Name\", \"match\": \"Very close|Similar|Different but works\",
+        \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+      id: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      provider: GPT-5.4 Mini ($0.75/M)
+      metrics:
+        score: 4.0249999999999995
+        testPassCount: 2
+        testFailCount: 3
+        testErrorCount: 0
+        assertPassCount: 15
+        assertFailCount: 5
+        totalLatencyMs: 10335
+        tokenUsage:
+          prompt: 469
+          completion: 1159
+          cached: 0
+          total: 1628
+          numRequests: 5
+          completionDetails:
+            reasoning: 0
+            acceptedPrediction: 0
+            rejectedPrediction: 0
+          assertions:
+            total: 6483
+            prompt: 5031
+            completion: 1452
+            cached: 0
+            numRequests: 0
+            completionDetails:
+              reasoning: 0
+              acceptedPrediction: 0
+              rejectedPrediction: 0
+        namedScores: {}
+        namedScoresCount: {}
+        cost: 0
+  results:
+    - cost: 0
+      error: >-
+        The alternatives are real products commonly found in North American
+        grocery stores, and the 'where' fields give useful aisle locations.
+        However, the 'Very close' entry is not another hot sauce; it is a
+        chili-garlic sauce, which makes the match level less honest per the
+        rubric.
+      gradingResult:
+        pass: false
+        score: 0.8849999999999999
+        reason: >-
+          The alternatives are real products commonly found in North American
+          grocery stores, and the 'where' fields give useful aisle locations.
+          However, the 'Very close' entry is not another hot sauce; it is a
+          chili-garlic sauce, which makes the match level less honest per the
+          rubric.
+        namedScores: {}
+        tokensUsed:
+          total: 1380
+          prompt: 1071
+          completion: 309
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - note
+                  - alts
+                properties:
+                  note:
+                    type: string
+                  alts:
+                    type: array
+                    minItems: 3
+                    maxItems: 4
+                    items:
+                      type: object
+                      required:
+                        - name_en
+                        - match
+                        - desc
+                        - where
+                      properties:
+                        name_en:
+                          type: string
+                        match:
+                          type: string
+                        desc:
+                          type: string
+                        where:
+                          type: string
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                Alternatives are genuinely available in North American grocery
+                stores. Match levels are honest — 'Very close' should be another
+                hot sauce, not a completely different condiment. Each
+                alternative should be a real product. 'where' gives useful store
+                location.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.82
+            reason: >-
+              All four alternatives are real products genuinely available in
+              North American grocery stores. The match levels are reasonable:
+              Cholula is 'Similar' (fair - it's a hot sauce but different flavor
+              profile), Frank's RedHot is 'Different but works' (honest - it's
+              thinner and more vinegary), Huy Fong Garlic Chili Sauce is 'Very
+              close' (appropriate - it's from the same brand family and has a
+              similar chili-garlic profile), and Lee Kum Kee Chili Garlic Sauce
+              is 'Similar' (fair). The 'where' fields give useful, accurate
+              store location guidance. One minor issue: the Huy Fong entry is
+              slightly awkwardly worded ('similar style' in parentheses in the
+              name, and 'depending on the specific product variety' is vague),
+              but the product itself is real and the match level is honest.
+              Overall the output meets the rubric criteria well.
+            tokensUsed:
+              total: 818
+              prompt: 584
+              completion: 234
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"Needed to
+                swap sriracha with similarly flavored hot sauces that are
+                commonly stocked in North American grocery
+                stores.\",\"alts\":[{\"name_en\":\"Cholula Hot Sauce
+                (Red)\",\"match\":\"Similar\",\"desc\":\"A tangy, chili-forward
+                hot sauce with a mild-to-medium kick that works well as a
+                sriracha substitute for drizzling or mixing into
+                sauces.\",\"where\":\"International foods / hot sauce
+                aisle\"},{\"name_en\":\"Frank’s RedHot
+                (Original)\",\"match\":\"Different but works\",\"desc\":\"A
+                slightly thinner cayenne-based hot sauce with a vinegar tang
+                that adds heat and flavor to the same dishes where you’d use
+                sriracha.\",\"where\":\"Hot sauce aisle\"},{\"name_en\":\"Huy
+                Fong Foods Garlic Chili Sauce (similar style)\",\"match\":\"Very
+                close\",\"desc\":\"A very close chili-garlic style option with a
+                comparable spicy-sweet chili profile depending on the specific
+                product variety.\",\"where\":\"Asian foods aisle (often near
+                other chili sauces)\"},{\"name_en\":\"Lee Kum Kee Chili Garlic
+                Sauce\",\"match\":\"Similar\",\"desc\":\"A chili-garlic
+                condiment that’s thicker and more aromatic, giving a
+                sriracha-like kick for stir-fries, noodles, and
+                marinades.\",\"where\":\"Asian foods aisle (condiments/sauces
+                section)\"}]}\n</Output>\n<Rubric>\nAlternatives are genuinely
+                available in North American grocery stores. Match levels are
+                honest — 'Very close' should be another hot sauce, not a
+                completely different condiment. Each alternative should be a
+                real product. 'where' gives useful store
+                location.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Alternatives are genuinely available in North American grocery
+                stores. Match levels are honest — 'Very close' should be another
+                hot sauce, not a completely different condiment. Each
+                alternative should be a real product. 'where' gives useful store
+                location.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.72
+            reason: >-
+              The alternatives are real products commonly found in North
+              American grocery stores, and the 'where' fields give useful aisle
+              locations. However, the 'Very close' entry is not another hot
+              sauce; it is a chili-garlic sauce, which makes the match level
+              less honest per the rubric.
+            tokensUsed:
+              total: 562
+              prompt: 487
+              completion: 75
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"Needed to
+                swap sriracha with similarly flavored hot sauces that are
+                commonly stocked in North American grocery
+                stores.\",\"alts\":[{\"name_en\":\"Cholula Hot Sauce
+                (Red)\",\"match\":\"Similar\",\"desc\":\"A tangy, chili-forward
+                hot sauce with a mild-to-medium kick that works well as a
+                sriracha substitute for drizzling or mixing into
+                sauces.\",\"where\":\"International foods / hot sauce
+                aisle\"},{\"name_en\":\"Frank’s RedHot
+                (Original)\",\"match\":\"Different but works\",\"desc\":\"A
+                slightly thinner cayenne-based hot sauce with a vinegar tang
+                that adds heat and flavor to the same dishes where you’d use
+                sriracha.\",\"where\":\"Hot sauce aisle\"},{\"name_en\":\"Huy
+                Fong Foods Garlic Chili Sauce (similar style)\",\"match\":\"Very
+                close\",\"desc\":\"A very close chili-garlic style option with a
+                comparable spicy-sweet chili profile depending on the specific
+                product variety.\",\"where\":\"Asian foods aisle (often near
+                other chili sauces)\"},{\"name_en\":\"Lee Kum Kee Chili Garlic
+                Sauce\",\"match\":\"Similar\",\"desc\":\"A chili-garlic
+                condiment that’s thicker and more aromatic, giving a
+                sriracha-like kick for stir-fries, noodles, and
+                marinades.\",\"where\":\"Asian foods aisle (condiments/sauces
+                section)\"}]}\n</Output>\n<Rubric>\nAlternatives are genuinely
+                available in North American grocery stores. Match levels are
+                honest — 'Very close' should be another hot sauce, not a
+                completely different condiment. Each alternative should be a
+                real product. 'where' gives useful store
+                location.\n\n</Rubric>"}]
+      id: 3b6f82ab-bc86-446f-ac96-504b4bd429f7
+      latencyMs: 2069
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Find 3-4 alternatives for \"sriracha\" available in North American stores.\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"
+            }
+          ]
+        label: >-
+          prompts/current/alternatives.json: [{"role":"system","content":"You
+          are a grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Find 3-4 alternatives for
+          \"{{name_en}}\" available in North American stores.{% if reason %}
+          User reason: {{reason}}.{% endif %}{% if taste %} User taste:
+          {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{%
+          endif %}\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\":
+          [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but
+          works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+        config: {}
+      promptId: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "note": "Needed to swap sriracha with similarly flavored hot sauces that are commonly stocked in North American grocery stores.",
+            "alts": [
+              {
+                "name_en": "Cholula Hot Sauce (Red)",
+                "match": "Similar",
+                "desc": "A tangy, chili-forward hot sauce with a mild-to-medium kick that works well as a sriracha substitute for drizzling or mixing into sauces.",
+                "where": "International foods / hot sauce aisle"
+              },
+              {
+                "name_en": "Frank’s RedHot (Original)",
+                "match": "Different but works",
+                "desc": "A slightly thinner cayenne-based hot sauce with a vinegar tang that adds heat and flavor to the same dishes where you’d use sriracha.",
+                "where": "Hot sauce aisle"
+              },
+              {
+                "name_en": "Huy Fong Foods Garlic Chili Sauce (similar style)",
+                "match": "Very close",
+                "desc": "A very close chili-garlic style option with a comparable spicy-sweet chili profile depending on the specific product variety.",
+                "where": "Asian foods aisle (often near other chili sauces)"
+              },
+              {
+                "name_en": "Lee Kum Kee Chili Garlic Sauce",
+                "match": "Similar",
+                "desc": "A chili-garlic condiment that’s thicker and more aromatic, giving a sriracha-like kick for stir-fries, noodles, and marinades.",
+                "where": "Asian foods aisle (condiments/sauces section)"
+              }
+            ]
+          }
+        tokenUsage:
+          total: 421
+          prompt: 90
+          completion: 331
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.8849999999999999
+      success: false
+      testCase:
+        description: sriracha — general alternative with no constraints
+        vars: &ref_0
+          name_en: sriracha
+          reason: ''
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - note
+                - alts
+              properties:
+                note:
+                  type: string
+                alts:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items:
+                    type: object
+                    required:
+                      - name_en
+                      - match
+                      - desc
+                      - where
+                    properties:
+                      name_en:
+                        type: string
+                      match:
+                        type: string
+                      desc:
+                        type: string
+                      where:
+                        type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const matchValues = ['Very close', 'Similar', 'Different but
+              works'];
+
+              const valid = d.note && d.alts && d.alts.length >= 3 &&
+              d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+              matchValues.includes(a.match) && a.desc && a.where);
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or match values' };
+          - type: llm-rubric
+            value: >
+              Alternatives are genuinely available in North American grocery
+              stores. Match levels are honest — 'Very close' should be another
+              hot sauce, not a completely different condiment. Each alternative
+              should be a real product. 'where' gives useful store location.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Alternatives are genuinely available in North American grocery
+              stores. Match levels are honest — 'Very close' should be another
+              hot sauce, not a completely different condiment. Each alternative
+              should be a real product. 'where' gives useful store location.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 0
+      vars: *ref_0
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.9624999999999999
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 1233
+          prompt: 983
+          completion: 250
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - note
+                  - alts
+                properties:
+                  note:
+                    type: string
+                  alts:
+                    type: array
+                    minItems: 3
+                    maxItems: 4
+                    items:
+                      type: object
+                      required:
+                        - name_en
+                        - match
+                        - desc
+                        - where
+                      properties:
+                        name_en:
+                          type: string
+                        match:
+                          type: string
+                        desc:
+                          type: string
+                        where:
+                          type: string
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                Alternatives are genuinely available in North American grocery
+                stores. Match levels are honest — 'Very close' should be another
+                hot sauce, not a completely different condiment. Each
+                alternative should be a real product. 'where' gives useful store
+                location.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.95
+            reason: >-
+              All four alternatives are real, commercially available products
+              found in North American grocery stores. Huy Fong Chili Garlic
+              Sauce is genuinely very close to sriracha (same brand family,
+              similar flavor profile). Tabasco Sriracha and Kikkoman Sriracha
+              are legitimate sriracha-style sauces rated 'Similar' which is
+              honest. Cholula Chili Garlic is rated 'Different but works' which
+              is appropriately honest since it's more vinegary. All 'where'
+              fields give practical, accurate store location guidance. No match
+              level is inflated — nothing is called 'Very close' that isn't
+              actually a close substitute.
+            tokensUsed:
+              total: 705
+              prompt: 535
+              completion: 170
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"Sriracha
+                is often out of stock or discontinued in some markets, so these
+                alternatives can fill the same spicy, garlicky condiment
+                role.\",\"alts\":[{\"name_en\":\"Huy Fong Chili Garlic
+                Sauce\",\"match\":\"Very close\",\"desc\":\"Garlicky chili sauce
+                with a similar heat profile and thicker texture, though less
+                sweet than classic sriracha.\",\"where\":\"International foods
+                aisle or hot sauce section\"},{\"name_en\":\"Tabasco Sriracha
+                Sauce\",\"match\":\"Similar\",\"desc\":\"A smoother, thinner
+                sriracha-style sauce with balanced heat and a tangy
+                flavor.\",\"where\":\"Hot sauce aisle\"},{\"name_en\":\"Kikkoman
+                Sriracha Hot Chili Sauce\",\"match\":\"Similar\",\"desc\":\"A
+                widely available sriracha-style sauce with garlic, sweetness,
+                and moderate heat.\",\"where\":\"Asian foods aisle or condiment
+                aisle\"},{\"name_en\":\"Cholula Chili Garlic Hot
+                Sauce\",\"match\":\"Different but works\",\"desc\":\"More
+                vinegary and less sweet than sriracha, but it adds
+                garlic-forward heat to noodles, eggs, and
+                rice.\",\"where\":\"Hot sauce
+                aisle\"}]}\n</Output>\n<Rubric>\nAlternatives are genuinely
+                available in North American grocery stores. Match levels are
+                honest — 'Very close' should be another hot sauce, not a
+                completely different condiment. Each alternative should be a
+                real product. 'where' gives useful store
+                location.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Alternatives are genuinely available in North American grocery
+                stores. Match levels are honest — 'Very close' should be another
+                hot sauce, not a completely different condiment. Each
+                alternative should be a real product. 'where' gives useful store
+                location.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.9
+            reason: >-
+              The alternatives are real products and their store locations are
+              useful. The match levels are mostly honest: Huy Fong Chili Garlic
+              Sauce is another chili-garlic sauce and could be considered very
+              close; the others are plausible sriracha-style or garlic hot
+              sauces. They are generally available in North American grocery
+              stores.
+            tokensUsed:
+              total: 528
+              prompt: 448
+              completion: 80
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"Sriracha
+                is often out of stock or discontinued in some markets, so these
+                alternatives can fill the same spicy, garlicky condiment
+                role.\",\"alts\":[{\"name_en\":\"Huy Fong Chili Garlic
+                Sauce\",\"match\":\"Very close\",\"desc\":\"Garlicky chili sauce
+                with a similar heat profile and thicker texture, though less
+                sweet than classic sriracha.\",\"where\":\"International foods
+                aisle or hot sauce section\"},{\"name_en\":\"Tabasco Sriracha
+                Sauce\",\"match\":\"Similar\",\"desc\":\"A smoother, thinner
+                sriracha-style sauce with balanced heat and a tangy
+                flavor.\",\"where\":\"Hot sauce aisle\"},{\"name_en\":\"Kikkoman
+                Sriracha Hot Chili Sauce\",\"match\":\"Similar\",\"desc\":\"A
+                widely available sriracha-style sauce with garlic, sweetness,
+                and moderate heat.\",\"where\":\"Asian foods aisle or condiment
+                aisle\"},{\"name_en\":\"Cholula Chili Garlic Hot
+                Sauce\",\"match\":\"Different but works\",\"desc\":\"More
+                vinegary and less sweet than sriracha, but it adds
+                garlic-forward heat to noodles, eggs, and
+                rice.\",\"where\":\"Hot sauce
+                aisle\"}]}\n</Output>\n<Rubric>\nAlternatives are genuinely
+                available in North American grocery stores. Match levels are
+                honest — 'Very close' should be another hot sauce, not a
+                completely different condiment. Each alternative should be a
+                real product. 'where' gives useful store
+                location.\n\n</Rubric>"}]
+      id: 0be054a9-d510-4d46-ac45-2d327cf2c4c5
+      latencyMs: 1949
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Find 3-4 alternatives for \"sriracha\" available in North American stores.\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"
+            }
+          ]
+        label: >-
+          prompts/current/alternatives.json: [{"role":"system","content":"You
+          are a grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Find 3-4 alternatives for
+          \"{{name_en}}\" available in North American stores.{% if reason %}
+          User reason: {{reason}}.{% endif %}{% if taste %} User taste:
+          {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{%
+          endif %}\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\":
+          [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but
+          works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+        config: {}
+      promptId: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"note":"Sriracha is often out of stock or discontinued in some
+          markets, so these alternatives can fill the same spicy, garlicky
+          condiment role.","alts":[{"name_en":"Huy Fong Chili Garlic
+          Sauce","match":"Very close","desc":"Garlicky chili sauce with a
+          similar heat profile and thicker texture, though less sweet than
+          classic sriracha.","where":"International foods aisle or hot sauce
+          section"},{"name_en":"Tabasco Sriracha
+          Sauce","match":"Similar","desc":"A smoother, thinner sriracha-style
+          sauce with balanced heat and a tangy flavor.","where":"Hot sauce
+          aisle"},{"name_en":"Kikkoman Sriracha Hot Chili
+          Sauce","match":"Similar","desc":"A widely available sriracha-style
+          sauce with garlic, sweetness, and moderate heat.","where":"Asian foods
+          aisle or condiment aisle"},{"name_en":"Cholula Chili Garlic Hot
+          Sauce","match":"Different but works","desc":"More vinegary and less
+          sweet than sriracha, but it adds garlic-forward heat to noodles, eggs,
+          and rice.","where":"Hot sauce aisle"}]}
+        tokenUsage:
+          total: 316
+          prompt: 90
+          completion: 226
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9624999999999999
+      success: true
+      testCase:
+        description: sriracha — general alternative with no constraints
+        vars: &ref_1
+          name_en: sriracha
+          reason: ''
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - note
+                - alts
+              properties:
+                note:
+                  type: string
+                alts:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items:
+                    type: object
+                    required:
+                      - name_en
+                      - match
+                      - desc
+                      - where
+                    properties:
+                      name_en:
+                        type: string
+                      match:
+                        type: string
+                      desc:
+                        type: string
+                      where:
+                        type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const matchValues = ['Very close', 'Similar', 'Different but
+              works'];
+
+              const valid = d.note && d.alts && d.alts.length >= 3 &&
+              d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+              matchValues.includes(a.match) && a.desc && a.where);
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or match values' };
+          - type: llm-rubric
+            value: >
+              Alternatives are genuinely available in North American grocery
+              stores. Match levels are honest — 'Very close' should be another
+              hot sauce, not a completely different condiment. Each alternative
+              should be a real product. 'where' gives useful store location.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Alternatives are genuinely available in North American grocery
+              stores. Match levels are honest — 'Very close' should be another
+              hot sauce, not a completely different condiment. Each alternative
+              should be a real product. 'where' gives useful store location.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 0
+      vars: *ref_1
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      error: >-
+        The output fails on multiple rubric criteria: (1) Margarine is suggested
+        without verifying dairy-free content, which the rubric explicitly flags
+        as unacceptable; (2) Plant-based butter is rated 'Very close' when the
+        rubric specifies it should be 'Similar' for baking; (3) Ghee still
+        contains trace dairy and is presented somewhat misleadingly as a safe
+        option.
+      gradingResult:
+        pass: false
+        score: 0.575
+        reason: >-
+          The output fails on multiple rubric criteria: (1) Margarine is
+          suggested without verifying dairy-free content, which the rubric
+          explicitly flags as unacceptable; (2) Plant-based butter is rated
+          'Very close' when the rubric specifies it should be 'Similar' for
+          baking; (3) Ghee still contains trace dairy and is presented somewhat
+          misleadingly as a safe option.
+        namedScores: {}
+        tokensUsed:
+          total: 1462
+          prompt: 947
+          completion: 515
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - note
+                  - alts
+                properties:
+                  note:
+                    type: string
+                  alts:
+                    type: array
+                    minItems: 3
+                    maxItems: 4
+                    items:
+                      type: object
+                      required:
+                        - name_en
+                        - match
+                        - desc
+                        - where
+                      properties:
+                        name_en:
+                          type: string
+                        match:
+                          type: string
+                        desc:
+                          type: string
+                        where:
+                          type: string
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                ALL alternatives must be dairy-free/lactose-free since the user
+                specified lactose intolerant. Suggesting regular margarine
+                without checking dairy content is not acceptable. Match levels
+                should be honest — plant-based butters are 'Similar' not 'Very
+                close' for baking. The note should acknowledge the lactose
+                constraint.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.3
+            reason: >-
+              The output fails on multiple rubric criteria: (1) Margarine is
+              suggested without verifying dairy-free content, which the rubric
+              explicitly flags as unacceptable; (2) Plant-based butter is rated
+              'Very close' when the rubric specifies it should be 'Similar' for
+              baking; (3) Ghee still contains trace dairy and is presented
+              somewhat misleadingly as a safe option.
+            tokensUsed:
+              total: 928
+              prompt: 509
+              completion: 419
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"These
+                alternatives can provide similar cooking, baking, or spreading
+                use without the lactose in regular
+                butter.\",\"alts\":[{\"name_en\":\"Lactose-free
+                butter\",\"match\":\"Very close\",\"desc\":\"Made from dairy but
+                treated to remove lactose, so it behaves much like regular
+                butter.\",\"where\":\"Dairy section or specialty lactose-free
+                foods\"},{\"name_en\":\"Plant-based butter / vegan
+                butter\",\"match\":\"Very close\",\"desc\":\"A non-dairy spread
+                made from oils and sometimes cultured for a butter-like taste
+                and texture.\",\"where\":\"Refrigerated dairy alternatives
+                section\"},{\"name_en\":\"Margarine\",\"match\":\"Similar\",\"desc\":\"A
+                butter substitute made from vegetable oils that works well for
+                spreading, cooking, and some baking.\",\"where\":\"Refrigerated
+                spreads section\"},{\"name_en\":\"Ghee\",\"match\":\"Different
+                but works\",\"desc\":\"Clarified butter with most milk solids
+                and lactose removed, often tolerated better by
+                lactose-intolerant people.\",\"where\":\"Cooking oils or
+                specialty dairy section\"}]}\n</Output>\n<Rubric>\nALL
+                alternatives must be dairy-free/lactose-free since the user
+                specified lactose intolerant. Suggesting regular margarine
+                without checking dairy content is not acceptable. Match levels
+                should be honest — plant-based butters are 'Similar' not 'Very
+                close' for baking. The note should acknowledge the lactose
+                constraint.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                ALL alternatives must be dairy-free/lactose-free since the user
+                specified lactose intolerant. Suggesting regular margarine
+                without checking dairy content is not acceptable. Match levels
+                should be honest — plant-based butters are 'Similar' not 'Very
+                close' for baking. The note should acknowledge the lactose
+                constraint.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0
+            reason: >-
+              The note does acknowledge the lactose constraint, but the
+              alternatives are not all dairy-free/lactose-free: margarine can
+              contain dairy depending on the product, and ghee is not dairy-free
+              (though it is low in lactose). Also, the match level for
+              plant-based butter is marked 'Very close' rather than the rubric's
+              required 'Similar'. Therefore the output does not satisfy the
+              rubric.
+            tokensUsed:
+              total: 534
+              prompt: 438
+              completion: 96
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"These
+                alternatives can provide similar cooking, baking, or spreading
+                use without the lactose in regular
+                butter.\",\"alts\":[{\"name_en\":\"Lactose-free
+                butter\",\"match\":\"Very close\",\"desc\":\"Made from dairy but
+                treated to remove lactose, so it behaves much like regular
+                butter.\",\"where\":\"Dairy section or specialty lactose-free
+                foods\"},{\"name_en\":\"Plant-based butter / vegan
+                butter\",\"match\":\"Very close\",\"desc\":\"A non-dairy spread
+                made from oils and sometimes cultured for a butter-like taste
+                and texture.\",\"where\":\"Refrigerated dairy alternatives
+                section\"},{\"name_en\":\"Margarine\",\"match\":\"Similar\",\"desc\":\"A
+                butter substitute made from vegetable oils that works well for
+                spreading, cooking, and some baking.\",\"where\":\"Refrigerated
+                spreads section\"},{\"name_en\":\"Ghee\",\"match\":\"Different
+                but works\",\"desc\":\"Clarified butter with most milk solids
+                and lactose removed, often tolerated better by
+                lactose-intolerant people.\",\"where\":\"Cooking oils or
+                specialty dairy section\"}]}\n</Output>\n<Rubric>\nALL
+                alternatives must be dairy-free/lactose-free since the user
+                specified lactose intolerant. Suggesting regular margarine
+                without checking dairy content is not acceptable. Match levels
+                should be honest — plant-based butters are 'Similar' not 'Very
+                close' for baking. The note should acknowledge the lactose
+                constraint.\n\n</Rubric>"}]
+      id: ee62c2f4-4853-4259-ab8c-973971931090
+      latencyMs: 1861
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Find 3-4 alternatives for \"butter\" available in North American stores. User reason: lactose intolerant.\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"
+            }
+          ]
+        label: >-
+          prompts/current/alternatives.json: [{"role":"system","content":"You
+          are a grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Find 3-4 alternatives for
+          \"{{name_en}}\" available in North American stores.{% if reason %}
+          User reason: {{reason}}.{% endif %}{% if taste %} User taste:
+          {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{%
+          endif %}\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\":
+          [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but
+          works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+        config: {}
+      promptId: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"note":"These alternatives can provide similar cooking, baking, or
+          spreading use without the lactose in regular
+          butter.","alts":[{"name_en":"Lactose-free butter","match":"Very
+          close","desc":"Made from dairy but treated to remove lactose, so it
+          behaves much like regular butter.","where":"Dairy section or specialty
+          lactose-free foods"},{"name_en":"Plant-based butter / vegan
+          butter","match":"Very close","desc":"A non-dairy spread made from oils
+          and sometimes cultured for a butter-like taste and
+          texture.","where":"Refrigerated dairy alternatives
+          section"},{"name_en":"Margarine","match":"Similar","desc":"A butter
+          substitute made from vegetable oils that works well for spreading,
+          cooking, and some baking.","where":"Refrigerated spreads
+          section"},{"name_en":"Ghee","match":"Different but
+          works","desc":"Clarified butter with most milk solids and lactose
+          removed, often tolerated better by lactose-intolerant
+          people.","where":"Cooking oils or specialty dairy section"}]}
+        tokenUsage:
+          total: 299
+          prompt: 96
+          completion: 203
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.575
+      success: false
+      testCase:
+        description: butter + lactose intolerant — all alts must be dairy-free
+        vars: &ref_2
+          name_en: butter
+          reason: lactose intolerant
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - note
+                - alts
+              properties:
+                note:
+                  type: string
+                alts:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items:
+                    type: object
+                    required:
+                      - name_en
+                      - match
+                      - desc
+                      - where
+                    properties:
+                      name_en:
+                        type: string
+                      match:
+                        type: string
+                      desc:
+                        type: string
+                      where:
+                        type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const matchValues = ['Very close', 'Similar', 'Different but
+              works'];
+
+              const valid = d.note && d.alts && d.alts.length >= 3 &&
+              d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+              matchValues.includes(a.match) && a.desc && a.where);
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or match values' };
+          - type: llm-rubric
+            value: >
+              ALL alternatives must be dairy-free/lactose-free since the user
+              specified lactose intolerant. Suggesting regular margarine without
+              checking dairy content is not acceptable. Match levels should be
+              honest — plant-based butters are 'Similar' not 'Very close' for
+              baking. The note should acknowledge the lactose constraint.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              ALL alternatives must be dairy-free/lactose-free since the user
+              specified lactose intolerant. Suggesting regular margarine without
+              checking dairy content is not acceptable. Match levels should be
+              honest — plant-based butters are 'Similar' not 'Very close' for
+              baking. The note should acknowledge the lactose constraint.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 1
+      vars: *ref_2
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      error: >-
+        The margarine entry fails the rubric's explicit requirement — it hedges
+        by saying 'some margarines are made without dairy ingredients' rather
+        than confirming the recommendation is dairy-free, which the rubric flags
+        as unacceptable. Additionally, vegan butter's match level of 'Different
+        but works' is arguably too low per the rubric (should be 'Similar' for
+        baking). The note does acknowledge the lactose constraint adequately.
+      gradingResult:
+        pass: false
+        score: 0.6825
+        reason: >-
+          The margarine entry fails the rubric's explicit requirement — it
+          hedges by saying 'some margarines are made without dairy ingredients'
+          rather than confirming the recommendation is dairy-free, which the
+          rubric flags as unacceptable. Additionally, vegan butter's match level
+          of 'Different but works' is arguably too low per the rubric (should be
+          'Similar' for baking). The note does acknowledge the lactose
+          constraint adequately.
+        namedScores: {}
+        tokensUsed:
+          total: 1732
+          prompt: 1154
+          completion: 578
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - note
+                  - alts
+                properties:
+                  note:
+                    type: string
+                  alts:
+                    type: array
+                    minItems: 3
+                    maxItems: 4
+                    items:
+                      type: object
+                      required:
+                        - name_en
+                        - match
+                        - desc
+                        - where
+                      properties:
+                        name_en:
+                          type: string
+                        match:
+                          type: string
+                        desc:
+                          type: string
+                        where:
+                          type: string
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                ALL alternatives must be dairy-free/lactose-free since the user
+                specified lactose intolerant. Suggesting regular margarine
+                without checking dairy content is not acceptable. Match levels
+                should be honest — plant-based butters are 'Similar' not 'Very
+                close' for baking. The note should acknowledge the lactose
+                constraint.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.4
+            reason: >-
+              The margarine entry fails the rubric's explicit requirement — it
+              hedges by saying 'some margarines are made without dairy
+              ingredients' rather than confirming the recommendation is
+              dairy-free, which the rubric flags as unacceptable. Additionally,
+              vegan butter's match level of 'Different but works' is arguably
+              too low per the rubric (should be 'Similar' for baking). The note
+              does acknowledge the lactose constraint adequately.
+            tokensUsed:
+              total: 1072
+              prompt: 624
+              completion: 448
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"You need
+                lactose-free or reduced-lactose options so you can still cook
+                and bake without triggering
+                symptoms.\",\"alts\":[{\"name_en\":\"Lactose-Free
+                Butter\",\"match\":\"Very close\",\"desc\":\"Butter made with
+                lactase added so the lactose is broken down while keeping a
+                similar taste and texture to regular butter.\",\"where\":\"Dairy
+                aisle, near regular butter (often labeled lactose-free or
+                lactose-reduced).\"},{\"name_en\":\"Ghee (Clarified
+                Butter)\",\"match\":\"Similar\",\"desc\":\"Butterfat with milk
+                solids removed, making it typically much lower in lactose and
+                easier for many lactose-intolerant people to
+                tolerate.\",\"where\":\"International foods aisle or near
+                specialty oils/ghee, or sometimes in the dairy
+                aisle.\"},{\"name_en\":\"Vegan Butter
+                (Plant-Based)\",\"match\":\"Different but
+                works\",\"desc\":\"Butter alternatives made from plant oils that
+                are naturally lactose-free and can work well for spreading and
+                most cooking/baking.\",\"where\":\"Dairy-free/vegan section in
+                the refrigerated aisle (often near margarine and
+                spreads).\"},{\"name_en\":\"Margarine (Dairy-Free or
+                Lactose-Free)\",\"match\":\"Different but
+                works\",\"desc\":\"Some margarines are made without dairy
+                ingredients and are lactose-free, making them a practical swap
+                for spreading and everyday cooking.\",\"where\":\"Near butter
+                and other spreads in the dairy section (check the label for
+                'dairy-free' or 'lactose-free').\"}]}\n</Output>\n<Rubric>\nALL
+                alternatives must be dairy-free/lactose-free since the user
+                specified lactose intolerant. Suggesting regular margarine
+                without checking dairy content is not acceptable. Match levels
+                should be honest — plant-based butters are 'Similar' not 'Very
+                close' for baking. The note should acknowledge the lactose
+                constraint.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                ALL alternatives must be dairy-free/lactose-free since the user
+                specified lactose intolerant. Suggesting regular margarine
+                without checking dairy content is not acceptable. Match levels
+                should be honest — plant-based butters are 'Similar' not 'Very
+                close' for baking. The note should acknowledge the lactose
+                constraint.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.33
+            reason: >-
+              The note acknowledges the lactose constraint. However, one
+              alternative is problematic: 'Margarine (Dairy-Free or
+              Lactose-Free)' is phrased conditionally and the description says
+              'some margarines' are dairy-free, so it is not clearly guaranteed
+              to be dairy-free/lactose-free as required. Also, 'Vegan Butter
+              (Plant-Based)' is labeled 'Different but works' rather than the
+              more honest 'Similar' indicated by the rubric. The rest of the
+              alternatives meet the constraint better, but the output does not
+              fully satisfy all rubric conditions.
+            tokensUsed:
+              total: 660
+              prompt: 530
+              completion: 130
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"You need
+                lactose-free or reduced-lactose options so you can still cook
+                and bake without triggering
+                symptoms.\",\"alts\":[{\"name_en\":\"Lactose-Free
+                Butter\",\"match\":\"Very close\",\"desc\":\"Butter made with
+                lactase added so the lactose is broken down while keeping a
+                similar taste and texture to regular butter.\",\"where\":\"Dairy
+                aisle, near regular butter (often labeled lactose-free or
+                lactose-reduced).\"},{\"name_en\":\"Ghee (Clarified
+                Butter)\",\"match\":\"Similar\",\"desc\":\"Butterfat with milk
+                solids removed, making it typically much lower in lactose and
+                easier for many lactose-intolerant people to
+                tolerate.\",\"where\":\"International foods aisle or near
+                specialty oils/ghee, or sometimes in the dairy
+                aisle.\"},{\"name_en\":\"Vegan Butter
+                (Plant-Based)\",\"match\":\"Different but
+                works\",\"desc\":\"Butter alternatives made from plant oils that
+                are naturally lactose-free and can work well for spreading and
+                most cooking/baking.\",\"where\":\"Dairy-free/vegan section in
+                the refrigerated aisle (often near margarine and
+                spreads).\"},{\"name_en\":\"Margarine (Dairy-Free or
+                Lactose-Free)\",\"match\":\"Different but
+                works\",\"desc\":\"Some margarines are made without dairy
+                ingredients and are lactose-free, making them a practical swap
+                for spreading and everyday cooking.\",\"where\":\"Near butter
+                and other spreads in the dairy section (check the label for
+                'dairy-free' or 'lactose-free').\"}]}\n</Output>\n<Rubric>\nALL
+                alternatives must be dairy-free/lactose-free since the user
+                specified lactose intolerant. Suggesting regular margarine
+                without checking dairy content is not acceptable. Match levels
+                should be honest — plant-based butters are 'Similar' not 'Very
+                close' for baking. The note should acknowledge the lactose
+                constraint.\n\n</Rubric>"}]
+      id: baec8c35-a577-469d-a733-5143750eac0b
+      latencyMs: 308170
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Find 3-4 alternatives for \"butter\" available in North American stores. User reason: lactose intolerant.\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"
+            }
+          ]
+        label: >-
+          prompts/current/alternatives.json: [{"role":"system","content":"You
+          are a grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Find 3-4 alternatives for
+          \"{{name_en}}\" available in North American stores.{% if reason %}
+          User reason: {{reason}}.{% endif %}{% if taste %} User taste:
+          {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{%
+          endif %}\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\":
+          [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but
+          works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+        config: {}
+      promptId: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "note": "You need lactose-free or reduced-lactose options so you can still cook and bake without triggering symptoms.",
+            "alts": [
+              {
+                "name_en": "Lactose-Free Butter",
+                "match": "Very close",
+                "desc": "Butter made with lactase added so the lactose is broken down while keeping a similar taste and texture to regular butter.",
+                "where": "Dairy aisle, near regular butter (often labeled lactose-free or lactose-reduced)."
+              },
+              {
+                "name_en": "Ghee (Clarified Butter)",
+                "match": "Similar",
+                "desc": "Butterfat with milk solids removed, making it typically much lower in lactose and easier for many lactose-intolerant people to tolerate.",
+                "where": "International foods aisle or near specialty oils/ghee, or sometimes in the dairy aisle."
+              },
+              {
+                "name_en": "Vegan Butter (Plant-Based)",
+                "match": "Different but works",
+                "desc": "Butter alternatives made from plant oils that are naturally lactose-free and can work well for spreading and most cooking/baking.",
+                "where": "Dairy-free/vegan section in the refrigerated aisle (often near margarine and spreads)."
+              },
+              {
+                "name_en": "Margarine (Dairy-Free or Lactose-Free)",
+                "match": "Different but works",
+                "desc": "Some margarines are made without dairy ingredients and are lactose-free, making them a practical swap for spreading and everyday cooking.",
+                "where": "Near butter and other spreads in the dairy section (check the label for 'dairy-free' or 'lactose-free')."
+              }
+            ]
+          }
+        tokenUsage:
+          total: 458
+          prompt: 96
+          completion: 362
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.6825
+      success: false
+      testCase:
+        description: butter + lactose intolerant — all alts must be dairy-free
+        vars: &ref_3
+          name_en: butter
+          reason: lactose intolerant
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - note
+                - alts
+              properties:
+                note:
+                  type: string
+                alts:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items:
+                    type: object
+                    required:
+                      - name_en
+                      - match
+                      - desc
+                      - where
+                    properties:
+                      name_en:
+                        type: string
+                      match:
+                        type: string
+                      desc:
+                        type: string
+                      where:
+                        type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const matchValues = ['Very close', 'Similar', 'Different but
+              works'];
+
+              const valid = d.note && d.alts && d.alts.length >= 3 &&
+              d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+              matchValues.includes(a.match) && a.desc && a.where);
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or match values' };
+          - type: llm-rubric
+            value: >
+              ALL alternatives must be dairy-free/lactose-free since the user
+              specified lactose intolerant. Suggesting regular margarine without
+              checking dairy content is not acceptable. Match levels should be
+              honest — plant-based butters are 'Similar' not 'Very close' for
+              baking. The note should acknowledge the lactose constraint.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              ALL alternatives must be dairy-free/lactose-free since the user
+              specified lactose intolerant. Suggesting regular margarine without
+              checking dairy content is not acceptable. Match levels should be
+              honest — plant-based butters are 'Similar' not 'Very close' for
+              baking. The note should acknowledge the lactose constraint.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 1
+      vars: *ref_3
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      error: >-
+        The alternatives are all vinegars that can work in similar recipes, and
+        the match levels are reasonable. However, the 'where' field says
+        'Vinegar aisle' rather than the requested useful location examples like
+        condiment aisle or Asian section, so it only partially satisfies the
+        rubric.
+      gradingResult:
+        pass: false
+        score: 0.9075
+        reason: >-
+          The alternatives are all vinegars that can work in similar recipes,
+          and the match levels are reasonable. However, the 'where' field says
+          'Vinegar aisle' rather than the requested useful location examples
+          like condiment aisle or Asian section, so it only partially satisfies
+          the rubric.
+        namedScores: {}
+        tokensUsed:
+          total: 1204
+          prompt: 959
+          completion: 245
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - note
+                  - alts
+                properties:
+                  note:
+                    type: string
+                  alts:
+                    type: array
+                    minItems: 3
+                    maxItems: 4
+                    items:
+                      type: object
+                      required:
+                        - name_en
+                        - match
+                        - desc
+                        - where
+                      properties:
+                        name_en:
+                          type: string
+                        match:
+                          type: string
+                        desc:
+                          type: string
+                        where:
+                          type: string
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                Alternatives should be other vinegars or acidic condiments that
+                work in similar recipes. Match levels are honest. Alternatives
+                are available in North American stores. 'where' gives useful
+                location (condiment aisle, Asian section).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.88
+            reason: >-
+              All four alternatives (apple cider vinegar, white wine vinegar,
+              champagne vinegar, distilled white vinegar) are appropriate
+              vinegar substitutes that work in similar recipes. Match levels are
+              honest and well-calibrated - white wine and champagne vinegar are
+              correctly rated 'Very close' while distilled white vinegar is
+              appropriately rated 'Different but works' due to its sharper, less
+              sweet profile. All are readily available in North American grocery
+              stores. The 'where' field consistently says 'Vinegar aisle' which
+              is accurate and useful, though it could have noted that rice
+              vinegar itself is sometimes in the Asian section, which might have
+              added nuance. The descriptions are accurate and helpful.
+            tokensUsed:
+              total: 689
+              prompt: 517
+              completion: 172
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"Rice
+                vinegar is often substituted when you need a mild, slightly
+                sweet acidity for dressings, sushi rice, and quick
+                pickles.\",\"alts\":[{\"name_en\":\"Apple cider
+                vinegar\",\"match\":\"Similar\",\"desc\":\"Milder and slightly
+                fruity, so it works well in dressings, marinades, and pickles;
+                use a bit less if you want less sharpness.\",\"where\":\"Vinegar
+                aisle\"},{\"name_en\":\"White wine vinegar\",\"match\":\"Very
+                close\",\"desc\":\"Clean and moderately mild with good acidity,
+                making it one of the best stand-ins for rice vinegar in most
+                recipes.\",\"where\":\"Vinegar aisle\"},{\"name_en\":\"Champagne
+                vinegar\",\"match\":\"Very close\",\"desc\":\"Light, delicate,
+                and less harsh than many other vinegars, so it closely mimics
+                rice vinegar's gentle flavor.\",\"where\":\"Vinegar
+                aisle\"},{\"name_en\":\"Distilled white
+                vinegar\",\"match\":\"Different but works\",\"desc\":\"More
+                sharp and neutral, but it can replace rice vinegar in small
+                amounts when you mainly need acidity rather than
+                sweetness.\",\"where\":\"Vinegar
+                aisle\"}]}\n</Output>\n<Rubric>\nAlternatives should be other
+                vinegars or acidic condiments that work in similar recipes.
+                Match levels are honest. Alternatives are available in North
+                American stores. 'where' gives useful location (condiment aisle,
+                Asian section).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Alternatives should be other vinegars or acidic condiments that
+                work in similar recipes. Match levels are honest. Alternatives
+                are available in North American stores. 'where' gives useful
+                location (condiment aisle, Asian section).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.75
+            reason: >-
+              The alternatives are all vinegars that can work in similar
+              recipes, and the match levels are reasonable. However, the 'where'
+              field says 'Vinegar aisle' rather than the requested useful
+              location examples like condiment aisle or Asian section, so it
+              only partially satisfies the rubric.
+            tokensUsed:
+              total: 515
+              prompt: 442
+              completion: 73
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"Rice
+                vinegar is often substituted when you need a mild, slightly
+                sweet acidity for dressings, sushi rice, and quick
+                pickles.\",\"alts\":[{\"name_en\":\"Apple cider
+                vinegar\",\"match\":\"Similar\",\"desc\":\"Milder and slightly
+                fruity, so it works well in dressings, marinades, and pickles;
+                use a bit less if you want less sharpness.\",\"where\":\"Vinegar
+                aisle\"},{\"name_en\":\"White wine vinegar\",\"match\":\"Very
+                close\",\"desc\":\"Clean and moderately mild with good acidity,
+                making it one of the best stand-ins for rice vinegar in most
+                recipes.\",\"where\":\"Vinegar aisle\"},{\"name_en\":\"Champagne
+                vinegar\",\"match\":\"Very close\",\"desc\":\"Light, delicate,
+                and less harsh than many other vinegars, so it closely mimics
+                rice vinegar's gentle flavor.\",\"where\":\"Vinegar
+                aisle\"},{\"name_en\":\"Distilled white
+                vinegar\",\"match\":\"Different but works\",\"desc\":\"More
+                sharp and neutral, but it can replace rice vinegar in small
+                amounts when you mainly need acidity rather than
+                sweetness.\",\"where\":\"Vinegar
+                aisle\"}]}\n</Output>\n<Rubric>\nAlternatives should be other
+                vinegars or acidic condiments that work in similar recipes.
+                Match levels are honest. Alternatives are available in North
+                American stores. 'where' gives useful location (condiment aisle,
+                Asian section).\n\n</Rubric>"}]
+      id: ad588710-ca13-4e8e-842b-98b17c095a7a
+      latencyMs: 2264
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Find 3-4 alternatives for \"rice vinegar\" available in North American stores.\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"
+            }
+          ]
+        label: >-
+          prompts/current/alternatives.json: [{"role":"system","content":"You
+          are a grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Find 3-4 alternatives for
+          \"{{name_en}}\" available in North American stores.{% if reason %}
+          User reason: {{reason}}.{% endif %}{% if taste %} User taste:
+          {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{%
+          endif %}\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\":
+          [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but
+          works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+        config: {}
+      promptId: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"note":"Rice vinegar is often substituted when you need a mild,
+          slightly sweet acidity for dressings, sushi rice, and quick
+          pickles.","alts":[{"name_en":"Apple cider
+          vinegar","match":"Similar","desc":"Milder and slightly fruity, so it
+          works well in dressings, marinades, and pickles; use a bit less if you
+          want less sharpness.","where":"Vinegar aisle"},{"name_en":"White wine
+          vinegar","match":"Very close","desc":"Clean and moderately mild with
+          good acidity, making it one of the best stand-ins for rice vinegar in
+          most recipes.","where":"Vinegar aisle"},{"name_en":"Champagne
+          vinegar","match":"Very close","desc":"Light, delicate, and less harsh
+          than many other vinegars, so it closely mimics rice vinegar's gentle
+          flavor.","where":"Vinegar aisle"},{"name_en":"Distilled white
+          vinegar","match":"Different but works","desc":"More sharp and neutral,
+          but it can replace rice vinegar in small amounts when you mainly need
+          acidity rather than sweetness.","where":"Vinegar aisle"}]}
+        tokenUsage:
+          total: 313
+          prompt: 89
+          completion: 224
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9075
+      success: false
+      testCase:
+        description: rice vinegar — general substitution for acidic condiment
+        vars: &ref_4
+          name_en: rice vinegar
+          reason: ''
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - note
+                - alts
+              properties:
+                note:
+                  type: string
+                alts:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items:
+                    type: object
+                    required:
+                      - name_en
+                      - match
+                      - desc
+                      - where
+                    properties:
+                      name_en:
+                        type: string
+                      match:
+                        type: string
+                      desc:
+                        type: string
+                      where:
+                        type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const matchValues = ['Very close', 'Similar', 'Different but
+              works'];
+
+              const valid = d.note && d.alts && d.alts.length >= 3 &&
+              d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+              matchValues.includes(a.match) && a.desc && a.where);
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or match values' };
+          - type: llm-rubric
+            value: >
+              Alternatives should be other vinegars or acidic condiments that
+              work in similar recipes. Match levels are honest. Alternatives are
+              available in North American stores. 'where' gives useful location
+              (condiment aisle, Asian section).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Alternatives should be other vinegars or acidic condiments that
+              work in similar recipes. Match levels are honest. Alternatives are
+              available in North American stores. 'where' gives useful location
+              (condiment aisle, Asian section).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 2
+      vars: *ref_4
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.9349999999999999
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 1275
+          prompt: 984
+          completion: 291
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - note
+                  - alts
+                properties:
+                  note:
+                    type: string
+                  alts:
+                    type: array
+                    minItems: 3
+                    maxItems: 4
+                    items:
+                      type: object
+                      required:
+                        - name_en
+                        - match
+                        - desc
+                        - where
+                      properties:
+                        name_en:
+                          type: string
+                        match:
+                          type: string
+                        desc:
+                          type: string
+                        where:
+                          type: string
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                Alternatives should be other vinegars or acidic condiments that
+                work in similar recipes. Match levels are honest. Alternatives
+                are available in North American stores. 'where' gives useful
+                location (condiment aisle, Asian section).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.88
+            reason: >-
+              All four alternatives (white wine vinegar, apple cider vinegar,
+              champagne vinegar, distilled white vinegar) are genuine vinegar
+              alternatives that work in similar recipes to rice vinegar. Match
+              levels are honest - white wine vinegar is indeed 'very close,'
+              apple cider and champagne are 'similar,' and distilled white
+              vinegar is correctly noted as 'different but works' since it's
+              sharper and needs adjustment. All are readily available in North
+              American grocery stores. The 'where' guidance points to the
+              vinegar aisle, which is accurate and useful, though it could have
+              mentioned the Asian foods section as an alternative location for
+              rice vinegar context. Minor quibble: 'near cleaning/drying
+              vinegars' for distilled white vinegar is slightly odd phrasing but
+              not wrong. Overall the output is accurate, honest, and helpful.
+            tokensUsed:
+              total: 736
+              prompt: 531
+              completion: 205
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"You need
+                alternatives to rice vinegar so you can still achieve similar
+                acidity and flavor in recipes if rice vinegar isn’t
+                available.\",\"alts\":[{\"name_en\":\"White wine
+                vinegar\",\"match\":\"Very close\",\"desc\":\"Milder and
+                slightly fruity, it substitutes well for rice vinegar in
+                dressings, marinades, and quick pickles.\",\"where\":\"Vinegar
+                aisle, near other bottled vinegars.\"},{\"name_en\":\"Apple
+                cider vinegar\",\"match\":\"Similar\",\"desc\":\"Provides
+                comparable tanginess with a light apple note, best for sauces,
+                slaws, and everyday pickling.\",\"where\":\"Vinegar aisle or
+                natural/organic section.\"},{\"name_en\":\"Champagne
+                vinegar\",\"match\":\"Similar\",\"desc\":\"Delicate and less
+                harsh than distilled vinegars, making it a good swap for many
+                Asian-style dishes.\",\"where\":\"Vinegar aisle, often near
+                specialty vinegars.\"},{\"name_en\":\"Distilled white
+                vinegar\",\"match\":\"Different but works\",\"desc\":\"More
+                sharp and neutral than rice vinegar, so it works when you dilute
+                or balance with sugar/honey.\",\"where\":\"Vinegar aisle, near
+                cleaning/drying
+                vinegars.\"}]}\n</Output>\n<Rubric>\nAlternatives should be
+                other vinegars or acidic condiments that work in similar
+                recipes. Match levels are honest. Alternatives are available in
+                North American stores. 'where' gives useful location (condiment
+                aisle, Asian section).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Alternatives should be other vinegars or acidic condiments that
+                work in similar recipes. Match levels are honest. Alternatives
+                are available in North American stores. 'where' gives useful
+                location (condiment aisle, Asian section).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.86
+            reason: >-
+              The output lists other vinegars that can substitute in similar
+              recipes, the match levels are plausible/honest, and each item
+              includes a store location. However, the 'where' fields are
+              somewhat generic (mostly 'vinegar aisle') rather than specifically
+              useful locations like condiment aisle or Asian section, though
+              they are still usable in North American stores.
+            tokensUsed:
+              total: 539
+              prompt: 453
+              completion: 86
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"You need
+                alternatives to rice vinegar so you can still achieve similar
+                acidity and flavor in recipes if rice vinegar isn’t
+                available.\",\"alts\":[{\"name_en\":\"White wine
+                vinegar\",\"match\":\"Very close\",\"desc\":\"Milder and
+                slightly fruity, it substitutes well for rice vinegar in
+                dressings, marinades, and quick pickles.\",\"where\":\"Vinegar
+                aisle, near other bottled vinegars.\"},{\"name_en\":\"Apple
+                cider vinegar\",\"match\":\"Similar\",\"desc\":\"Provides
+                comparable tanginess with a light apple note, best for sauces,
+                slaws, and everyday pickling.\",\"where\":\"Vinegar aisle or
+                natural/organic section.\"},{\"name_en\":\"Champagne
+                vinegar\",\"match\":\"Similar\",\"desc\":\"Delicate and less
+                harsh than distilled vinegars, making it a good swap for many
+                Asian-style dishes.\",\"where\":\"Vinegar aisle, often near
+                specialty vinegars.\"},{\"name_en\":\"Distilled white
+                vinegar\",\"match\":\"Different but works\",\"desc\":\"More
+                sharp and neutral than rice vinegar, so it works when you dilute
+                or balance with sugar/honey.\",\"where\":\"Vinegar aisle, near
+                cleaning/drying
+                vinegars.\"}]}\n</Output>\n<Rubric>\nAlternatives should be
+                other vinegars or acidic condiments that work in similar
+                recipes. Match levels are honest. Alternatives are available in
+                North American stores. 'where' gives useful location (condiment
+                aisle, Asian section).\n\n</Rubric>"}]
+      id: 3480801e-7f9d-484b-9c74-c27b45ffb40d
+      latencyMs: 3269
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Find 3-4 alternatives for \"rice vinegar\" available in North American stores.\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"
+            }
+          ]
+        label: >-
+          prompts/current/alternatives.json: [{"role":"system","content":"You
+          are a grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Find 3-4 alternatives for
+          \"{{name_en}}\" available in North American stores.{% if reason %}
+          User reason: {{reason}}.{% endif %}{% if taste %} User taste:
+          {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{%
+          endif %}\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\":
+          [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but
+          works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+        config: {}
+      promptId: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "note": "You need alternatives to rice vinegar so you can still achieve similar acidity and flavor in recipes if rice vinegar isn’t available.",
+            "alts": [
+              {
+                "name_en": "White wine vinegar",
+                "match": "Very close",
+                "desc": "Milder and slightly fruity, it substitutes well for rice vinegar in dressings, marinades, and quick pickles.",
+                "where": "Vinegar aisle, near other bottled vinegars."
+              },
+              {
+                "name_en": "Apple cider vinegar",
+                "match": "Similar",
+                "desc": "Provides comparable tanginess with a light apple note, best for sauces, slaws, and everyday pickling.",
+                "where": "Vinegar aisle or natural/organic section."
+              },
+              {
+                "name_en": "Champagne vinegar",
+                "match": "Similar",
+                "desc": "Delicate and less harsh than distilled vinegars, making it a good swap for many Asian-style dishes.",
+                "where": "Vinegar aisle, often near specialty vinegars."
+              },
+              {
+                "name_en": "Distilled white vinegar",
+                "match": "Different but works",
+                "desc": "More sharp and neutral than rice vinegar, so it works when you dilute or balance with sugar/honey.",
+                "where": "Vinegar aisle, near cleaning/drying vinegars."
+              }
+            ]
+          }
+        tokenUsage:
+          total: 391
+          prompt: 89
+          completion: 302
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9349999999999999
+      success: true
+      testCase:
+        description: rice vinegar — general substitution for acidic condiment
+        vars: &ref_5
+          name_en: rice vinegar
+          reason: ''
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - note
+                - alts
+              properties:
+                note:
+                  type: string
+                alts:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items:
+                    type: object
+                    required:
+                      - name_en
+                      - match
+                      - desc
+                      - where
+                    properties:
+                      name_en:
+                        type: string
+                      match:
+                        type: string
+                      desc:
+                        type: string
+                      where:
+                        type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const matchValues = ['Very close', 'Similar', 'Different but
+              works'];
+
+              const valid = d.note && d.alts && d.alts.length >= 3 &&
+              d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+              matchValues.includes(a.match) && a.desc && a.where);
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or match values' };
+          - type: llm-rubric
+            value: >
+              Alternatives should be other vinegars or acidic condiments that
+              work in similar recipes. Match levels are honest. Alternatives are
+              available in North American stores. 'where' gives useful location
+              (condiment aisle, Asian section).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Alternatives should be other vinegars or acidic condiments that
+              work in similar recipes. Match levels are honest. Alternatives are
+              available in North American stores. 'where' gives useful location
+              (condiment aisle, Asian section).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 2
+      vars: *ref_5
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      error: >-
+        All alternatives listed (tofu, seitan, tempeh, and vegetarian
+        chicken-style products) are indeed vegetarian with no meat, poultry, or
+        fish — this part passes. However, the rubric specifies that match levels
+        should be 'Different but works' or 'Similar' at most, since vegetarian
+        substitutes differ significantly from chicken in texture and flavor. The
+        output assigns 'Very close' to both seitan and vegetarian chicken-style
+        products, which violates the rubric's guidance on appropriate match
+        levels.
+      gradingResult:
+        pass: false
+        score: 0.8049999999999999
+        reason: >-
+          All alternatives listed (tofu, seitan, tempeh, and vegetarian
+          chicken-style products) are indeed vegetarian with no meat, poultry,
+          or fish — this part passes. However, the rubric specifies that match
+          levels should be 'Different but works' or 'Similar' at most, since
+          vegetarian substitutes differ significantly from chicken in texture
+          and flavor. The output assigns 'Very close' to both seitan and
+          vegetarian chicken-style products, which violates the rubric's
+          guidance on appropriate match levels.
+        namedScores: {}
+        tokensUsed:
+          total: 1341
+          prompt: 1122
+          completion: 219
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - note
+                  - alts
+                properties:
+                  note:
+                    type: string
+                  alts:
+                    type: array
+                    minItems: 3
+                    maxItems: 4
+                    items:
+                      type: object
+                      required:
+                        - name_en
+                        - match
+                        - desc
+                        - where
+                      properties:
+                        name_en:
+                          type: string
+                        match:
+                          type: string
+                        desc:
+                          type: string
+                        where:
+                          type: string
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                ALL alternatives must be vegetarian — no meat, poultry, or fish.
+                This is a protein substitution test. Alternatives like tofu,
+                tempeh, seitan, or plant-based chicken are expected. Match
+                levels should reflect that these are 'Different but works' or
+                'Similar' — not 'Very close' since texture/flavor differ
+                significantly from chicken.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.5
+            reason: >-
+              All alternatives listed (tofu, seitan, tempeh, and vegetarian
+              chicken-style products) are indeed vegetarian with no meat,
+              poultry, or fish — this part passes. However, the rubric specifies
+              that match levels should be 'Different but works' or 'Similar' at
+              most, since vegetarian substitutes differ significantly from
+              chicken in texture and flavor. The output assigns 'Very close' to
+              both seitan and vegetarian chicken-style products, which violates
+              the rubric's guidance on appropriate match levels.
+            tokensUsed:
+              total: 735
+              prompt: 602
+              completion: 133
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"You need
+                vegetarian alternatives that provide a similar hearty,
+                protein-forward substitute in place of chicken
+                breast.\",\"alts\":[{\"name_en\":\"Tofu
+                (extra-firm)\",\"match\":\"Similar\",\"desc\":\"Extra-firm tofu
+                holds its shape well when pressed and pan-seared, giving a
+                chicken-breast-like texture in stir-fries or
+                cutlets.\",\"where\":\"Produce/ refrigerated section near
+                packaged tofu.\"},{\"name_en\":\"Seitan (wheat
+                gluten)\",\"match\":\"Very close\",\"desc\":\"Seitan has a
+                chewy, meat-like bite and absorbs marinades, making it a direct
+                swap for sliced or breaded “cutlets.”\",\"where\":\"Refrigerated
+                or refrigerated/ frozen prepared foods section (often near meat
+                alternatives).\"},{\"name_en\":\"Tempeh\",\"match\":\"Similar\",\"desc\":\"Tempeh
+                is firm and hearty with a nutty flavor that works well when
+                marinated and pan-fried for a satisfying “breast-like”
+                portion.\",\"where\":\"Refrigerated section near tofu/soy
+                products.\"},{\"name_en\":\"Vegetarian chicken-style products
+                (e.g., meatless chicken cutlets/strips)\",\"match\":\"Very
+                close\",\"desc\":\"These are designed to mimic chicken in flavor
+                and texture, making them the easiest plug-and-play option for
+                recipes.\",\"where\":\"Frozen foods or refrigerated
+                meat-alternative aisle.\"}]}\n</Output>\n<Rubric>\nALL
+                alternatives must be vegetarian — no meat, poultry, or fish.
+                This is a protein substitution test. Alternatives like tofu,
+                tempeh, seitan, or plant-based chicken are expected. Match
+                levels should reflect that these are 'Different but works' or
+                'Similar' — not 'Very close' since texture/flavor differ
+                significantly from chicken.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                ALL alternatives must be vegetarian — no meat, poultry, or fish.
+                This is a protein substitution test. Alternatives like tofu,
+                tempeh, seitan, or plant-based chicken are expected. Match
+                levels should reflect that these are 'Different but works' or
+                'Similar' — not 'Very close' since texture/flavor differ
+                significantly from chicken.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.72
+            reason: >-
+              All listed alternatives are vegetarian (tofu, seitan, tempeh, and
+              vegetarian chicken-style products). However, the rubric says match
+              levels should be 'Different but works' or 'Similar' and not 'Very
+              close'; this output includes 'Very close' for seitan and
+              vegetarian chicken-style products, so it does not fully comply.
+            tokensUsed:
+              total: 606
+              prompt: 520
+              completion: 86
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"You need
+                vegetarian alternatives that provide a similar hearty,
+                protein-forward substitute in place of chicken
+                breast.\",\"alts\":[{\"name_en\":\"Tofu
+                (extra-firm)\",\"match\":\"Similar\",\"desc\":\"Extra-firm tofu
+                holds its shape well when pressed and pan-seared, giving a
+                chicken-breast-like texture in stir-fries or
+                cutlets.\",\"where\":\"Produce/ refrigerated section near
+                packaged tofu.\"},{\"name_en\":\"Seitan (wheat
+                gluten)\",\"match\":\"Very close\",\"desc\":\"Seitan has a
+                chewy, meat-like bite and absorbs marinades, making it a direct
+                swap for sliced or breaded “cutlets.”\",\"where\":\"Refrigerated
+                or refrigerated/ frozen prepared foods section (often near meat
+                alternatives).\"},{\"name_en\":\"Tempeh\",\"match\":\"Similar\",\"desc\":\"Tempeh
+                is firm and hearty with a nutty flavor that works well when
+                marinated and pan-fried for a satisfying “breast-like”
+                portion.\",\"where\":\"Refrigerated section near tofu/soy
+                products.\"},{\"name_en\":\"Vegetarian chicken-style products
+                (e.g., meatless chicken cutlets/strips)\",\"match\":\"Very
+                close\",\"desc\":\"These are designed to mimic chicken in flavor
+                and texture, making them the easiest plug-and-play option for
+                recipes.\",\"where\":\"Frozen foods or refrigerated
+                meat-alternative aisle.\"}]}\n</Output>\n<Rubric>\nALL
+                alternatives must be vegetarian — no meat, poultry, or fish.
+                This is a protein substitution test. Alternatives like tofu,
+                tempeh, seitan, or plant-based chicken are expected. Match
+                levels should reflect that these are 'Different but works' or
+                'Similar' — not 'Very close' since texture/flavor differ
+                significantly from chicken.\n\n</Rubric>"}]
+      id: ee20e5a7-7e0a-4251-9e95-a869c7608805
+      latencyMs: 2595
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Find 3-4 alternatives for \"chicken breast\" available in North American stores. User reason: vegetarian.\nDietary: vegetarian.\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"
+            }
+          ]
+        label: >-
+          prompts/current/alternatives.json: [{"role":"system","content":"You
+          are a grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Find 3-4 alternatives for
+          \"{{name_en}}\" available in North American stores.{% if reason %}
+          User reason: {{reason}}.{% endif %}{% if taste %} User taste:
+          {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{%
+          endif %}\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\":
+          [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but
+          works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+        config: {}
+      promptId: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "note": "You need vegetarian alternatives that provide a similar hearty, protein-forward substitute in place of chicken breast.",
+            "alts": [
+              {
+                "name_en": "Tofu (extra-firm)",
+                "match": "Similar",
+                "desc": "Extra-firm tofu holds its shape well when pressed and pan-seared, giving a chicken-breast-like texture in stir-fries or cutlets.",
+                "where": "Produce/ refrigerated section near packaged tofu."
+              },
+              {
+                "name_en": "Seitan (wheat gluten)",
+                "match": "Very close",
+                "desc": "Seitan has a chewy, meat-like bite and absorbs marinades, making it a direct swap for sliced or breaded “cutlets.”",
+                "where": "Refrigerated or refrigerated/ frozen prepared foods section (often near meat alternatives)."
+              },
+              {
+                "name_en": "Tempeh",
+                "match": "Similar",
+                "desc": "Tempeh is firm and hearty with a nutty flavor that works well when marinated and pan-fried for a satisfying “breast-like” portion.",
+                "where": "Refrigerated section near tofu/soy products."
+              },
+              {
+                "name_en": "Vegetarian chicken-style products (e.g., meatless chicken cutlets/strips)",
+                "match": "Very close",
+                "desc": "These are designed to mimic chicken in flavor and texture, making them the easiest plug-and-play option for recipes.",
+                "where": "Frozen foods or refrigerated meat-alternative aisle."
+              }
+            ]
+          }
+        tokenUsage:
+          total: 441
+          prompt: 100
+          completion: 341
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.8049999999999999
+      success: false
+      testCase:
+        description: chicken breast + vegetarian — all alts must be meat-free
+        vars: &ref_6
+          name_en: chicken breast
+          reason: vegetarian
+          taste: ''
+          profile_context: |-
+
+            Dietary: vegetarian.
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - note
+                - alts
+              properties:
+                note:
+                  type: string
+                alts:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items:
+                    type: object
+                    required:
+                      - name_en
+                      - match
+                      - desc
+                      - where
+                    properties:
+                      name_en:
+                        type: string
+                      match:
+                        type: string
+                      desc:
+                        type: string
+                      where:
+                        type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const matchValues = ['Very close', 'Similar', 'Different but
+              works'];
+
+              const valid = d.note && d.alts && d.alts.length >= 3 &&
+              d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+              matchValues.includes(a.match) && a.desc && a.where);
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or match values' };
+          - type: llm-rubric
+            value: >
+              ALL alternatives must be vegetarian — no meat, poultry, or fish.
+              This is a protein substitution test. Alternatives like tofu,
+              tempeh, seitan, or plant-based chicken are expected. Match levels
+              should reflect that these are 'Different but works' or 'Similar' —
+              not 'Very close' since texture/flavor differ significantly from
+              chicken.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              ALL alternatives must be vegetarian — no meat, poultry, or fish.
+              This is a protein substitution test. Alternatives like tofu,
+              tempeh, seitan, or plant-based chicken are expected. Match levels
+              should reflect that these are 'Different but works' or 'Similar' —
+              not 'Very close' since texture/flavor differ significantly from
+              chicken.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 3
+      vars: *ref_6
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      error: >-
+        All four alternatives (tofu, tempeh, seitan, chickpea cutlets/vegan
+        chicken-style strips) are vegetarian with no meat, poultry, or fish —
+        this part passes. However, the rubric specifies that match levels should
+        reflect 'Different but works' or 'Similar' — not 'Very close' — since
+        texture and flavor differ significantly from chicken. The output assigns
+        'Very close' to both seitan and chickpea cutlets/vegan chicken-style
+        strips, which violates the rubric's guidance on match levels.
+      gradingResult:
+        pass: false
+        score: 0.625
+        reason: >-
+          All four alternatives (tofu, tempeh, seitan, chickpea cutlets/vegan
+          chicken-style strips) are vegetarian with no meat, poultry, or fish —
+          this part passes. However, the rubric specifies that match levels
+          should reflect 'Different but works' or 'Similar' — not 'Very close' —
+          since texture and flavor differ significantly from chicken. The output
+          assigns 'Very close' to both seitan and chickpea cutlets/vegan
+          chicken-style strips, which violates the rubric's guidance on match
+          levels.
+        namedScores: {}
+        tokensUsed:
+          total: 1295
+          prompt: 1079
+          completion: 216
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - note
+                  - alts
+                properties:
+                  note:
+                    type: string
+                  alts:
+                    type: array
+                    minItems: 3
+                    maxItems: 4
+                    items:
+                      type: object
+                      required:
+                        - name_en
+                        - match
+                        - desc
+                        - where
+                      properties:
+                        name_en:
+                          type: string
+                        match:
+                          type: string
+                        desc:
+                          type: string
+                        where:
+                          type: string
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                ALL alternatives must be vegetarian — no meat, poultry, or fish.
+                This is a protein substitution test. Alternatives like tofu,
+                tempeh, seitan, or plant-based chicken are expected. Match
+                levels should reflect that these are 'Different but works' or
+                'Similar' — not 'Very close' since texture/flavor differ
+                significantly from chicken.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.5
+            reason: >-
+              All four alternatives (tofu, tempeh, seitan, chickpea
+              cutlets/vegan chicken-style strips) are vegetarian with no meat,
+              poultry, or fish — this part passes. However, the rubric specifies
+              that match levels should reflect 'Different but works' or
+              'Similar' — not 'Very close' — since texture and flavor differ
+              significantly from chicken. The output assigns 'Very close' to
+              both seitan and chickpea cutlets/vegan chicken-style strips, which
+              violates the rubric's guidance on match levels.
+            tokensUsed:
+              total: 729
+              prompt: 587
+              completion: 142
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"These
+                vegetarian alternatives can replace chicken breast in common
+                North American recipes while keeping similar texture or protein
+                content.\",\"alts\":[{\"name_en\":\"Tofu
+                (extra-firm)\",\"match\":\"Similar\",\"desc\":\"Mild-flavored
+                and protein-rich, extra-firm tofu works well in stir-fries,
+                sandwiches, and baked dishes when pressed and
+                seasoned.\",\"where\":\"Produce or refrigerated tofu
+                section\"},{\"name_en\":\"Tempeh\",\"match\":\"Different but
+                works\",\"desc\":\"A soy-based protein with a firmer, nuttier
+                texture that slices well and holds up in sautéed, grilled, or
+                sauced dishes.\",\"where\":\"Produce, refrigerated plant-based
+                proteins, or natural foods
+                aisle\"},{\"name_en\":\"Seitan\",\"match\":\"Very
+                close\",\"desc\":\"Wheat-based seitan has a chewy, meat-like
+                texture that is one of the closest vegetarian substitutes for
+                chicken breast.\",\"where\":\"Refrigerated plant-based meats or
+                natural foods aisle\"},{\"name_en\":\"Chickpea cutlets / vegan
+                chicken-style strips\",\"match\":\"Very close\",\"desc\":\"These
+                prepared plant-based products are designed to mimic chicken
+                texture and flavor, making them easy direct swaps in many
+                recipes.\",\"where\":\"Frozen foods or refrigerated plant-based
+                meats aisle\"}]}\n</Output>\n<Rubric>\nALL alternatives must be
+                vegetarian — no meat, poultry, or fish. This is a protein
+                substitution test. Alternatives like tofu, tempeh, seitan, or
+                plant-based chicken are expected. Match levels should reflect
+                that these are 'Different but works' or 'Similar' — not 'Very
+                close' since texture/flavor differ significantly from
+                chicken.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                ALL alternatives must be vegetarian — no meat, poultry, or fish.
+                This is a protein substitution test. Alternatives like tofu,
+                tempeh, seitan, or plant-based chicken are expected. Match
+                levels should reflect that these are 'Different but works' or
+                'Similar' — not 'Very close' since texture/flavor differ
+                significantly from chicken.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0
+            reason: >-
+              All listed alternatives are vegetarian, but two entries are marked
+              'Very close' (Seitan and chickpea cutlets/vegan chicken-style
+              strips), which violates the rubric’s requirement that match levels
+              should be 'Different but works' or 'Similar' rather than 'Very
+              close'.
+            tokensUsed:
+              total: 566
+              prompt: 492
+              completion: 74
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"These
+                vegetarian alternatives can replace chicken breast in common
+                North American recipes while keeping similar texture or protein
+                content.\",\"alts\":[{\"name_en\":\"Tofu
+                (extra-firm)\",\"match\":\"Similar\",\"desc\":\"Mild-flavored
+                and protein-rich, extra-firm tofu works well in stir-fries,
+                sandwiches, and baked dishes when pressed and
+                seasoned.\",\"where\":\"Produce or refrigerated tofu
+                section\"},{\"name_en\":\"Tempeh\",\"match\":\"Different but
+                works\",\"desc\":\"A soy-based protein with a firmer, nuttier
+                texture that slices well and holds up in sautéed, grilled, or
+                sauced dishes.\",\"where\":\"Produce, refrigerated plant-based
+                proteins, or natural foods
+                aisle\"},{\"name_en\":\"Seitan\",\"match\":\"Very
+                close\",\"desc\":\"Wheat-based seitan has a chewy, meat-like
+                texture that is one of the closest vegetarian substitutes for
+                chicken breast.\",\"where\":\"Refrigerated plant-based meats or
+                natural foods aisle\"},{\"name_en\":\"Chickpea cutlets / vegan
+                chicken-style strips\",\"match\":\"Very close\",\"desc\":\"These
+                prepared plant-based products are designed to mimic chicken
+                texture and flavor, making them easy direct swaps in many
+                recipes.\",\"where\":\"Frozen foods or refrigerated plant-based
+                meats aisle\"}]}\n</Output>\n<Rubric>\nALL alternatives must be
+                vegetarian — no meat, poultry, or fish. This is a protein
+                substitution test. Alternatives like tofu, tempeh, seitan, or
+                plant-based chicken are expected. Match levels should reflect
+                that these are 'Different but works' or 'Similar' — not 'Very
+                close' since texture/flavor differ significantly from
+                chicken.\n\n</Rubric>"}]
+      id: 487f7bb7-5a98-4683-90e6-e8e818748970
+      latencyMs: 2348
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Find 3-4 alternatives for \"chicken breast\" available in North American stores. User reason: vegetarian.\nDietary: vegetarian.\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"
+            }
+          ]
+        label: >-
+          prompts/current/alternatives.json: [{"role":"system","content":"You
+          are a grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Find 3-4 alternatives for
+          \"{{name_en}}\" available in North American stores.{% if reason %}
+          User reason: {{reason}}.{% endif %}{% if taste %} User taste:
+          {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{%
+          endif %}\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\":
+          [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but
+          works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+        config: {}
+      promptId: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"note":"These vegetarian alternatives can replace chicken breast in
+          common North American recipes while keeping similar texture or protein
+          content.","alts":[{"name_en":"Tofu
+          (extra-firm)","match":"Similar","desc":"Mild-flavored and
+          protein-rich, extra-firm tofu works well in stir-fries, sandwiches,
+          and baked dishes when pressed and seasoned.","where":"Produce or
+          refrigerated tofu section"},{"name_en":"Tempeh","match":"Different but
+          works","desc":"A soy-based protein with a firmer, nuttier texture that
+          slices well and holds up in sautéed, grilled, or sauced
+          dishes.","where":"Produce, refrigerated plant-based proteins, or
+          natural foods aisle"},{"name_en":"Seitan","match":"Very
+          close","desc":"Wheat-based seitan has a chewy, meat-like texture that
+          is one of the closest vegetarian substitutes for chicken
+          breast.","where":"Refrigerated plant-based meats or natural foods
+          aisle"},{"name_en":"Chickpea cutlets / vegan chicken-style
+          strips","match":"Very close","desc":"These prepared plant-based
+          products are designed to mimic chicken texture and flavor, making them
+          easy direct swaps in many recipes.","where":"Frozen foods or
+          refrigerated plant-based meats aisle"}]}
+        tokenUsage:
+          total: 348
+          prompt: 100
+          completion: 248
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.625
+      success: false
+      testCase:
+        description: chicken breast + vegetarian — all alts must be meat-free
+        vars: &ref_7
+          name_en: chicken breast
+          reason: vegetarian
+          taste: ''
+          profile_context: |-
+
+            Dietary: vegetarian.
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - note
+                - alts
+              properties:
+                note:
+                  type: string
+                alts:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items:
+                    type: object
+                    required:
+                      - name_en
+                      - match
+                      - desc
+                      - where
+                    properties:
+                      name_en:
+                        type: string
+                      match:
+                        type: string
+                      desc:
+                        type: string
+                      where:
+                        type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const matchValues = ['Very close', 'Similar', 'Different but
+              works'];
+
+              const valid = d.note && d.alts && d.alts.length >= 3 &&
+              d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+              matchValues.includes(a.match) && a.desc && a.where);
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or match values' };
+          - type: llm-rubric
+            value: >
+              ALL alternatives must be vegetarian — no meat, poultry, or fish.
+              This is a protein substitution test. Alternatives like tofu,
+              tempeh, seitan, or plant-based chicken are expected. Match levels
+              should reflect that these are 'Different but works' or 'Similar' —
+              not 'Very close' since texture/flavor differ significantly from
+              chicken.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              ALL alternatives must be vegetarian — no meat, poultry, or fish.
+              This is a protein substitution test. Alternatives like tofu,
+              tempeh, seitan, or plant-based chicken are expected. Match levels
+              should reflect that these are 'Different but works' or 'Similar' —
+              not 'Very close' since texture/flavor differ significantly from
+              chicken.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 3
+      vars: *ref_7
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      error: Invalid structure or match values
+      gradingResult:
+        pass: false
+        score: 0.6825
+        reason: Invalid structure or match values
+        namedScores: {}
+        tokensUsed:
+          total: 1616
+          prompt: 1254
+          completion: 362
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - note
+                  - alts
+                properties:
+                  note:
+                    type: string
+                  alts:
+                    type: array
+                    minItems: 3
+                    maxItems: 4
+                    items:
+                      type: object
+                      required:
+                        - name_en
+                        - match
+                        - desc
+                        - where
+                      properties:
+                        name_en:
+                          type: string
+                        match:
+                          type: string
+                        desc:
+                          type: string
+                        where:
+                          type: string
+          - pass: false
+            score: 0
+            reason: Invalid structure or match values
+          - assertion:
+              type: llm-rubric
+              value: >
+                Since the user has Korean taste preference, alternatives should
+                be cuisine-appropriate. Korean alternatives like 국간장 (soup soy
+                sauce) or 액젓 (Korean fish sauce/anchovy sauce) are ideal.
+                Non-Korean alternatives are acceptable but should work in Korean
+                cooking. Match levels are honest.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.78
+            reason: >-
+              The output includes Korean anchovy sauce (멸치액젓/myeolchi-aekjeot)
+              as the first alternative, which is a highly cuisine-appropriate
+              Korean alternative. Thai fish sauce is included as a very close
+              substitute that works well in Korean cooking. Oyster sauce is
+              included with an honest 'Different but works' match level,
+              acknowledging it's thicker and sweeter. The soy sauce + anchovy
+              paste combo is also marked 'Different but works' honestly. The
+              output does not include 국간장 (soup soy sauce), which would have
+              been an ideal Korean-specific alternative, but the alternatives
+              provided are generally appropriate for Korean cooking. Match
+              levels appear honest - the Korean anchovy sauce and Thai fish
+              sauce are marked as 'Very close|Similar|Different but works'
+              (though this seems like a formatting issue showing all options
+              rather than selecting one), while oyster sauce and the combo are
+              correctly marked as 'Different but works'. Overall, the response
+              is cuisine-appropriate with Korean-friendly alternatives and
+              honest match assessments, though the match field formatting is odd
+              for the first two entries.
+            tokensUsed:
+              total: 931
+              prompt: 675
+              completion: 256
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"Provide
+                Korean-friendly savory substitutes for fish sauce in North
+                American grocery aisles.\",\"alts\":[{\"name_en\":\"Korean
+                anchovy sauce (멸치액젓, myeolchi-aekjeot)\",\"match\":\"Very
+                close|Similar|Different but works\",\"desc\":\"A Korean
+                anchovy-based fermented condiment with a similar umami profile,
+                often used in banchan, soups, and
+                marinades.\",\"where\":\"International/Korean aisle near other
+                Korean condiments or in the refrigerated/condiment section
+                depending on store.\"},{\"name_en\":\"Thai fish sauce (น้ำปลา,
+                nam pla)\",\"match\":\"Very close|Similar|Different but
+                works\",\"desc\":\"Same core ingredient category (fermented
+                fish), giving comparable saltiness and depth for kimchi,
+                stir-fries, and soups.\",\"where\":\"International aisle
+                (Thai/SEA products) near other curry pastes and
+                condiments.\"},{\"name_en\":\"Oyster sauce (굴소스, gu-style oyster
+                sauce)\",\"match\":\"Different but works\",\"desc\":\"Thicker
+                and sweeter than fish sauce, but still adds strong savory umami
+                for Korean-style cooking when fishiness is less
+                critical.\",\"where\":\"Asian sauces section (often labeled for
+                Chinese/Asian cooking) near soy sauce and stir-fry
+                sauces.\"},{\"name_en\":\"Soy sauce + small amount of anchovy
+                paste (or anchovy-derived seasoning)\",\"match\":\"Different but
+                works\",\"desc\":\"Soy sauce supplies salt and fermentation-like
+                funk, while anchovy paste adds the fishy umami to approximate
+                fish-sauce depth.\",\"where\":\"Soy sauce aisle plus
+                Mediterranean pantry where anchovy paste/tubes are stocked (or
+                international section with canned
+                anchovies).\"}]}\n</Output>\n<Rubric>\nSince the user has Korean
+                taste preference, alternatives should be cuisine-appropriate.
+                Korean alternatives like 국간장 (soup soy sauce) or 액젓 (Korean fish
+                sauce/anchovy sauce) are ideal. Non-Korean alternatives are
+                acceptable but should work in Korean cooking. Match levels are
+                honest.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Since the user has Korean taste preference, alternatives should
+                be cuisine-appropriate. Korean alternatives like 국간장 (soup soy
+                sauce) or 액젓 (Korean fish sauce/anchovy sauce) are ideal.
+                Non-Korean alternatives are acceptable but should work in Korean
+                cooking. Match levels are honest.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.95
+            reason: >-
+              The output includes Korean-appropriate alternatives such as Korean
+              anchovy sauce (멸치액젓), which matches the rubric’s preference for
+              Korean cuisine. It also includes non-Korean substitutes that can
+              work in Korean cooking, and the match levels are reasonably framed
+              as close/similar/different but works. However, it does not mention
+              국간장, which the rubric says is ideal but not strictly required.
+            tokensUsed:
+              total: 685
+              prompt: 579
+              completion: 106
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"Provide
+                Korean-friendly savory substitutes for fish sauce in North
+                American grocery aisles.\",\"alts\":[{\"name_en\":\"Korean
+                anchovy sauce (멸치액젓, myeolchi-aekjeot)\",\"match\":\"Very
+                close|Similar|Different but works\",\"desc\":\"A Korean
+                anchovy-based fermented condiment with a similar umami profile,
+                often used in banchan, soups, and
+                marinades.\",\"where\":\"International/Korean aisle near other
+                Korean condiments or in the refrigerated/condiment section
+                depending on store.\"},{\"name_en\":\"Thai fish sauce (น้ำปลา,
+                nam pla)\",\"match\":\"Very close|Similar|Different but
+                works\",\"desc\":\"Same core ingredient category (fermented
+                fish), giving comparable saltiness and depth for kimchi,
+                stir-fries, and soups.\",\"where\":\"International aisle
+                (Thai/SEA products) near other curry pastes and
+                condiments.\"},{\"name_en\":\"Oyster sauce (굴소스, gu-style oyster
+                sauce)\",\"match\":\"Different but works\",\"desc\":\"Thicker
+                and sweeter than fish sauce, but still adds strong savory umami
+                for Korean-style cooking when fishiness is less
+                critical.\",\"where\":\"Asian sauces section (often labeled for
+                Chinese/Asian cooking) near soy sauce and stir-fry
+                sauces.\"},{\"name_en\":\"Soy sauce + small amount of anchovy
+                paste (or anchovy-derived seasoning)\",\"match\":\"Different but
+                works\",\"desc\":\"Soy sauce supplies salt and fermentation-like
+                funk, while anchovy paste adds the fishy umami to approximate
+                fish-sauce depth.\",\"where\":\"Soy sauce aisle plus
+                Mediterranean pantry where anchovy paste/tubes are stocked (or
+                international section with canned
+                anchovies).\"}]}\n</Output>\n<Rubric>\nSince the user has Korean
+                taste preference, alternatives should be cuisine-appropriate.
+                Korean alternatives like 국간장 (soup soy sauce) or 액젓 (Korean fish
+                sauce/anchovy sauce) are ideal. Non-Korean alternatives are
+                acceptable but should work in Korean cooking. Match levels are
+                honest.\n\n</Rubric>"}]
+      id: 16100417-0ca1-42e2-9673-c87e7f1a9d05
+      latencyMs: 3467
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Find 3-4 alternatives for \"fish sauce\" available in North American stores. User taste: Korean.\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"
+            }
+          ]
+        label: >-
+          prompts/current/alternatives.json: [{"role":"system","content":"You
+          are a grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Find 3-4 alternatives for
+          \"{{name_en}}\" available in North American stores.{% if reason %}
+          User reason: {{reason}}.{% endif %}{% if taste %} User taste:
+          {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{%
+          endif %}\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\":
+          [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but
+          works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+        config: {}
+      promptId: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "note": "Provide Korean-friendly savory substitutes for fish sauce in North American grocery aisles.",
+            "alts": [
+              {
+                "name_en": "Korean anchovy sauce (멸치액젓, myeolchi-aekjeot)",
+                "match": "Very close|Similar|Different but works",
+                "desc": "A Korean anchovy-based fermented condiment with a similar umami profile, often used in banchan, soups, and marinades.",
+                "where": "International/Korean aisle near other Korean condiments or in the refrigerated/condiment section depending on store."
+              },
+              {
+                "name_en": "Thai fish sauce (น้ำปลา, nam pla)",
+                "match": "Very close|Similar|Different but works",
+                "desc": "Same core ingredient category (fermented fish), giving comparable saltiness and depth for kimchi, stir-fries, and soups.",
+                "where": "International aisle (Thai/SEA products) near other curry pastes and condiments."
+              },
+              {
+                "name_en": "Oyster sauce (굴소스, gu-style oyster sauce)",
+                "match": "Different but works",
+                "desc": "Thicker and sweeter than fish sauce, but still adds strong savory umami for Korean-style cooking when fishiness is less critical.",
+                "where": "Asian sauces section (often labeled for Chinese/Asian cooking) near soy sauce and stir-fry sauces."
+              },
+              {
+                "name_en": "Soy sauce + small amount of anchovy paste (or anchovy-derived seasoning)",
+                "match": "Different but works",
+                "desc": "Soy sauce supplies salt and fermentation-like funk, while anchovy paste adds the fishy umami to approximate fish-sauce depth.",
+                "where": "Soy sauce aisle plus Mediterranean pantry where anchovy paste/tubes are stocked (or international section with canned anchovies)."
+              }
+            ]
+          }
+        tokenUsage:
+          total: 501
+          prompt: 94
+          completion: 407
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.6825
+      success: false
+      testCase:
+        description: fish sauce + Korean taste — cuisine-appropriate alternatives
+        vars: &ref_8
+          name_en: fish sauce
+          reason: ''
+          taste: Korean
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - note
+                - alts
+              properties:
+                note:
+                  type: string
+                alts:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items:
+                    type: object
+                    required:
+                      - name_en
+                      - match
+                      - desc
+                      - where
+                    properties:
+                      name_en:
+                        type: string
+                      match:
+                        type: string
+                      desc:
+                        type: string
+                      where:
+                        type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const matchValues = ['Very close', 'Similar', 'Different but
+              works'];
+
+              const valid = d.note && d.alts && d.alts.length >= 3 &&
+              d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+              matchValues.includes(a.match) && a.desc && a.where);
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or match values' };
+          - type: llm-rubric
+            value: >
+              Since the user has Korean taste preference, alternatives should be
+              cuisine-appropriate. Korean alternatives like 국간장 (soup soy sauce)
+              or 액젓 (Korean fish sauce/anchovy sauce) are ideal. Non-Korean
+              alternatives are acceptable but should work in Korean cooking.
+              Match levels are honest.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Since the user has Korean taste preference, alternatives should be
+              cuisine-appropriate. Korean alternatives like 국간장 (soup soy sauce)
+              or 액젓 (Korean fish sauce/anchovy sauce) are ideal. Non-Korean
+              alternatives are acceptable but should work in Korean cooking.
+              Match levels are honest.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 4
+      vars: *ref_8
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.955
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 1289
+          prompt: 1063
+          completion: 226
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - note
+                  - alts
+                properties:
+                  note:
+                    type: string
+                  alts:
+                    type: array
+                    minItems: 3
+                    maxItems: 4
+                    items:
+                      type: object
+                      required:
+                        - name_en
+                        - match
+                        - desc
+                        - where
+                      properties:
+                        name_en:
+                          type: string
+                        match:
+                          type: string
+                        desc:
+                          type: string
+                        where:
+                          type: string
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                Since the user has Korean taste preference, alternatives should
+                be cuisine-appropriate. Korean alternatives like 국간장 (soup soy
+                sauce) or 액젓 (Korean fish sauce/anchovy sauce) are ideal.
+                Non-Korean alternatives are acceptable but should work in Korean
+                cooking. Match levels are honest.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.82
+            reason: >-
+              The output includes 'Aekjeot (Korean fish sauce)' which is 액젓,
+              directly addressing the Korean preference. 'Anchovy sauce' is also
+              a close Korean-appropriate substitute. The match levels appear
+              honest (Very close, Similar, Different but works). The soy sauce +
+              anchovy paste combination is noted as 'Different but works' which
+              is appropriately conservative. However, the output misses 국간장
+              (soup soy sauce/Korean soup soy sauce), which is a classic Korean
+              substitute. Despite this omission, the alternatives provided are
+              cuisine-appropriate and the match levels are honest. The response
+              adequately serves Korean cooking needs.
+            tokensUsed:
+              total: 731
+              prompt: 569
+              completion: 162
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"Needed
+                because fish sauce is a salty, savory umami seasoning and Korean
+                cooking can use close substitutes when the exact product isn’t
+                available.\",\"alts\":[{\"name_en\":\"Anchovy
+                sauce\",\"match\":\"Very close\",\"desc\":\"Made from fermented
+                anchovies, it delivers a salty, briny umami profile very close
+                to fish sauce and works well in Korean soups and
+                marinades.\",\"where\":\"Asian aisle; Korean section;
+                refrigerated Asian sauces\"},{\"name_en\":\"Aekjeot (Korean fish
+                sauce)\",\"match\":\"Very close\",\"desc\":\"This is the Korean
+                version of fish sauce and is often the best direct swap for
+                Korean recipes, especially kimchi and soups.\",\"where\":\"Asian
+                aisle; Korean section\"},{\"name_en\":\"Shrimp
+                paste\",\"match\":\"Similar\",\"desc\":\"It has strong fermented
+                seafood umami with a deeper, funkier flavor, so use a small
+                amount to replace some of fish sauce’s
+                savoriness.\",\"where\":\"Asian aisle; Southeast Asian
+                section\"},{\"name_en\":\"Soy sauce + a little salted anchovy
+                paste\",\"match\":\"Different but works\",\"desc\":\"This
+                combination gives saltiness and umami with a more soy-forward
+                taste, which can work when you need a Korean-friendly pantry
+                substitute.\",\"where\":\"Condiments aisle; Asian
+                aisle\"}]}\n</Output>\n<Rubric>\nSince the user has Korean taste
+                preference, alternatives should be cuisine-appropriate. Korean
+                alternatives like 국간장 (soup soy sauce) or 액젓 (Korean fish
+                sauce/anchovy sauce) are ideal. Non-Korean alternatives are
+                acceptable but should work in Korean cooking. Match levels are
+                honest.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Since the user has Korean taste preference, alternatives should
+                be cuisine-appropriate. Korean alternatives like 국간장 (soup soy
+                sauce) or 액젓 (Korean fish sauce/anchovy sauce) are ideal.
+                Non-Korean alternatives are acceptable but should work in Korean
+                cooking. Match levels are honest.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output provides cuisine-appropriate Korean alternatives,
+              including aekjeot (Korean fish sauce) and anchovy sauce, and also
+              includes non-Korean options that can work in Korean cooking. The
+              match levels appear reasonable and honest.
+            tokensUsed:
+              total: 558
+              prompt: 494
+              completion: 64
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"note\":\"Needed
+                because fish sauce is a salty, savory umami seasoning and Korean
+                cooking can use close substitutes when the exact product isn’t
+                available.\",\"alts\":[{\"name_en\":\"Anchovy
+                sauce\",\"match\":\"Very close\",\"desc\":\"Made from fermented
+                anchovies, it delivers a salty, briny umami profile very close
+                to fish sauce and works well in Korean soups and
+                marinades.\",\"where\":\"Asian aisle; Korean section;
+                refrigerated Asian sauces\"},{\"name_en\":\"Aekjeot (Korean fish
+                sauce)\",\"match\":\"Very close\",\"desc\":\"This is the Korean
+                version of fish sauce and is often the best direct swap for
+                Korean recipes, especially kimchi and soups.\",\"where\":\"Asian
+                aisle; Korean section\"},{\"name_en\":\"Shrimp
+                paste\",\"match\":\"Similar\",\"desc\":\"It has strong fermented
+                seafood umami with a deeper, funkier flavor, so use a small
+                amount to replace some of fish sauce’s
+                savoriness.\",\"where\":\"Asian aisle; Southeast Asian
+                section\"},{\"name_en\":\"Soy sauce + a little salted anchovy
+                paste\",\"match\":\"Different but works\",\"desc\":\"This
+                combination gives saltiness and umami with a more soy-forward
+                taste, which can work when you need a Korean-friendly pantry
+                substitute.\",\"where\":\"Condiments aisle; Asian
+                aisle\"}]}\n</Output>\n<Rubric>\nSince the user has Korean taste
+                preference, alternatives should be cuisine-appropriate. Korean
+                alternatives like 국간장 (soup soy sauce) or 액젓 (Korean fish
+                sauce/anchovy sauce) are ideal. Non-Korean alternatives are
+                acceptable but should work in Korean cooking. Match levels are
+                honest.\n\n</Rubric>"}]
+      id: 82b3d19b-f9cf-4cef-a81c-17e60977c77a
+      latencyMs: 1913
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Find 3-4 alternatives for \"fish sauce\" available in North American stores. User taste: Korean.\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"
+            }
+          ]
+        label: >-
+          prompts/current/alternatives.json: [{"role":"system","content":"You
+          are a grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Find 3-4 alternatives for
+          \"{{name_en}}\" available in North American stores.{% if reason %}
+          User reason: {{reason}}.{% endif %}{% if taste %} User taste:
+          {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{%
+          endif %}\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\":
+          [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but
+          works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}]
+        config: {}
+      promptId: 6c6f43857b14c7d151c7e7388b6de75935830c58d36695f5d26fd98790152b4d
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"note":"Needed because fish sauce is a salty, savory umami seasoning
+          and Korean cooking can use close substitutes when the exact product
+          isn’t available.","alts":[{"name_en":"Anchovy sauce","match":"Very
+          close","desc":"Made from fermented anchovies, it delivers a salty,
+          briny umami profile very close to fish sauce and works well in Korean
+          soups and marinades.","where":"Asian aisle; Korean section;
+          refrigerated Asian sauces"},{"name_en":"Aekjeot (Korean fish
+          sauce)","match":"Very close","desc":"This is the Korean version of
+          fish sauce and is often the best direct swap for Korean recipes,
+          especially kimchi and soups.","where":"Asian aisle; Korean
+          section"},{"name_en":"Shrimp paste","match":"Similar","desc":"It has
+          strong fermented seafood umami with a deeper, funkier flavor, so use a
+          small amount to replace some of fish sauce’s
+          savoriness.","where":"Asian aisle; Southeast Asian
+          section"},{"name_en":"Soy sauce + a little salted anchovy
+          paste","match":"Different but works","desc":"This combination gives
+          saltiness and umami with a more soy-forward taste, which can work when
+          you need a Korean-friendly pantry substitute.","where":"Condiments
+          aisle; Asian aisle"}]}
+        tokenUsage:
+          total: 352
+          prompt: 94
+          completion: 258
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.955
+      success: true
+      testCase:
+        description: fish sauce + Korean taste — cuisine-appropriate alternatives
+        vars: &ref_9
+          name_en: fish sauce
+          reason: ''
+          taste: Korean
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - note
+                - alts
+              properties:
+                note:
+                  type: string
+                alts:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items:
+                    type: object
+                    required:
+                      - name_en
+                      - match
+                      - desc
+                      - where
+                    properties:
+                      name_en:
+                        type: string
+                      match:
+                        type: string
+                      desc:
+                        type: string
+                      where:
+                        type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const matchValues = ['Very close', 'Similar', 'Different but
+              works'];
+
+              const valid = d.note && d.alts && d.alts.length >= 3 &&
+              d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+              matchValues.includes(a.match) && a.desc && a.where);
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or match values' };
+          - type: llm-rubric
+            value: >
+              Since the user has Korean taste preference, alternatives should be
+              cuisine-appropriate. Korean alternatives like 국간장 (soup soy sauce)
+              or 액젓 (Korean fish sauce/anchovy sauce) are ideal. Non-Korean
+              alternatives are acceptable but should work in Korean cooking.
+              Match levels are honest.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Since the user has Korean taste preference, alternatives should be
+              cuisine-appropriate. Korean alternatives like 국간장 (soup soy sauce)
+              or 액젓 (Korean fish sauce/anchovy sauce) are ideal. Non-Korean
+              alternatives are acceptable but should work in Korean cooking.
+              Match levels are honest.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 4
+      vars: *ref_9
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+  stats:
+    successes: 3
+    failures: 7
+    errors: 0
+    tokenUsage:
+      prompt: 938
+      completion: 2902
+      cached: 0
+      total: 3840
+      numRequests: 10
+      completionDetails:
+        reasoning: 0
+        acceptedPrediction: 0
+        rejectedPrediction: 0
+      assertions:
+        total: 13827
+        prompt: 10616
+        completion: 3211
+        cached: 0
+        numRequests: 0
+        completionDetails:
+          reasoning: 0
+          acceptedPrediction: 0
+          rejectedPrediction: 0
+    durationMs: 316714
+    evaluationDurationMs: 316714
+config:
+  tags: {}
+  description: 'Alternatives — Scenario 1: OpenAI tier comparison (current prompt)'
+  prompts:
+    - >-
+      file:///Users/dako/LocalDocument/200-Project/SGA-ai-service/services/ai-service/tests/eval/prompts/current/alternatives.json
+  providers:
+    - id: openrouter:openai/gpt-5.4-nano
+      label: GPT-5.4 Nano ($0.20/M)
+      config:
+        temperature: 0.7
+        max_tokens: 800
+    - id: openrouter:openai/gpt-5.4-mini
+      label: GPT-5.4 Mini ($0.75/M)
+      config:
+        temperature: 0.7
+        max_tokens: 800
+  tests:
+    - description: sriracha — general alternative with no constraints
+      vars:
+        name_en: sriracha
+        reason: ''
+        taste: ''
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - note
+              - alts
+            properties:
+              note:
+                type: string
+              alts:
+                type: array
+                minItems: 3
+                maxItems: 4
+                items:
+                  type: object
+                  required:
+                    - name_en
+                    - match
+                    - desc
+                    - where
+                  properties:
+                    name_en:
+                      type: string
+                    match:
+                      type: string
+                    desc:
+                      type: string
+                    where:
+                      type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const matchValues = ['Very close', 'Similar', 'Different but
+            works'];
+
+            const valid = d.note && d.alts && d.alts.length >= 3 &&
+            d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+            matchValues.includes(a.match) && a.desc && a.where);
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+            'Structure valid' : 'Invalid structure or match values' };
+        - type: llm-rubric
+          value: >
+            Alternatives are genuinely available in North American grocery
+            stores. Match levels are honest — 'Very close' should be another hot
+            sauce, not a completely different condiment. Each alternative should
+            be a real product. 'where' gives useful store location.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Alternatives are genuinely available in North American grocery
+            stores. Match levels are honest — 'Very close' should be another hot
+            sauce, not a completely different condiment. Each alternative should
+            be a real product. 'where' gives useful store location.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: butter + lactose intolerant — all alts must be dairy-free
+      vars:
+        name_en: butter
+        reason: lactose intolerant
+        taste: ''
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - note
+              - alts
+            properties:
+              note:
+                type: string
+              alts:
+                type: array
+                minItems: 3
+                maxItems: 4
+                items:
+                  type: object
+                  required:
+                    - name_en
+                    - match
+                    - desc
+                    - where
+                  properties:
+                    name_en:
+                      type: string
+                    match:
+                      type: string
+                    desc:
+                      type: string
+                    where:
+                      type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const matchValues = ['Very close', 'Similar', 'Different but
+            works'];
+
+            const valid = d.note && d.alts && d.alts.length >= 3 &&
+            d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+            matchValues.includes(a.match) && a.desc && a.where);
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+            'Structure valid' : 'Invalid structure or match values' };
+        - type: llm-rubric
+          value: >
+            ALL alternatives must be dairy-free/lactose-free since the user
+            specified lactose intolerant. Suggesting regular margarine without
+            checking dairy content is not acceptable. Match levels should be
+            honest — plant-based butters are 'Similar' not 'Very close' for
+            baking. The note should acknowledge the lactose constraint.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            ALL alternatives must be dairy-free/lactose-free since the user
+            specified lactose intolerant. Suggesting regular margarine without
+            checking dairy content is not acceptable. Match levels should be
+            honest — plant-based butters are 'Similar' not 'Very close' for
+            baking. The note should acknowledge the lactose constraint.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: rice vinegar — general substitution for acidic condiment
+      vars:
+        name_en: rice vinegar
+        reason: ''
+        taste: ''
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - note
+              - alts
+            properties:
+              note:
+                type: string
+              alts:
+                type: array
+                minItems: 3
+                maxItems: 4
+                items:
+                  type: object
+                  required:
+                    - name_en
+                    - match
+                    - desc
+                    - where
+                  properties:
+                    name_en:
+                      type: string
+                    match:
+                      type: string
+                    desc:
+                      type: string
+                    where:
+                      type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const matchValues = ['Very close', 'Similar', 'Different but
+            works'];
+
+            const valid = d.note && d.alts && d.alts.length >= 3 &&
+            d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+            matchValues.includes(a.match) && a.desc && a.where);
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+            'Structure valid' : 'Invalid structure or match values' };
+        - type: llm-rubric
+          value: >
+            Alternatives should be other vinegars or acidic condiments that work
+            in similar recipes. Match levels are honest. Alternatives are
+            available in North American stores. 'where' gives useful location
+            (condiment aisle, Asian section).
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Alternatives should be other vinegars or acidic condiments that work
+            in similar recipes. Match levels are honest. Alternatives are
+            available in North American stores. 'where' gives useful location
+            (condiment aisle, Asian section).
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: chicken breast + vegetarian — all alts must be meat-free
+      vars:
+        name_en: chicken breast
+        reason: vegetarian
+        taste: ''
+        profile_context: |-
+
+          Dietary: vegetarian.
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - note
+              - alts
+            properties:
+              note:
+                type: string
+              alts:
+                type: array
+                minItems: 3
+                maxItems: 4
+                items:
+                  type: object
+                  required:
+                    - name_en
+                    - match
+                    - desc
+                    - where
+                  properties:
+                    name_en:
+                      type: string
+                    match:
+                      type: string
+                    desc:
+                      type: string
+                    where:
+                      type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const matchValues = ['Very close', 'Similar', 'Different but
+            works'];
+
+            const valid = d.note && d.alts && d.alts.length >= 3 &&
+            d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+            matchValues.includes(a.match) && a.desc && a.where);
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+            'Structure valid' : 'Invalid structure or match values' };
+        - type: llm-rubric
+          value: >
+            ALL alternatives must be vegetarian — no meat, poultry, or fish.
+            This is a protein substitution test. Alternatives like tofu, tempeh,
+            seitan, or plant-based chicken are expected. Match levels should
+            reflect that these are 'Different but works' or 'Similar' — not
+            'Very close' since texture/flavor differ significantly from chicken.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            ALL alternatives must be vegetarian — no meat, poultry, or fish.
+            This is a protein substitution test. Alternatives like tofu, tempeh,
+            seitan, or plant-based chicken are expected. Match levels should
+            reflect that these are 'Different but works' or 'Similar' — not
+            'Very close' since texture/flavor differ significantly from chicken.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: fish sauce + Korean taste — cuisine-appropriate alternatives
+      vars:
+        name_en: fish sauce
+        reason: ''
+        taste: Korean
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - note
+              - alts
+            properties:
+              note:
+                type: string
+              alts:
+                type: array
+                minItems: 3
+                maxItems: 4
+                items:
+                  type: object
+                  required:
+                    - name_en
+                    - match
+                    - desc
+                    - where
+                  properties:
+                    name_en:
+                      type: string
+                    match:
+                      type: string
+                    desc:
+                      type: string
+                    where:
+                      type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const matchValues = ['Very close', 'Similar', 'Different but
+            works'];
+
+            const valid = d.note && d.alts && d.alts.length >= 3 &&
+            d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match &&
+            matchValues.includes(a.match) && a.desc && a.where);
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+            'Structure valid' : 'Invalid structure or match values' };
+        - type: llm-rubric
+          value: >
+            Since the user has Korean taste preference, alternatives should be
+            cuisine-appropriate. Korean alternatives like 국간장 (soup soy sauce)
+            or 액젓 (Korean fish sauce/anchovy sauce) are ideal. Non-Korean
+            alternatives are acceptable but should work in Korean cooking. Match
+            levels are honest.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Since the user has Korean taste preference, alternatives should be
+            cuisine-appropriate. Korean alternatives like 국간장 (soup soy sauce)
+            or 액젓 (Korean fish sauce/anchovy sauce) are ideal. Non-Korean
+            alternatives are acceptable but should work in Korean cooking. Match
+            levels are honest.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+  scenarios: []
+  env: {}
+  outputPath:
+    - results/scenario1_alternatives_20260331_193835.yaml
+    - results/scenario1_alternatives_20260331_193835.csv
+  extensions: []
+  metadata: {}
+  evaluateOptions: {}
+shareableUrl: null
+metadata:
+  promptfooVersion: 0.121.3
+  nodeVersion: v25.1.0
+  platform: darwin
+  arch: arm64
+  exportedAt: '2026-04-01T02:44:48.705Z'
+  evaluationCreatedAt: '2026-04-01T02:39:31.934Z'

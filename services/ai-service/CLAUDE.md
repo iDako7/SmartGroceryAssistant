@@ -47,6 +47,10 @@ uv run ruff check .                                  # Lint
 uv run ruff format --check .                         # Format check
 ```
 
+## Eval
+
+- **Use `/promptfoo-evals` skill** when creating or updating promptfoo evaluation configs -- it enforces correct patterns (file-based tests, deterministic assertions first, `promptfoo validate`)
+
 ## Code Style
 
 - Python 3.12+, Ruff for lint + format (line-length 120)

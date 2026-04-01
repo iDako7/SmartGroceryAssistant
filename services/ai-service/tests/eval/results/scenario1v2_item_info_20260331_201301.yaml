@@ -1,0 +1,3174 @@
+evalId: eval-fgJ-2026-04-01T03:13:03
+results:
+  version: 3
+  timestamp: '2026-04-01T03:13:03.788Z'
+  prompts:
+    - raw: >-
+        [{"role":"system","content":"You are a grocery expert. Respond with JSON
+        only."},{"role":"user","content":"Grocery expert helping someone
+        understand \"{{name_en}}\".{% if profile_context %}{{profile_context}}{%
+        endif %}\nstorage_tip: distinguish opened vs unopened if different.
+        nutrition_note: lead with the item's most distinctive trait.\nONLY JSON:
+        {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\":
+        \"...\", \"nutrition_note\": \"...\"}"}]
+      label: >-
+        prompts/current/item_info.json: [{"role":"system","content":"You are a
+        grocery expert. Respond with JSON
+        only."},{"role":"user","content":"Grocery expert helping someone
+        understand \"{{name_en}}\".{% if profile_context %}{{profile_context}}{%
+        endif %}\nstorage_tip: distinguish opened vs unopened if different.
+        nutrition_note: lead with the item's most distinctive trait.\nONLY JSON:
+        {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\":
+        \"...\", \"nutrition_note\": \"...\"}"}]
+      id: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      provider: GPT-5.4 Nano ($0.20/M)
+      metrics:
+        score: 4.9525
+        testPassCount: 4
+        testFailCount: 1
+        testErrorCount: 0
+        assertPassCount: 19
+        assertFailCount: 1
+        totalLatencyMs: 7440
+        tokenUsage:
+          prompt: 397
+          completion: 654
+          cached: 0
+          total: 1051
+          numRequests: 5
+          completionDetails:
+            reasoning: 0
+            acceptedPrediction: 0
+            rejectedPrediction: 0
+          assertions:
+            total: 4914
+            prompt: 3817
+            completion: 1097
+            cached: 0
+            numRequests: 0
+            completionDetails:
+              reasoning: 0
+              acceptedPrediction: 0
+              rejectedPrediction: 0
+        namedScores: {}
+        namedScoresCount: {}
+        cost: 0
+    - raw: >-
+        [{"role":"system","content":"You are a grocery expert. Respond with JSON
+        only."},{"role":"user","content":"Grocery expert helping someone
+        understand \"{{name_en}}\".{% if profile_context %}{{profile_context}}{%
+        endif %}\nstorage_tip: distinguish opened vs unopened if different.
+        nutrition_note: lead with the item's most distinctive trait.\nONLY JSON:
+        {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\":
+        \"...\", \"nutrition_note\": \"...\"}"}]
+      label: >-
+        prompts/current/item_info.json: [{"role":"system","content":"You are a
+        grocery expert. Respond with JSON
+        only."},{"role":"user","content":"Grocery expert helping someone
+        understand \"{{name_en}}\".{% if profile_context %}{{profile_context}}{%
+        endif %}\nstorage_tip: distinguish opened vs unopened if different.
+        nutrition_note: lead with the item's most distinctive trait.\nONLY JSON:
+        {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\":
+        \"...\", \"nutrition_note\": \"...\"}"}]
+      id: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      provider: GPT-5.4 Mini ($0.75/M)
+      metrics:
+        score: 4.8275
+        testPassCount: 4
+        testFailCount: 1
+        testErrorCount: 0
+        assertPassCount: 18
+        assertFailCount: 2
+        totalLatencyMs: 8916
+        tokenUsage:
+          prompt: 397
+          completion: 598
+          cached: 0
+          total: 995
+          numRequests: 5
+          completionDetails:
+            reasoning: 0
+            acceptedPrediction: 0
+            rejectedPrediction: 0
+          assertions:
+            total: 5278
+            prompt: 3751
+            completion: 1527
+            cached: 0
+            numRequests: 0
+            completionDetails:
+              reasoning: 0
+              acceptedPrediction: 0
+              rejectedPrediction: 0
+        namedScores: {}
+        namedScoresCount: {}
+        cost: 0
+  results:
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 866
+          prompt: 675
+          completion: 191
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - category
+                  - typical_unit
+                  - storage_tip
+                  - nutrition_note
+                properties:
+                  category:
+                    type: string
+                  typical_unit:
+                    type: string
+                  storage_tip:
+                    type: string
+                  nutrition_note:
+                    type: string
+          - pass: true
+            score: 1
+            reason: All fields present
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for banana. Category
+                should be produce/fruit. Storage tip should be actionable (e.g.,
+                room temperature to ripen, fridge to slow). Nutrition note
+                should highlight a specific characteristic (e.g., potassium,
+                natural energy), not a generic statement.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              All four fields are factually accurate for banana. Category is
+              'Fruit' which falls under produce/fruit. Storage tip is
+              actionable: store at room temperature until ripe, then refrigerate
+              cut fruit with a note about browning. Nutrition note specifically
+              highlights potassium, quick energy from carbohydrates, fiber, and
+              vitamin B6 - these are specific characteristics of bananas, not
+              generic statements. The typical unit of '1 banana' is appropriate.
+            tokensUsed:
+              total: 480
+              prompt: 361
+              completion: 119
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Fruit\",\"typical_unit\":\"1
+                banana\",\"storage_tip\":\"Store unopened bananas at room
+                temperature until ripe. Once opened or peeled, cover and
+                refrigerate the cut fruit; the flesh may brown, so use soon for
+                best quality.\",\"nutrition_note\":\"Notable for being naturally
+                high in potassium and quick energy from carbohydrates, with
+                fiber and vitamin B6 contributing to its overall
+                nutrition.\"}\n</Output>\n<Rubric>\nAll four fields are
+                factually accurate for banana. Category should be produce/fruit.
+                Storage tip should be actionable (e.g., room temperature to
+                ripen, fridge to slow). Nutrition note should highlight a
+                specific characteristic (e.g., potassium, natural energy), not a
+                generic statement.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for banana. Category
+                should be produce/fruit. Storage tip should be actionable (e.g.,
+                room temperature to ripen, fridge to slow). Nutrition note
+                should highlight a specific characteristic (e.g., potassium,
+                natural energy), not a generic statement.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output includes all four requested fields and they are
+              factually consistent with bananas: category is fruit, typical unit
+              is reasonable, storage tip is actionable and correct, and the
+              nutrition note highlights specific characteristics like potassium
+              and quick energy rather than being generic.
+            tokensUsed:
+              total: 386
+              prompt: 314
+              completion: 72
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Fruit\",\"typical_unit\":\"1
+                banana\",\"storage_tip\":\"Store unopened bananas at room
+                temperature until ripe. Once opened or peeled, cover and
+                refrigerate the cut fruit; the flesh may brown, so use soon for
+                best quality.\",\"nutrition_note\":\"Notable for being naturally
+                high in potassium and quick energy from carbohydrates, with
+                fiber and vitamin B6 contributing to its overall
+                nutrition.\"}\n</Output>\n<Rubric>\nAll four fields are
+                factually accurate for banana. Category should be produce/fruit.
+                Storage tip should be actionable (e.g., room temperature to
+                ripen, fridge to slow). Nutrition note should highlight a
+                specific characteristic (e.g., potassium, natural energy), not a
+                generic statement.\n\n</Rubric>"}]
+      id: 0ec715ab-0112-45db-880e-5b448fe1e310
+      latencyMs: 1284
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Grocery expert helping someone understand \"banana\".\nstorage_tip: distinguish opened vs unopened if different. nutrition_note: lead with the item's most distinctive trait.\nONLY JSON: {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\": \"...\", \"nutrition_note\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/item_info.json: [{"role":"system","content":"You are a
+          grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Grocery expert helping someone
+          understand \"{{name_en}}\".{% if profile_context
+          %}{{profile_context}}{% endif %}\nstorage_tip: distinguish opened vs
+          unopened if different. nutrition_note: lead with the item's most
+          distinctive trait.\nONLY JSON: {\"category\": \"...\",
+          \"typical_unit\": \"...\", \"storage_tip\": \"...\",
+          \"nutrition_note\": \"...\"}"}]
+        config: {}
+      promptId: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"category":"Fruit","typical_unit":"1 banana","storage_tip":"Store
+          unopened bananas at room temperature until ripe. Once opened or
+          peeled, cover and refrigerate the cut fruit; the flesh may brown, so
+          use soon for best quality.","nutrition_note":"Notable for being
+          naturally high in potassium and quick energy from carbohydrates, with
+          fiber and vitamin B6 contributing to its overall nutrition."}
+        tokenUsage:
+          total: 161
+          prompt: 78
+          completion: 83
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: banana — common fruit with well-known properties
+        vars: &ref_0
+          name_en: banana
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - category
+                - typical_unit
+                - storage_tip
+                - nutrition_note
+              properties:
+                category:
+                  type: string
+                typical_unit:
+                  type: string
+                storage_tip:
+                  type: string
+                nutrition_note:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.category && d.typical_unit && d.storage_tip &&
+              d.nutrition_note && d.category.length > 0 && d.typical_unit.length
+              > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+              fields present' : 'Missing fields' };
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for banana. Category should
+              be produce/fruit. Storage tip should be actionable (e.g., room
+              temperature to ripen, fridge to slow). Nutrition note should
+              highlight a specific characteristic (e.g., potassium, natural
+              energy), not a generic statement.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for banana. Category should
+              be produce/fruit. Storage tip should be actionable (e.g., room
+              temperature to ripen, fridge to slow). Nutrition note should
+              highlight a specific characteristic (e.g., potassium, natural
+              energy), not a generic statement.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 0
+      vars: *ref_0
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 884
+          prompt: 708
+          completion: 176
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - category
+                  - typical_unit
+                  - storage_tip
+                  - nutrition_note
+                properties:
+                  category:
+                    type: string
+                  typical_unit:
+                    type: string
+                  storage_tip:
+                    type: string
+                  nutrition_note:
+                    type: string
+          - pass: true
+            score: 1
+            reason: All fields present
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for banana. Category
+                should be produce/fruit. Storage tip should be actionable (e.g.,
+                room temperature to ripen, fridge to slow). Nutrition note
+                should highlight a specific characteristic (e.g., potassium,
+                natural energy), not a generic statement.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              All four fields are present and accurate. Category is correctly
+              'Produce (Fruit)'. Storage tip is actionable and accurate -
+              recommends room temperature for ripening and refrigeration to slow
+              further ripening, with specific guidance for cut bananas.
+              Nutrition note specifically highlights potassium content and
+              natural sweetness, which are distinctive characteristics of
+              bananas rather than generic statements.
+            tokensUsed:
+              total: 477
+              prompt: 379
+              completion: 98
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Produce
+                (Fruit)\",\"typical_unit\":\"1
+                banana\",\"storage_tip\":\"Unopened/whole bananas: store at room
+                temperature until ripe, then refrigerate if already ripe to slow
+                further ripening. Opened/cut bananas: refrigerate in an airtight
+                container and use within 1–2 days (toss with lemon juice to
+                reduce browning).\",\"nutrition_note\":\"Bananas are most
+                distinctive for their naturally sweet flavor and high potassium
+                content.\"}\n</Output>\n<Rubric>\nAll four fields are factually
+                accurate for banana. Category should be produce/fruit. Storage
+                tip should be actionable (e.g., room temperature to ripen,
+                fridge to slow). Nutrition note should highlight a specific
+                characteristic (e.g., potassium, natural energy), not a generic
+                statement.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for banana. Category
+                should be produce/fruit. Storage tip should be actionable (e.g.,
+                room temperature to ripen, fridge to slow). Nutrition note
+                should highlight a specific characteristic (e.g., potassium,
+                natural energy), not a generic statement.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output lists banana as produce/fruit, gives an actionable
+              storage tip about room temperature ripening and refrigeration to
+              slow further ripening, and includes a specific nutrition note
+              about potassium and sweet flavor. The field 'typical_unit' as '1
+              banana' is also reasonable.
+            tokensUsed:
+              total: 407
+              prompt: 329
+              completion: 78
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Produce
+                (Fruit)\",\"typical_unit\":\"1
+                banana\",\"storage_tip\":\"Unopened/whole bananas: store at room
+                temperature until ripe, then refrigerate if already ripe to slow
+                further ripening. Opened/cut bananas: refrigerate in an airtight
+                container and use within 1–2 days (toss with lemon juice to
+                reduce browning).\",\"nutrition_note\":\"Bananas are most
+                distinctive for their naturally sweet flavor and high potassium
+                content.\"}\n</Output>\n<Rubric>\nAll four fields are factually
+                accurate for banana. Category should be produce/fruit. Storage
+                tip should be actionable (e.g., room temperature to ripen,
+                fridge to slow). Nutrition note should highlight a specific
+                characteristic (e.g., potassium, natural energy), not a generic
+                statement.\n\n</Rubric>"}]
+      id: 075d0bc5-6128-45d6-8e12-2f53091a2936
+      latencyMs: 1295
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Grocery expert helping someone understand \"banana\".\nstorage_tip: distinguish opened vs unopened if different. nutrition_note: lead with the item's most distinctive trait.\nONLY JSON: {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\": \"...\", \"nutrition_note\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/item_info.json: [{"role":"system","content":"You are a
+          grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Grocery expert helping someone
+          understand \"{{name_en}}\".{% if profile_context
+          %}{{profile_context}}{% endif %}\nstorage_tip: distinguish opened vs
+          unopened if different. nutrition_note: lead with the item's most
+          distinctive trait.\nONLY JSON: {\"category\": \"...\",
+          \"typical_unit\": \"...\", \"storage_tip\": \"...\",
+          \"nutrition_note\": \"...\"}"}]
+        config: {}
+      promptId: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: >-
+          {"category":"Produce (Fruit)","typical_unit":"1
+          banana","storage_tip":"Unopened/whole bananas: store at room
+          temperature until ripe, then refrigerate if already ripe to slow
+          further ripening. Opened/cut bananas: refrigerate in an airtight
+          container and use within 1–2 days (toss with lemon juice to reduce
+          browning).","nutrition_note":"Bananas are most distinctive for their
+          naturally sweet flavor and high potassium content."}
+        tokenUsage:
+          total: 176
+          prompt: 78
+          completion: 98
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: banana — common fruit with well-known properties
+        vars: &ref_1
+          name_en: banana
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - category
+                - typical_unit
+                - storage_tip
+                - nutrition_note
+              properties:
+                category:
+                  type: string
+                typical_unit:
+                  type: string
+                storage_tip:
+                  type: string
+                nutrition_note:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.category && d.typical_unit && d.storage_tip &&
+              d.nutrition_note && d.category.length > 0 && d.typical_unit.length
+              > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+              fields present' : 'Missing fields' };
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for banana. Category should
+              be produce/fruit. Storage tip should be actionable (e.g., room
+              temperature to ripen, fridge to slow). Nutrition note should
+              highlight a specific characteristic (e.g., potassium, natural
+              energy), not a generic statement.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for banana. Category should
+              be produce/fruit. Storage tip should be actionable (e.g., room
+              temperature to ripen, fridge to slow). Nutrition note should
+              highlight a specific characteristic (e.g., potassium, natural
+              energy), not a generic statement.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 0
+      vars: *ref_1
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 939
+          prompt: 730
+          completion: 209
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - category
+                  - typical_unit
+                  - storage_tip
+                  - nutrition_note
+                properties:
+                  category:
+                    type: string
+                  typical_unit:
+                    type: string
+                  storage_tip:
+                    type: string
+                  nutrition_note:
+                    type: string
+          - pass: true
+            score: 1
+            reason: All fields present
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for gochujang (Korean red
+                pepper paste). Category should reflect it's a
+                condiment/sauce/paste. Typical unit should mention jar or tub.
+                Storage tip should distinguish opened vs unopened. Nutrition
+                note should mention something specific (e.g., fermented,
+                contains capsaicin, sodium content).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              All four fields are factually accurate for gochujang. Category
+              correctly identifies it as a Korean fermented chili
+              paste/condiment. Typical unit mentions 'tub or jar' which is
+              accurate. Storage tip correctly distinguishes between unopened
+              (pantry) and opened (refrigerator) storage. Nutrition note
+              mentions fermented chili paste, spicy-sweet umami flavor, calorie
+              density, sodium, and sugar content - all specific and accurate
+              characteristics of gochujang.
+            tokensUsed:
+              total: 514
+              prompt: 390
+              completion: 124
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Korean
+                fermented chili paste / condiment\",\"typical_unit\":\"tub or
+                jar\",\"storage_tip\":\"Unopened gochujang can be stored in a
+                cool, dry pantry; once opened, keep it tightly sealed in the
+                refrigerator for best quality and to slow fermentation
+                changes.\",\"nutrition_note\":\"Its most distinctive trait is a
+                spicy-sweet umami flavor from fermented chili paste; it is
+                usually fairly calorie-dense and can be moderately high in
+                sodium and sugar.\"}\n</Output>\n<Rubric>\nAll four fields are
+                factually accurate for gochujang (Korean red pepper paste).
+                Category should reflect it's a condiment/sauce/paste. Typical
+                unit should mention jar or tub. Storage tip should distinguish
+                opened vs unopened. Nutrition note should mention something
+                specific (e.g., fermented, contains capsaicin, sodium
+                content).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for gochujang (Korean red
+                pepper paste). Category should reflect it's a
+                condiment/sauce/paste. Typical unit should mention jar or tub.
+                Storage tip should distinguish opened vs unopened. Nutrition
+                note should mention something specific (e.g., fermented,
+                contains capsaicin, sodium content).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The four fields are factually accurate for gochujang: it is a
+              Korean fermented chili paste/condiment, is commonly sold in jars
+              or tubs, should be stored unopened in a cool dry place and
+              refrigerated after opening, and its nutrition note correctly
+              mentions fermentation, spicy-sweet umami flavor, and relatively
+              high sodium/sugar.
+            tokensUsed:
+              total: 425
+              prompt: 340
+              completion: 85
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Korean
+                fermented chili paste / condiment\",\"typical_unit\":\"tub or
+                jar\",\"storage_tip\":\"Unopened gochujang can be stored in a
+                cool, dry pantry; once opened, keep it tightly sealed in the
+                refrigerator for best quality and to slow fermentation
+                changes.\",\"nutrition_note\":\"Its most distinctive trait is a
+                spicy-sweet umami flavor from fermented chili paste; it is
+                usually fairly calorie-dense and can be moderately high in
+                sodium and sugar.\"}\n</Output>\n<Rubric>\nAll four fields are
+                factually accurate for gochujang (Korean red pepper paste).
+                Category should reflect it's a condiment/sauce/paste. Typical
+                unit should mention jar or tub. Storage tip should distinguish
+                opened vs unopened. Nutrition note should mention something
+                specific (e.g., fermented, contains capsaicin, sodium
+                content).\n\n</Rubric>"}]
+      id: 0efd27fe-9e7c-4412-bd39-13fa6c314709
+      latencyMs: 1206
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Grocery expert helping someone understand \"gochujang\".\nstorage_tip: distinguish opened vs unopened if different. nutrition_note: lead with the item's most distinctive trait.\nONLY JSON: {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\": \"...\", \"nutrition_note\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/item_info.json: [{"role":"system","content":"You are a
+          grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Grocery expert helping someone
+          understand \"{{name_en}}\".{% if profile_context
+          %}{{profile_context}}{% endif %}\nstorage_tip: distinguish opened vs
+          unopened if different. nutrition_note: lead with the item's most
+          distinctive trait.\nONLY JSON: {\"category\": \"...\",
+          \"typical_unit\": \"...\", \"storage_tip\": \"...\",
+          \"nutrition_note\": \"...\"}"}]
+        config: {}
+      promptId: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"category":"Korean fermented chili paste /
+          condiment","typical_unit":"tub or jar","storage_tip":"Unopened
+          gochujang can be stored in a cool, dry pantry; once opened, keep it
+          tightly sealed in the refrigerator for best quality and to slow
+          fermentation changes.","nutrition_note":"Its most distinctive trait is
+          a spicy-sweet umami flavor from fermented chili paste; it is usually
+          fairly calorie-dense and can be moderately high in sodium and sugar."}
+        tokenUsage:
+          total: 181
+          prompt: 81
+          completion: 100
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: gochujang — Korean specialty requiring specific knowledge
+        vars: &ref_2
+          name_en: gochujang
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - category
+                - typical_unit
+                - storage_tip
+                - nutrition_note
+              properties:
+                category:
+                  type: string
+                typical_unit:
+                  type: string
+                storage_tip:
+                  type: string
+                nutrition_note:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.category && d.typical_unit && d.storage_tip &&
+              d.nutrition_note && d.category.length > 0 && d.typical_unit.length
+              > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+              fields present' : 'Missing fields' };
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for gochujang (Korean red
+              pepper paste). Category should reflect it's a
+              condiment/sauce/paste. Typical unit should mention jar or tub.
+              Storage tip should distinguish opened vs unopened. Nutrition note
+              should mention something specific (e.g., fermented, contains
+              capsaicin, sodium content).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for gochujang (Korean red
+              pepper paste). Category should reflect it's a
+              condiment/sauce/paste. Typical unit should mention jar or tub.
+              Storage tip should distinguish opened vs unopened. Nutrition note
+              should mention something specific (e.g., fermented, contains
+              capsaicin, sodium content).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 1
+      vars: *ref_2
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.9875
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 1016
+          prompt: 779
+          completion: 237
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - category
+                  - typical_unit
+                  - storage_tip
+                  - nutrition_note
+                properties:
+                  category:
+                    type: string
+                  typical_unit:
+                    type: string
+                  storage_tip:
+                    type: string
+                  nutrition_note:
+                    type: string
+          - pass: true
+            score: 1
+            reason: All fields present
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for gochujang (Korean red
+                pepper paste). Category should reflect it's a
+                condiment/sauce/paste. Typical unit should mention jar or tub.
+                Storage tip should distinguish opened vs unopened. Nutrition
+                note should mention something specific (e.g., fermented,
+                contains capsaicin, sodium content).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              All four fields are factually accurate for gochujang: (1) Category
+              correctly identifies it as a Korean fermented chili
+              paste/condiment; (2) Typical unit mentions 'jar/pouch' which
+              covers the jar/tub requirement; (3) Storage tip clearly
+              distinguishes between unopened (cool, dark pantry) and opened
+              (refrigerate, tightly sealed) storage; (4) Nutrition note mentions
+              specific traits including that it's fermented, contains sodium,
+              carbohydrates, and added sugar, with a note about the spicy-sweet
+              flavor profile.
+            tokensUsed:
+              total: 559
+              prompt: 414
+              completion: 145
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Korean
+                fermented chili paste (condiment)\",\"typical_unit\":\"tbsp or
+                jar/pouch\",\"storage_tip\":\"Unopened: store in a cool, dark
+                pantry. Opened: refrigerate after opening and keep the lid
+                tightly sealed; use a clean spoon and expect best quality for a
+                few months (check label for exact
+                guidance).\",\"nutrition_note\":\"Distinctive trait: richly
+                fermented, spicy-sweet chili flavor that adds punch to
+                dishes—contains some sodium and carbohydrates, and may include
+                added sugar; use small amounts for flavor and watch portion size
+                if limiting salt or sugar.\"}\n</Output>\n<Rubric>\nAll four
+                fields are factually accurate for gochujang (Korean red pepper
+                paste). Category should reflect it's a condiment/sauce/paste.
+                Typical unit should mention jar or tub. Storage tip should
+                distinguish opened vs unopened. Nutrition note should mention
+                something specific (e.g., fermented, contains capsaicin, sodium
+                content).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for gochujang (Korean red
+                pepper paste). Category should reflect it's a
+                condiment/sauce/paste. Typical unit should mention jar or tub.
+                Storage tip should distinguish opened vs unopened. Nutrition
+                note should mention something specific (e.g., fermented,
+                contains capsaicin, sodium content).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.95
+            reason: >-
+              The output is factually accurate for gochujang: it is a Korean
+              fermented chili paste condiment; typical units like tbsp or
+              jar/pouch are plausible though the rubric specifically mentions
+              jar or tub; the storage tip correctly distinguishes unopened vs
+              opened storage; and the nutrition note accurately mentions
+              fermented, spicy-sweet flavor plus sodium and carbohydrates.
+              Overall it satisfies the rubric’s requirements.
+            tokensUsed:
+              total: 457
+              prompt: 365
+              completion: 92
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Korean
+                fermented chili paste (condiment)\",\"typical_unit\":\"tbsp or
+                jar/pouch\",\"storage_tip\":\"Unopened: store in a cool, dark
+                pantry. Opened: refrigerate after opening and keep the lid
+                tightly sealed; use a clean spoon and expect best quality for a
+                few months (check label for exact
+                guidance).\",\"nutrition_note\":\"Distinctive trait: richly
+                fermented, spicy-sweet chili flavor that adds punch to
+                dishes—contains some sodium and carbohydrates, and may include
+                added sugar; use small amounts for flavor and watch portion size
+                if limiting salt or sugar.\"}\n</Output>\n<Rubric>\nAll four
+                fields are factually accurate for gochujang (Korean red pepper
+                paste). Category should reflect it's a condiment/sauce/paste.
+                Typical unit should mention jar or tub. Storage tip should
+                distinguish opened vs unopened. Nutrition note should mention
+                something specific (e.g., fermented, contains capsaicin, sodium
+                content).\n\n</Rubric>"}]
+      id: 7a25898a-cab4-490a-9815-588b28fe4729
+      latencyMs: 1299
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Grocery expert helping someone understand \"gochujang\".\nstorage_tip: distinguish opened vs unopened if different. nutrition_note: lead with the item's most distinctive trait.\nONLY JSON: {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\": \"...\", \"nutrition_note\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/item_info.json: [{"role":"system","content":"You are a
+          grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Grocery expert helping someone
+          understand \"{{name_en}}\".{% if profile_context
+          %}{{profile_context}}{% endif %}\nstorage_tip: distinguish opened vs
+          unopened if different. nutrition_note: lead with the item's most
+          distinctive trait.\nONLY JSON: {\"category\": \"...\",
+          \"typical_unit\": \"...\", \"storage_tip\": \"...\",
+          \"nutrition_note\": \"...\"}"}]
+        config: {}
+      promptId: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: >-
+          {"category":"Korean fermented chili paste
+          (condiment)","typical_unit":"tbsp or
+          jar/pouch","storage_tip":"Unopened: store in a cool, dark pantry.
+          Opened: refrigerate after opening and keep the lid tightly sealed; use
+          a clean spoon and expect best quality for a few months (check label
+          for exact guidance).","nutrition_note":"Distinctive trait: richly
+          fermented, spicy-sweet chili flavor that adds punch to dishes—contains
+          some sodium and carbohydrates, and may include added sugar; use small
+          amounts for flavor and watch portion size if limiting salt or sugar."}
+        tokenUsage:
+          total: 206
+          prompt: 81
+          completion: 125
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9875
+      success: true
+      testCase:
+        description: gochujang — Korean specialty requiring specific knowledge
+        vars: &ref_3
+          name_en: gochujang
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - category
+                - typical_unit
+                - storage_tip
+                - nutrition_note
+              properties:
+                category:
+                  type: string
+                typical_unit:
+                  type: string
+                storage_tip:
+                  type: string
+                nutrition_note:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.category && d.typical_unit && d.storage_tip &&
+              d.nutrition_note && d.category.length > 0 && d.typical_unit.length
+              > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+              fields present' : 'Missing fields' };
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for gochujang (Korean red
+              pepper paste). Category should reflect it's a
+              condiment/sauce/paste. Typical unit should mention jar or tub.
+              Storage tip should distinguish opened vs unopened. Nutrition note
+              should mention something specific (e.g., fermented, contains
+              capsaicin, sodium content).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for gochujang (Korean red
+              pepper paste). Category should reflect it's a
+              condiment/sauce/paste. Typical unit should mention jar or tub.
+              Storage tip should distinguish opened vs unopened. Nutrition note
+              should mention something specific (e.g., fermented, contains
+              capsaicin, sodium content).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 1
+      vars: *ref_3
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.9875
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 966
+          prompt: 755
+          completion: 211
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - category
+                  - typical_unit
+                  - storage_tip
+                  - nutrition_note
+                properties:
+                  category:
+                    type: string
+                  typical_unit:
+                    type: string
+                  storage_tip:
+                    type: string
+                  nutrition_note:
+                    type: string
+          - pass: true
+            score: 1
+            reason: All fields present
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for quinoa. Category
+                should be grains/dry goods. Storage tip should mention airtight
+                container or cool/dry place. Nutrition note should highlight a
+                specific trait (complete protein, gluten-free) — not generic
+                'healthy' statements.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.95
+            reason: >-
+              All four fields are factually accurate for quinoa. The category
+              'whole grain (seed)' is acceptable though slightly different from
+              'grains/dry goods' — quinoa is technically a seed but commonly
+              categorized as a grain/dry good, which is a reasonable
+              classification. The storage tip mentions both airtight container
+              and cool/dry place. The nutrition note highlights specific traits:
+              complete plant protein with all nine essential amino acids, fiber,
+              magnesium, iron, and gluten-free status — these are all accurate
+              and specific, not generic 'healthy' statements.
+            tokensUsed:
+              total: 545
+              prompt: 404
+              completion: 141
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"whole
+                grain (seed)\",\"typical_unit\":\"1 lb bag or 12 oz
+                box\",\"storage_tip\":\"Unopened quinoa can be stored in a cool,
+                dry pantry. Once opened, keep it tightly sealed in an airtight
+                container in the pantry away from heat and moisture; for longer
+                storage, refrigerate or freeze to help prevent rancidity and
+                insect exposure.\",\"nutrition_note\":\"Its standout trait is
+                that it’s a complete plant protein, meaning it contains all nine
+                essential amino acids. It’s also a good source of fiber,
+                magnesium, and iron, and it’s naturally
+                gluten-free.\"}\n</Output>\n<Rubric>\nAll four fields are
+                factually accurate for quinoa. Category should be grains/dry
+                goods. Storage tip should mention airtight container or cool/dry
+                place. Nutrition note should highlight a specific trait
+                (complete protein, gluten-free) — not generic 'healthy'
+                statements.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for quinoa. Category
+                should be grains/dry goods. Storage tip should mention airtight
+                container or cool/dry place. Nutrition note should highlight a
+                specific trait (complete protein, gluten-free) — not generic
+                'healthy' statements.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The entry is factually accurate for quinoa: the category is a
+              grain/dry good, the storage tip correctly mentions a cool, dry
+              pantry and airtight container, and the nutrition note correctly
+              highlights quinoa as a complete protein and gluten-free.
+            tokensUsed:
+              total: 421
+              prompt: 351
+              completion: 70
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"whole
+                grain (seed)\",\"typical_unit\":\"1 lb bag or 12 oz
+                box\",\"storage_tip\":\"Unopened quinoa can be stored in a cool,
+                dry pantry. Once opened, keep it tightly sealed in an airtight
+                container in the pantry away from heat and moisture; for longer
+                storage, refrigerate or freeze to help prevent rancidity and
+                insect exposure.\",\"nutrition_note\":\"Its standout trait is
+                that it’s a complete plant protein, meaning it contains all nine
+                essential amino acids. It’s also a good source of fiber,
+                magnesium, and iron, and it’s naturally
+                gluten-free.\"}\n</Output>\n<Rubric>\nAll four fields are
+                factually accurate for quinoa. Category should be grains/dry
+                goods. Storage tip should mention airtight container or cool/dry
+                place. Nutrition note should highlight a specific trait
+                (complete protein, gluten-free) — not generic 'healthy'
+                statements.\n\n</Rubric>"}]
+      id: dd0a36b3-5c7e-484f-afc3-11d4bdc144e7
+      latencyMs: 1515
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Grocery expert helping someone understand \"quinoa\".\nstorage_tip: distinguish opened vs unopened if different. nutrition_note: lead with the item's most distinctive trait.\nONLY JSON: {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\": \"...\", \"nutrition_note\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/item_info.json: [{"role":"system","content":"You are a
+          grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Grocery expert helping someone
+          understand \"{{name_en}}\".{% if profile_context
+          %}{{profile_context}}{% endif %}\nstorage_tip: distinguish opened vs
+          unopened if different. nutrition_note: lead with the item's most
+          distinctive trait.\nONLY JSON: {\"category\": \"...\",
+          \"typical_unit\": \"...\", \"storage_tip\": \"...\",
+          \"nutrition_note\": \"...\"}"}]
+        config: {}
+      promptId: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"category":"whole grain (seed)","typical_unit":"1 lb bag or 12 oz
+          box","storage_tip":"Unopened quinoa can be stored in a cool, dry
+          pantry. Once opened, keep it tightly sealed in an airtight container
+          in the pantry away from heat and moisture; for longer storage,
+          refrigerate or freeze to help prevent rancidity and insect
+          exposure.","nutrition_note":"Its standout trait is that it’s a
+          complete plant protein, meaning it contains all nine essential amino
+          acids. It’s also a good source of fiber, magnesium, and iron, and it’s
+          naturally gluten-free."}
+        tokenUsage:
+          total: 204
+          prompt: 79
+          completion: 125
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9875
+      success: true
+      testCase:
+        description: quinoa — grain with specific nutritional claims
+        vars: &ref_4
+          name_en: quinoa
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - category
+                - typical_unit
+                - storage_tip
+                - nutrition_note
+              properties:
+                category:
+                  type: string
+                typical_unit:
+                  type: string
+                storage_tip:
+                  type: string
+                nutrition_note:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.category && d.typical_unit && d.storage_tip &&
+              d.nutrition_note && d.category.length > 0 && d.typical_unit.length
+              > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+              fields present' : 'Missing fields' };
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for quinoa. Category should
+              be grains/dry goods. Storage tip should mention airtight container
+              or cool/dry place. Nutrition note should highlight a specific
+              trait (complete protein, gluten-free) — not generic 'healthy'
+              statements.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for quinoa. Category should
+              be grains/dry goods. Storage tip should mention airtight container
+              or cool/dry place. Nutrition note should highlight a specific
+              trait (complete protein, gluten-free) — not generic 'healthy'
+              statements.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 2
+      vars: *ref_4
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 996
+          prompt: 783
+          completion: 213
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - category
+                  - typical_unit
+                  - storage_tip
+                  - nutrition_note
+                properties:
+                  category:
+                    type: string
+                  typical_unit:
+                    type: string
+                  storage_tip:
+                    type: string
+                  nutrition_note:
+                    type: string
+          - pass: true
+            score: 1
+            reason: All fields present
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for quinoa. Category
+                should be grains/dry goods. Storage tip should mention airtight
+                container or cool/dry place. Nutrition note should highlight a
+                specific trait (complete protein, gluten-free) — not generic
+                'healthy' statements.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              All four fields are factually accurate for quinoa. The category
+              'Grain (pseudocereal) / Pantry staple' correctly identifies quinoa
+              as a grain/dry good. The typical unit of 1 lb bags is accurate.
+              The storage tip mentions both airtight container and cool/dry
+              place. The nutrition note specifically highlights that quinoa is a
+              complete protein containing all essential amino acids, which is
+              its most distinctive nutritional trait — this is a specific,
+              accurate claim rather than a generic 'healthy' statement.
+            tokensUsed:
+              total: 551
+              prompt: 419
+              completion: 132
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Grain
+                (pseudocereal) / Pantry staple\",\"typical_unit\":\"1 lb (454 g)
+                bag or 16–48 oz (454 g–1.36 kg)\",\"storage_tip\":\"Unopened:
+                store in a cool, dry pantry in a sealed package. Opened:
+                transfer to an airtight container (or reseal tightly) and use
+                within ~6–12 months for best quality; keep away from heat,
+                humidity, and pests.\",\"nutrition_note\":\"Quinoa’s most
+                distinctive trait is that it’s a complete protein (it contains
+                all essential amino acids) and is also high in fiber and
+                minerals like magnesium and iron.\"}\n</Output>\n<Rubric>\nAll
+                four fields are factually accurate for quinoa. Category should
+                be grains/dry goods. Storage tip should mention airtight
+                container or cool/dry place. Nutrition note should highlight a
+                specific trait (complete protein, gluten-free) — not generic
+                'healthy' statements.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for quinoa. Category
+                should be grains/dry goods. Storage tip should mention airtight
+                container or cool/dry place. Nutrition note should highlight a
+                specific trait (complete protein, gluten-free) — not generic
+                'healthy' statements.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The four fields are factually accurate for quinoa: the category is
+              a grain/pantry staple, the typical unit is reasonable, the storage
+              tip correctly mentions a cool/dry pantry and airtight storage, and
+              the nutrition note highlights a specific trait (complete protein)
+              rather than a generic health claim.
+            tokensUsed:
+              total: 445
+              prompt: 364
+              completion: 81
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Grain
+                (pseudocereal) / Pantry staple\",\"typical_unit\":\"1 lb (454 g)
+                bag or 16–48 oz (454 g–1.36 kg)\",\"storage_tip\":\"Unopened:
+                store in a cool, dry pantry in a sealed package. Opened:
+                transfer to an airtight container (or reseal tightly) and use
+                within ~6–12 months for best quality; keep away from heat,
+                humidity, and pests.\",\"nutrition_note\":\"Quinoa’s most
+                distinctive trait is that it’s a complete protein (it contains
+                all essential amino acids) and is also high in fiber and
+                minerals like magnesium and iron.\"}\n</Output>\n<Rubric>\nAll
+                four fields are factually accurate for quinoa. Category should
+                be grains/dry goods. Storage tip should mention airtight
+                container or cool/dry place. Nutrition note should highlight a
+                specific trait (complete protein, gluten-free) — not generic
+                'healthy' statements.\n\n</Rubric>"}]
+      id: 6fba0671-1c2e-46b6-aa73-3f502269d8d2
+      latencyMs: 1288
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Grocery expert helping someone understand \"quinoa\".\nstorage_tip: distinguish opened vs unopened if different. nutrition_note: lead with the item's most distinctive trait.\nONLY JSON: {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\": \"...\", \"nutrition_note\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/item_info.json: [{"role":"system","content":"You are a
+          grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Grocery expert helping someone
+          understand \"{{name_en}}\".{% if profile_context
+          %}{{profile_context}}{% endif %}\nstorage_tip: distinguish opened vs
+          unopened if different. nutrition_note: lead with the item's most
+          distinctive trait.\nONLY JSON: {\"category\": \"...\",
+          \"typical_unit\": \"...\", \"storage_tip\": \"...\",
+          \"nutrition_note\": \"...\"}"}]
+        config: {}
+      promptId: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: >-
+          {"category":"Grain (pseudocereal) / Pantry staple","typical_unit":"1
+          lb (454 g) bag or 16–48 oz (454 g–1.36 kg)","storage_tip":"Unopened:
+          store in a cool, dry pantry in a sealed package. Opened: transfer to
+          an airtight container (or reseal tightly) and use within ~6–12 months
+          for best quality; keep away from heat, humidity, and
+          pests.","nutrition_note":"Quinoa’s most distinctive trait is that it’s
+          a complete protein (it contains all essential amino acids) and is also
+          high in fiber and minerals like magnesium and iron."}
+        tokenUsage:
+          total: 217
+          prompt: 79
+          completion: 138
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: quinoa — grain with specific nutritional claims
+        vars: &ref_5
+          name_en: quinoa
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - category
+                - typical_unit
+                - storage_tip
+                - nutrition_note
+              properties:
+                category:
+                  type: string
+                typical_unit:
+                  type: string
+                storage_tip:
+                  type: string
+                nutrition_note:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.category && d.typical_unit && d.storage_tip &&
+              d.nutrition_note && d.category.length > 0 && d.typical_unit.length
+              > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+              fields present' : 'Missing fields' };
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for quinoa. Category should
+              be grains/dry goods. Storage tip should mention airtight container
+              or cool/dry place. Nutrition note should highlight a specific
+              trait (complete protein, gluten-free) — not generic 'healthy'
+              statements.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for quinoa. Category should
+              be grains/dry goods. Storage tip should mention airtight container
+              or cool/dry place. Nutrition note should highlight a specific
+              trait (complete protein, gluten-free) — not generic 'healthy'
+              statements.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 2
+      vars: *ref_5
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 993
+          prompt: 763
+          completion: 230
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - category
+                  - typical_unit
+                  - storage_tip
+                  - nutrition_note
+                properties:
+                  category:
+                    type: string
+                  typical_unit:
+                    type: string
+                  storage_tip:
+                    type: string
+                  nutrition_note:
+                    type: string
+          - pass: true
+            score: 1
+            reason: All fields present
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for tofu. Category should
+                be produce/refrigerated/protein. Storage tip should mention
+                water and refrigeration for opened tofu. Nutrition note should
+                highlight protein content or low calorie.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output contains all four fields with accurate information
+              about tofu. Category is 'Plant-based protein (soy)' which aligns
+              with the protein requirement. Storage tip mentions refrigeration
+              and water for opened tofu, including changing water daily and
+              using within 3-5 days. Nutrition note highlights protein content
+              ('high-protein'). All facts are accurate: tofu is indeed sold in
+              packages of roughly 14-16 oz, unopened tofu should be refrigerated
+              in its liquid, opened tofu should be stored in fresh water changed
+              daily, freezing does create a firmer texture, and tofu is indeed
+              high in protein and known for absorbing flavors.
+            tokensUsed:
+              total: 569
+              prompt: 407
+              completion: 162
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Plant-based
+                protein (soy)\",\"typical_unit\":\"package (often 14–16 oz /
+                400–450 g) or block\",\"storage_tip\":\"Unopened tofu:
+                refrigerate in its original packaging and keep submerged in the
+                liquid. Opened tofu: store in a sealed container in fresh water
+                in the fridge and change the water daily; use within ~3–5 days.
+                Freeze only if you want a firmer, chewier texture—thaw in the
+                fridge and drain well.\",\"nutrition_note\":\"Tofu is a
+                high-protein, soy-based food that’s most distinctive for its
+                ability to take on the flavor of whatever you cook it
+                with.\"}\n</Output>\n<Rubric>\nAll four fields are factually
+                accurate for tofu. Category should be
+                produce/refrigerated/protein. Storage tip should mention water
+                and refrigeration for opened tofu. Nutrition note should
+                highlight protein content or low calorie.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for tofu. Category should
+                be produce/refrigerated/protein. Storage tip should mention
+                water and refrigeration for opened tofu. Nutrition note should
+                highlight protein content or low calorie.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The category is reasonable for tofu as a protein/refrigerated
+              food, the storage tip correctly mentions refrigeration and storing
+              opened tofu in water, and the nutrition note accurately highlights
+              its high protein content. Overall, all four fields are factually
+              accurate enough for tofu.
+            tokensUsed:
+              total: 424
+              prompt: 356
+              completion: 68
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Plant-based
+                protein (soy)\",\"typical_unit\":\"package (often 14–16 oz /
+                400–450 g) or block\",\"storage_tip\":\"Unopened tofu:
+                refrigerate in its original packaging and keep submerged in the
+                liquid. Opened tofu: store in a sealed container in fresh water
+                in the fridge and change the water daily; use within ~3–5 days.
+                Freeze only if you want a firmer, chewier texture—thaw in the
+                fridge and drain well.\",\"nutrition_note\":\"Tofu is a
+                high-protein, soy-based food that’s most distinctive for its
+                ability to take on the flavor of whatever you cook it
+                with.\"}\n</Output>\n<Rubric>\nAll four fields are factually
+                accurate for tofu. Category should be
+                produce/refrigerated/protein. Storage tip should mention water
+                and refrigeration for opened tofu. Nutrition note should
+                highlight protein content or low calorie.\n\n</Rubric>"}]
+      id: c04ba8fb-dd34-41f0-9e52-5a96da3fbd6f
+      latencyMs: 1926
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Grocery expert helping someone understand \"tofu\".\nstorage_tip: distinguish opened vs unopened if different. nutrition_note: lead with the item's most distinctive trait.\nONLY JSON: {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\": \"...\", \"nutrition_note\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/item_info.json: [{"role":"system","content":"You are a
+          grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Grocery expert helping someone
+          understand \"{{name_en}}\".{% if profile_context
+          %}{{profile_context}}{% endif %}\nstorage_tip: distinguish opened vs
+          unopened if different. nutrition_note: lead with the item's most
+          distinctive trait.\nONLY JSON: {\"category\": \"...\",
+          \"typical_unit\": \"...\", \"storage_tip\": \"...\",
+          \"nutrition_note\": \"...\"}"}]
+        config: {}
+      promptId: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "category": "Plant-based protein (soy)",
+            "typical_unit": "package (often 14–16 oz / 400–450 g) or block",
+            "storage_tip": "Unopened tofu: refrigerate in its original packaging and keep submerged in the liquid. Opened tofu: store in a sealed container in fresh water in the fridge and change the water daily; use within ~3–5 days. Freeze only if you want a firmer, chewier texture—thaw in the fridge and drain well.",
+            "nutrition_note": "Tofu is a high-protein, soy-based food that’s most distinctive for its ability to take on the flavor of whatever you cook it with."
+          }
+        tokenUsage:
+          total: 231
+          prompt: 79
+          completion: 152
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: tofu — refrigerated item with specific storage needs
+        vars: &ref_6
+          name_en: tofu
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - category
+                - typical_unit
+                - storage_tip
+                - nutrition_note
+              properties:
+                category:
+                  type: string
+                typical_unit:
+                  type: string
+                storage_tip:
+                  type: string
+                nutrition_note:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.category && d.typical_unit && d.storage_tip &&
+              d.nutrition_note && d.category.length > 0 && d.typical_unit.length
+              > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+              fields present' : 'Missing fields' };
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for tofu. Category should
+              be produce/refrigerated/protein. Storage tip should mention water
+              and refrigeration for opened tofu. Nutrition note should highlight
+              protein content or low calorie.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for tofu. Category should
+              be produce/refrigerated/protein. Storage tip should mention water
+              and refrigeration for opened tofu. Nutrition note should highlight
+              protein content or low calorie.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 3
+      vars: *ref_6
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.985
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 1244
+          prompt: 782
+          completion: 462
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - category
+                  - typical_unit
+                  - storage_tip
+                  - nutrition_note
+                properties:
+                  category:
+                    type: string
+                  typical_unit:
+                    type: string
+                  storage_tip:
+                    type: string
+                  nutrition_note:
+                    type: string
+          - pass: true
+            score: 1
+            reason: All fields present
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for tofu. Category should
+                be produce/refrigerated/protein. Storage tip should mention
+                water and refrigeration for opened tofu. Nutrition note should
+                highlight protein content or low calorie.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              All four fields are factually accurate for tofu. The category
+              appropriately identifies it as a plant-based protein/soy food. The
+              storage tip correctly mentions keeping opened tofu submerged in
+              water and refrigerated. The nutrition note highlights tofu's high
+              protein content and low saturated fat. All rubric criteria are
+              met.
+            tokensUsed:
+              total: 759
+              prompt: 421
+              completion: 338
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Plant-based
+                protein / soy food\",\"typical_unit\":\"14 to 16 oz block (about
+                400 to 450 g)\",\"storage_tip\":\"Unopened tofu can be stored in
+                the refrigerator until the use-by date. Once opened, keep it
+                submerged in fresh water in an airtight container in the fridge
+                and change the water daily; use within 3 to 5 days. For longer
+                storage, freeze unopened or pressed tofu, then thaw in the
+                fridge before using.\",\"nutrition_note\":\"Its most distinctive
+                trait is that it’s a high-protein, soy-based food with very
+                little saturated fat; it also provides iron and calcium
+                (especially if calcium-set), though exact amounts vary by
+                type.\"}\n</Output>\n<Rubric>\nAll four fields are factually
+                accurate for tofu. Category should be
+                produce/refrigerated/protein. Storage tip should mention water
+                and refrigeration for opened tofu. Nutrition note should
+                highlight protein content or low calorie.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for tofu. Category should
+                be produce/refrigerated/protein. Storage tip should mention
+                water and refrigeration for opened tofu. Nutrition note should
+                highlight protein content or low calorie.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.94
+            reason: >-
+              The output is factually accurate for tofu: it is a plant-based soy
+              protein food, typically sold in ~14–16 oz blocks, opened tofu
+              should be refrigerated in water and the water changed daily, and
+              the nutrition note correctly highlights its protein content and
+              low saturated fat. However, the rubric says the category should be
+              produce/refrigerated/protein, and the output uses 'Plant-based
+              protein / soy food,' which is close but not exactly that phrasing.
+              Overall it satisfies the rubric’s substance.
+            tokensUsed:
+              total: 485
+              prompt: 361
+              completion: 124
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Plant-based
+                protein / soy food\",\"typical_unit\":\"14 to 16 oz block (about
+                400 to 450 g)\",\"storage_tip\":\"Unopened tofu can be stored in
+                the refrigerator until the use-by date. Once opened, keep it
+                submerged in fresh water in an airtight container in the fridge
+                and change the water daily; use within 3 to 5 days. For longer
+                storage, freeze unopened or pressed tofu, then thaw in the
+                fridge before using.\",\"nutrition_note\":\"Its most distinctive
+                trait is that it’s a high-protein, soy-based food with very
+                little saturated fat; it also provides iron and calcium
+                (especially if calcium-set), though exact amounts vary by
+                type.\"}\n</Output>\n<Rubric>\nAll four fields are factually
+                accurate for tofu. Category should be
+                produce/refrigerated/protein. Storage tip should mention water
+                and refrigeration for opened tofu. Nutrition note should
+                highlight protein content or low calorie.\n\n</Rubric>"}]
+      id: 1461ad0e-8dda-4b35-8714-f5e050ce2c5d
+      latencyMs: 2991
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Grocery expert helping someone understand \"tofu\".\nstorage_tip: distinguish opened vs unopened if different. nutrition_note: lead with the item's most distinctive trait.\nONLY JSON: {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\": \"...\", \"nutrition_note\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/item_info.json: [{"role":"system","content":"You are a
+          grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Grocery expert helping someone
+          understand \"{{name_en}}\".{% if profile_context
+          %}{{profile_context}}{% endif %}\nstorage_tip: distinguish opened vs
+          unopened if different. nutrition_note: lead with the item's most
+          distinctive trait.\nONLY JSON: {\"category\": \"...\",
+          \"typical_unit\": \"...\", \"storage_tip\": \"...\",
+          \"nutrition_note\": \"...\"}"}]
+        config: {}
+      promptId: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"category":"Plant-based protein / soy food","typical_unit":"14 to 16
+          oz block (about 400 to 450 g)","storage_tip":"Unopened tofu can be
+          stored in the refrigerator until the use-by date. Once opened, keep it
+          submerged in fresh water in an airtight container in the fridge and
+          change the water daily; use within 3 to 5 days. For longer storage,
+          freeze unopened or pressed tofu, then thaw in the fridge before
+          using.","nutrition_note":"Its most distinctive trait is that it’s a
+          high-protein, soy-based food with very little saturated fat; it also
+          provides iron and calcium (especially if calcium-set), though exact
+          amounts vary by type."}
+        tokenUsage:
+          total: 225
+          prompt: 79
+          completion: 146
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.985
+      success: true
+      testCase:
+        description: tofu — refrigerated item with specific storage needs
+        vars: &ref_7
+          name_en: tofu
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - category
+                - typical_unit
+                - storage_tip
+                - nutrition_note
+              properties:
+                category:
+                  type: string
+                typical_unit:
+                  type: string
+                storage_tip:
+                  type: string
+                nutrition_note:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.category && d.typical_unit && d.storage_tip &&
+              d.nutrition_note && d.category.length > 0 && d.typical_unit.length
+              > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+              fields present' : 'Missing fields' };
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for tofu. Category should
+              be produce/refrigerated/protein. Storage tip should mention water
+              and refrigeration for opened tofu. Nutrition note should highlight
+              protein content or low calorie.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for tofu. Category should
+              be produce/refrigerated/protein. Storage tip should mention water
+              and refrigeration for opened tofu. Nutrition note should highlight
+              protein content or low calorie.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 3
+      vars: *ref_7
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      error: >-
+        The output is mostly factually accurate for saffron: it is a spice, the
+        typical unit correctly reflects very small quantities, the storage tip
+        mentions airtight, dark, cool conditions, and the nutrition note
+        mentions antioxidants and saffron’s distinctive properties. However, the
+        rubric says the category should be "spices" plural, while the output
+        says "Spice (saffron threads)" singular, so it does not fully match the
+        rubric requirement.
+      gradingResult:
+        pass: false
+        score: 0.965
+        reason: >-
+          The output is mostly factually accurate for saffron: it is a spice,
+          the typical unit correctly reflects very small quantities, the storage
+          tip mentions airtight, dark, cool conditions, and the nutrition note
+          mentions antioxidants and saffron’s distinctive properties. However,
+          the rubric says the category should be "spices" plural, while the
+          output says "Spice (saffron threads)" singular, so it does not fully
+          match the rubric requirement.
+        namedScores: {}
+        tokensUsed:
+          total: 1025
+          prompt: 784
+          completion: 241
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - category
+                  - typical_unit
+                  - storage_tip
+                  - nutrition_note
+                properties:
+                  category:
+                    type: string
+                  typical_unit:
+                    type: string
+                  storage_tip:
+                    type: string
+                  nutrition_note:
+                    type: string
+          - pass: true
+            score: 1
+            reason: All fields present
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for saffron. Category
+                should be spices. Typical unit should reflect it's sold in very
+                small quantities (grams, pinch). Storage tip should mention
+                airtight, dark, cool. Nutrition note should mention antioxidants
+                or specific properties — not just 'expensive spice'.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              All four fields are factually accurate for saffron. Category is
+              correctly listed as 'Spice (saffron threads)'. Typical unit
+              correctly reflects small quantities (0.1–0.2 g pinch or 1 g).
+              Storage tip mentions airtight container, cool, dark, and dry
+              conditions. Nutrition note mentions carotenoid compounds and plant
+              antioxidants, going beyond just calling it an 'expensive spice'
+              and noting its distinctive aroma and color properties.
+            tokensUsed:
+              total: 551
+              prompt: 423
+              completion: 128
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Spice
+                (saffron threads)\",\"typical_unit\":\"0.1–0.2 g (small pinch)
+                or 1 g\",\"storage_tip\":\"Unopened: store in a cool, dark, dry
+                pantry in an airtight container. Opened: keep tightly sealed in
+                an airtight container away from light and moisture to preserve
+                aroma and color.\",\"nutrition_note\":\"Most distinctive trait:
+                saffron’s powerful floral–honey aroma and deep golden color from
+                its carotenoid compounds. It’s used in very small amounts, so
+                it’s not a major calorie source, but it does provide notable
+                plant antioxidants.\"}\n</Output>\n<Rubric>\nAll four fields are
+                factually accurate for saffron. Category should be spices.
+                Typical unit should reflect it's sold in very small quantities
+                (grams, pinch). Storage tip should mention airtight, dark, cool.
+                Nutrition note should mention antioxidants or specific
+                properties — not just 'expensive spice'.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for saffron. Category
+                should be spices. Typical unit should reflect it's sold in very
+                small quantities (grams, pinch). Storage tip should mention
+                airtight, dark, cool. Nutrition note should mention antioxidants
+                or specific properties — not just 'expensive spice'.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.86
+            reason: >-
+              The output is mostly factually accurate for saffron: it is a
+              spice, the typical unit correctly reflects very small quantities,
+              the storage tip mentions airtight, dark, cool conditions, and the
+              nutrition note mentions antioxidants and saffron’s distinctive
+              properties. However, the rubric says the category should be
+              "spices" plural, while the output says "Spice (saffron threads)"
+              singular, so it does not fully match the rubric requirement.
+            tokensUsed:
+              total: 474
+              prompt: 361
+              completion: 113
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Spice
+                (saffron threads)\",\"typical_unit\":\"0.1–0.2 g (small pinch)
+                or 1 g\",\"storage_tip\":\"Unopened: store in a cool, dark, dry
+                pantry in an airtight container. Opened: keep tightly sealed in
+                an airtight container away from light and moisture to preserve
+                aroma and color.\",\"nutrition_note\":\"Most distinctive trait:
+                saffron’s powerful floral–honey aroma and deep golden color from
+                its carotenoid compounds. It’s used in very small amounts, so
+                it’s not a major calorie source, but it does provide notable
+                plant antioxidants.\"}\n</Output>\n<Rubric>\nAll four fields are
+                factually accurate for saffron. Category should be spices.
+                Typical unit should reflect it's sold in very small quantities
+                (grams, pinch). Storage tip should mention airtight, dark, cool.
+                Nutrition note should mention antioxidants or specific
+                properties — not just 'expensive spice'.\n\n</Rubric>"}]
+      id: 434c4283-095e-4d08-a96b-5e7b9a01ec0c
+      latencyMs: 1632
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Grocery expert helping someone understand \"saffron\".\nstorage_tip: distinguish opened vs unopened if different. nutrition_note: lead with the item's most distinctive trait.\nONLY JSON: {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\": \"...\", \"nutrition_note\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/item_info.json: [{"role":"system","content":"You are a
+          grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Grocery expert helping someone
+          understand \"{{name_en}}\".{% if profile_context
+          %}{{profile_context}}{% endif %}\nstorage_tip: distinguish opened vs
+          unopened if different. nutrition_note: lead with the item's most
+          distinctive trait.\nONLY JSON: {\"category\": \"...\",
+          \"typical_unit\": \"...\", \"storage_tip\": \"...\",
+          \"nutrition_note\": \"...\"}"}]
+        config: {}
+      promptId: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "category": "Spice (saffron threads)",
+            "typical_unit": "0.1–0.2 g (small pinch) or 1 g",
+            "storage_tip": "Unopened: store in a cool, dark, dry pantry in an airtight container. Opened: keep tightly sealed in an airtight container away from light and moisture to preserve aroma and color.",
+            "nutrition_note": "Most distinctive trait: saffron’s powerful floral–honey aroma and deep golden color from its carotenoid compounds. It’s used in very small amounts, so it’s not a major calorie source, but it does provide notable plant antioxidants."
+          }
+        tokenUsage:
+          total: 221
+          prompt: 80
+          completion: 141
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.965
+      success: false
+      testCase:
+        description: saffron — expensive spice sold in tiny quantities
+        vars: &ref_8
+          name_en: saffron
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - category
+                - typical_unit
+                - storage_tip
+                - nutrition_note
+              properties:
+                category:
+                  type: string
+                typical_unit:
+                  type: string
+                storage_tip:
+                  type: string
+                nutrition_note:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.category && d.typical_unit && d.storage_tip &&
+              d.nutrition_note && d.category.length > 0 && d.typical_unit.length
+              > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+              fields present' : 'Missing fields' };
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for saffron. Category
+              should be spices. Typical unit should reflect it's sold in very
+              small quantities (grams, pinch). Storage tip should mention
+              airtight, dark, cool. Nutrition note should mention antioxidants
+              or specific properties — not just 'expensive spice'.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for saffron. Category
+              should be spices. Typical unit should reflect it's sold in very
+              small quantities (grams, pinch). Storage tip should mention
+              airtight, dark, cool. Nutrition note should mention antioxidants
+              or specific properties — not just 'expensive spice'.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 4
+      vars: *ref_8
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      error: >-
+        The first three fields are factually accurate — category is correct,
+        typical unit reflects small gram/pinch quantities, and storage tip
+        mentions airtight, dark, and cool conditions. However, the nutrition
+        note fails the rubric requirement: it only states that saffron
+        contributes few calories due to small serving sizes, without mentioning
+        antioxidants (like crocin or safranal) or any specific
+        bioactive/nutritional properties of saffron.
+      gradingResult:
+        pass: false
+        score: 0.855
+        reason: >-
+          The first three fields are factually accurate — category is correct,
+          typical unit reflects small gram/pinch quantities, and storage tip
+          mentions airtight, dark, and cool conditions. However, the nutrition
+          note fails the rubric requirement: it only states that saffron
+          contributes few calories due to small serving sizes, without
+          mentioning antioxidants (like crocin or safranal) or any specific
+          bioactive/nutritional properties of saffron.
+        namedScores: {}
+        tokensUsed:
+          total: 1263
+          prompt: 809
+          completion: 454
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - category
+                  - typical_unit
+                  - storage_tip
+                  - nutrition_note
+                properties:
+                  category:
+                    type: string
+                  typical_unit:
+                    type: string
+                  storage_tip:
+                    type: string
+                  nutrition_note:
+                    type: string
+          - pass: true
+            score: 1
+            reason: All fields present
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for saffron. Category
+                should be spices. Typical unit should reflect it's sold in very
+                small quantities (grams, pinch). Storage tip should mention
+                airtight, dark, cool. Nutrition note should mention antioxidants
+                or specific properties — not just 'expensive spice'.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.75
+            reason: >-
+              The first three fields are factually accurate — category is
+              correct, typical unit reflects small gram/pinch quantities, and
+              storage tip mentions airtight, dark, and cool conditions. However,
+              the nutrition note fails the rubric requirement: it only states
+              that saffron contributes few calories due to small serving sizes,
+              without mentioning antioxidants (like crocin or safranal) or any
+              specific bioactive/nutritional properties of saffron.
+            tokensUsed:
+              total: 797
+              prompt: 434
+              completion: 363
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Spice
+                (dried saffron threads)\",\"typical_unit\":\"Small jar or tiny
+                vial; often sold by gram or in very small pinch-sized
+                packages\",\"storage_tip\":\"Store unopened saffron in a cool,
+                dark, dry pantry away from heat and moisture. Once opened, keep
+                it tightly sealed in an airtight container, still in a cool,
+                dark place; for best flavor, use within 6–12 months. Avoid the
+                refrigerator unless your kitchen is very humid, because
+                condensation can damage it.\",\"nutrition_note\":\"Its most
+                distinctive trait is that it’s used in tiny amounts for intense
+                color, aroma, and flavor, so it contributes very few calories or
+                nutrients per serving.\"}\n</Output>\n<Rubric>\nAll four fields
+                are factually accurate for saffron. Category should be spices.
+                Typical unit should reflect it's sold in very small quantities
+                (grams, pinch). Storage tip should mention airtight, dark, cool.
+                Nutrition note should mention antioxidants or specific
+                properties — not just 'expensive spice'.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                All four fields are factually accurate for saffron. Category
+                should be spices. Typical unit should reflect it's sold in very
+                small quantities (grams, pinch). Storage tip should mention
+                airtight, dark, cool. Nutrition note should mention antioxidants
+                or specific properties — not just 'expensive spice'.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.67
+            reason: >-
+              The output is mostly accurate, but it fails the rubric in one key
+              way: the category is singular ('Spice') rather than 'spices', and
+              the nutrition note does not mention antioxidants or other specific
+              properties as requested. The storage tip does mention airtight,
+              dark, and cool conditions, and the typical unit does reflect very
+              small quantities.
+            tokensUsed:
+              total: 466
+              prompt: 375
+              completion: 91
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"category\":\"Spice
+                (dried saffron threads)\",\"typical_unit\":\"Small jar or tiny
+                vial; often sold by gram or in very small pinch-sized
+                packages\",\"storage_tip\":\"Store unopened saffron in a cool,
+                dark, dry pantry away from heat and moisture. Once opened, keep
+                it tightly sealed in an airtight container, still in a cool,
+                dark place; for best flavor, use within 6–12 months. Avoid the
+                refrigerator unless your kitchen is very humid, because
+                condensation can damage it.\",\"nutrition_note\":\"Its most
+                distinctive trait is that it’s used in tiny amounts for intense
+                color, aroma, and flavor, so it contributes very few calories or
+                nutrients per serving.\"}\n</Output>\n<Rubric>\nAll four fields
+                are factually accurate for saffron. Category should be spices.
+                Typical unit should reflect it's sold in very small quantities
+                (grams, pinch). Storage tip should mention airtight, dark, cool.
+                Nutrition note should mention antioxidants or specific
+                properties — not just 'expensive spice'.\n\n</Rubric>"}]
+      id: 0c5e9571-6752-4b51-85a3-e197f65215b8
+      latencyMs: 1920
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery expert. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Grocery expert helping someone understand \"saffron\".\nstorage_tip: distinguish opened vs unopened if different. nutrition_note: lead with the item's most distinctive trait.\nONLY JSON: {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\": \"...\", \"nutrition_note\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/item_info.json: [{"role":"system","content":"You are a
+          grocery expert. Respond with JSON
+          only."},{"role":"user","content":"Grocery expert helping someone
+          understand \"{{name_en}}\".{% if profile_context
+          %}{{profile_context}}{% endif %}\nstorage_tip: distinguish opened vs
+          unopened if different. nutrition_note: lead with the item's most
+          distinctive trait.\nONLY JSON: {\"category\": \"...\",
+          \"typical_unit\": \"...\", \"storage_tip\": \"...\",
+          \"nutrition_note\": \"...\"}"}]
+        config: {}
+      promptId: 42857fa502ccd4ae92a1a62186f07c3f56b3f10b7c0831b8cb2dbf0350b10e90
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"category":"Spice (dried saffron threads)","typical_unit":"Small jar
+          or tiny vial; often sold by gram or in very small pinch-sized
+          packages","storage_tip":"Store unopened saffron in a cool, dark, dry
+          pantry away from heat and moisture. Once opened, keep it tightly
+          sealed in an airtight container, still in a cool, dark place; for best
+          flavor, use within 6–12 months. Avoid the refrigerator unless your
+          kitchen is very humid, because condensation can damage
+          it.","nutrition_note":"Its most distinctive trait is that it’s used in
+          tiny amounts for intense color, aroma, and flavor, so it contributes
+          very few calories or nutrients per serving."}
+        tokenUsage:
+          total: 224
+          prompt: 80
+          completion: 144
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.855
+      success: false
+      testCase:
+        description: saffron — expensive spice sold in tiny quantities
+        vars: &ref_9
+          name_en: saffron
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - category
+                - typical_unit
+                - storage_tip
+                - nutrition_note
+              properties:
+                category:
+                  type: string
+                typical_unit:
+                  type: string
+                storage_tip:
+                  type: string
+                nutrition_note:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.category && d.typical_unit && d.storage_tip &&
+              d.nutrition_note && d.category.length > 0 && d.typical_unit.length
+              > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+              fields present' : 'Missing fields' };
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for saffron. Category
+              should be spices. Typical unit should reflect it's sold in very
+              small quantities (grams, pinch). Storage tip should mention
+              airtight, dark, cool. Nutrition note should mention antioxidants
+              or specific properties — not just 'expensive spice'.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              All four fields are factually accurate for saffron. Category
+              should be spices. Typical unit should reflect it's sold in very
+              small quantities (grams, pinch). Storage tip should mention
+              airtight, dark, cool. Nutrition note should mention antioxidants
+              or specific properties — not just 'expensive spice'.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 4
+      vars: *ref_9
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+  stats:
+    successes: 8
+    failures: 2
+    errors: 0
+    tokenUsage:
+      prompt: 794
+      completion: 1252
+      cached: 0
+      total: 2046
+      numRequests: 10
+      completionDetails:
+        reasoning: 0
+        acceptedPrediction: 0
+        rejectedPrediction: 0
+      assertions:
+        total: 10192
+        prompt: 7568
+        completion: 2624
+        cached: 0
+        numRequests: 0
+        completionDetails:
+          reasoning: 0
+          acceptedPrediction: 0
+          rejectedPrediction: 0
+    durationMs: 25868
+    evaluationDurationMs: 25868
+config:
+  tags: {}
+  description: 'Item Info — Scenario 1: OpenAI tier comparison (current prompt)'
+  prompts:
+    - >-
+      file:///Users/dako/LocalDocument/200-Project/SGA-ai-service/services/ai-service/tests/eval/prompts/current/item_info.json
+  providers:
+    - id: openrouter:openai/gpt-5.4-nano
+      label: GPT-5.4 Nano ($0.20/M)
+      config:
+        temperature: 0.7
+        max_tokens: 512
+    - id: openrouter:openai/gpt-5.4-mini
+      label: GPT-5.4 Mini ($0.75/M)
+      config:
+        temperature: 0.7
+        max_tokens: 512
+  tests:
+    - description: banana — common fruit with well-known properties
+      vars:
+        name_en: banana
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - category
+              - typical_unit
+              - storage_tip
+              - nutrition_note
+            properties:
+              category:
+                type: string
+              typical_unit:
+                type: string
+              storage_tip:
+                type: string
+              nutrition_note:
+                type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const valid = d.category && d.typical_unit && d.storage_tip &&
+            d.nutrition_note && d.category.length > 0 && d.typical_unit.length >
+            0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+            fields present' : 'Missing fields' };
+        - type: llm-rubric
+          value: >
+            All four fields are factually accurate for banana. Category should
+            be produce/fruit. Storage tip should be actionable (e.g., room
+            temperature to ripen, fridge to slow). Nutrition note should
+            highlight a specific characteristic (e.g., potassium, natural
+            energy), not a generic statement.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            All four fields are factually accurate for banana. Category should
+            be produce/fruit. Storage tip should be actionable (e.g., room
+            temperature to ripen, fridge to slow). Nutrition note should
+            highlight a specific characteristic (e.g., potassium, natural
+            energy), not a generic statement.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: gochujang — Korean specialty requiring specific knowledge
+      vars:
+        name_en: gochujang
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - category
+              - typical_unit
+              - storage_tip
+              - nutrition_note
+            properties:
+              category:
+                type: string
+              typical_unit:
+                type: string
+              storage_tip:
+                type: string
+              nutrition_note:
+                type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const valid = d.category && d.typical_unit && d.storage_tip &&
+            d.nutrition_note && d.category.length > 0 && d.typical_unit.length >
+            0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+            fields present' : 'Missing fields' };
+        - type: llm-rubric
+          value: >
+            All four fields are factually accurate for gochujang (Korean red
+            pepper paste). Category should reflect it's a condiment/sauce/paste.
+            Typical unit should mention jar or tub. Storage tip should
+            distinguish opened vs unopened. Nutrition note should mention
+            something specific (e.g., fermented, contains capsaicin, sodium
+            content).
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            All four fields are factually accurate for gochujang (Korean red
+            pepper paste). Category should reflect it's a condiment/sauce/paste.
+            Typical unit should mention jar or tub. Storage tip should
+            distinguish opened vs unopened. Nutrition note should mention
+            something specific (e.g., fermented, contains capsaicin, sodium
+            content).
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: quinoa — grain with specific nutritional claims
+      vars:
+        name_en: quinoa
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - category
+              - typical_unit
+              - storage_tip
+              - nutrition_note
+            properties:
+              category:
+                type: string
+              typical_unit:
+                type: string
+              storage_tip:
+                type: string
+              nutrition_note:
+                type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const valid = d.category && d.typical_unit && d.storage_tip &&
+            d.nutrition_note && d.category.length > 0 && d.typical_unit.length >
+            0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+            fields present' : 'Missing fields' };
+        - type: llm-rubric
+          value: >
+            All four fields are factually accurate for quinoa. Category should
+            be grains/dry goods. Storage tip should mention airtight container
+            or cool/dry place. Nutrition note should highlight a specific trait
+            (complete protein, gluten-free) — not generic 'healthy' statements.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            All four fields are factually accurate for quinoa. Category should
+            be grains/dry goods. Storage tip should mention airtight container
+            or cool/dry place. Nutrition note should highlight a specific trait
+            (complete protein, gluten-free) — not generic 'healthy' statements.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: tofu — refrigerated item with specific storage needs
+      vars:
+        name_en: tofu
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - category
+              - typical_unit
+              - storage_tip
+              - nutrition_note
+            properties:
+              category:
+                type: string
+              typical_unit:
+                type: string
+              storage_tip:
+                type: string
+              nutrition_note:
+                type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const valid = d.category && d.typical_unit && d.storage_tip &&
+            d.nutrition_note && d.category.length > 0 && d.typical_unit.length >
+            0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+            fields present' : 'Missing fields' };
+        - type: llm-rubric
+          value: >
+            All four fields are factually accurate for tofu. Category should be
+            produce/refrigerated/protein. Storage tip should mention water and
+            refrigeration for opened tofu. Nutrition note should highlight
+            protein content or low calorie.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            All four fields are factually accurate for tofu. Category should be
+            produce/refrigerated/protein. Storage tip should mention water and
+            refrigeration for opened tofu. Nutrition note should highlight
+            protein content or low calorie.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: saffron — expensive spice sold in tiny quantities
+      vars:
+        name_en: saffron
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - category
+              - typical_unit
+              - storage_tip
+              - nutrition_note
+            properties:
+              category:
+                type: string
+              typical_unit:
+                type: string
+              storage_tip:
+                type: string
+              nutrition_note:
+                type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const valid = d.category && d.typical_unit && d.storage_tip &&
+            d.nutrition_note && d.category.length > 0 && d.typical_unit.length >
+            0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All
+            fields present' : 'Missing fields' };
+        - type: llm-rubric
+          value: >
+            All four fields are factually accurate for saffron. Category should
+            be spices. Typical unit should reflect it's sold in very small
+            quantities (grams, pinch). Storage tip should mention airtight,
+            dark, cool. Nutrition note should mention antioxidants or specific
+            properties — not just 'expensive spice'.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            All four fields are factually accurate for saffron. Category should
+            be spices. Typical unit should reflect it's sold in very small
+            quantities (grams, pinch). Storage tip should mention airtight,
+            dark, cool. Nutrition note should mention antioxidants or specific
+            properties — not just 'expensive spice'.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+  scenarios: []
+  env: {}
+  outputPath:
+    - results/scenario1v2_item_info_20260331_201301.yaml
+    - results/scenario1v2_item_info_20260331_201301.csv
+  extensions: []
+  metadata: {}
+  evaluateOptions: {}
+shareableUrl: null
+metadata:
+  promptfooVersion: 0.121.3
+  nodeVersion: v25.1.0
+  platform: darwin
+  arch: arm64
+  exportedAt: '2026-04-01T03:13:29.755Z'
+  evaluationCreatedAt: '2026-04-01T03:13:03.788Z'

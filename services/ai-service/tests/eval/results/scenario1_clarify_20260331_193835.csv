@@ -1,0 +1,76 @@
+Description,sections_text,profile_context,"[GPT-5.4 Nano ($0.20/M)] prompts/current/clarify.json: [{""role"":""system"",""content"":""You are a smart grocery assistant. Respond with JSON only.""},{""role"":""user"",""content"":""You are a smart grocery assistant. Before making suggestions, understand the user's intent.{% if profile_context %}{{profile_context}}{% endif %}\n\nGrocery list sections:\n{{sections_text}}\n\nAnalyze the list and generate 1-3 quick clarifying questions. Consider:\n- Is the purpose obvious or ambiguous? (party vs weekly restock vs specific recipe)\n- Are there mixed cuisine patterns that need clarification?\n- Is the quantity/scale unclear?\n- Would knowing a theme, occasion, or cooking method change recommendations?\n\nIf straightforward, generate just 1 question. If ambiguous or complex, generate 2-3.\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\""questions\"": [{\""q\"": \""Question text\"", \""options\"": [\""Option 1\"", \""Option 2\"", \""Option 3\""], \""allowOther\"": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Questions should feel conversational, like a friend asking \""what are we cooking?\""\n- 3-4 options per question""}]",Status,Score,Named Scores,Grader Reason,Comment,"[GPT-5.4 Mini ($0.75/M)] prompts/current/clarify.json: [{""role"":""system"",""content"":""You are a smart grocery assistant. Respond with JSON only.""},{""role"":""user"",""content"":""You are a smart grocery assistant. Before making suggestions, understand the user's intent.{% if profile_context %}{{profile_context}}{% endif %}\n\nGrocery list sections:\n{{sections_text}}\n\nAnalyze the list and generate 1-3 quick clarifying questions. Consider:\n- Is the purpose obvious or ambiguous? (party vs weekly restock vs specific recipe)\n- Are there mixed cuisine patterns that need clarification?\n- Is the quantity/scale unclear?\n- Would knowing a theme, occasion, or cooking method change recommendations?\n\nIf straightforward, generate just 1 question. If ambiguous or complex, generate 2-3.\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\""questions\"": [{\""q\"": \""Question text\"", \""options\"": [\""Option 1\"", \""Option 2\"", \""Option 3\""], \""allowOther\"": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Questions should feel conversational, like a friend asking \""what are we cooking?\""\n- 3-4 options per question""}]",Status,Score,Named Scores,Grader Reason,Comment
+"chicken/rice/soy sauce — obvious Asian meal, minimal questions","{""produce"": [""chicken"", ""rice"", ""soy sauce""]}",,"{
+  ""questions"": [
+    {
+      ""q"": ""What are you cooking with the chicken and soy sauce?"",
+      ""options"": [""Stir-fry"", ""Teriyaki-style"", ""Fried rice"", ""Other""],
+      ""allowOther"": true
+    },
+    {
+      ""q"": ""How much are you planning to make?"",
+      ""options"": [""1-2 servings"", ""3-4 servings"", ""Meal prep"", ""For a crowd""],
+      ""allowOther"": true
+    }
+  ]
+}",FAIL,0.63,,"The output generates 2 questions instead of 1. The first question is reasonably specific to the list (chicken + soy sauce), though 'Teriyaki-style' is a bit awkward as an option. The second question about serving size is generic and not specific to this particular list. The options are appropriately short and tappable. The tone is somewhat conversational. The main failure is generating 2 questions when only 1 is needed, and the second question is generic rather than specific to this list.",,"{""questions"":[{""q"":""What are we making with these ingredients?"",""options"":[""Stir-fry"",""Rice bowl"",""Fried rice"",""Not sure yet""],""allowOther"":true}]}",PASS,0.93,,All assertions passed,
+tortillas/cheese/kimchi/naan — mixed cuisine signals,"{""produce"": [""tortillas"", ""cheese"", ""kimchi"", ""naan""]}",,"{
+  ""questions"": [
+    {
+      ""q"": ""What are you making with these?"",
+      ""options"": [""Tacos or wraps"", ""Korean-style bowls"", ""Indian-style meal""],
+      ""allowOther"": true
+    },
+    {
+      ""q"": ""How many people are you feeding?"",
+      ""options"": [""Just me"", ""2-3 people"", ""4-6 people""],
+      ""allowOther"": true
+    }
+  ]
+}",PASS,0.95,,All assertions passed,,"{""questions"":[{""q"":""What are you making with these ingredients?"",""options"":[""Tacos"",""Grilled cheese"",""Korean wraps"",""Just restocking""],""allowOther"":true},{""q"":""How many people are you shopping for?"",""options"":[""1-2"",""3-4"",""5-6"",""A crowd""],""allowOther"":true}]}",FAIL,0.65,,"The output generates exactly 2 questions that address the mixed cuisine signals in the shopping list. The first question directly addresses the conflict by listing cuisine-specific options (Tacos for Mexican/tortillas, Grilled cheese as a neutral option, Korean wraps for kimchi), though it notably omits Indian/naan as an option. The second question about number of people is generic and not specific to the cuisine conflict at all. The options are short and tappable. However, the questions don't fully address the specific conflict between Mexican (tortillas), Korean (kimchi), and Indian (naan) ingredients - the naan/Indian signal is completely ignored, and the second question is entirely generic rather than clarifying the mixed cuisine pattern.",
+"chips/soda/cups/napkins — obvious party, minimal questions","{""produce"": [""chips"", ""soda"", ""cups"", ""napkins""]}",,"{
+  ""questions"": [
+    {
+      ""q"": ""What’s this grocery run for?"",
+      ""options"": [""Game night snacks"", ""Weekend restock"", ""Small party"", ""One-time recipe""],
+      ""allowOther"": true
+    }
+  ]
+}",PASS,0.95,,All assertions passed,,"{""questions"":[{""q"":""Is this for a party, a snack restock, or something else?"",""options"":[""Party"",""Snack restock"",""Weekly groceries"",""Something else""],""allowOther"":true},{""q"":""How many people are you shopping for?"",""options"":[""Just me"",""2-4 people"",""5-8 people"",""A crowd""],""allowOther"":true}]}",FAIL,0.55,,"The output generates 2 questions when only 1 is needed, since the list is obviously for a party/gathering. The first question asks 'Is this for a party, a snack restock, or something else?' which is unnecessary since the purpose is already clear from the list. The second question about number of people is appropriate. Additionally, the first question violates the rubric by asking about purpose when it's already obvious. The model should have generated just 1 question (e.g., about party size or type of event).",
+flour/sugar/butter/eggs/vanilla — clear baking list,"{""produce"": [""flour"", ""sugar"", ""butter"", ""eggs"", ""vanilla""]}",,"{
+  ""questions"": [
+    {
+      ""q"": ""What are you making with these basics?"",
+      ""options"": [""Cookies or bars"", ""Cake or cupcakes"", ""Baking bread"", ""Not sure yet""],
+      ""allowOther"": true
+    },
+    {
+      ""q"": ""About how many servings are you aiming for?"",
+      ""options"": [""Small batch"", ""Standard batch"", ""Big crowd"", ""No idea""],
+      ""allowOther"": true
+    },
+    {
+      ""q"": ""Do you want any specific add-ins or dietary swaps?"",
+      ""options"": [""No substitutions"", ""Gluten-free swap"", ""Less sugar option"", ""Vegan alternative""],
+      ""allowOther"": true
+    }
+  ]
+}",FAIL,0.55,,"The output generates 3 questions instead of the required 1 question. While the questions are baking-specific and the options reference baking items (cookies, cake, bread), the rubric clearly states the model should generate just 1 question.",,"{""questions"":[{""q"":""What are we cooking with these ingredients?"",""options"":[""Baking dessert"",""Breakfast/brunch"",""Just restocking"",""Not sure yet""],""allowOther"":true},{""q"":""How much do you want to make?"",""options"":[""Small batch"",""Standard amount"",""For a group"",""Just in case""],""allowOther"":true}]}",FAIL,0.53,,"The output generates 2 questions instead of 1, and the questions/options are too generic. The first question asks broadly about 'cooking' and includes non-baking options like 'Just restocking' and 'Not sure yet'. The second question about quantity uses vague terms like 'Small batch' and 'Standard amount' rather than referencing specific baked goods. Neither question nor their options specifically reference baking items like cookies, cake, or bread as required by the rubric.",
+salmon/steak/shrimp/lobster + butter/cream — ambiguous scale,"{""produce"": [""salmon"", ""steak"", ""shrimp"", ""lobster""], ""dairy"": [""butter"", ""cream""]}",,"{
+  ""questions"": [
+    {
+      ""q"": ""What are you planning to cook with these?"",
+      ""options"": [""Grilling/BBQ"", ""Seafood pasta"", ""Steak dinner"", ""Lobster night""],
+      ""allowOther"": true
+    },
+    {
+      ""q"": ""How many people are we feeding?"",
+      ""options"": [""Just me"", ""2 people"", ""4 people"", ""6+ people""],
+      ""allowOther"": true
+    },
+    {
+      ""q"": ""Any preferred cooking style?"",
+      ""options"": [""Garlic butter"", ""Spicy/seasoned"", ""Light and simple"", ""Creamy sauce""],
+      ""allowOther"": true
+    }
+  ]
+}",PASS,0.95,,All assertions passed,,"{""questions"":[{""q"":""What are you cooking for?"",""options"":[""Weeknight dinner"",""Date night"",""Dinner party"",""Meal prep""],""allowOther"":true},{""q"":""Do you have a cuisine or style in mind?"",""options"":[""Seafood boil"",""Steakhouse"",""Surf & turf"",""No preference""],""allowOther"":true},{""q"":""How much food do you need?"",""options"":[""Just me"",""2-4 people"",""A crowd"",""Not sure""],""allowOther"":true}]}",PASS,0.95,,All assertions passed,

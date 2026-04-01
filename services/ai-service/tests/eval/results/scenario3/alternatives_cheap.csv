@@ -1,0 +1,1186 @@
+Description,name_en,reason,taste,profile_context,"[Qwen 3.5-9B ($0.05/M)] prompts/current/alternatives.json: [{""role"":""system"",""content"":""You are a grocery expert. Respond with JSON only.""},{""role"":""user"",""content"":""Find 3-4 alternatives for \""{{name_en}}\"" available in North American stores.{% if reason %} User reason: {{reason}}.{% endif %}{% if taste %} User taste: {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{% endif %}\nIf a dietary restriction is given, EVERY alternative MUST be definitively compliant — no \""if available\"" or \""check label\"" items.\nmatch levels (use strictly): \""Very close\"" = same product, different brand (e.g., another brand of sriracha). Different product type = \""Similar\"" at best. Plant-based for meat = \""Different but works\"".\nIf user taste is specified, prioritize alternatives authentic to that cuisine.\nONLY JSON: {\""note\"": \""1 sentence why needed\"", \""alts\"": [{\""name_en\"": \""Name\"", \""match\"": \""Very close|Similar|Different but works\"", \""desc\"": \""1 sentence\"", \""where\"": \""Where in store\""}]}""}]",Status,Score,Named Scores,Grader Reason,Comment,"[Llama 4 Scout ($0.08/M)] prompts/current/alternatives.json: [{""role"":""system"",""content"":""You are a grocery expert. Respond with JSON only.""},{""role"":""user"",""content"":""Find 3-4 alternatives for \""{{name_en}}\"" available in North American stores.{% if reason %} User reason: {{reason}}.{% endif %}{% if taste %} User taste: {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{% endif %}\nIf a dietary restriction is given, EVERY alternative MUST be definitively compliant — no \""if available\"" or \""check label\"" items.\nmatch levels (use strictly): \""Very close\"" = same product, different brand (e.g., another brand of sriracha). Different product type = \""Similar\"" at best. Plant-based for meat = \""Different but works\"".\nIf user taste is specified, prioritize alternatives authentic to that cuisine.\nONLY JSON: {\""note\"": \""1 sentence why needed\"", \""alts\"": [{\""name_en\"": \""Name\"", \""match\"": \""Very close|Similar|Different but works\"", \""desc\"": \""1 sentence\"", \""where\"": \""Where in store\""}]}""}]",Status,Score,Named Scores,Grader Reason,Comment,"[DeepSeek V3.1 ($0.15/M)] prompts/current/alternatives.json: [{""role"":""system"",""content"":""You are a grocery expert. Respond with JSON only.""},{""role"":""user"",""content"":""Find 3-4 alternatives for \""{{name_en}}\"" available in North American stores.{% if reason %} User reason: {{reason}}.{% endif %}{% if taste %} User taste: {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{% endif %}\nIf a dietary restriction is given, EVERY alternative MUST be definitively compliant — no \""if available\"" or \""check label\"" items.\nmatch levels (use strictly): \""Very close\"" = same product, different brand (e.g., another brand of sriracha). Different product type = \""Similar\"" at best. Plant-based for meat = \""Different but works\"".\nIf user taste is specified, prioritize alternatives authentic to that cuisine.\nONLY JSON: {\""note\"": \""1 sentence why needed\"", \""alts\"": [{\""name_en\"": \""Name\"", \""match\"": \""Very close|Similar|Different but works\"", \""desc\"": \""1 sentence\"", \""where\"": \""Where in store\""}]}""}]",Status,Score,Named Scores,Grader Reason,Comment
+sriracha — general alternative with no constraints,sriracha,,,,"{""note"": ""1 sentence why needed"", ""alts"": [{""name_en"": ""Name"", ""match"": ""Very close|Similar|Different but works"", ""desc"": ""1 sentence"", ""where"": ""Where in store""}]}`
+        *   Quantity: 3-4 alternatives.
+        *   Location: North American stores.
+
+2.  **Determine ""Sriracha"" Alternatives:**
+    *   Sriracha is a specific style of chili paste (garlic, chili, vinegar, sugar, salt) originating from Thailand but popularized in the US (Huy Fong Foods is the most iconic).
+    *   *Alternative 1 (Very Close):* Another brand of Sriracha. (e.g., Chao Seng, Tapatío, or a generic store brand like Great Value Sriracha).
+    *   *Alternative 2 (Similar):* Gochujang (Korean fermented chili paste) or Sambal Oelek (Indonesian chili paste). Sambal Oelek is often considered the best direct substitute for the texture and heat profile without the fish sauce/sugar imbalance, but it lacks the vinegar tang slightly. Let's go with Sambal Oelek as ""Similar"".
+    *   *Alternative 3 (Similar/Different):* Harissa (Tunisian chili paste). Different flavor profile but similar usage.
+    *   *Alternative 4 (Different but works):* Chili Garlic Sauce (e.g., Lee Kum Kee). This is very close to Sriracha but often sweeter and less vinegar-forward. Actually, Chili Garlic Sauce (Lee Kum Kee) is often considered a direct competitor/alternative in the aisle. Let's categorize it as ""Similar"" or ""Very close"" depending on brand. Since not all are exact clones, ""Similar"" is safer.
+    *   Wait, let's refine ""Very close"". Huy Fong is the standard. Other brands like Thai Kitchen or generic store brands labeled ""Sriracha"" count as ""Very close"".
+    *   Let's select:
+        1.  Huy Fong (if user didn't specify brand) -> But the request implies alternatives *to* Sriracha, so I need to assume they want something else if they can't find Huy Fong, or just other Sriracha types. The prompt asks for alternatives *for* ""sriracha"". Usually, this means if someone wants the flavor but can't get the specific bottle, or wants a substitute.
+        2.  Strict interpretation: ""Very close"" = same product, different brand. So Brand B Sriracha.
+        3.  ""Similar"" = Different product type (e.g., Gochujang, Sambal Oelek, Chili Garlic Sauce).
+        4.  Let's ensure 3-4 items.
+
+    *   Selection:
+        1.  Generic Store Brand Sriracha (e.g., Great Value Sriracha) -> Very close.
+        2.  Lee Kum Kee Chili Garlic Sauce -> Similar (sweeter, less tangy).
+        3.  Sambal Oelek (e.g., Trader Joe's or generic) -> Similar (coarse, less vinegar).
+        4.  Gochujang (e.g., Korean markets or Asian section) -> Similar (fermented, sweeter).
+
+    *   Wait, I need to check the ""dietary restriction"" clause. No restriction is given in the prompt. So I don't need to worry about vegan/compliance unless I assume one exists. None exists.
+    *   I need to ensure the JSON structure is exact.
+
+3.  **Drafting JSON Content:**
+    *   `note`: ""Sriracha is a versatile hot sauce, but alternatives are needed when unavailable or for specific flavor profiles.""
+    *   `alts`:
+        *   Item 1: ""Huy Fong Foods Sriracha"" (Wait, that's the original). Let's use a different brand. ""Chao Seng Sriracha"". Match: ""Very close"".
+        *   Item 2: ""Lee Kum Kee Chili Garlic Sauce"". Match: ""Similar"".
+        *   Item 3: ""Sambal Oelek"". Match: ""Similar"".
+        *   Item 4: ""Gochujang"". Match: ""Similar"".
+
+    *   Refining descriptions for North American stores.
+    *   Refining ""match"" levels based on instructions: ""Very close"" = same product, different brand. ""Different product type = ""Similar"" at best"".
+    *   So:
+        1.  Chao Seng Sriracha Sauce -> Very close.
+        2.  Lee Kum Kee Chili Garlic Sauce -> Similar.
+        3.  Sundale or Generic Sambal Oelek -> Similar.
+        4.  Gochujang -> Similar.
+
+    *   Wait, I need to make sure I don't hallucinate specific brand availability if I use generic names, but the prompt asks for specific names (""Name_en""). I will use well-known brands available in North America.
+    *   Store location: ""International aisle"", ""Condiment aisle"", ""Asian section"".
+
+4.  **Constructing JSON:**
+    *   Check constraints: JSON only. No markdown code blocks? The prompt says ""Respond with JSON only."" Usually, this means raw JSON. However, often systems wrap it in markdown. I will output raw JSON text to be safe, or ensure it's valid JSON. The instruction ""ONLY JSON"" suggests no markdown fencing.
+    *   Wait, looking at the system instruction: ""Respond with JSON only.""
+    *   I must ensure no extra text, no markdown ticks .
+
+    *   Wait, I need to check the ""match"" levels strictly.
+    *   ""Very close"" = same product, different brand.
+    *   ""Different product type = ""Similar"" at best.""
+    *   So Chili Garlic Sauce is technically a different product type (often contains ginger, garlic, chilies, sugar in a sauce base vs paste). So ""Similar"".
+    *   Sambal Oelek is chili paste, very similar base but texture differs. ""Similar"".
+    *   Gochujang is fermented bean paste. ""Similar"".
+
+5.  **Final Review:**
+    *   3-4 alternatives? Yes.
+    *   North American stores? Yes.
+    *   Dietary restriction? None given.
+    *   JSON structure? `{""note"": ""..."", ""alts"": [...]}`.
+    *   Fields inside alts: `name_en`, `match`, `desc`, `where`.
+    *   No markdown formatting? The prompt says ""ONLY JSON"". I will output raw JSON.
+
+    *   Wait, one detail: ""If a dietary restriction is given..."". None given.
+    *   ""ONLY JSON: {""note"": ""1 sentence why needed"", ""alts"": [{""name_en"": ""Name"", ""match"": ""Very close|Similar|Different but works"", ""desc"": ""1 sentence"", ""where"": ""Where in store""}]}""
+    *   I must follow this schema exactly.
+
+    *   Wait, I need to be careful about ""ONLY JSON"". Sometimes adding markdown blocks breaks parsers if they expect raw text. I will output raw text.
+
+    *   Let's pick 3-4 items.
+    *   1. Chao Seng Sriracha Sauce (Very close)
+    *   2. Lee Kum Kee Chili Garlic Sauce (Similar)
+    *   3. Trader Joe's Sambal Oelek (Similar)
+    *   4. Gochujang by Cuppa (Similar) - Maybe generic ""Red Gochujang"" is safer. Let's use ""Sunmoon Gochujang"".
+    *   Actually, to keep it general and accurate:
+    *   1. ""Chao Seng Sriracha Sauce"", ""Very close"", ""Another brand offering the same garlic-chili paste profile."", ""Condiment aisle""
+    *   2. ""Lee Kum Kee Chili Garlic Sauce"", ""Similar"", ""Sweeter and less acidic chili garlic paste alternative."", ""Asian foods aisle""
+    *   3. ""Sambal Oelek"", ""Similar"", ""Coarse chili paste without vinegar or garlic found in many brands."", ""Asian foods aisle""
+    *   4. ""Gochujang"", ""Similar"", ""Fermented Korean chili paste with a sweeter, spicier flavor."", ""Asian foods aisle""
+
+    *   Wait, ""Sambal Oelek"" is often a product type rather than a specific brand name. I should specify ""Generic Sambal Oelek"" or a brand like ""Trader Joe's Sambal Oelek"". Let's use brand for clarity. ""Trader Joe's Sambal Oelek"".
+    *   ""Gochujang"" - ""Sunmoon Gochujang"".
+
+    *   Wait, one constraint: ""If user taste is specified, prioritize alternatives authentic to that cuisine."" No taste specified.
+    *   Constraint: ""ONLY JSON"".
+
+    *   Wait, I need to check if I should use markdown code block. ""Respond with JSON only."" usually implies raw JSON. I will output raw JSON.
+
+    *   Wait, I need to check the keys. `name_en`, `match`, `desc`, `where`. All lowercase. `note` key at root. `alts` array.
+
+    *   Let's finalize the JSON string.
+
+    *   Wait, one more check on ""Very close"". ""same product, different brand"". So Chao Seng Sriracha is perfect.
+    *   ""Different product type = ""Similar"" at best"". So Chili Garlic Sauce is ""Similar"".
+
+    *   Okay, ready to generate.
+
+    *   Wait, I need to ensure I don't use markdown code blocks like  ... . Just the text.
+
+    *   Wait, I need to make sure I don't violate the ""dietary restriction"" rule even though none is given. I will ensure they are standard commercial products.
+
+    *   Wait, is there any hidden constraint? ""If a dietary restriction is given, EVERY alternative MUST be definitively compliant"". Since none is given, I don't need to filter by vegan/gluten-free/etc., but I should ensure the items exist.
+
+    *   One more check: ""ONLY JSON"". I will not add any introductory text.
+
+    *   Wait, the prompt asks for ""3-4 alternatives"". I will provide exactly 4 to be safe.
+
+    *   Wait, I need to make sure the JSON is valid (quotes, commas).
+
+    *   Let's write it.
+    *   Note: Sriracha is often out of stock or requires specific brands, so substitutes provide similar heat and condiment utility.
+    *   Alt 1: Chao Seng Sriracha Sauce, Very close, Same garlic-chili paste profile from a different manufacturer, Condiment aisle.
+    *   Alt 2: Lee Kum Kee Chili Garlic Sauce, Similar, Sweet and spicy sauce with more garlic and less vinegar, Asian foods aisle.
+    *   Alt 3: Trader Joe's Sambal Oelek, Similar, Coarse red chili paste without vinegar often found in the Asian section, Asian foods aisle.
+    *   Alt 4: Sunmoon Gochujang, Similar, Fermented Korean chili paste offering a sweet and spicy depth, Asian foods aisle.
+
+    *   Wait, I need to condense descriptions to 1 sentence.
+    *   Alt 1 desc: Another brand offering the identical garlic-chili paste profile used for similar culinary applications.
+    *   Alt 2 desc: A sweeter garlic-based chili sauce often used as a versatile condiment in stir-fries.
+    *   Alt 3 desc: A coarse red chili paste without vinegar or garlic that provides heat and texture.
+    *   Alt 4 desc: A fermented Korean chili paste with a sweeter, spicier flavor profile distinct from Sriracha.
+
+    *   Where:
+    *   Alt 1: Condiment aisle.
+    *   Alt 2: International foods aisle.
+    *   Alt 3: International foods aisle.
+    *   Alt 4: International foods aisle.
+
+    *   Okay, constructing the JSON.
+
+    *   Wait, I need to check if ""Sambal Oelek"" is a product type or brand. It's a type of chili paste. ""Trader Joe's Sambal Oelek"" is a specific SKU. I will use ""Trader Joe's Sambal Oelek"" as the name.
+    *   Wait, ""where"" needs to be specific. ""Condiment aisle"", ""Asian foods aisle"".
+
+    *   Final check on JSON syntax. Double quotes for keys and strings. No trailing commas.
+
+    *   Wait, ""ONLY JSON"". I will not put .
+
+    *   Wait, should I check if ""Huy Fong"" counts as an alternative to ""Sriracha""? Technically Sriracha is the style, Huy Fong is the brand. So ""Chao Seng"" is a valid ""Very close"" alternative.
+
+    *   Okay, proceeding.
+
+    *   Wait, I need to make sure I don't output markdown. Just raw text.
+
+    *   Wait, one more thing: ""If a dietary restriction is given, EVERY alternative MUST be definitively compliant"". Since none is given, I don't need to enforce this, but I should ensure the names are real products.
+
+    *   Okay, generating JSON.
+
+    *   Wait, I'll count the items. 1, 2, 3, 4. Good.
+
+    *   Wait, ensure the keys match exactly: `note`, `alts`, `name_en`, `match`, `desc`, `where`.
+
+    *   Wait, `match` values are strict: ""Very close"", ""Similar"", ""Different but works"". I will use ""Very close"" and ""Similar"".
+
+    *   Wait, ""Different but works"" is for plant-based for meat. Not relevant here.
+
+    *   Okay, final check.
+    *   Root object.
+    *   `note` string.
+    *   `alts` array.
+    *   Objects in `alts` have 4 keys.
+    *   No markdown.
+
+    *   Wait, I should verify if I can use markdown. Usually ""ONLY JSON"" means raw text. I will output raw text.
+
+    *   Wait, I need to make sure I don't add extra spaces or newlines that break validity, though JSON allows whitespace. I'll keep it compact or pretty print. Pretty print is valid JSON. I'll use standard formatting for readability within the block.
+
+    *   Wait, I'll ensure no markdown block indicators.
+
+    *   Wait, I need to check if the prompt implies I should ask for dietary restrictions? No, ""Respond with JSON only."" and ""Find 3-4 alternatives"". I must answer the prompt.
+
+    *   Okay, ready.
+
+    *   Wait, one nuance: ""If a dietary restriction is given..."". Since it's not given, I don't need to check compliance.
+    *   ""If user taste is specified..."". Not specified.
+    *   So general alternatives.
+
+    *   Wait, I'll make sure the JSON is valid. Escape quotes if necessary. None needed.
+
+    *   Final check on ""match"" values. ""Very close"", ""Similar"", ""Different but works"". I will use these exact strings.
+
+    *   Okay, writing the JSON.
+
+    *   Wait, I need to ensure I don't use markdown code blocks. I will just output the text.
+
+    *   Wait, I will add newlines for readability as JSON allows it.
+
+    *   Wait, I need to make sure I don't accidentally add  at the start.
+
+    *   Okay.
+
+
+{
+  ""note"": ""Sriracha is a versatile hot sauce, but alternatives are needed when unavailable or for specific flavor profiles."",
+  ""alts"": [
+    {
+      ""name_en"": ""Chao Seng Sriracha Sauce"",
+      ""match"": ""Very close"",
+      ""desc"": ""Another brand offering the identical garlic-chili paste profile used for similar culinary applications."",
+      ""where"": ""Condiment aisle""
+    },
+    {
+      ""name_en"": ""Lee Kum Kee Chili Garlic Sauce"",
+      ""match"": ""Similar"",
+      ""desc"": ""A sweeter garlic-based chili sauce often used as a versatile condiment in stir-fries."",
+      ""where"": ""International foods aisle""
+    },
+    {
+      ""name_en"": ""Trader Joe's Sambal Oelek"",
+      ""match"": ""Similar"",
+      ""desc"": ""A coarse red chili paste without vinegar or garlic that provides heat and texture."",
+      ""where"": ""International foods aisle""
+    },
+    {
+      ""name_en"": ""Sunmoon Gochujang"",
+      ""match"": ""Similar"",
+      ""desc"": ""A fermented Korean chili paste with a sweeter, spicier flavor profile distinct from Sriracha."",
+      ""where"": ""International foods aisle""
+    }
+  ]
+}",FAIL,0.25,,"Evaluating the output against the rubric criteria: 1) **North American availability**: Lee Kum Kee Chili Garlic Sauce and Gochujang are widely available. Trader Joe's Sambal Oelek is available at Trader Joe's. However, 'Chao Seng Sriracha Sauce' is questionable - this doesn't appear to be a well-known or widely available brand in North American grocery stores. 'Sunmoon Gochujang' is also not a clearly recognizable brand. 2) **Match levels honesty**: 'Very close' for another sriracha brand is appropriate - it's another hot sauce of the same type. Chili Garlic Sauce as 'Similar' is fair. Sambal Oelek as 'Similar' is reasonable. Gochujang as 'Similar' is borderline - it's quite different from sriracha (fermented paste vs. liquid hot sauce), but 'Similar' rather than 'Very close' is at least honest. 3) **Real products**: 'Chao Seng Sriracha Sauce' doesn't appear to be a real, widely recognized product - this seems potentially hallucinated. 'Sunmoon Gochujang' also doesn't appear to be a well-known brand. Lee Kum Kee Chili Garlic Sauce is definitely real. Trader Joe's Sambal Oelek is real. 4) **'where' usefulness**: 'Condiment aisle' and 'International foods aisle' are reasonable and useful directions. The output has some issues with product authenticity (2 out of 4 products have questionable brand names), but the general categories and match levels are reasonable, and the store locations are helpful.",,"{
+  ""note"": ""Sriracha alternatives are needed due to potential unavailability or dietary restrictions."",
+  ""alts"": [
+    {""name_en"": ""Huy Fong Foods Hot Sauce"", ""match"": ""Very close"", ""desc"": ""Similar hot sauce with a spicy and smoky flavor."", ""where"": ""International or Hot Sauce aisle""},
+    {""name_en"": ""Cholesterol-free Sriracha by Huy Fong Foods"", ""match"": ""Very close"", ""desc"": ""A cholesterol-free version of the original sriracha sauce."", ""where"": ""International or Hot Sauce aisle""},
+    {""name_en"": ""Frank's RedHot Sauce"", ""match"": ""Similar"", ""desc"": ""A spicy hot sauce with a vinegar-based flavor profile."", ""where"": ""Hot Sauce aisle""},
+    {""name_en"": ""Sambal Oelek"", ""match"": ""Different but works"", ""desc"": ""A chili paste that provides a similar spicy kick."", ""where"": ""International or Asian Foods aisle""}
+  ]
+}",FAIL,0.78,,"Most entries are real products commonly found in North American grocery stores, and the aisle guidance is generally useful. However, one entry is problematic: 'Cholesterol-free Sriracha by Huy Fong Foods' does not appear to be a distinct real product, since standard Huy Fong Sriracha is already cholesterol-free. This makes the list fail the rubric requirement that each alternative be a real product. The match labels are otherwise mostly honest, with 'Very close' used for another hot sauce and the others appropriately labeled.",,"{
+    ""note"": ""Providing direct substitutes for sriracha hot sauce"",
+    ""alts"": [
+        {
+            ""name_en"": ""Huy Fong Chili Garlic Sauce"",
+            ""match"": ""Very close"",
+            ""desc"": ""Made by the same company as sriracha with similar flavor profile but thicker consistency"",
+            ""where"": ""Asian aisle or condiment section""
+        },
+        {
+            ""name_en"": ""Tabasco Sriracha"",
+            ""match"": ""Very close"",
+            ""desc"": ""Brand alternative with similar heat and garlic-forward flavor"",
+            ""where"": ""Condiment aisle near other hot sauces""
+        },
+        {
+            ""name_en"": ""Lee Kum Kee Chili Garlic Sauce"",
+            ""match"": ""Similar"",
+            ""desc"": ""Chinese-style chili garlic sauce with comparable heat and garlic notes"",
+            ""where"": ""Asian aisle or international foods section""
+        },
+        {
+            ""name_en"": ""Frank's RedHot Sauce"",
+            ""match"": ""Different but works"",
+            ""desc"": ""Vinegar-based hot sauce that provides heat but different flavor profile"",
+            ""where"": ""Condiment aisle with other hot sauces""
+        }
+    ]
+}",PASS,0.98,,All assertions passed,
+butter + lactose intolerant — all alts must be dairy-free,butter,lactose intolerant,,,"{""note"": ""1 sentence why needed"", ""alts"": [{""name_en"": ""Name"", ""match"": ""Very close|Similar|Different but works"", ""desc"": ""1 sentence"", ""where"": ""Where in store""}]}`.
+
+2.  **Evaluate Alternatives for Lactose Intolerant Users:**
+    *   Butter is dairy-based (contains lactose).
+    *   *Ghee:* Clarified butter. Most lactose is removed, but strictly speaking, commercial ghee can sometimes have trace amounts. However, for lactose intolerant individuals, it's often considered safe, but the prompt says ""EVERY alternative MUST be definitively compliant"". Ghee *can* contain traces depending on processing, but ""strictly compliant"" might be risky to claim as definitive without caveats. However, many sources consider lactose-free ghee a valid option. But to be *definitively* compliant with the strict constraint, plant-based is safer.
+    *   *Margarine/Butter Alternatives:* Many contain dairy derivatives.
+    *   *Oils/Butter Substitutes:* Coconut oil, olive oil, vegan butter spreads.
+    *   *Constraint Check:* ""Definitively compliant"". I need products that are universally recognized as lactose-free without needing a label check.
+    *   *Vegan Butter Brands:* Miyoko's, Earth Balance, Flora Plant Butter. These are made from plant oils, not dairy. They are definitively dairy-free and lactose-free.
+    *   *Ghee:* While many ghee brands are lactose-free, some contain milk solids. To be safe and definitive, plant-based options are better for the ""definitive"" constraint.
+    *   *Oils:* Coconut oil, Avocado oil.
+    *   *Match Level:* Butter is a fat used for flavoring and cooking.
+        *   Vegan Butter (e.g., Earth Balance): ""Similar"" (same function, different base).
+        *   Coconut Oil: ""Different but works"" (different flavor profile, solid at room temp like butter).
+        *   Ghee: ""Very close"" (same product technically, just clarified). *Correction:* If the constraint is strict compliance, ghee is risky. Let's stick to plant-based for safety on the ""definitive"" constraint. Actually, the prompt asks for alternatives *for* butter. Vegan butter is the closest functional match.
+        *   Wait, the prompt says ""match levels (use strictly)"".
+        *   If I use Vegan Butter, is it ""Very close""? Same product type (spreadable fat for baking/cooking), different brand/brand composition. Usually, ""Very close"" is defined as ""same product, different brand (e.g., another brand of sriracha)"". Vegan butter is a *different product type* chemically (oil vs milk fat), though functionally similar. The prompt says ""Different product type = 'Similar' at best."" So Vegan Butter should be ""Similar"".
+        *   Oil (Coconut): ""Different but works"".
+        *   What is ""Very close""? There isn't really a dairy-free butter that is ""Very close"" in the strict sense of ""same product, different brand"" unless we consider lactose-free butter brands (like Lactose-Free Farms butter). But those are rare and often require checking the specific brand for cross-contamination.
+        *   Actually, the prompt says: ""match levels (use strictly): 'Very close' = same product, different brand"". Since Butter (Dairy) vs Vegan Butter are different products chemically, they cannot be ""Very close"" under this definition. Vegan Butter is ""Different product type"". So max match is ""Similar"".
+        *   However, if I find a brand of butter that is explicitly labeled lactose-free (e.g., Kerrygold Lactose-Free), that would be ""Very close"". But is it definitively compliant? Yes, if labeled. But the prompt says ""no 'if available'"". I need to name specific products known to be compliant.
+        *   Let's select Vegan Butter as it's the most common alternative. Since it's plant-based vs dairy, it's ""Different product type"" -> ""Similar"".
+        *   Let's select Coconut Oil. ""Different product type"" -> ""Different but works"".
+        *   Let's select Ghee (Clarified Butter). Scientifically, ghee has <0.1g lactose, often considered safe, but strictly it's still dairy-derived. To be *definitively* compliant for a strict ""no dairy"" rule (often implied by lactose intolerance sensitivity), plant-based is safer. But often lactose intolerants can eat ghee. Let's look at the constraint: ""EVERY alternative MUST be definitively compliant"". If I list Ghee, I might risk a sensitive person's reaction. Plant-based is safer.
+        *   Let's check the definition of ""Very close"" again: ""same product, different brand"". If I list ""Earth Balance Buttery Sticks"" vs ""Butter"", are they the same product? No.
+        *   Okay, I need 3-4 alternatives.
+        *   Option 1: Earth Balance Buttery Sticks (Vegan). Type: Spreadable fat. Match: Similar (Different product type).
+        *   Option 2: Coconut Oil (Refined). Type: Cooking oil. Match: Different but works.
+        *   Option 3: Melted Olive Oil. Type: Liquid fat. Match: Different but works.
+        *   Option 4: Lactose-Free Butter (e.g., Lactose-Free Farms). Match: Very close (Same product, different brand formulation). Is it definitively compliant? Yes, if specified as Lactose-Free. But is it better to recommend plant-based? Usually, dietary restrictions on butter imply avoiding dairy entirely or just lactose. Lactose intolerant people can often tolerate dairy butter without lactose. However, the safest ""definitive"" compliance for ""lactose intolerant"" often aligns with plant-based to avoid casein/sensitivity issues. But strictly speaking, ""lactose-free butter"" is the *exact* product.
+        *   Let's prioritize safety. If the user says ""lactose intolerant"", they need no lactose. Lactose-free butter is compliant. Vegan butter is compliant.
+        *   Let's try to find 3 ""Very close"" or ""Similar"" options.
+        *   Actually, the instruction says ""Different product type = 'Similar' at best"". Since Butter is dairy fat, Vegan Butter is plant fat. That is a different product type. So Vegan Butter = ""Similar"".
+        *   Can I find a ""Very close"" option? ""Lactose-Free Butter"" (e.g., Store brand Lactose-Free Butter). Is that available definitively? Yes, many big brands have it. But naming a specific brand might vary by region. ""Land O Lakes Lactose Free"" exists.
+        *   However, to be most helpful and safe for lactose intolerance, plant-based is the standard recommendation.
+        *   Let's stick to the definitions.
+        *   Alternative 1: Earth Balance Buttery Sticks (Vegan). Match: Similar.
+        *   Alternative 2: Spectrum Organic Coconut Oil (Refined). Match: Different but works.
+        *   Alternative 3: Miyoko's Creamery Organic Cultured Vegan Butter. Match: Similar.
+        *   Wait, I need 3-4.
+        *   Alternative 4: Melted Ghee (from a strictly dairy-free certified brand? No, standard ghee has milk solids). Let's skip ghee to avoid risk on ""definitively compliant"".
+        *   Let's use Refined Coconut Oil, Vegan Butter, and maybe Avocado Oil or just stick to 3.
+        *   Wait, I need to ensure the JSON structure is exact.
+        *   Check constraints again: ""If a dietary restriction is given, EVERY alternative MUST be definitively compliant — no 'if available' or 'check label' items.""
+        *   So I must name specific products known to be lactose-free.
+        *   1. Earth Balance Buttery Sticks (Non-Hydrogenated). Known to be dairy-free.
+        *   2. Miyoko's Organic Vegan Butter. Known to be dairy-free.
+        *   3. Refined Coconut Oil (Generic or specific brand like Spectrum). Refined coconut oil is lactose-free.
+        *   What about ""Very close""? I can't find a dairy-free butter that is ""Very close"" (same product) unless I say ""Lactose-Free Butter"". Is there a brand? ""Lactaid Butter""? Yes. Is it definitely compliant? Yes. Is it available in NA stores? Yes.
+        *   Let's use ""Lactaid Butter"" as ""Very close"".
+        *   Let's use ""Earth Balance"" as ""Similar"".
+        *   Let's use ""Spectrum Organic Refined Coconut Oil"" as ""Different but works"".
+        *   Let's use ""Miyoko's Vegan Butter"" as ""Similar"".
+        *   Wait, are there too many ""Similar""? Maybe I can merge or pick the best 3.
+        *   I need 3-4.
+        *   Let's refine the match levels.
+        *   1. Lactaid Butter: Same product (butter), different brand/formulation (lactose-free). Match: ""Very close"".
+        *   2. Earth Balance Buttery Sticks: Plant-based spread. Match: ""Similar"".
+        *   3. Refined Coconut Oil: Oil. Match: ""Different but works"".
+        *   4. Miyoko's Creamery Cultured Vegan Butter: Plant-based spread. Match: ""Similar"".
+        *   Wait, is ""Lactaid Butter"" actually a butter? It's a butter substitute made from coconut oil and milk? No, Lactaid Butter is actually ""Dairy Butter"" from which lactose is removed. Wait, checking facts: Lactaid Butter is often a blend or clarified butter. Actually, most ""Lactose Free Butter"" products are margarine substitutes using coconut oil. There is a product called ""Lactaid Butter"" by Lactaid brand? It's often a blend.
+        *   To be definitively compliant and accurate, ""Vegan Butter"" is the safest recommendation for lactose intolerance to avoid casein.
+        *   Let's reconsider ""Very close"". Is there a brand of butter that is lactose-free and definitive? Yes, ""Land O Lakes Lactose Free"" (if available). But ""Lactaid Butter"" is more recognizable.
+        *   Actually, a safer bet for ""Very close"" is often hard because commercial butter is milk fat.
+        *   Let's prioritize the ""Similar"" and ""Different but works"" to ensure compliance without ambiguity. I will use the ""Very close"" definition strictly: ""same product, different brand"". Since I cannot guarantee a specific brand of ""Lactose-Free Butter"" is available in *every* store without ""check label"", I should avoid ""Very close"" if it risks the ""definitively compliant"" constraint. However, the prompt says I must use the match levels strictly. If I can find one that fits ""Very close"" (e.g. specific brand known to be lactose free like Kerrygold Lactose Free? No Kerrygold doesn't do lactose-free).
+        *   Okay, strict interpretation: ""Very close"" = same product, different brand. Example: Sriracha. Butter vs Butter? No, they are different brands of butter. If I list ""Land O Lakes Butter"" vs ""I Can't Believe It's Not Butter"", the second is a substitute.
+        *   If I list ""Kerrygold Butter"" (Standard), it has lactose.
+        *   If I list ""Lactaid Butter"", it is a ""Lactose Free"" version. Is it the same product? Chemically different (lactose removed or replaced).
+        *   Okay, I will play it safe. I will not claim ""Very close"" for anything if it involves dairy unless I am 100% sure.
+        *   Actually, I can claim ""Very close"" for ""Lactose-Free Butter"" if I specify the brand known to be compliant. ""Lactaid Butter"" is a specific product.
+        *   But for the sake of the user's ""lactose intolerant"" reason, plant-based is safer.
+        *   Let's try to find 3-4 items.
+        *   1. Earth Balance Buttery Sticks (Vegan). Match: Similar.
+        *   2. Miyoko's Organic Vegan Butter. Match: Similar.
+        *   3. Refined Coconut Oil. Match: Different but works.
+        *   4. Spectrum Organic Coconut Oil. Match: Different but works.
+        *   Wait, I need 3-4 alternatives.
+        *   Let's use:
+            1.  Earth Balance Buttery Sticks (Vegan) - Similar.
+            2.  Miyoko's Organic Vegan Butter - Similar.
+            3.  Refined Coconut Oil - Different but works.
+            4.  Avocado Oil - Different but works.
+        *   Wait, the match level ""Very close"" is defined as ""same product, different brand"". Since I cannot find a dairy-free butter that is chemically ""same product"" (dairy fat) without risk, I will omit ""Very close"" or use one that is a specific Lactose-Free Butter brand if I'm confident.
+        *   Let's check ""Lactaid Butter"" again. It is a specific product. Is it lactose free? Yes. Is it butter? It's a ""Butter"" product. It uses milk-free ingredients usually. Wait, actually Lactaid Butter is made with milk-free ingredients (like coconut oil) to mimic butter. So it's not ""same product, different brand"" of dairy butter. It's a substitute.
+        *   Okay, I will stick to ""Similar"" and ""Different but works"".
+        *   Wait, can I use ""Ghee""? ""Badger Ghee"" or similar? No, ghee is butter fat. It is dairy.
+        *   Okay, I will focus on Vegan Butter and Oils.
+        *   Wait, the prompt asks for ""3-4 alternatives"".
+        *   Let's draft the JSON.
+
+    *   **Constraint Check:** ""ONLY JSON"".
+    *   **Constraint Check:** ""note"": ""1 sentence"".
+    *   **Constraint Check:** ""alts"": array of objects.
+    *   **Constraint Check:** Fields: ""name_en"", ""match"", ""desc"", ""where"".
+    *   **Constraint Check:** ""match"" values: ""Very close"", ""Similar"", ""Different but works"".
+    *   **Constraint Check:** ""definitively compliant"".
+
+    *   **Selection:**
+        1.  **Earth Balance Buttery Sticks:** Vegan, dairy-free. Match: Similar. Where: Refrigerated dairy aisle or baking aisle.
+        2.  **Miyoko's Organic Vegan Butter:** Cultured vegan butter. Match: Similar. Where: Refrigerated dairy aisle or vegan section.
+        3.  **Spectrum Organic Refined Coconut Oil:** Refined means no coconut flavor, neutral like butter. Match: Different but works. Where: Baking or oil aisle.
+        4.  **Lactaid Butter:** (Wait, is this safe? Some sources say Lactaid Butter is safe for lactose intolerance but contains milk solids? No, Lactaid Butter is specifically formulated to be lactose-free). Actually, to be ""definitively compliant"" without risk, plant-based is better. But I can include ""Lactaid Butter"" as a lactose-free version. However, many lactose intolerant people react to casein in dairy butter.
+        *   Decision: Stick to Vegan Butter and Oils for safety on ""lactose intolerant"".
+        *   I need 3-4.
+        *   1. Earth Balance Buttery Sticks.
+        *   2. Miyoko's Organic Vegan Butter.
+        *   3. Spectrum Refined Coconut Oil.
+        *   4. Avocado Oil (or Olive Oil). Let's use Avocado Oil as it's solid-like when chilled sometimes, but Olive Oil is more common. Refined Olive Oil is neutral. Let's use Refined Olive Oil.
+        *   Wait, ""Different but works"" for oil is accurate.
+        *   Let's check ""Where"". ""Dairy aisle"", ""Baking aisle"", ""Oil aisle"".
+        *   Let's check ""match"".
+            *   Vegan Butter: ""Similar"" (Different product type - plant vs animal).
+            *   Oil: ""Different but works"".
+        *   Is there any ""Very close""? If I can't find a definitive dairy-free butter that is ""Very close"" (same product), I won't use it.
+        *   Wait, I must ensure I don't include ""check label"".
+        *   ""Earth Balance"" is definitive.
+        *   ""Miyoko's"" is definitive.
+        *   ""Spectrum"" is definitive.
+
+    *   **Refining Match Levels:**
+        *   Prompt: ""Different product type = 'Similar' at best.""
+        *   Vegan Butter is a different product type (plant vs dairy). So ""Similar"".
+        *   Oil is a different product type. So ""Different but works"".
+        *   Wait, is ""Very close"" possible? ""Same product, different brand"". If I list ""Land O Lakes Butter"" (Dairy) vs ""I Can't Believe It's Not Butter"" (Dairy-Free Veg), they are different products.
+        *   Okay, I will not use ""Very close"" because I cannot find a specific brand of *Dairy* Butter that is definitively lactose-free for *all* NA stores without risk of cross-contamination or formulation changes.
+        *   Wait, I need to",FAIL,0.26,,"The output is not a valid final answer and contains planning text rather than a clean JSON response. While it ultimately leans toward dairy-free options and correctly reasons that vegan butters should be rated 'Similar' rather than 'Very close', it also considers risky/non-definitive options like ghee and lactose-free butter during the output, and never provides the required final note clearly acknowledging the lactose constraint in the specified structure.",,"{
+  ""note"": ""The user is lactose intolerant and needs alternatives to butter."",
+  ""alts"": [
+    {
+      ""name_en"": ""Earth Balance Original Buttery Spread"",
+      ""match"": ""Very close"",
+      ""desc"": ""A lactose-free, vegan butter substitute made from plant-based ingredients."",
+      ""where"": ""Dairy or Natural Foods section""
+    },
+    {
+      ""name_en"": ""Miyoko's Kitchen Cultured Vegan Butter"",
+      ""match"": ""Very close"",
+      ""desc"": ""A plant-based butter alternative made from cashew cream, lactose-free and vegan."",
+      ""where"": ""Natural Foods or Specialty section""
+    },
+    {
+      ""name_en"": ""Nuttelex Buttery Spread"",
+      ""match"": ""Very close"",
+      ""desc"": ""A dairy-free, vegan butter substitute made from plant-based ingredients."",
+      ""where"": ""Natural Foods or Specialty section""
+    },
+    {
+      ""name_en"": ""Avocado Oil"",
+      ""match"": ""Different but works"",
+      ""desc"": ""A plant-based oil that can be used for cooking and baking, lactose-free."",
+      ""where"": ""Oils section""
+    }
+  ]
+}",FAIL,0.77,,"Evaluating the output against the rubric: 1) All alternatives are dairy-free/lactose-free (Earth Balance, Miyoko's, Nuttelex are all vegan/plant-based, and Avocado Oil is naturally dairy-free) - PASS. No regular margarine with potential dairy content is suggested - PASS. 2) The note acknowledges the lactose constraint ('The user is lactose intolerant and needs alternatives to butter') - PASS. 3) However, the match levels are questionable. Plant-based butters like Earth Balance, Miyoko's, and Nuttelex are labeled 'Very close' when the rubric states they should be 'Similar' not 'Very close' for baking purposes. Plant-based butters do behave differently in baking (different water content, fat composition, melting points) and calling them 'Very close' is not fully honest per the rubric's standard. This is a notable issue as it affects three of the four alternatives. Overall, the output mostly meets the criteria but fails on the match level honesty requirement.",,"{
+    ""note"": ""These are all lactose-free alternatives to butter for cooking and spreading."",
+    ""alts"": [
+        {
+            ""name_en"": ""Ghee (clarified butter)"",
+            ""match"": ""Very close"",
+            ""desc"": ""Butter with milk solids removed, making it lactose-free while retaining rich, nutty flavor."",
+            ""where"": ""Baking aisle or international foods section""
+        },
+        {
+            ""name_en"": ""Plant-based butter sticks (e.g., Miyoko's, Country Crock Plant Butter)"",
+            ""match"": ""Very close"",
+            ""desc"": ""Vegan butter made from oils like coconut, avocado, or olive oil that performs like dairy butter."",
+            ""where"": ""Refrigerated dairy section""
+        },
+        {
+            ""name_en"": ""Coconut oil"",
+            ""match"": ""Similar"",
+            ""desc"": ""Solid at room temperature, works for baking and sautéing with a mild coconut flavor."",
+            ""where"": ""Cooking oil aisle""
+        },
+        {
+            ""name_en"": ""Olive oil spread (e.g., Bertolli)"",
+            ""match"": ""Similar"",
+            ""desc"": ""Spreadable blend of olive oil and other plant oils, lactose-free and good for bread."",
+            ""where"": ""Refrigerated dairy section""
+        }
+    ]
+}",FAIL,0.68,,"Evaluating the rubric criteria: 1) All alternatives are dairy-free/lactose-free: Ghee is technically very low in lactose (milk solids removed) and is generally tolerated by lactose-intolerant people, so this is acceptable. Plant-based butter, coconut oil, and olive oil spread are all dairy-free/lactose-free. No regular margarine with hidden dairy is suggested. ✓ 2) Match levels should be honest — the rubric states plant-based butters should be 'Similar' not 'Very close' for baking. The output rates plant-based butter sticks as 'Very close', which the rubric explicitly says is not honest for baking. ✗ 3) The note acknowledges the lactose constraint: 'These are all lactose-free alternatives to butter for cooking and spreading.' ✓. The output fails on the match level honesty criterion for plant-based butters being rated 'Very close' instead of 'Similar'.",
+rice vinegar — general substitution for acidic condiment,rice vinegar,,,,"{""note"": ""1 sentence why needed"", ""alts"": [{""name_en"": ""Name"", ""match"": ""Very close|Similar|Different but works"", ""desc"": ""1 sentence"", ""where"": ""Where in store""}]}`
+    *   Input: ""Find 3-4 alternatives for ""rice vinegar"" available in North American stores.""
+
+2.  **Determine the ""Why Needed"":**
+    *   Rice vinegar is essential for Asian cuisines (sushi, salad dressings, marinades). It might be out of stock or unavailable in certain stores.
+    *   Draft Note: Rice vinegar is essential for authentic Asian cooking but may be out of stock or unavailable in specific regions.
+
+3.  **Identify Alternatives:**
+    *   *Option 1: Seasoned Rice Vinegar.* Wait, that's a specific type. I need alternatives *for* rice vinegar, not types *of* it.
+    *   *Option 1: White Distilled Vinegar.* Common, acidic, but lacks the mild sweetness.
+    *   *Option 2: Apple Cider Vinegar.* Mild, fruity, often used in dressings.
+    *   *Option 3: Chinkiang Vinegar (Black Vinegar).* Very close to Chinese rice vinegar.
+    *   *Option 4: Champagne Vinegar.* Mild, similar to white vinegar but closer to rice in acidity.
+    *   *Option 5: Coconut Aminos.* (Different but works for soy sauce, but for vinegar? Maybe not the best match for acidity).
+    *   *Option 6: Cider Vinegar + Sugar.*
+    *   *Best ""Very close"" alternatives:* There aren't many true ""Very close"" because rice vinegar is specific (fermented rice). However, ""Japanese Rice Vinegar"" vs ""Chinese Black Rice Vinegar"" are all rice vinegar.
+    *   *Interpretation of ""Alternatives for rice vinegar"":* Usually, people want substitutes because they can't find the specific one.
+    *   *Substitute 1: Apple Cider Vinegar.* (Similar - mild acidity, fruity).
+    *   *Substitute 2: White Distilled Vinegar.* (Similar - sharp acidity, lacks sweetness).
+    *   *Substitute 3: Champagne Vinegar.* (Similar - mild, light).
+    *   *Substitute 4: Shaoxing Vinegar.* (Different but works - dark, fermented grain, different flavor profile).
+    *   *Constraint Check:* Match levels.
+        *   Rice vinegar is rice-based.
+        *   Apple Cider Vinegar is apple-based. -> ""Similar"".
+        *   White Distilled Vinegar is grain-based (potato/barley). -> ""Similar"".
+        *   Chinkiang (Black) Vinegar is rice/wheat based. -> ""Very close"" (still rice vinegar, different style).
+        *   Let's verify ""Very close"" definition: ""same product, different brand"". Since Chinkiang is a different product type (black vs white) but still rice vinegar, technically it's a variant. But if the user wants *any* rice vinegar, a different brand of white rice vinegar is ""Very close"".
+        *   Actually, finding *alternatives* implies substitutes.
+        *   If I say ""Seasoned Rice Vinegar"", that is rice vinegar + sugar/salt. Not a perfect substitute for plain.
+        *   Let's look for common North American store items.
+        *   1. Seasoned Rice Vinegar (Marukan/Kikkoman). Wait, if the user needs plain rice vinegar, seasoned is too sweet.
+        *   2. White Rice Vinegar (different brand).
+        *   3. Apple Cider Vinegar + Sugar mix.
+        *   4. White Distilled Vinegar + Sugar mix.
+        *   Since I need specific items available in North America:
+            *   Item 1: Kikkoman Rice Vinegar (Brand A) vsgeneric Rice Vinegar (Brand B). This counts as ""Very close"" based on the definition ""same product, different brand"". But the prompt asks for alternatives *for* rice vinegar. Usually, this means substitutes.
+            *   However, if I can't find rice vinegar, what do I use?
+            *   Alternative 1: White Distilled Vinegar (with a bit of sugar). Match: Similar.
+            *   Alternative 2: Apple Cider Vinegar. Match: Similar.
+            *   Alternative 3: Champagne Vinegar. Match: Similar.
+            *   Alternative 4: Chinkiang Vinegar (if looking for Chinese style rice vinegar). Match: Very close (both are rice vinegar).
+            *   Let's stick to the ""Where in store"" constraint. Asian aisle, Pantry, or International aisle.
+            *   Let's refine the ""Match"" logic.
+            *   If the user asks for alternatives to Rice Vinegar, they usually accept substitutes because Rice Vinegar is specific.
+            *   ""Very close"" = same product, different brand. So another brand of *Rice Vinegar* is technically a valid alternative to the specific brand out of stock. I should include this as the best match.
+            *   Then others are ""Similar"".
+
+4.  **Drafting the JSON:**
+
+    *   **Note:** Rice vinegar is vital for authentic Asian flavor profiles but may be unavailable or sold out during peak seasons.
+    *   **Alt 1:** Generic Rice Vinegar (e.g., Trader Joe's or store brand). Match: Very close. (Same product, different brand).
+    *   **Alt 2:** Apple Cider Vinegar. Match: Similar. (Fruity acidity, often used in dressings).
+    *   **Alt 3:** White Distilled Vinegar. Match: Similar. (Sharp acidity, requires added sugar for balance).
+    *   **Alt 4:** Chinkiang Vinegar. Match: Very close (still rice based) or Similar (darker flavor). Let's go with Similar to distinguish from plain white rice vinegar, or Very close if considering ""Rice Vinegar"" category. Actually, Chinkiang is a different *type* of rice vinegar. ""Chinkiang"" is often distinct. Let's use ""Champagne Vinegar"" as a lighter wine-based option or ""White Distilled"" as the standard pantry item.
+    *   Better Alt 4: Seasoned Rice Vinegar (if sweetness is part of the dish). But plain is better for substitution. Let's stick to White Distilled, Apple Cider, and Champagne. Wait, I need 3-4.
+    *   Let's prioritize ""Very close"" first. If the user can't find their brand, another brand of Rice Vinegar is the best answer.
+    *   So Alt 1: Store Brand Rice Vinegar (Very close).
+    *   Alt 2: White Distilled Vinegar (Similar).
+    *   Alt 3: Apple Cider Vinegar (Similar).
+    *   Alt 4: Champagne Vinegar (Similar).
+
+    *   Wait, the prompt says ""If a dietary restriction is given..."". None given.
+    *   Prompt says ""match levels (use strictly)"".
+    *   ""Very close"" = same product, different brand.
+    *   So, if I list ""Kikkoman Rice Vinegar"" as an alternative to ""Nakano Rice Vinegar"", that is Very Close.
+    *   But I don't know the user's brand. I can list ""Generic Rice Vinegar"" as a Very Close alternative to ""Specific Brand Rice Vinegar"".
+    *   Let's ensure the ""name_en"" reflects the product name found in NA stores.
+
+    *   *Revision:*
+    *   1. Store Brand Rice Vinegar (e.g., Great Value, Kirkland). Match: Very close.
+    *   2. Apple Cider Vinegar. Match: Similar.
+    *   3. White Distilled Vinegar. Match: Similar.
+    *   4. Champagne Vinegar. Match: Similar.
+
+    *   Wait, I need to check ""Where in store"".
+    *   Rice Vinegar -> International/Asian aisle or Pantry.
+    *   White Distilled -> Pantry.
+    *   Apple Cider -> Pantry.
+    *   Champagne -> Pantry or International.
+
+    *   Refining descriptions for 1 sentence.
+
+5.  **Final JSON Construction:**
+    *   Check constraints: JSON only. No markdown. No text outside JSON.
+    *   Keys: ""note"", ""alts"".
+    *   Alt Keys: ""name_en"", ""match"", ""desc"", ""where"".
+    *   Values: Strings.
+    *   Match Levels: Must be exactly ""Very close|Similar|Different but works"".
+
+    *   Wait, I need to ensure the alternatives are *definitively compliant* if a restriction was given. No restriction given.
+    *   Ensure ""Very close"" is used correctly. Since I don't know the specific brand the user wants, I can imply that another brand of the exact same product is the best alternative. So ""Store Brand Rice Vinegar"" counts as Very Close to ""Name Brand Rice Vinegar"".
+    *   However, usually, when people ask for alternatives to Rice Vinegar, they mean substitutes because they can't find *any* rice vinegar. So I should include one other brand of Rice Vinegar as ""Very Close"" and the others as ""Similar"".
+
+    *   Let's finalize the list.
+    *   1. Generic Rice Vinegar (Store Brand) - Very Close.
+    *   2. Apple Cider Vinegar - Similar.
+    *   3. White Distilled Vinegar - Similar.
+    *   4. Champagne Vinegar - Similar.
+
+    *   Wait, is Chinkiang Vinegar a good alternative? It is rice vinegar. If the user wants *any* rice vinegar, Chinkiang is a rice vinegar. If they want a substitute for *white* rice vinegar specifically, Chinkiang is darker/sweeter. Let's stick to the standard pantry substitutes for safety.
+
+    *   Wait, looking at the match definition: ""Very close"" = same product, different brand.
+    *   So listing ""Kikkoman Rice Vinegar"" as an alternative to ""Unknown Brand Rice Vinegar"" is valid.
+    *   I will list ""Store Brand Rice Vinegar"" as the first alternative.
+
+    *   Wait, the prompt asks for ""3-4 alternatives"".
+    *   Okay.
+
+    *   Wait, I must output JSON ONLY. No markdown code blocks like  ... . Just raw JSON.
+    *   Wait, the system instruction says ""Respond with JSON only.""
+    *   Usually, this means no markdown formatting.
+    *   I will output raw JSON text.
+
+    *   Re-checking ""match"" values.
+    *   ""Very close"", ""Similar"", ""Different but works"".
+    *   I will ensure I use these exact strings.
+
+    *   One sentence for ""note"".
+    *   One sentence for ""desc"".
+    *   ""where"" should be location in store.
+
+    *   Let's write the content.
+    *   Note: Rice vinegar is essential for Asian cooking but often sells out or is unavailable in standard aisles.
+    *   Alt 1: Great Value Rice Vinegar. Match: Very close. Desc: Identical ingredients to name brands but lower cost. Where: Pantry aisle.
+    *   Alt 2: Apple Cider Vinegar. Match: Similar. Desc: Mild acidity with fruity notes, often used in salad dressings. Where: Condiment aisle.
+    *   Alt 3: White Distilled Vinegar. Match: Similar. Desc: Sharp acidity requiring a pinch of sugar to mimic rice vinegar's sweetness. Where: Condiment aisle.
+    *   Alt 4: Champagne Vinegar. Match: Similar. Desc: Light and fruity, closer to rice vinegar than white vinegar. Where: International or Condiment aisle.
+
+    *   Wait, I should check if ""Champagne Vinegar"" is common in NA stores. Yes, often in specialty or condiment.
+    *   Is there a better 4th? Maybe ""Chinkiang Vinegar"" (Lao Gan Ma Black Vinegar)? It is rice based. Match: Very close? No, Chinkiang is Black Vinegar (fermented). White rice vinegar is clear.
+    *   Let's stick to the list above.
+
+    *   Wait, I need to make sure I don't output markdown. Just the JSON string.
+    *   Wait, usually ""JSON only"" allows code blocks in some interfaces but strict instruction says ""ONLY JSON"". I will output raw text.
+
+    *   Wait, I need to check if I need to escape quotes. Yes, standard JSON.
+    *   Wait, looking at the instruction: ""Respond with JSON only.""
+    *   I will output the JSON object directly.
+
+    *   Wait, I need to ensure I don't violate the ""match levels"" strictness.
+    *   ""Very close"" = same product, different brand.
+    *   ""Similar"" = Different product type.
+    *   My Alt 1 is Rice Vinegar (Same product). So ""Very close"".
+    *   My Alt 2, 3, 4 are different products (Apple, White, Champagne). So ""Similar"".
+
+    *   One check: ""If a dietary restriction is given..."". None given.
+    *   One check: ""ONLY JSON"".
+    *   One check: ""match levels (use strictly)"".
+    *   One check: ""1 sentence why needed"".
+    *   One check: ""1 sentence"" for desc.
+
+    *   Final check on JSON syntax.
+    *   Keys in double quotes.
+    *   No trailing commas.
+    *   Proper escaping.
+
+    *   Wait, I need to make sure I don't include markdown ticks.
+    *   Okay, ready.
+
+    *   Wait, one more check on ""Where"".
+    *   ""Pantry aisle"" is good.
+    *   ""International aisle"" is good.
+    *   ""Condiment aisle"" is good.
+
+    *   Wait, I need to ensure the JSON is valid.
+    *   I will construct it carefully.
+
+    *   Wait, one nuance: ""Rice vinegar"" usually comes in a bottle. Store brand is often ""Great Value"", ""Kirkland"", ""Market Pantry"". I'll use ""Store Brand Rice Vinegar"" to be generic but accurate to the match definition.
+
+    *   Wait, I should check if the prompt implies I need to list specific brands. ""Find 3-4 alternatives"". ""Name_en"". I will use store names or generic descriptive names.
+    *   ""Great Value Rice Vinegar"" is specific.
+    *   ""Apple Cider Vinegar"" is generic.
+    *   ""White Distilled Vinegar"" is generic.
+    *   ""Champagne Vinegar"" is generic.
+
+    *   Let's finalize the Note. ""Rice vinegar is essential for authentic Asian flavor profiles but may be unavailable or sold out during peak seasons.""
+    *   Let's finalize the Alts.
+    *   1. ""Great Value Rice Vinegar"", ""Very close"", ""Identical ingredients to name brands but lower cost."", ""International aisle""
+    *   2. ""Apple Cider Vinegar"", ""Similar"", ""Mild acidity with fruity notes, often used in salad dressings."", ""Condiment aisle""
+    *   3. ""White Distilled Vinegar"", ""Similar"", ""Sharp acidity requiring a pinch of sugar to mimic rice vinegar's sweetness."", ""Condiment aisle""
+    *   4. ""Champagne Vinegar"", ""Similar"", ""Light and fruity, closer to rice vinegar than white vinegar."", ""International or Condiment aisle""
+
+    *   Wait, I need to check if ""Where"" needs to be specific. ""Where in store"". ""International aisle"" works.
+    *   Wait, I should check the ""match"" strictness again.
+    *   ""Very close"" = same product, different brand.
+    *   ""Similar"" = Different product type.
+    *   My Alt 1 is Rice Vinegar. So ""Very close"".
+    *   My Alt 2 is Apple. ""Similar"".
+    *   My Alt 3 is White. ""Similar"".
+    *   My Alt 4 is Champagne. ""Similar"".
+    *   Looks correct.
+
+    *   Wait, I must ensure no markdown.
+    *   I will output the raw JSON string.
+
+    *   Wait, I need to double check the ""match"" levels list provided in the prompt: ""Very close|Similar|Different but works"".
+    *   I am using ""Very close"" and ""Similar"".
+    *   Okay.
+
+    *   Wait, one last thing: ""ONLY JSON"".
+    *   I will not add any markdown formatting like .
+
+    *   Wait, I need to make sure I don't violate the ""JSON only"" rule by adding newlines that break parsing? No, JSON allows newlines for whitespace, but I will keep it compact or standard pretty print. Standard pretty print is fine as long as it's valid JSON.
+    *   Actually, to be safe with ""JSON only"", I will output it as a single block without markdown.
+
+    *   Wait, I need to check if I need to escape double quotes inside the strings.
+    *   e.g. ""Identical ingredients..."" does not have quotes.
+    *   ""International aisle"" does not have quotes.
+    *   Okay.
+
+    *   Wait, I need to ensure the ""note"" is 1 sentence.
+    *   ""Rice vinegar is essential for authentic Asian cooking but may be out of stock or unavailable in specific regions."" -> 1 sentence.",FAIL,0.22,,"The output is not a valid alternatives JSON at all; it is chain-of-thought/planning text. While it mentions mostly plausible North American substitutes like apple cider, white distilled, and champagne vinegar, it also treats 'store brand rice vinegar' as an alternative and never cleanly provides the required final structured entries with useful 'where' fields. Because the actual output does not deliver honest, usable alternative items in the specified format, it does not satisfy the rubric.",,"{
+  ""note"": ""Rice vinegar is used for its mild acidity and delicate flavor in various recipes."",
+  ""alts"": [
+    {""name_en"": ""Apple Cider Vinegar"", ""match"": ""Similar"", ""desc"": ""Has a slightly stronger flavor but can provide a similar acidity"", ""where"": ""Condiment aisle""},
+    {""name_en"": ""White Wine Vinegar"", ""match"": ""Similar"", ""desc"": ""Provides a similar acidity with a slightly stronger flavor"", ""where"": ""Condiment aisle""},
+    {""name_en"": ""Champagne Vinegar"", ""match"": ""Similar"", ""desc"": ""Mild and delicate flavor, similar to rice vinegar but slightly more expensive"", ""where"": ""Condiment or gourmet food aisle""},
+    {""name_en"": ""Distilled White Vinegar (diluted)"", ""match"": ""Different but works"", ""desc"": ""Can be used if diluted with water, provides acidity but lacks flavor"", ""where"": ""Condiment aisle""}
+  ]
+}",PASS,1.00,,All assertions passed,,"{
+    ""note"": ""Common pantry item for Asian cooking and dressings, with several accessible alternatives."",
+    ""alts"": [
+        {
+            ""name_en"": ""Mizkan Rice Vinegar"",
+            ""match"": ""Very close"",
+            ""desc"": ""Another major brand of pure rice vinegar with the same mild, slightly sweet flavor."",
+            ""where"": ""Asian aisle or vinegar section""
+        },
+        {
+            ""name_en"": ""Marukan Rice Vinegar"",
+            ""match"": ""Very close"",
+            ""desc"": ""A popular brand of rice vinegar, nearly identical in taste and use."",
+            ""where"": ""Asian aisle or condiment section""
+        },
+        {
+            ""name_en"": ""Seasoned Rice Vinegar"",
+            ""match"": ""Similar"",
+            ""desc"": ""Rice vinegar with added sugar and salt, suitable if sweetness is acceptable."",
+            ""where"": ""Asian aisle""
+        },
+        {
+            ""name_en"": ""Apple Cider Vinegar"",
+            ""match"": ""Different but works"",
+            ""desc"": ""Mildly fruity vinegar; use slightly less as it's more acidic than rice vinegar."",
+            ""where"": ""Vinegar section""
+        }
+    ]
+}",PASS,1.00,,All assertions passed,
+chicken breast + vegetarian — all alts must be meat-free,chicken breast,vegetarian,,"
+Dietary: vegetarian.","{""note"": ""1 sentence why needed"", ""alts"": [{""name_en"": ""Name"", ""match"": ""Very close|Similar|Different but works"", ""desc"": ""1 sentence"", ""where"": ""Where in store""}]}`
+
+2.  **Evaluate Dietary Constraints:**
+    *   User is vegetarian.
+    *   Original product: Chicken breast (meat).
+    *   Constraint: EVERY alternative MUST be vegetarian.
+    *   Since chicken breast is meat, there are no ""Very close"" (same product) or ""Similar"" (different product type but same category like turkey breast) that are vegetarian. Turkey is meat, pork is meat, etc.
+    *   Therefore, all alternatives must be ""Different but works"" (Plant-based for meat) or technically ""Different product type"" but since the category is meat substitute, ""Different but works"" fits the prompt's definition for ""Plant-based for meat"".
+    *   Wait, the prompt defines ""Different product type = 'Similar' at best"" and ""Plant-based for meat = 'Different but works'"". Since the user wants vegetarian alternatives to chicken breast, plant-based chicken substitutes are the only viable options that are definitively vegetarian.
+    *   I need to ensure 3-4 items that are definitively vegetarian and sold in NA stores.
+
+3.  **Select Alternatives:**
+    *   Option 1: Beyond Meat Chicken Buys (Beyond Burger is famous, but Beyond Meat has chicken). Let's use ""Beyond Meat Chicken Tenders"" or ""Beyond Crispy Chicken Breast"".
+    *   Option 2: Impossible Foods (They have chicken, e.g., ""Impossible Chicken"").
+    *   Option 3: Gardein ""Chicken Style"" products (e.g., ""Gardein Delightful Chicken Breasts"").
+    *   Option 4: Tofurky (They have turkey, but also chicken? Or maybe Quorn?). Let's stick to plant-based meat alternatives specifically labeled as chicken. ""Tofurky"" has turkey, less common chicken. Let's use ""Lightlife Plant-Based Chicken"".
+    *   Check constraints: Must be vegetarian. Plant-based meat products are vegetarian.
+    *   Match Level: ""Different but works"" (as per prompt definition for plant-based for meat).
+
+4.  **Draft Content:**
+    *   Note: Explaining the need for vegetarian substitutes since chicken is meat.
+    *   Alt 1: Beyond Meat Chicken (e.g., Beyond Meat Chicken Breast Strips). Match: Different but works. Where: Frozen section or refrigerated meat aisle.
+    *   Alt 2: Gardein Chicken Style Strips. Match: Different but works. Where: Refrigerated meat aisle.
+    *   Alt 3: Lightlife Plant-Based Chicken. Match: Different but works. Where: Frozen section or refrigerated meat aisle.
+    *   Alt 4: Tofurky? Actually, Tofurky is mostly turkey. Let's use ""Gardein Chicken Nuggets"" or ""Tofurky Chicken"". Better: ""Beyond Meat Plant-Based Chicken"". Wait, I need 3-4.
+    *   Let's pick:
+        1.  Beyond Meat Plant-Based Chicken
+        2.  Gardein Real Chicken Style Breast
+        3.  Lightlife Grill'd Chicken
+        4.  Tofurky (often turkey, but they have chicken? Actually, Tofurky focuses on turkey/ham. Let's use ""Quorn Fillets"" or ""Daiya""? No, Daiya is cheese. Let's use ""Gardein Chicken Style Strips"" again? No, need distinct.
+        4.  ""MorningStar Farms Good Meat Chicken"".
+    *   All are plant-based. All are vegetarian. All are in NA stores.
+    *   Match Level: All must be ""Different but works"" because they are plant-based meat substitutes.
+
+5.  **Refine JSON:**
+    *   Ensure strictly JSON.
+    *   Ensure no markdown code blocks (though the prompt says ""Respond with JSON only"", usually meaning raw text, but often wrapped in  for clarity in chat interfaces. However, the instruction says ""ONLY JSON"". I will output raw JSON text to be safe).
+    *   Check match levels again: ""Plant-based for meat = 'Different but works'"".
+    *   Check note: ""1 sentence why needed"".
+    *   Check desc: ""1 sentence"".
+
+6.  **Final Review:**
+    *   Vegetarian constraint met? Yes, all plant-based.
+    *   3-4 alternatives? Yes.
+    *   North American stores? Yes (major brands).
+    *   JSON structure correct? Yes.
+    *   No markdown? Yes.
+
+    *Self-Correction on JSON Output:* The instruction says ""Respond with JSON only."" I should not include markdown fences like  ...  if strict adherence is required, but often models output markdown. To be safest with ""ONLY JSON"", I will output the raw string. However, looking at typical system instructions for this persona, usually, a code block is acceptable if it's valid JSON. But ""ONLY JSON"" often implies no markdown. I will output raw JSON.
+
+    *Wait, one more check on Match Levels:*
+    ""Very close"" = same product, different brand (e.g., another brand of sriracha).
+    Since chicken breast is meat, I cannot find a vegetarian ""Very close"" match.
+    ""Different product type = 'Similar' at best"".
+    ""Plant-based for meat = 'Different but works'"".
+    Since I am recommending plant-based meat substitutes, ""Different but works"" is the correct classification per the prompt instructions.
+
+    *Wait, is there a vegetarian chicken breast?*
+    Some products are labeled ""Chicken Breast"" but are plant-based.
+    Example: ""Beyond Meat Chicken Breast"".
+    Is it ""Very close""? No, because the underlying product is plant-based, not the actual animal product. So ""Different but works"" is the correct classification per the instruction ""Plant-based for meat = 'Different but works'"".
+
+    *Drafting the JSON:*
+    {
+    ""note"": ""Vegetarian alternatives are required because chicken breast is meat and contains animal protein."",
+    ""alts"": [
+      {
+        ""name_en"": ""Beyond Meat Plant-Based Chicken Breast"",
+        ""match"": ""Different but works"",
+        ""desc"": ""Made from pea protein and coconut oil to mimic chicken texture and flavor."",
+        ""where"": ""Frozen or refrigerated meat section""
+      },
+      {
+        ""name_en"": ""Gardein Real Chicken Style Strips"",
+        ""match"": ""Different but works"",
+        ""desc"": ""Plant-based strips designed to grill or bake like traditional chicken."",
+        ""where"": ""Refrigerated meat or frozen aisle""
+      },
+      {
+        ""name_en"": ""Lightlife Grill'd Chicken"",
+        ""match"": ""Different but works"",
+        ""desc"": ""Vegetarian chicken patties or strips made from soy and pea protein."",
+        ""where"": ""Refrigerated meat aisle""
+      },
+      {
+        ""name_en"": ""MorningStar Farms Good Meat Chicken"",
+        ""match"": ""Different but works"",
+        ""desc"": ""Plant-based chicken alternatives with a savory profile and crispy texture."",
+        ""where"": ""Frozen food section""
+      }
+    ]
+    }
+
+    *Wait, check constraint:* ""If a dietary restriction is given, EVERY alternative MUST be definitively compliant — no 'if available' or 'check label' items.""
+    All selected items are widely known plant-based brands in NA stores, generally pre-packaged with clear labeling.
+
+    *Wait, check constraint:* ""ONLY JSON"". I will ensure no markdown ticks.
+
+    *Wait, check constraint:* ""match levels (use strictly): ... Plant-based for meat = 'Different but works'"".
+    My selection uses ""Different but works"". Correct.
+
+    *Wait, check constraint:* ""3-4 alternatives"". I have 4. Correct.
+
+    *Wait, check constraint:* ""name_en"". I used English names. Correct.
+
+    *Wait, check constraint:* ""where"". I used store sections. Correct.
+
+    *Wait, check constraint:* ""note"". 1 sentence. Correct.
+
+    *Wait, check constraint:* ""desc"". 1 sentence. Correct.
+
+    Ready.
+
+    One final check: The prompt says ""Respond with JSON only."" I must not include any introductory text or markdown code blocks if interpreted strictly. I will output raw JSON.
+
+    Wait, looking at the instruction ""Respond with JSON only."" usually implies the content type is JSON. I will output the text directly.
+
+    Wait, I need to make sure I don't use markdown formatting like . I will just output the text.
+
+    Wait, I need to check if ""Gardein Real Chicken Style Strips"" is definitely vegetarian. Yes, Gardein is a brand specifically for plant-based meat.
+    Beyond Meat. Yes.
+    Lightlife. Yes.
+    MorningStar. Yes.
+
+    Okay, proceeding.
+
+    Wait, I need to make sure I don't add extra newlines or comments.
+
+    One more thing: ""User reason: vegetarian."" ""Dietary: vegetarian.""
+    The prompt asks for alternatives to ""chicken breast"".
+    Since chicken breast is meat, there are no vegetarian alternatives that are the *same* product.
+    So ""Different but works"" is the only valid match level for these plant-based items.
+
+    Let's assemble the JSON string.
+
+    {""note"": ""Since chicken breast is meat, vegetarian alternatives must be plant-based meat substitutes to comply with dietary restrictions."", ""alts"": [{""name_en"": ""Beyond Meat Plant-Based Chicken Breast"", ""match"": ""Different but works"", ""desc"": ""A pea and coconut protein product textured to mimic the bite of real chicken breast."", ""where"": ""Frozen or refrigerated meat aisle""}, {""name_en"": ""Gardein Real Chicken Style Strips"", ""match"": ""Different but works"", ""desc"": ""Soy and pea protein strips seasoned to taste like grilled chicken pieces."", ""where"": ""Refrigerated meat section""}, {""name_en"": ""Lightlife Grill'd Chicken"", ""match"": ""Different but works"", ""desc"": ""Plant-based patties and strips made from organic soy and pea protein."", ""where"": ""Frozen or refrigerated meat aisle""}, {""name_en"": ""MorningStar Farms Good Meat Chicken"", ""match"": ""Different but works"", ""desc"": ""Plant-based chicken alternatives designed for stir-fry or grilling."", ""where"": ""Frozen food section""}]}
+
+    Check quotes and escaping. Looks good.
+    Check strict JSON. No trailing commas.
+    Check 3-4 items. I have 4.
+    Check Note 1 sentence.
+    Check Desc 1 sentence.
+
+    Final check on ""ONLY JSON"". I will not wrap in markdown.
+    Wait, if I output raw JSON, it might be harder to read in some interfaces, but the instruction is explicit.
+    Actually, usually ""Respond with JSON only"" allows markdown blocks for code formatting in many contexts, but strict adherence suggests just the text. I will provide just the text to be safe.
+    Wait, I see the system instruction says ""You are a grocery expert. Respond with JSON only.""
+    Okay, I will output the raw JSON string.
+
+    Wait, one detail: ""match levels (use strictly): ... Different product type = 'Similar' at best. Plant-based for meat = 'Different but works'"".
+    Since I am substituting meat with plant-based, ""Different but works"" is the correct level.
+    If I picked a turkey breast, it would be ""Similar"" (Different product type) but it is NOT vegetarian. So I cannot pick turkey.
+    So all must be ""Different but works"".
+
+    Okay, ready to generate.
+
+    Wait, I should check if there are any specific NA store exclusions. These brands are standard in Whole Foods, Walmart, Target, Kroger, etc.
+
+    Final check on JSON syntax.
+    Keys in double quotes.
+    Strings in double quotes.
+    No single quotes.
+    No comments.
+
+    Okay.
+
+
+{
+  ""note"": ""Vegetarian alternatives are required because chicken breast is meat and contains animal protein."",
+  ""alts"": [
+    {
+      ""name_en"": ""Beyond Meat Plant-Based Chicken Breast"",
+      ""match"": ""Different but works"",
+      ""desc"": ""A pea and coconut protein product textured to mimic the bite of real chicken breast."",
+      ""where"": ""Frozen or refrigerated meat aisle""
+    },
+    {
+      ""name_en"": ""Gardein Real Chicken Style Strips"",
+      ""match"": ""Different but works"",
+      ""desc"": ""Soy and pea protein strips seasoned to taste like grilled chicken pieces."",
+      ""where"": ""Refrigerated meat section""
+    },
+    {
+      ""name_en"": ""Lightlife Grill'd Chicken"",
+      ""match"": ""Different but works"",
+      ""desc"": ""Plant-based patties and strips made from organic soy and pea protein."",
+      ""where"": ""Frozen or refrigerated meat aisle""
+    },
+    {
+      ""name_en"": ""MorningStar Farms Good Meat Chicken"",
+      ""match"": ""Different but works"",
+      ""desc"": ""Plant-based chicken alternatives designed for stir-fry or grilling."",
+      ""where"": ""Frozen food section""
+    }
+  ]
+}",FAIL,0.50,,"Custom function threw error: Unexpected non-whitespace character after JSON at position 164 (line 1 column 165)
+Stack Trace: SyntaxError: Unexpected non-whitespace character after JSON at position 164 (line 1 column 165)
+    at JSON.parse (<anonymous>)
+    at eval (eval at handleJavascript (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:1343:34), <anonymous>:3:16)
+    at handleJavascript (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:1343:92)
+    at runAssertion (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:3557:24)
+    at file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:3608:24
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:151:38
+    at replenish (/Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:447:21)
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:452:13
+    at Object.eachOfLimit (/Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:478:36)
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:220:25
+const d = JSON.parse(output);
+const matchValues = ['Very close', 'Similar', 'Different but works'];
+const valid = d.note && d.alts && d.alts.length >= 3 && d.alts.length <= 4 && d.alts.every(a => a.name_en && a.match && matchValues.includes(a.match) && a.desc && a.where);
+return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid structure or match values' };",,"{
+  ""note"": ""User is looking for vegetarian alternatives to chicken breast"",
+  ""alts"": [
+    {
+      ""name_en"": ""Tofu"",
+      ""match"": ""Different but works"",
+      ""desc"": ""A plant-based protein made from soybeans, can be marinated and cooked similar to chicken breast"",
+      ""where"": ""Produce or International section""
+    },
+    {
+      ""name_en"": ""Tempeh"",
+      ""match"": ""Different but works"",
+      ""desc"": ""A fermented soybean product with a nutty flavor, can be used as a meat substitute"",
+      ""where"": ""International or Health food section""
+    },
+    {
+      ""name_en"": ""Seitan"",
+      ""match"": ""Different but works"",
+      ""desc"": ""A meat substitute made from wheat gluten, has a chewy texture similar to chicken breast"",
+      ""where"": ""International or Health food section""
+    },
+    {
+      ""name_en"": ""Portobello Mushrooms"",
+      ""match"": ""Similar"",
+      ""desc"": ""A type of mushroom with a meaty texture, can be used as a vegetarian substitute in many recipes"",
+      ""where"": ""Produce section""
+    }
+  ]
+}",PASS,1.00,,All assertions passed,,"{
+    ""note"": ""Providing vegetarian alternatives to chicken breast for plant-based diets."",
+    ""alts"": [
+        {
+            ""name_en"": ""Tofu"",
+            ""match"": ""Different but works"",
+            ""desc"": ""Versatile soy-based protein that absorbs flavors well when cooked."",
+            ""where"": ""Refrigerated produce section""
+        },
+        {
+            ""name_en"": ""Seitan"",
+            ""match"": ""Different but works"",
+            ""desc"": ""Wheat-based meat substitute with chewy texture similar to chicken."",
+            ""where"": ""Refrigerated health food section""
+        },
+        {
+            ""name_en"": ""Tempeh"",
+            ""match"": ""Different but works"",
+            ""desc"": ""Fermented soybean cake with firm texture and nutty flavor."",
+            ""where"": ""Refrigerated health food section""
+        },
+        {
+            ""name_en"": ""Plant-based chicken strips"",
+            ""match"": ""Similar"",
+            ""desc"": ""Pre-made vegetarian chicken alternatives made from soy or pea protein."",
+            ""where"": ""Frozen foods section""
+        }
+    ]
+}",PASS,1.00,,All assertions passed,
+fish sauce + Korean taste — cuisine-appropriate alternatives,fish sauce,,Korean,,"{""note"": ""1 sentence why needed"", ""alts"": [{""name_en"": ""Name"", ""match"": ""Very close|Similar|Different but works"", ""desc"": ""1 sentence"", ""where"": ""Where in store""}]}`
+
+2.  **Evaluate ""Fish Sauce"" Alternatives for Korean Cuisine:**
+    *   *True Korean Fish Sauce:* There isn't a direct ""fish sauce"" used in the same way as Vietnamese (nam pla) or Thai (nam pla) in Korean cooking. Korean cooking often uses *Ganjang* (soy sauce) or *Vermicelli broth* (Tang/Jang-muk) or *Korean Anchovy Sauce* (Eom-dang). However, if someone specifically wants fish sauce for Korean cooking (e.g., for a marinade or specific dish like Japchae or certain stews), they might be looking for something that mimics the umami/salty fishy flavor.
+    *   *Authentic Korean Substitute:* **Korean Anchovy Sauce (Eom-dang / Eom-dang-guk)**. This is often used in soups, but there is a specific product called **""Changnyeong Fish Sauce""** or **""Korean Fish Sauce""**. Actually, many Korean households use **Anchovy Paste** or **Dried Anchovies (Jang-jeong)** to make their own.
+    *   *Common Store Alternative:* **Oyster Sauce** (often used in Korean stir-fries like Japchae, but not a direct fish sauce substitute).
+    *   **Better Match:** **Korean Anchovy Sauce (e.g., Gukje)** or **Soy Sauce + Sugar + Anchovy**.
+    *   *Wait, is there a direct Korean Fish Sauce?* Yes, some brands like **Chunghyang** or **Haeundae** make Korean-style fish sauce (Jang-ju). However, in North American stores, it's hard to find ""Korean Fish Sauce"" specifically distinct from Asian fish sauce.
+    *   *Alternative 1 (Very Close):* **Thai or Vietnamese Fish Sauce** (e.g., Red Boat, Lee Kum Kee). But the user wants *Korean* taste priority. Using Thai fish sauce in Korean cooking is common for umami, but not ""authentic"" to Korean cuisine specifically.
+    *   *Alternative 2 (Similar):* **Anchovy Paste** (e.g., Marmite, but Asian version).
+    *   *Alternative 3 (Different but works):* **Soy Sauce** (Ganjang) is the backbone of Korean cooking.
+    *   *Wait, the prompt asks for alternatives FOR fish sauce.*
+    *   If the user wants to replicate the flavor profile in a Korean dish, **Korean Anchovy Liquid (Jang-ju)** is the true equivalent, but it's rare.
+    *   A common substitute in Korean cooking for fish sauce (if required for a specific recipe) is **Soy Sauce** or **Miso**.
+    *   Actually, a more specific Korean product is **Korean Anchovy Sauce (Eom-dang)**.
+    *   Let's look for products available in North American stores (Korean markets, Asian supermarkets).
+    *   **Option 1:** **Lee Kum Kee Chinese Clear Seasoning** (No, not fishy).
+    *   **Option 2:** **Red Boat Fish Sauce** (Very common, but Vietnamese/Thai).
+    *   **Option 3:** **Chunghyang Special Fish Sauce** (Korean brand, available in some Asian stores).
+    *   **Option 4:** **Anchovy Broth** (Korean brand).
+    *   **Option 5:** **Ganjang (Soy Sauce)**. In Korean cooking, fish sauce is sometimes used in specific regional dishes (like some grilled fish dishes), but usually, soy sauce is the main salty/umami base.
+    *   *Correction:* There is a product called **""Korean Fish Sauce""** or **""Anchovy Seasoning""**.
+    *   Let's consider the match levels.
+    *   If I suggest **Soy Sauce**, it's ""Different but works"" because it's plant-based (mostly) and fundamental to Korean cuisine, but not the same product.
+    *   If I suggest **Oyster Sauce**, it's ""Similar"".
+    *   If I suggest **Thai Fish Sauce**, it's ""Very close"" (same product type, different brand/origin).
+    *   *Wait, the instruction says:* ""If user taste is specified, prioritize alternatives authentic to that cuisine.""
+    *   So I need Korean-specific products if possible.
+    *   **Korean Anchovy Sauce (Eom-dang):** This is closer.
+    *   **Ganjang (Korean Soy Sauce):** This is the primary seasoning.
+    *   **Korean Salted Jang:** No.
+    *   Let's check availability: **Chunghyang** brand is often available in larger Asian markets.
+    *   **Alternative:** **Dried Anchovies (Jang-jeong)** + water. But that's a process.
+    *   **Alternative:** **Soy Sauce (Ganjang)**.
+    *   **Alternative:** **Oyster Sauce**.
+    *   **Alternative:** **Miso**.
+    *   Let's try to find 3 distinct ones.
+    *   1. **Chunghyang Fish Sauce** (Korean brand, often available in Asian grocery). Match: Very close.
+    *   2. **Red Boat Fish Sauce** (Vietnamese, common substitute). Match: Similar.
+    *   3. **Ganjang (Soy Sauce)** (Korean specific). Match: Different but works.
+    *   4. **Anchovy Paste (Gukje)** (Korean). Match: Similar.
+
+    *Refining for ""Korean Taste"" priority:*
+    Korean cuisine doesn't typically use fish sauce (Nam Pla) like Thai/Vietnamese food. It uses **Ganjang (Soy Sauce)**. If someone is asking for fish sauce alternatives *for* Korean cooking, they might be trying to make a specific dish that calls for it (like a marinade for galbi or a specific soup).
+    However, if the user asks for alternatives *to fish sauce* (meaning they want to replace fish sauce in a recipe that requires it, but they like Korean food?), or they want fish sauce substitutes *within* Korean cooking?
+    The prompt says: ""Find 3-4 alternatives for 'fish sauce' ... User taste: Korean.""
+    This implies: The user wants to cook Korean food and needs a substitute for fish sauce (perhaps a recipe calls for it, or they want to replicate the flavor without specific Thai/Vietnamese brands).
+    Actually, it likely means: ""Give me fish sauce alternatives that work for Korean cooking.""
+    Authentic Korean equivalent to fish sauce is **Anchovy Seasoning** or just **Soy Sauce** depending on the dish.
+    Let's prioritize Korean products/brands.
+
+    *Selection:*
+    1.  **Chunghyang Fish Sauce** (Korean brand). Available in larger Asian supermarkets. Match: Very close.
+    2.  **Korean Anchovy Seasoning (Eom-dang)** (often found in liquid form). Match: Similar.
+    3.  **Ganjang (Korean Soy Sauce)** like **Mirin** or **Samyang**? No, just **Soy Sauce**. Match: Different but works.
+    4.  **Oyster Sauce** (e.g., Lee Kum Kee). Match: Similar.
+
+    *Wait, constraint check:* ""If a dietary restriction is given, EVERY alternative MUST be definitively compliant"". None given.
+    *Constraint check:* ""ONLY JSON"".
+    *Constraint check:* ""3-4 alternatives"".
+    *Constraint check:* ""match levels (use strictly)"".
+    *Constraint check:* ""prioritize alternatives authentic to that cuisine"".
+
+    *Re-evaluating Match Levels:*
+    - ""Very close"" = same product, different brand (e.g., another brand of sriracha).
+    - So, if I suggest another brand of Fish Sauce, that is ""Very close"".
+    - ""Similar"" = Different product type.
+    - ""Different but works"" = Plant-based for meat (not applicable here) or simply a functional substitute that isn't fish sauce.
+
+    *Decision:*
+    1.  **Lee Kum Kee Premium Fish Sauce**: It's the most common in NA. It's not Korean, but it's the standard ""Fish Sauce"". Is it ""Very close""? Yes, it's the same product type. But user taste is Korean. Is there a Korean brand? **Chunghyang** is a Korean brand.
+    2.  **Chunghyang Fish Sauce**: Korean brand. Match: Very close.
+    3.  **Korean Anchovy Broth (Guk-jang)**: Different product type (broth vs sauce). Match: Similar.
+    4.  **Soy Sauce (Ganjang)**: Plant-based base. Match: Different but works.
+
+    *Wait, is ""Chunghyang"" widely available in North American stores?* It's in major Asian markets (Korean grocery).
+    Better to suggest widely available alternatives if Chunghyang is too niche. But the prompt asks for ""North American stores"".
+    Let's use:
+    1.  **Lee Kum Kee Premium Fish Sauce**: Standard substitute. (Very close).
+    2.  **Korean Anchovy Sauce (Eom-dang)**: (Similar).
+    3.  **Korean Soy Sauce (Ganjang)**: (Different but works).
+    4.  **Oyster Sauce**: (Similar).
+
+    *Wait, ""Very close"" requires same product, different brand.*
+    If I suggest Lee Kum Kee, is that ""Very close"" to generic Fish Sauce? Yes.
+    Does it fit ""User taste: Korean""? Not specifically, but it's available.
+    The instruction says: ""If user taste is specified, prioritize alternatives authentic to that cuisine.""
+    So I should prioritize Korean brands if possible.
+    **Chunghyang** is the best bet for a Korean Fish Sauce.
+    **Jang-ju** (Korean Anchovy Water).
+    **Soy Sauce** (Ganjang).
+    **Anchovy Paste**.
+
+    Let's draft the JSON.
+    Note: Need 1 sentence why needed.
+    Alts: 3-4 items.
+    Fields: name_en, match, desc, where.
+
+    *Drafting content:*
+    Note: Korean cuisine rarely uses fish sauce, so these provide the umami/savory depth needed for specific marinades or soups.
+    1.  **Chunghyang Fish Sauce**: Korean brand, authentic fish flavor. Match: Very close. Where: Asian Grocery (Korean aisle).
+    2.  **Gukje Anchovy Seasoning**: Liquid anchovy product common in Korea. Match: Similar. Where: Korean Market.
+    3.  **Mirin & Soy Sauce Blend**: No, Soy Sauce. Match: Different but works.
+    4.  **Huiyoo Anchovy Paste**: Different product type. Match: Similar.
+
+    *Refining ""Very close"":*
+    If the base product is ""Fish Sauce"", then another brand of Fish Sauce is ""Very close"".
+    If the product is ""Korean Fish Sauce"", then ""Thai Fish Sauce"" is ""Very close"".
+    Let's assume ""Fish Sauce"" is the category.
+    1.  **Red Boat Premium Fish Sauce** (Standard, widely available). Match: Very close.
+    2.  **Chunghyang Fish Sauce** (Korean specific). Match: Very close.
+    3.  **Korean Anchovy Seasoning (Eom-dang)** (Broth/Paste). Match: Similar.
+    4.  **Korean Soy Sauce (Ganjang)** (Salt base). Match: Different but works.
+
+    *Wait, availability:* Chunghyang is hard to find in general ""North American stores"" (like Walmart/Kroger). It's found in ""Asian Markets"". The prompt says ""North American stores"". I should specify ""Asian Market"" or ""Korean Grocery"".
+    Let's try to stick to widely available ones if possible, but prioritize Korean taste.
+    Actually, **Gukje** Anchovy Seasoning is often found in Korean sections.
+    **Korean Soy Sauce** is easy.
+    **Oyster Sauce** is easy.
+
+    Let's settle on:
+    1.  **Chunghyang Fish Sauce**: Very close.
+    2.  **Korean Anchovy Seasoning (Eom-dang)**: Similar.
+    3.  **Ganjang (Korean Soy Sauce)**: Different but works.
+    4.  **Oyster Sauce**: Similar.
+
+    Wait, I need to ensure ""Very close"" is used correctly.
+    ""Very close"" = same product, different brand.
+    So if I list ""Fish Sauce"", another brand of Fish Sauce is ""Very close"".
+    If I list ""Korean Anchovy Sauce"", is it the same product? No, it's a different type (broth/seasoning). So ""Similar"".
+    So I can have multiple ""Very close"" entries if they are different brands of Fish Sauce.
+    But I need to prioritize Korean taste.
+    So I should list **Chunghyang** (Korean Fish Sauce) as Very Close.
+    Maybe **Lee Kum Kee** is less authentic for Korean taste.
+    Let's include **Chunghyang**.
+    Then **Korean Anchovy Seasoning** (Eom-dang) is ""Similar"".
+    Then **Soy Sauce** is ""Different but works"".
+    Then **Oyster Sauce** is ""Similar"".
+
+    Wait, looking at the instruction: ""If user taste is specified, prioritize alternatives authentic to that cuisine.""
+    Korean cuisine doesn't typically use fish sauce. It uses *Ganjang*.
+    If the user is asking for alternatives to fish sauce *for Korean cooking*, then Soy Sauce is the most authentic replacement.
+    But if they want a substitute *for fish sauce* that fits their palate (Korean), they might want something savory/umami.
+    Let's assume they want to use a Korean-friendly substitute.
+    1. **Chunghyang Fish Sauce**: Very close (Authentic Korean brand).
+    2. **Korean Anchovy Seasoning**: Similar (Broth/Paste).
+    3. **Mirin**: No.
+    4. **Soy Sauce**: Different but works.
+
+    Let's refine the ""Where"".
+    ""Korean Grocery Store"" or ""Asian Market"".
+
+    *Wait, checking ""Very close"" definition again:*
+    ""Very close"" = same product, different brand (e.g., another brand of sriracha).
+    So, if I list ""Fish Sauce"", any brand is ""Very close"".
+    So I can have multiple ""Very close"" items.
+    But I need 3-4 alternatives.
+    I will list:
+    1. Chunghyang Fish Sauce (Korean brand).
+    2. Red Boat Fish Sauce (Common NA brand, but Thai/Vietnamese).
+    3. Korean Anchovy Seasoning (Eom-dang).
+    4. Soy Sauce (Ganjang).
+
+    Wait, if I want to prioritize Korean taste, Red Boat is less prioritized than Chunghyang.
+    Let's check if Chunghyang is easily found in NA stores. It's in Asian markets.
+    Okay, I will proceed with these.
+
+    *Wait, one more check:* ""If a dietary restriction is given, EVERY alternative MUST be definitively compliant — no 'if available' or 'check label' items.""
+    No dietary restriction given.
+    ""ONLY JSON"".
+
+    *Structure Check:*
+    `{""note"": ""..."", ""alts"": [{""name_en"": ""..."", ""match"": ""..."", ""desc"": ""..."", ""where"": ""...""}]}`
+
+    *Drafting the JSON:*
+    Note: These substitutes provide the necessary umami depth for Korean dishes where fish sauce might be requested or used for specific marinades.
+    1. Chunghyang Fish Sauce. Match: Very close. Desc: Authentic Korean brand offering the same savory fish flavor. Where: Asian market Korean aisle.
+    2. Gukje Anchovy Seasoning. Match: Similar. Desc: Liquid anchovy seasoning common in Korean households. Where: Korean grocery specialty section.
+    3. Korean Soy Sauce (Ganjang). Match: Different but works. Desc: Primary salty base in Korean cooking used to replace savory depth. Where: Asian market or regular grocery.
+    4. Oyster Sauce. Match: Similar. Desc: Thick savory sauce often used in Korean stir-fries. Where: Sauce aisle or Asian market.
+
+    Wait, is ""Gukje"" a specific product name? It's a brand of Anchovy Seasoning.
+    Is ""Oyster Sauce"" really ""Similar"" to Fish Sauce? Yes, both are liquid umami, but one is oyster, one is fish.
+    Is ""Soy Sauce"" ""Different but works""? Yes, plant-based.
+
+    One detail: ""If user taste is specified, prioritize alternatives authentic to that cuisine.""
+    So I should put the Korean specific ones first.
+    Also, make sure the JSON is valid.
+
+    *Final Polish:*
+    Note: Since Korean cuisine rarely relies on fish sauce, these options provide the savory umami profile needed for specific marinades or soups.
+    1. Chunghyang Fish Sauce. Very close. Authentic Korean brand for identical flavor. Asian market.
+    2.",FAIL,0.29,,"The output attempts to address Korean cuisine alternatives but is extremely disorganized - it's essentially a stream-of-consciousness brainstorming session rather than a final JSON response. It never produces a complete, valid JSON output. However, evaluating the substance: the output does identify relevant Korean alternatives like Korean anchovy sauce (액젓/eom-dang), Korean soy sauce (ganjang), and Korean fish sauce brands. It correctly recognizes that Korean cuisine uses anchovy sauce (액젓) as the equivalent of fish sauce, and mentions soy sauce (간장) as a different-but-works option. The match levels discussed are generally honest - fish sauce brands as 'Very close', anchovy seasoning as 'Similar', and soy sauce as 'Different but works'. The output does prioritize Korean-authentic alternatives as requested. However, the romanizations are sometimes inaccurate (e.g., 'Eom-dang' is not standard for 액젓, 'Jang-jeong' for dried anchovies is incorrect), and the output is incomplete - it cuts off mid-sentence without delivering a final clean JSON. Despite the mess, the core recommendations (Korean fish sauce, Korean anchovy sauce, Korean soy sauce, oyster sauce) are cuisine-appropriate and the match levels are reasonably honest.",,"{
+  ""note"": ""Fish sauce is a common ingredient in Korean cuisine, but it may not be easily found in all North American stores."",
+  ""alts"": [
+    {""name_en"": ""Nama shoyu"", ""match"": ""Similar"", ""desc"": ""A Japanese fermented soybean paste that can provide a similar umami flavor, often used in Korean cooking."", ""where"": ""International or Asian food section""},
+    {""name_en"": ""Korean chili paste (gochujang) with anchovy or fish stock"", ""match"": ""Different but works"", ""desc"": ""While not a direct substitute, combining gochujang with anchovy or fish stock can replicate the savory, umami flavor of fish sauce in Korean dishes."", ""where"": ""International or Asian food section""},
+    {""name_en"": ""Soy sauce with kombu dashi"", ""match"": ""Similar"", ""desc"": ""Mixing soy sauce with kombu dashi (a Japanese seaweed stock) can create a similar savory flavor profile to fish sauce, suitable for Korean recipes."", ""where"": ""International or Asian food section""},
+    {""name_en"": ""Doenjang (Korean fermented soybean paste)"", ""match"": ""Similar"", ""desc"": ""While thicker and with a stronger flavor, doenjang can be used diluted as a substitute for fish sauce in some Korean recipes."", ""where"": ""International or Asian food section""}
+  ]
+}",FAIL,0.67,,"The output provides alternatives that could work in Korean cooking, but misses the most obvious and ideal Korean-specific substitutes like 국간장 (soup soy sauce) and 액젓 (Korean anchovy sauce/fish sauce). Instead, it suggests somewhat unusual substitutes like 'Nama shoyu' (a Japanese raw soy sauce, which is not commonly used in Korean cooking and is oddly described as 'fermented soybean paste'), and a combination of gochujang with anchovy stock, which is a stretch. Doenjang is a reasonable suggestion but is quite different from fish sauce. The alternatives are not the most cuisine-appropriate choices for Korean cooking. Additionally, 'Nama shoyu' is incorrectly described as a 'fermented soybean paste' when it's actually a raw/unpasteurized soy sauce. The match levels are somewhat honest but the descriptions contain inaccuracies. Overall, the response shows some awareness of Korean cuisine but fails to suggest the most natural and commonly used Korean alternatives.",,"{
+    ""note"": ""Fish sauce is essential for Korean cooking's umami depth."",
+    ""alts"": [
+        {
+            ""name_en"": ""Anchovy sauce (Myeolchi Aekjeot)"",
+            ""match"": ""Very close"",
+            ""desc"": ""Korean fermented anchovy sauce that is the traditional base for many soups and stews."",
+            ""where"": ""Korean/Asian market, international aisle""
+        },
+        {
+            ""name_en"": ""Shrimp sauce (Saeu-jeot)"",
+            ""match"": ""Very close"",
+            ""desc"": ""Korean fermented shrimp sauce used similarly to fish sauce in seasoning and kimchi."",
+            ""where"": ""Korean/Asian market, international aisle""
+        },
+        {
+            ""name_en"": ""Soy sauce + dashima (Guk-ganjang)"",
+            ""match"": ""Similar"",
+            ""desc"": ""Light Korean soup soy sauce brewed with dried kelp, offering savory depth without fish."",
+            ""where"": ""Korean/Asian market, international aisle""
+        },
+        {
+            ""name_en"": ""Doenjang (fermented soybean paste)"",
+            ""match"": ""Different but works"",
+            ""desc"": ""Korean fermented soybean paste provides deep umami, though thicker and saltier than fish sauce."",
+            ""where"": ""Korean/Asian market, refrigerated section""
+        }
+    ]
+}",PASS,0.99,,All assertions passed,
