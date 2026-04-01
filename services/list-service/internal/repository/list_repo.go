@@ -3,10 +3,20 @@ package repository
 import (
 	"context"
 	"fmt"
+	"time"
 
+	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/metrics"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/model"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
+
+// observeQuery records query duration and, on error, increments the error counter.
+func observeQuery(operation string, start time.Time, err error) {
+	metrics.DBQueryDuration.WithLabelValues(operation).Observe(time.Since(start).Seconds())
+	if err != nil {
+		metrics.DBQueryErrors.WithLabelValues(operation).Inc()
+	}
+}
 
 type ListRepo struct {
 	db *pgxpool.Pool
@@ -18,7 +28,10 @@ func NewListRepo(db *pgxpool.Pool) *ListRepo {
 
 // ── Sections ─────────────────────────────────────────────
 
-func (r *ListRepo) GetSections(ctx context.Context, userID string) ([]model.Section, error) {
+func (r *ListRepo) GetSections(ctx context.Context, userID string) (_ []model.Section, err error) {
+	start := time.Now()
+	defer func() { observeQuery("get_sections", start, err) }()
+
 	rows, err := r.db.Query(ctx,
 		`SELECT id, user_id, name, position, deleted_at, created_at, updated_at
 		 FROM sections
@@ -42,9 +55,12 @@ func (r *ListRepo) GetSections(ctx context.Context, userID string) ([]model.Sect
 	return sections, rows.Err()
 }
 
-func (r *ListRepo) CreateSection(ctx context.Context, userID, name string, position int) (*model.Section, error) {
+func (r *ListRepo) CreateSection(ctx context.Context, userID, name string, position int) (_ *model.Section, err error) {
+	start := time.Now()
+	defer func() { observeQuery("create_section", start, err) }()
+
 	var s model.Section
-	err := r.db.QueryRow(ctx,
+	err = r.db.QueryRow(ctx,
 		`INSERT INTO sections (user_id, name, position)
 		 VALUES ($1, $2, $3)
 		 RETURNING id, user_id, name, position, deleted_at, created_at, updated_at`,
@@ -56,9 +72,12 @@ func (r *ListRepo) CreateSection(ctx context.Context, userID, name string, posit
 	return &s, nil
 }
 
-func (r *ListRepo) UpdateSection(ctx context.Context, id, userID string, req model.UpdateSectionRequest) (*model.Section, error) {
+func (r *ListRepo) UpdateSection(ctx context.Context, id, userID string, req model.UpdateSectionRequest) (_ *model.Section, err error) {
+	start := time.Now()
+	defer func() { observeQuery("update_section", start, err) }()
+
 	var s model.Section
-	err := r.db.QueryRow(ctx,
+	err = r.db.QueryRow(ctx,
 		`UPDATE sections
 		 SET name      = CASE WHEN $3 != '' THEN $3 ELSE name END,
 		     position  = CASE WHEN $4 IS NOT NULL THEN $4 ELSE position END,
@@ -73,7 +92,10 @@ func (r *ListRepo) UpdateSection(ctx context.Context, id, userID string, req mod
 	return &s, nil
 }
 
-func (r *ListRepo) DeleteSection(ctx context.Context, id, userID string) error {
+func (r *ListRepo) DeleteSection(ctx context.Context, id, userID string) (err error) {
+	start := time.Now()
+	defer func() { observeQuery("delete_section", start, err) }()
+
 	tag, err := r.db.Exec(ctx,
 		`UPDATE sections SET deleted_at = NOW(), updated_at = NOW()
 		 WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL`,
@@ -90,7 +112,10 @@ func (r *ListRepo) DeleteSection(ctx context.Context, id, userID string) error {
 
 // ── Items ────────────────────────────────────────────────
 
-func (r *ListRepo) GetItems(ctx context.Context, sectionID, userID string) ([]model.Item, error) {
+func (r *ListRepo) GetItems(ctx context.Context, sectionID, userID string) (_ []model.Item, err error) {
+	start := time.Now()
+	defer func() { observeQuery("get_items", start, err) }()
+
 	rows, err := r.db.Query(ctx,
 		`SELECT i.id, i.section_id, i.name_en, i.name_secondary, i.quantity, i.checked, i.deleted_at, i.created_at, i.updated_at
 		 FROM items i
@@ -115,13 +140,16 @@ func (r *ListRepo) GetItems(ctx context.Context, sectionID, userID string) ([]mo
 	return items, rows.Err()
 }
 
-func (r *ListRepo) CreateItem(ctx context.Context, sectionID, userID string, req model.CreateItemRequest) (*model.Item, error) {
+func (r *ListRepo) CreateItem(ctx context.Context, sectionID, userID string, req model.CreateItemRequest) (_ *model.Item, err error) {
+	start := time.Now()
+	defer func() { observeQuery("create_item", start, err) }()
+
 	qty := 1
 	if req.Quantity > 0 {
 		qty = req.Quantity
 	}
 	var i model.Item
-	err := r.db.QueryRow(ctx,
+	err = r.db.QueryRow(ctx,
 		`INSERT INTO items (section_id, name_en, name_secondary, quantity)
 		 SELECT $1, $2, $3, $4
 		 WHERE EXISTS (SELECT 1 FROM sections WHERE id = $1 AND user_id = $5 AND deleted_at IS NULL)
@@ -134,9 +162,12 @@ func (r *ListRepo) CreateItem(ctx context.Context, sectionID, userID string, req
 	return &i, nil
 }
 
-func (r *ListRepo) UpdateItem(ctx context.Context, id, userID string, req model.UpdateItemRequest) (*model.Item, error) {
+func (r *ListRepo) UpdateItem(ctx context.Context, id, userID string, req model.UpdateItemRequest) (_ *model.Item, err error) {
+	start := time.Now()
+	defer func() { observeQuery("update_item", start, err) }()
+
 	var i model.Item
-	err := r.db.QueryRow(ctx,
+	err = r.db.QueryRow(ctx,
 		`UPDATE items
 		 SET name_en        = CASE WHEN $2 != '' THEN $2 ELSE name_en END,
 		     name_secondary = COALESCE($3, name_secondary),
@@ -154,7 +185,10 @@ func (r *ListRepo) UpdateItem(ctx context.Context, id, userID string, req model.
 	return &i, nil
 }
 
-func (r *ListRepo) DeleteItem(ctx context.Context, id, userID string) error {
+func (r *ListRepo) DeleteItem(ctx context.Context, id, userID string) (err error) {
+	start := time.Now()
+	defer func() { observeQuery("delete_item", start, err) }()
+
 	tag, err := r.db.Exec(ctx,
 		`UPDATE items SET deleted_at = NOW(), updated_at = NOW()
 		 FROM sections s
