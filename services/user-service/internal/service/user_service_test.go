@@ -65,6 +65,10 @@ func (m *mockUserRepo) UpdateProfile(ctx context.Context, userID string, req mod
 	return args.Get(0).(*model.Profile), args.Error(1)
 }
 
+func (m *mockUserRepo) DeleteUser(ctx context.Context, userID string) error {
+	return m.Called(ctx, userID).Error(0)
+}
+
 // ── Helpers ──────────────────────────────────────────────
 
 var testUUID = pgtype.UUID{

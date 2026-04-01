@@ -18,6 +18,7 @@ type userServicer interface {
 	Login(ctx context.Context, req model.LoginRequest) (*model.AuthResponse, error)
 	GetProfile(ctx context.Context, userID string) (*model.ProfileView, error)
 	UpdateProfile(ctx context.Context, userID string, req model.UpdateProfileRequest) (*model.ProfileView, error)
+	DeleteUser(ctx context.Context, userID string) error
 }
 
 type Handler struct {
@@ -78,6 +79,29 @@ func (h *Handler) GetProfile(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, profile)
+}
+
+func (h *Handler) DeleteUser(c *gin.Context) {
+	userID, _ := c.Get("userID")
+
+	if err := h.svc.DeleteUser(c.Request.Context(), userID.(string)); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not delete user"})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+}
+
+// UserExists is an internal endpoint for service-to-service calls.
+// Returns 200 if user exists, 404 if not.
+func (h *Handler) UserExists(c *gin.Context) {
+	userID := c.Param("id")
+	_, err := h.svc.GetProfile(c.Request.Context(), userID)
+	if err != nil {
+		c.Status(http.StatusNotFound)
+		return
+	}
+	c.Status(http.StatusOK)
 }
 
 func (h *Handler) UpdateProfile(c *gin.Context) {

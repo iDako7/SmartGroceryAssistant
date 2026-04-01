@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/events"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/handler"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/metrics"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/middleware"
@@ -22,6 +23,7 @@ func main() {
 
 	dbURL := mustEnv("USER_DB_URL")
 	jwtSecret := mustEnv("JWT_SECRET")
+	amqpURL := getEnv("RABBITMQ_URL", "amqp://sga:sga_secret@localhost:5672/")
 	port := getEnv("USER_SERVICE_PORT", "4001")
 
 	db, err := pgxpool.New(context.Background(), dbURL)
@@ -47,8 +49,20 @@ func main() {
 		}
 	}()
 
+	// Connect to RabbitMQ for user lifecycle events.
+	pub, err := events.NewPublisher(amqpURL)
+	if err != nil {
+		log.Printf("warning: rabbitmq not available, user.deleted events will not be published: %v", err)
+	} else {
+		log.Println("connected to rabbitmq")
+	}
+
 	repo := repository.NewUserRepo(db)
-	svc := service.NewUserService(repo, jwtSecret)
+	var svcOpts []func(*service.UserService)
+	if pub != nil {
+		svcOpts = append(svcOpts, service.WithPublisher(pub))
+	}
+	svc := service.NewUserService(repo, jwtSecret, svcOpts...)
 	h := handler.New(svc)
 
 	r := gin.Default()
@@ -62,6 +76,7 @@ func main() {
 	{
 		users.POST("/register", h.Register)
 		users.POST("/login", h.Login)
+		users.GET("/internal/exists/:id", h.UserExists) // service-to-service
 	}
 
 	// Profile — JWT required
@@ -69,6 +84,7 @@ func main() {
 	{
 		me.GET("/me", h.GetProfile)
 		me.PUT("/me", h.UpdateProfile)
+		me.DELETE("/me", h.DeleteUser)
 	}
 
 	log.Printf("user-service listening on :%s", port)

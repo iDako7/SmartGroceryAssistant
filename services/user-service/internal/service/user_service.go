@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -26,20 +27,36 @@ type UserRepository interface {
 	CreateProfile(ctx context.Context, user model.User) (*model.Profile, error)
 	GetProfileByUserID(ctx context.Context, userID string) (*model.Profile, error)
 	UpdateProfile(ctx context.Context, userID string, req model.UpdateProfileRequest) (*model.Profile, error)
+	DeleteUser(ctx context.Context, userID string) error
+}
+
+// EventPublisher publishes user lifecycle events to RabbitMQ.
+type EventPublisher interface {
+	PublishUserDeleted(ctx context.Context, userID string) error
 }
 
 type UserService struct {
 	repo      UserRepository
+	pub       EventPublisher
 	jwtSecret string
 	jwtTTL    time.Duration
 }
 
-func NewUserService(repo UserRepository, jwtSecret string) *UserService {
-	return &UserService{
+func NewUserService(repo UserRepository, jwtSecret string, opts ...func(*UserService)) *UserService {
+	s := &UserService{
 		repo:      repo,
 		jwtSecret: jwtSecret,
 		jwtTTL:    7 * 24 * time.Hour,
 	}
+	for _, o := range opts {
+		o(s)
+	}
+	return s
+}
+
+// WithPublisher sets the event publisher (optional — degrades gracefully if nil).
+func WithPublisher(pub EventPublisher) func(*UserService) {
+	return func(s *UserService) { s.pub = pub }
 }
 
 func (s *UserService) Register(ctx context.Context, req model.RegisterRequest) (*model.AuthResponse, error) {
@@ -136,6 +153,22 @@ func (s *UserService) UpdateProfile(ctx context.Context, userID string, req mode
 		TastePreferences:    profile.TastePreferences,
 	}
 	return &view, nil
+}
+
+func (s *UserService) DeleteUser(ctx context.Context, userID string) error {
+	if err := s.repo.DeleteUser(ctx, userID); err != nil {
+		return err
+	}
+
+	// Publish user.deleted event so downstream services can clean up.
+	if s.pub != nil {
+		if err := s.pub.PublishUserDeleted(ctx, userID); err != nil {
+			// Log but don't fail — the user is already deleted.
+			// The periodic cleanup job (option 4) will catch orphaned data.
+			log.Printf("warning: failed to publish user.deleted for %s: %v", userID, err)
+		}
+	}
+	return nil
 }
 
 func (s *UserService) issueToken(user *model.User) (string, error) {

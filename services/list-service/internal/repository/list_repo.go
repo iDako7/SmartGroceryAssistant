@@ -204,6 +204,38 @@ func (r *ListRepo) DeleteItem(ctx context.Context, id, userID string) (err error
 	return nil
 }
 
+// ── User cleanup ────────────────────────────────────────
+
+func (r *ListRepo) SoftDeleteAllByUser(ctx context.Context, userID string) (sections int64, items int64, err error) {
+	start := time.Now()
+	defer func() { observeQuery("soft_delete_all_by_user", start, err) }()
+
+	// Soft-delete all items belonging to this user's sections.
+	tag, err := r.db.Exec(ctx,
+		`UPDATE items SET deleted_at = NOW(), updated_at = NOW()
+		 FROM sections s
+		 WHERE items.section_id = s.id AND s.user_id = $1 AND items.deleted_at IS NULL`,
+		userID,
+	)
+	if err != nil {
+		return 0, 0, fmt.Errorf("soft-delete items for user %s: %w", userID, err)
+	}
+	items = tag.RowsAffected()
+
+	// Soft-delete all sections for this user.
+	tag, err = r.db.Exec(ctx,
+		`UPDATE sections SET deleted_at = NOW(), updated_at = NOW()
+		 WHERE user_id = $1 AND deleted_at IS NULL`,
+		userID,
+	)
+	if err != nil {
+		return 0, items, fmt.Errorf("soft-delete sections for user %s: %w", userID, err)
+	}
+	sections = tag.RowsAffected()
+
+	return sections, items, nil
+}
+
 // ── Full list ────────────────────────────────────────────
 
 func (r *ListRepo) GetFullList(ctx context.Context, userID string) ([]model.Section, map[string][]model.Item, error) {

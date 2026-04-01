@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/cleanup"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/events"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/handler"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/metrics"
@@ -24,6 +25,7 @@ func main() {
 	dbURL := mustEnv("LIST_DB_URL")
 	jwtSecret := mustEnv("JWT_SECRET")
 	amqpURL := getEnv("RABBITMQ_URL", "amqp://sga:sga_secret@localhost:5672/")
+	userServiceURL := getEnv("USER_SERVICE_URL", "http://localhost:4001")
 	port := getEnv("LIST_SERVICE_PORT", "4002")
 
 	db, err := pgxpool.New(context.Background(), dbURL)
@@ -79,6 +81,20 @@ func main() {
 		lists.PUT("/items/:id", h.UpdateItem)
 		lists.DELETE("/items/:id", h.DeleteItem)
 	}
+
+	// Start user.deleted event consumer (Option 1: event-driven saga).
+	consumer, err := events.NewConsumer(amqpURL, func(ctx context.Context, userID string) error {
+		return svc.SoftDeleteAllByUser(ctx, userID)
+	})
+	if err != nil {
+		log.Printf("warning: could not start user.deleted consumer: %v", err)
+	} else {
+		go consumer.Start(context.Background())
+	}
+
+	// Start periodic orphan cleanup job (Option 4: safety net).
+	orphanCleanup := cleanup.NewOrphanCleanup(db, userServiceURL, 10*time.Minute)
+	go orphanCleanup.Start(context.Background())
 
 	log.Printf("list-service listening on :%s", port)
 	if err := r.Run(":" + port); err != nil {
