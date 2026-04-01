@@ -1,0 +1,374 @@
+# Test fixtures for the inspire/item endpoint eval.
+# 5 cases covering two user personas (immigrant + local Canadian exploring cuisines).
+# Each case has: is-json schema check, javascript structure validation, and 2x llm-rubric judges.
+# Variables (name_en, other_items, taste, profile_context) map to the prompt template.
+
+# ── Case 1: Simple, clear direction (Japanese) ──────────
+- description: "salmon + rice/soy sauce — simple Japanese direction"
+  vars:
+    name_en: "salmon"
+    other_items: "rice, soy sauce"
+    taste: ""
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["recipes"]
+        properties:
+          recipes:
+            type: array
+            minItems: 3
+            maxItems: 3
+            items:
+              type: object
+              required: ["name", "emoji", "desc", "add"]
+              properties:
+                name: { type: string }
+                emoji: { type: string }
+                desc: { type: string }
+                add:
+                  type: array
+                  minItems: 2
+                  maxItems: 3
+                  items:
+                    type: object
+                    required: ["name_en"]
+                    properties:
+                      name_en: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.recipes && d.recipes.length === 3 &&
+          d.recipes.every(r =>
+            r.name && r.emoji && r.desc &&
+            r.desc.split(/\s+/).length <= 8 &&
+            r.add && r.add.length >= 2 && r.add.length <= 3 &&
+            r.add.every(a => a.name_en)
+          );
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid recipe structure' };
+    - type: llm-rubric
+      value: |
+        Recipes are practical home cooking, not restaurant complexity.
+        Each recipe genuinely uses salmon as a key ingredient, not a garnish.
+        Added ingredients (add items) are NOT rice or soy sauce (already in user's list).
+        With rice and soy sauce present, recipes should lean Japanese/Asian but variety is welcome.
+        Descriptions are concise and genuinely descriptive (max 8 words).
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Recipes are practical home cooking, not restaurant complexity.
+        Each recipe genuinely uses salmon as a key ingredient, not a garnish.
+        Added ingredients (add items) are NOT rice or soy sauce (already in user's list).
+        With rice and soy sauce present, recipes should lean Japanese/Asian but variety is welcome.
+        Descriptions are concise and genuinely descriptive (max 8 words).
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# ── Case 2: Korean direction (strong cuisine signal) ────
+- description: "tofu + gochujang/sesame oil/rice — Korean direction"
+  vars:
+    name_en: "tofu"
+    other_items: "gochujang, sesame oil, rice"
+    taste: ""
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["recipes"]
+        properties:
+          recipes:
+            type: array
+            minItems: 3
+            maxItems: 3
+            items:
+              type: object
+              required: ["name", "emoji", "desc", "add"]
+              properties:
+                name: { type: string }
+                emoji: { type: string }
+                desc: { type: string }
+                add:
+                  type: array
+                  minItems: 2
+                  maxItems: 3
+                  items:
+                    type: object
+                    required: ["name_en"]
+                    properties:
+                      name_en: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const otherItems = ['gochujang', 'sesame oil', 'rice'];
+        const noDupes = d.recipes.every(r =>
+          r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+        );
+        const valid = d.recipes && d.recipes.length === 3 &&
+          d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+            r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+        return {
+          pass: valid && noDupes,
+          score: valid && noDupes ? 1 : 0,
+          reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+        };
+    - type: llm-rubric
+      value: |
+        Recipes are practical home cooking, not restaurant complexity.
+        Each recipe genuinely uses tofu as a key ingredient, not a garnish.
+        Added ingredients are NOT gochujang, sesame oil, or rice (already in user's list).
+        With gochujang and sesame oil present, recipes MUST be Korean-influenced.
+        At least 2 of 3 recipes should be recognizably Korean dishes.
+        Descriptions are concise and genuinely descriptive (max 8 words).
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Recipes are practical home cooking, not restaurant complexity.
+        Each recipe genuinely uses tofu as a key ingredient, not a garnish.
+        Added ingredients are NOT gochujang, sesame oil, or rice (already in user's list).
+        With gochujang and sesame oil present, recipes MUST be Korean-influenced.
+        At least 2 of 3 recipes should be recognizably Korean dishes.
+        Descriptions are concise and genuinely descriptive (max 8 words).
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# ── Case 3: No context — diverse recipes ────────────────
+- description: "avocado + no other items — should produce diverse recipes"
+  vars:
+    name_en: "avocado"
+    other_items: "none"
+    taste: ""
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["recipes"]
+        properties:
+          recipes:
+            type: array
+            minItems: 3
+            maxItems: 3
+            items:
+              type: object
+              required: ["name", "emoji", "desc", "add"]
+              properties:
+                name: { type: string }
+                emoji: { type: string }
+                desc: { type: string }
+                add:
+                  type: array
+                  minItems: 2
+                  maxItems: 3
+                  items:
+                    type: object
+                    required: ["name_en"]
+                    properties:
+                      name_en: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.recipes && d.recipes.length === 3 &&
+          d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+            r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+        // Check diversity: all 3 recipe names should be different
+        const names = d.recipes.map(r => r.name.toLowerCase());
+        const diverse = new Set(names).size === 3;
+        return {
+          pass: valid && diverse,
+          score: valid && diverse ? 1 : 0,
+          reason: !valid ? 'Invalid structure' : !diverse ? 'Recipes not diverse enough' : 'OK'
+        };
+    - type: llm-rubric
+      value: |
+        Recipes are practical home cooking, not restaurant complexity.
+        Each recipe genuinely uses avocado as a key ingredient, not a garnish.
+        With NO other items or cuisine hints, the 3 recipes should span different
+        cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3 Mexican dishes).
+        Diversity is the key test here.
+        Descriptions are concise and genuinely descriptive (max 8 words).
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Recipes are practical home cooking, not restaurant complexity.
+        Each recipe genuinely uses avocado as a key ingredient, not a garnish.
+        With NO other items or cuisine hints, the 3 recipes should span different
+        cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3 Mexican dishes).
+        Diversity is the key test here.
+        Descriptions are concise and genuinely descriptive (max 8 words).
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# ── Case 4: Profile conflict (Mexican ingredients + vegetarian) ──
+- description: "chicken thigh + Mexican items + vegetarian profile — conflict handling"
+  vars:
+    name_en: "chicken thigh"
+    other_items: "tortillas, cilantro, lime"
+    taste: ""
+    profile_context: "\nDietary: vegetarian."
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["recipes"]
+        properties:
+          recipes:
+            type: array
+            minItems: 3
+            maxItems: 3
+            items:
+              type: object
+              required: ["name", "emoji", "desc", "add"]
+              properties:
+                name: { type: string }
+                emoji: { type: string }
+                desc: { type: string }
+                add:
+                  type: array
+                  minItems: 2
+                  maxItems: 3
+                  items:
+                    type: object
+                    required: ["name_en"]
+                    properties:
+                      name_en: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const otherItems = ['tortillas', 'cilantro', 'lime'];
+        const noDupes = d.recipes.every(r =>
+          r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+        );
+        const valid = d.recipes && d.recipes.length === 3 &&
+          d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+            r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+        return {
+          pass: valid && noDupes,
+          score: valid && noDupes ? 1 : 0,
+          reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+        };
+    - type: llm-rubric
+      value: |
+        This is a CONFLICT test. The user asks about chicken thigh but has a vegetarian
+        dietary restriction in their profile.
+        The model should handle this gracefully — either:
+        (a) still provide chicken recipes since the user explicitly asked about chicken thigh
+            (respecting user agency), OR
+        (b) note the conflict and offer vegetarian alternatives.
+        Either approach is acceptable, but ignoring the conflict entirely is NOT acceptable.
+        Added ingredients should NOT be tortillas, cilantro, or lime (already in list).
+        Recipes should lean Mexican given the other items.
+        Descriptions are concise and genuinely descriptive (max 8 words).
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        This is a CONFLICT test. The user asks about chicken thigh but has a vegetarian
+        dietary restriction in their profile.
+        The model should handle this gracefully — either:
+        (a) still provide chicken recipes since the user explicitly asked about chicken thigh
+            (respecting user agency), OR
+        (b) note the conflict and offer vegetarian alternatives.
+        Either approach is acceptable, but ignoring the conflict entirely is NOT acceptable.
+        Added ingredients should NOT be tortillas, cilantro, or lime (already in list).
+        Recipes should lean Mexican given the other items.
+        Descriptions are concise and genuinely descriptive (max 8 words).
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# ── Case 5: Authentic Chinese (local exploring) ─────────
+- description: "bok choy + garlic/oyster sauce — authentic Chinese, not fusion"
+  vars:
+    name_en: "bok choy"
+    other_items: "garlic, oyster sauce"
+    taste: ""
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["recipes"]
+        properties:
+          recipes:
+            type: array
+            minItems: 3
+            maxItems: 3
+            items:
+              type: object
+              required: ["name", "emoji", "desc", "add"]
+              properties:
+                name: { type: string }
+                emoji: { type: string }
+                desc: { type: string }
+                add:
+                  type: array
+                  minItems: 2
+                  maxItems: 3
+                  items:
+                    type: object
+                    required: ["name_en"]
+                    properties:
+                      name_en: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const otherItems = ['garlic', 'oyster sauce'];
+        const noDupes = d.recipes.every(r =>
+          r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+        );
+        const valid = d.recipes && d.recipes.length === 3 &&
+          d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+            r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+        return {
+          pass: valid && noDupes,
+          score: valid && noDupes ? 1 : 0,
+          reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+        };
+    - type: llm-rubric
+      value: |
+        Recipes are practical home cooking, not restaurant complexity.
+        Each recipe genuinely uses bok choy as a key ingredient, not a garnish.
+        Added ingredients are NOT garlic or oyster sauce (already in user's list).
+        With garlic and oyster sauce, recipes should be authentically Chinese.
+        Recipes should NOT be fusion or westernized — a local Canadian exploring
+        Chinese cuisine wants authentic dishes, not "bok choy Caesar salad."
+        At least 2 of 3 recipes should be recognizably Chinese dishes.
+        Descriptions are concise and genuinely descriptive (max 8 words).
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Recipes are practical home cooking, not restaurant complexity.
+        Each recipe genuinely uses bok choy as a key ingredient, not a garnish.
+        Added ingredients are NOT garlic or oyster sauce (already in user's list).
+        With garlic and oyster sauce, recipes should be authentically Chinese.
+        Recipes should NOT be fusion or westernized — a local Canadian exploring
+        Chinese cuisine wants authentic dishes, not "bok choy Caesar salad."
+        At least 2 of 3 recipes should be recognizably Chinese dishes.
+        Descriptions are concise and genuinely descriptive (max 8 words).
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
