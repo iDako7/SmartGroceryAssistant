@@ -1,0 +1,1556 @@
+Description,name_en,other_items,taste,profile_context,"[Llama 4 Maverick ($0.15/M)] prompts/current/inspire_item.json: [{""role"":""system"",""content"":""You are a creative cooking assistant. Respond with JSON only.""},{""role"":""user"",""content"":""Cooking assistant. User has \""{{name_en}}\"".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther items: {{other_items}}{% if profile_context %}{{profile_context}}{% endif %}\n3 recipe ideas, each with 2-3 extra ingredients the user does NOT already have.\nRecipes must span different cooking styles (e.g., not two salads or two stir-fries).{% if profile_context %}\nIf the focal item conflicts with the user's dietary restrictions, acknowledge the conflict and adapt all recipes to the restriction.{% endif %}\nONLY JSON: {\""recipes\"": [{\""name\"": \""Name\"", \""emoji\"": \""🍳\"", \""desc\"": \""Max 8 words\"", \""add\"": [{\""name_en\"": \""Item\""}]}]}""}]",Status,Score,Named Scores,Grader Reason,Comment,"[DeepSeek V3.2 ($0.26/M)] prompts/current/inspire_item.json: [{""role"":""system"",""content"":""You are a creative cooking assistant. Respond with JSON only.""},{""role"":""user"",""content"":""Cooking assistant. User has \""{{name_en}}\"".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther items: {{other_items}}{% if profile_context %}{{profile_context}}{% endif %}\n3 recipe ideas, each with 2-3 extra ingredients the user does NOT already have.\nRecipes must span different cooking styles (e.g., not two salads or two stir-fries).{% if profile_context %}\nIf the focal item conflicts with the user's dietary restrictions, acknowledge the conflict and adapt all recipes to the restriction.{% endif %}\nONLY JSON: {\""recipes\"": [{\""name\"": \""Name\"", \""emoji\"": \""🍳\"", \""desc\"": \""Max 8 words\"", \""add\"": [{\""name_en\"": \""Item\""}]}]}""}]",Status,Score,Named Scores,Grader Reason,Comment,"[Qwen 3.5-35B-A3B ($0.16/M)] prompts/current/inspire_item.json: [{""role"":""system"",""content"":""You are a creative cooking assistant. Respond with JSON only.""},{""role"":""user"",""content"":""Cooking assistant. User has \""{{name_en}}\"".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther items: {{other_items}}{% if profile_context %}{{profile_context}}{% endif %}\n3 recipe ideas, each with 2-3 extra ingredients the user does NOT already have.\nRecipes must span different cooking styles (e.g., not two salads or two stir-fries).{% if profile_context %}\nIf the focal item conflicts with the user's dietary restrictions, acknowledge the conflict and adapt all recipes to the restriction.{% endif %}\nONLY JSON: {\""recipes\"": [{\""name\"": \""Name\"", \""emoji\"": \""🍳\"", \""desc\"": \""Max 8 words\"", \""add\"": [{\""name_en\"": \""Item\""}]}]}""}]",Status,Score,Named Scores,Grader Reason,Comment
+salmon + rice/soy sauce — simple Japanese direction,salmon,"rice, soy sauce",,,"{""recipes"": [
+  {""name"": ""Grilled Salmon"", ""emoji"": ""🔥"", ""desc"": ""Herby grilled salmon with lemon"", ""add"": [{""name_en"": ""Lemon""}, {""name_en"": ""Parsley""}, {""name_en"": ""Olive Oil""}]},
+  {""name"": ""Salmon Poke Bowl"", ""emoji"": ""🍣"", ""desc"": ""Fresh salmon poke with avocado"", ""add"": [{""name_en"": ""Avocado""}, {""name_en"": ""Cucumber""}, {""name_en"": ""Sesame Seeds""}]},
+  {""name"": ""Salmon en Croute"", ""emoji"": ""🥧"", ""desc"": ""Salmon in puff pastry with spinach"", ""add"": [{""name_en"": ""Puff Pastry""}, {""name_en"": ""Spinach""}, {""name_en"": ""Feta Cheese""}]}
+]}",FAIL,0.81,,"Recipes are practical and use salmon as a key ingredient. Added items don't duplicate rice/soy sauce. Descriptions are concise. However, with rice and soy sauce in the user's pantry, the recipes should lean more Asian/Japanese — only 1 of 3 (Poke Bowl) does, while the other two (Grilled Salmon, Salmon en Croute) are distinctly Western and don't naturally use the user's existing rice and soy sauce. This is a notable shortcoming despite the rubric allowing some variety.",,"{""recipes"": [{""name"": ""Teriyaki Salmon Bowl"", ""emoji"": ""🍱"", ""desc"": ""Sweet soy-glazed salmon over rice"", ""add"": [{""name_en"": ""Mirin""}, {""name_en"": ""Brown sugar""}, {""name_en"": ""Green onions""}]}, {""name"": ""Salmon en Papillote"", ""emoji"": ""🌿"", ""desc"": ""Herb-infused salmon steamed in parchment"", ""add"": [{""name_en"": ""Lemon""}, {""name_en"": ""Dill""}, {""name_en"": ""Butter""}]}, {""name"": ""Salmon Fried Rice"", ""emoji"": ""🍚"", ""desc"": ""Savory fried rice with flaked salmon"", ""add"": [{""name_en"": ""Eggs""}, {""name_en"": ""Peas""}, {""name_en"": ""Garlic""}]}]}",PASS,1.00,,All assertions passed,,"{""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}`.
+        *   Language: English (implied by ""name_en"").
+
+2.  **Drafting Recipe Ideas:**
+    *   *Current Inventory:* Salmon, Rice, Soy Sauce.
+    *   *Recipe 1 (Asian-inspired but different):* Salmon Teriyaki Rice Bowl.
+        *   Needs extra: Ginger, Sesame seeds, Green onions.
+        *   Style: Asian Bowl.
+    *   *Recipe 2 (Western/Grilled):* Lemon Herb Baked Salmon.
+        *   Needs extra: Lemon, Butter, Dill.
+        *   Style: Oven Baked.
+    *   *Recipe 3 (Japanese/Roll):* Salmon Sushi Rolls.
+        *   Needs extra: Nori sheets, Sushi rice (already have rice but specific type needed, better pick different), Cucumber, Avocado.
+        *   Let's adjust to ensure distinct styles.
+        *   Style 1: Pan-Seared Asian (Stir-fry-ish but distinct).
+        *   Style 2: Oven Roasted (Western).
+        *   Style 3: Cold/No-Cook (Salad or Sushi).
+        *   Let's try:
+            1.  **Crispy Skin Salmon with Ginger Rice:** Pan-seared. Extra: Ginger, Scallions. (Wait, need 2-3 extra).
+            2.  **Mediterranean Baked Salmon:** Oven baked. Extra: Olive oil, Cherry tomatoes, Feta.
+            3.  **Spicy Salmon Tacos:** Pan-seared but different style. Extra: Tortillas, Cabbage, Lime.
+    *   Let's refine for variety.
+        1.  **Glazed Salmon Rice Bowl:** (Asian). Extra: Ginger, Sesame oil, Scallions.
+        2.  **Lemon Butter Baked Salmon:** (Western). Extra: Lemon, Butter, Dill.
+        3.  **Spicy Salmon Salad:** (Cold/Modern). Extra: Avocado, Cucumber, Chili flakes.
+    *   Check constraints:
+        *   User has: Salmon, Rice, Soy Sauce.
+        *   Recipe 1 Add: Ginger, Sesame oil, Scallions. (3 items).
+        *   Recipe 2 Add: Lemon, Butter, Dill. (3 items).
+        *   Recipe 3 Add: Avocado, Cucumber, Chili flakes. (3 items).
+        *   Styles: Bowl (Cooked), Baked (Oven), Salad (Cold). Distinct enough.
+        *   Desc Max 8 words.
+        *   JSON format strict.
+
+3.  **Constructing JSON:**
+    *   Root key: ""recipes"".
+    *   Array of objects.
+    *   Keys: ""name"", ""emoji"", ""desc"", ""add"".
+    *   ""add"" is an array of objects with ""name_en"".
+
+    *   *Recipe 1:*
+        *   Name: Ginger Soy Salmon Bowl
+        *   Emoji: 🍚
+        *   Desc: Savory salmon over rice with fresh ginger. (9 words) -> ""Savory salmon over rice with fresh ginger."" (7 words).
+        *   Add: Ginger, Sesame oil, Scallions.
+
+    *   *Recipe 2:*
+        *   Name: Lemon Herb Baked Salmon
+        *   Emoji: 🐟
+        *   Desc: Crispy skin salmon with butter and dill. (8 words).
+        *   Add: Lemon, Butter, Dill.
+
+    *   *Recipe 3:*
+        *   Name: Spicy Salmon Cucumber Salad
+        *   Emoji: 🥗
+        *   Desc: Fresh cold salmon with spicy cucumber crunch. (8 words).
+        *   Add: Avocado, Chili flakes, Lime.
+
+4.  **Review against Constraints:**
+    *   JSON only? Yes.
+    *   3 recipes? Yes.
+    *   2-3 extra ingredients? Yes (3 each).
+    *   Different cooking styles? Yes (Bowl/Stir-fry glaze, Oven Bake, Cold Salad).
+    *   User doesn't have them? Yes (Ginger, Sesame oil, Scallions, Lemon, Butter, Dill, Avocado, Chili flakes, Lime). Note: Rice/Soy Sauce are already owned.
+    *   Desc Max 8 words?
+        1.  ""Savory salmon over rice with fresh ginger."" (7 words) - OK.
+        2.  ""Crispy skin salmon with butter and dill."" (8 words) - OK.
+        3.  ""Fresh cold salmon with spicy cucumber crunch."" (8 words) - OK.
+    *   Structure matches exactly? `{""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}`.
+
+5.  **Final JSON Validation:**
+    *   Ensure no markdown code blocks ( ... ) unless requested? The prompt says ""ONLY JSON"". Usually, this means raw text. I will output raw JSON text.
+    *   Wait, the prompt says ""Respond with JSON only."" I should not include markdown fencing.
+    *   Check ""add"" structure: `[{""name_en"": ""Item""}]`.
+    *   Check ""desc"": Max 8 words.
+
+    *   Recipe 1 Desc: ""Savory salmon over rice with fresh ginger"" (7 words).
+    *   Recipe 2 Desc: ""Crispy skin salmon with butter and dill"" (8 words).
+    *   Recipe 3 Desc: ""Fresh cold salmon with spicy cucumber crunch"" (8 words).
+
+    *   Wait, I need to make sure I don't accidentally include Rice in the ""add"" list since they have it.
+    *   Recipe 1 Add: Ginger, Sesame oil, Scallions.
+    *   Recipe 2 Add: Lemon, Butter, Dill.
+    *   Recipe 3 Add: Avocado, Chili flakes, Lime.
+
+    *   One more check on ""Different cooking styles"".
+        1.  Glazed Bowl (Stovetop/Simmered)
+        2.  Baked (Oven)
+        3.  Salad (No cook/Cold)
+        This spans styles well.
+
+    *   Formatting: Ensure valid JSON (quotes, commas, brackets).
+
+6.  **Final Polish:**
+    *   Check word counts again.
+    *   ""Savory salmon over rice with fresh ginger"" -> 7 words.
+    *   ""Crispy skin salmon with butter and dill"" -> 8 words.
+    *   ""Fresh cold salmon with spicy cucumber crunch"" -> 8 words.
+
+    *   Wait, is ""rice"" in Recipe 1 description allowed? Yes, user has it. The constraint is ""extra ingredients the user does NOT already have"". The description can mention what they have.
+    *   The ""add"" list must contain items they don't have.
+
+    *   Let's assemble.
+
+{
+  ""recipes"": [
+    {
+      ""name"": ""Ginger Soy Salmon Bowl"",
+      ""emoji"": ""🍚"",
+      ""desc"": ""Savory salmon over rice with fresh ginger"",
+      ""add"": [
+        {
+          ""name_en"": ""Ginger""
+        },
+        {
+          ""name_en"": ""Sesame oil""
+        },
+        {
+          ""name_en"": ""Scallions""
+        }
+      ]
+    },
+    {
+      ""name"": ""Lemon Herb Baked Salmon"",
+      ""emoji"": ""🐟"",
+      ""desc"": ""Crispy skin salmon with butter and dill"",
+      ""add"": [
+        {
+          ""name_en"": ""Lemon""
+        },
+        {
+          ""name_en"": ""Butter""
+        },
+        {
+          ""name_en"": ""Dill""
+        }
+      ]
+    },
+    {
+      ""name"": ""Spicy Salmon Cucumber Salad"",
+      ""emoji"": ""🥗"",
+      ""desc"": ""Fresh cold salmon with spicy cucumber crunch"",
+      ""add"": [
+        {
+          ""name_en"": ""Avocado""
+        },
+        {
+          ""name_en"": ""Chili flakes""
+        },
+        {
+          ""name_en"": ""Lime""
+        }
+      ]
+    }
+  ]
+}
+
+    *   Wait, I need to ensure I don't output markdown blocks. ""ONLY JSON"".
+    *   Double check word count on descriptions.
+    *   1: Savory (1) salmon (2) over (3) rice (4) with (5) fresh (6) ginger (7). OK.
+    *   2: Crispy (1) skin (2) salmon (3) with (4) butter (5) and (6) dill (7). Wait, ""Crispy skin salmon with butter and dill"" is 7 words. I counted 8 earlier. Let's recount. C-r-i-s-p-y (1) s-k-i-n (2) s-a-l-m-o-n (3) w-i-t-h (4) b-u-t-t-e-r (5) a-n-d (6) d-i-l-l (7). It is 7 words. Safe.
+    *   3: Fresh (1) cold (2) salmon (3) with (4) spicy (5) cucumber (6) crunch (7). 7 words. Safe.
+
+    *   Wait, looking at the instruction: ""3 recipe ideas, each with 2-3 extra ingredients"". I have 3 items each. That fits 2-3.
+    *   ""Recipes must span different cooking styles"". Bowl, Baked, Salad. Good.
+    *   ""ONLY JSON"". I will strip markdown.
+
+    *   One more check: ""name_en"" key inside ""add"" array. The example shows `[{""name_en"": ""Item""}]`. I will follow that.
+
+    *   Ready.
+
+    *   Wait, I should check if the emoji needs to be specific. The example shows ""🍳"". I can use relevant emojis.
+    *   Let's ensure the JSON is compact or pretty? Usually pretty is fine as long as it's valid JSON. I'll make it readable.
+    *   Actually, to be safe on ""ONLY JSON"", I'll avoid markdown fences.
+
+    *   Wait, one detail: ""Other items: rice, soy sauce"".
+    *   Recipe 1: ""Ginger Soy Salmon Bowl"". Uses Soy Sauce.
+    *   Recipe 2: ""Lemon Herb Baked Salmon"". Doesn't use Soy Sauce.
+    *   Recipe 3: ""Spicy Salmon Cucumber Salad"". Doesn't use Soy Sauce.
+    *   This is fine, they don't *have* to use all items, just have them available.
+
+    *   Wait, I need to make sure I don't accidentally violate the ""2-3 extra ingredients"" rule.
+    *   Recipe 1: Ginger, Sesame oil, Scallions (3).
+    *   Recipe 2: Lemon, Butter, Dill (3).
+    *   Recipe 3: Avocado, Chili flakes, Lime (3).
+    *   All good.
+
+    *   Wait, is ""Chili flakes"" one item or two? Usually treated as one ingredient. ""Lime"" is one. ""Avocado"" is one.
+    *   Is ""Sesame oil"" one item? Yes.
+    *   Is ""Scallions"" one item? Yes.
+    *   Is ""Dill"" one item? Yes.
+    *   Is ""Butter"" one item? Yes.
+    *   Is ""Lemon"" one item? Yes.
+    *   Is ""Ginger"" one item? Yes.
+
+    *   Okay, proceeding.
+
+    *   Wait, I need to check the constraint ""Respond with JSON only.""
+    *   Does that mean no text before or after? Yes.
+    *   I will output the raw JSON string.
+
+    *   One last check on word count for descriptions.
+    *   ""Savory salmon over rice with fresh ginger"" -> 7 words.
+    *   ""Crispy skin salmon with butter and dill"" -> 7 words.
+    *   ""Fresh cold salmon with spicy cucumber crunch"" -> 7 words.
+    *   All under 8 words.
+
+    *   Wait, I should check if the prompt implies I should not use markdown code blocks. ""Respond with JSON only."" usually implies raw text. I will output raw text.
+
+    *   Wait, I need to make sure the keys match the example exactly.
+    *   Example: `{""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}`
+    *   My structure matches.
+
+    *   Final check on ""add"" items.
+    *   Recipe 1: Ginger, Sesame oil, Scallions.
+    *   Recipe 2: Lemon, Butter, Dill.
+    *   Recipe 3: Avocado, Chili flakes, Lime.
+    *   All distinct from Salmon, Rice, Soy Sauce.
+
+    *   Okay, generating output.
+
+    *   Wait, I need to make sure I don't add newlines if it breaks JSON parsers? No, JSON allows whitespace. But to be safe and clean, I'll format it nicely.
+    *   Actually, I'll keep it compact to avoid any markdown interpretation issues, but pretty print is standard for JSON. I'll use standard indentation.
+
+    *   Wait, one detail in the prompt: ""3 recipe ideas, each with 2-3 extra ingredients the user does NOT already have.""
+    *   My list has 3 items each. That is within 2-3.
+    *   Okay.
+
+    *   Wait, I need to ensure the JSON is valid. No trailing commas.
+    *   Okay.
+
+    *   Wait, I need to check if the user has ""rice"". Yes. So I shouldn't list ""rice"" in the add list. I haven't.
+    *   User has ""soy sauce"". I haven't listed it in add list.
+    *   User has ""salmon"". I haven't listed it in add list.
+    *   Good.
+
+    *   Final check on emoji. Example uses ""🍳"". I can use others.
+    *   Okay.
+
+    *   Wait, I need to check the ""desc"" constraint again. ""Max 8 words"".
+    *   My counts: 7, 7, 7. All good.
+
+    *   Let's write it.
+
+{
+  ""recipes"": [
+    {
+      ""name"": ""Ginger Soy Salmon Bowl"",
+      ""emoji"": ""🍚"",
+      ""desc"": ""Savory salmon over rice with fresh ginger"",
+      ""add"": [
+        {
+          ""name_en"": ""Ginger""
+        },
+        {
+          ""name_en"": ""Sesame oil""
+        },
+        {
+          ""name_en"": ""Scallions""
+        }
+      ]
+    },
+    {
+      ""name"": ""Lemon Herb Baked Salmon"",
+      ""emoji"": ""🐟"",
+      ""desc"": ""Crispy skin salmon with butter and dill"",
+      ""add"": [
+        {
+          ""name_en"": ""Lemon""
+        },
+        {
+          ""name_en"": ""Butter""
+        },
+        {
+          ""name_en"": ""Dill""
+        }
+      ]
+    },
+    {
+      ""name"": ""Spicy Salmon Cucumber Salad"",
+      ""emoji"": ""🥗"",
+      ""desc"": ""Fresh cold salmon with spicy cucumber crunch"",
+      ""add"": [
+        {
+          ""name_en"": ""Avocado""
+        },
+        {
+          ""name_en"": ""Chili flakes""
+        },
+        {
+          ""name_en"": ""Lime""
+        }
+      ]
+    }
+  ]
+}",FAIL,0.46,,"Custom function threw error: Unexpected non-whitespace character after JSON at position 99 (line 1 column 100)
+Stack Trace: SyntaxError: Unexpected non-whitespace character after JSON at position 99 (line 1 column 100)
+    at JSON.parse (<anonymous>)
+    at eval (eval at handleJavascript (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:1343:34), <anonymous>:3:16)
+    at handleJavascript (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:1343:92)
+    at runAssertion (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:3557:24)
+    at file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:3608:24
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:151:38
+    at replenish (/Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:447:21)
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:452:13
+    at Object.eachOfLimit (/Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:478:36)
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:220:25
+const d = JSON.parse(output);
+const valid = d.recipes && d.recipes.length === 3 &&
+  d.recipes.every(r =>
+    r.name && r.emoji && r.desc &&
+    r.desc.split(/\s+/).length <= 8 &&
+    r.add && r.add.length >= 2 && r.add.length <= 3 &&
+    r.add.every(a => a.name_en)
+  );
+return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid recipe structure' };",
+tofu + gochujang/sesame oil/rice — Korean direction,tofu,"gochujang, sesame oil, rice",,,"{""recipes"": [
+  {""name"": ""Tofu Skewers"", ""emoji"": ""🍢"", ""desc"": ""Korean-style grilled tofu with gochujang"", ""add"": [{""name_en"": ""Bell Peppers""}, {""name_en"": ""Onions""}, {""name_en"": ""Bamboo Skewers""}]},
+  {""name"": ""Tofu Curry"", ""emoji"": ""🍛"", ""desc"": ""Coconut curry with tofu and rice"", ""add"": [{""name_en"": ""Coconut Milk""}, {""name_en"": ""Turmeric""}, {""name_en"": ""Garlic""}]},
+  {""name"": ""Tofu Panini"", ""emoji"": ""🥪"", ""desc"": ""Crispy tofu sandwich with sesame oil"", ""add"": [{""name_en"": ""Bread""}, {""name_en"": ""Avocado""}, {""name_en"": ""Lettuce""}]}
+]}",FAIL,0.66,,"Only 1 of 3 recipes (Tofu Skewers) is recognizably Korean. The tofu curry (Thai/Indian-style coconut curry) and tofu panini are not Korean-influenced at all, failing the requirement that at least 2 of 3 be recognizably Korean dishes given the user's Korean pantry (gochujang, sesame oil). Other criteria are mostly met.",,"{
+  ""recipes"": [
+    {
+      ""name"": ""Spicy Tofu Stir-Fry"",
+      ""emoji"": ""🔥"",
+      ""desc"": ""Quick, fiery tofu dish"",
+      ""add"": [
+        {""name_en"": ""Bell peppers""},
+        {""name_en"": ""Garlic""},
+        {""name_en"": ""Soy sauce""}
+      ]
+    },
+    {
+      ""name"": ""Tofu Sesame Salad"",
+      ""emoji"": ""🥗"",
+      ""desc"": ""Fresh, nutty tofu salad"",
+      ""add"": [
+        {""name_en"": ""Mixed greens""},
+        {""name_en"": ""Carrots""},
+        {""name_en"": ""Sesame seeds""}
+      ]
+    },
+    {
+      ""name"": ""Baked Gochujang Tofu"",
+      ""emoji"": ""🍲"",
+      ""desc"": ""Oven-baked spicy tofu"",
+      ""add"": [
+        {""name_en"": ""Green onions""},
+        {""name_en"": ""Honey""},
+        {""name_en"": ""Cornstarch""}
+      ]
+    }
+  ]
+}",FAIL,0.72,,Only 1 of 3 recipes (Baked Gochujang Tofu) is recognizably Korean. The stir-fry is generic and the sesame salad is not a Korean dish. The rubric requires at least 2 of 3 to be recognizably Korean given the presence of gochujang and sesame oil. Other criteria are met.,,"{""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}`
+        *   Description limit: Max 8 words.
+        *   Extra ingredients list: Array of objects with `name_en`.
+
+2.  **Analyze Available Ingredients:**
+    *   Tofu
+    *   Gochujang (Korean chili paste)
+    *   Sesame oil
+    *   Rice
+
+3.  **Brainstorm Recipe Ideas (spanning different styles):**
+
+    *   *Idea 1: Korean-style Glazed Tofu (Stir-fry/Bowl)*
+        *   Base: Tofu, Gochujang, Rice, Sesame oil.
+        *   Missing: Soy sauce, garlic, green onions.
+        *   Style: Korean Stir-fry/Bowl.
+    *   *Idea 2: Crispy Baked Tofu Tacos (Mexican/Fusion)*
+        *   Base: Tofu.
+        *   Missing: Corn tortillas, lime, cilantro, avocado. (Need 2-3).
+        *   Style: Mexican/Tacos.
+        *   Wait, I have Gochujang. Maybe use it as a spicy sauce for tacos? Or ignore it? The prompt says ""User has..."", implies I can use what they have. But I need to make sure the extra ingredients are distinct.
+        *   Let's try a *Soup* style.
+    *   *Idea 3: Tofu Miso Soup (Japanese)*
+        *   Base: Tofu.
+        *   Missing: Miso paste, seaweed, green onion.
+        *   Wait, I have Gochujang. Maybe a spicy miso soup?
+        *   Let's ensure styles are distinct.
+        *   Style 1: Korean Stir-fry (using Gochujang).
+        *   Style 2: Japanese Soup (using Tofu).
+        *   Style 3: Western/Italian fusion (using Tofu as protein).
+        *   Actually, let's stick to the available ingredients as the base for the recipe concept, but the ""add"" list defines what they need to buy.
+        *   Constraint Check: ""Other items: gochujang, sesame oil, rice"". This implies these are available.
+        *   Recipe 1: Korean Spicy Tofu Bowl (Stir-fry). Needs: Soy sauce, garlic, green onion.
+        *   Recipe 2: Tofu & Rice Risotto (Italian/Creamy). Needs: Onion, vegetable broth, parmesan. (Using rice + tofu).
+        *   Recipe 3: Crispy Tofu Curry (Indian). Needs: Curry paste, coconut milk, potatoes.
+
+    *   *Refining Styles:*
+        1.  Korean Stir-fry (uses Gochujang/Sesame/Rice).
+        2.  Japanese Soup (uses Tofu/Rice? No, soup usually doesn't use rice as main. Maybe Tofu Noodles? No, have rice). Let's do a Tofu Rice Salad? No, ""not two salads"".
+        3.  Let's try:
+            1.  Korean Glazed Tofu Bowl (Stir-fry).
+            2.  Spicy Tofu Soup (Soup).
+            3.  Crispy Tofu Burger (Sandwich/Burger).
+
+    *   *Refining Ingredients:*
+        1.  **Korean Glazed Tofu Bowl**: Base: Tofu, Gochujang, Sesame Oil, Rice. Add: Soy Sauce, Garlic, Green Onions. (3 items). Style: Korean Bowl.
+        2.  **Spicy Tofu Ramen**: Base: Tofu, Gochujang, Sesame Oil. Add: Noodles, Bok Choy, Egg. (3 items). Style: Soup.
+        3.  **Tofu Rice Casserole**: Base: Tofu, Rice, Sesame Oil. Add: Cheese, Broccoli, Tomato. (3 items). Style: Baked/Casserole.
+
+    *   *Check Constraints:*
+        *   3 recipes.
+        *   2-3 extra ingredients each.
+        *   Different cooking styles (Bowl, Soup, Casserole).
+        *   JSON only.
+        *   Desc max 8 words.
+        *   Schema: `{""recipes"": [{""name"": ""..."", ""emoji"": ""..."", ""desc"": ""..."", ""add"": [{""name_en"": ""...""}]}]}`
+
+4.  **Drafting Content:**
+
+    *   Recipe 1:
+        *   Name: Spicy Gochujang Tofu Bowl
+        *   Emoji: 🍚
+        *   Desc: Korean glazed tofu over steamed rice.
+        *   Add: Soy sauce, garlic cloves, green onions. (Wait, need array of objects).
+        *   Add: [{""name_en"": ""Soy sauce""}, {""name_en"": ""Garlic""}, {""name_en"": ""Green onions""}]
+    *   Recipe 2:
+        *   Name: Tofu and Rice Soup
+        *   Emoji: 🍲
+        *   Desc: Warm spicy soup with tofu cubes.
+        *   Add: [{""name_en"": ""Vegetable broth""}, {""name_en"": ""Spinach""}, {""name_en"": ""Ramen noodles""}]
+    *   Recipe 3:
+        *   Name: Crispy Baked Tofu Nuggets
+        *   Emoji: 🍗
+        *   Desc: Oven-baked tofu served with rice.
+        *   Add: [{""name_en"": ""Breadcrumbs""}, {""name_en"": ""Flour""}, {""name_en"": ""Parmesan cheese""}]
+        *   Wait, style check: Bowl (Stir-fry), Soup, Baked/Nuggets (Fried/Baked). Distinct enough.
+
+    *   *Reviewing Word Count:*
+        *   ""Korean glazed tofu over steamed rice."" -> 6 words. OK.
+        *   ""Warm spicy soup with tofu cubes."" -> 6 words. OK.
+        *   ""Oven-baked tofu served with rice."" -> 6 words. OK.
+
+    *   *Reviewing Extra Ingredients:*
+        *   R1: Soy sauce, Garlic, Green onions. (User has Tofu, Gochujang, Sesame Oil, Rice). OK.
+        *   R2: Vegetable broth, Spinach, Ramen noodles. (User has Tofu, Gochujang, Sesame Oil, Rice). OK.
+        *   R3: Breadcrumbs, Flour, Parmesan cheese. (User has Tofu, Gochujang, Sesame Oil, Rice). OK.
+
+    *   *Reviewing JSON Structure:*
+        *   Must be valid JSON.
+        *   Keys: ""recipes"", ""name"", ""emoji"", ""desc"", ""add"", ""name_en"".
+        *   No markdown code blocks (usually implied by ""ONLY JSON"", but often safer to output raw text). The prompt says ""Respond with JSON only"". I will output raw JSON string.
+
+5.  **Final Polish:**
+    *   Ensure no trailing commas.
+    *   Ensure escaping if needed (none needed for simple text).
+    *   Check ""2-3 extra ingredients"". My drafts have 3 each. That fits.
+    *   Check ""different cooking styles"". Bowl (Stir-fry), Soup, Baked. Good.
+
+    *   *Wait, one check on Recipe 3:* ""Crispy Baked Tofu Nuggets"" uses Rice? The base ingredients are available. I can serve rice with it. The description says ""Oven-baked tofu served with rice."" That works.
+    *   *Wait, one check on Recipe 2:* ""Tofu and Rice Soup"". Rice in soup is unusual but okay (like risotto soup or just rice added). Maybe ""Tofu and Noodle Soup"" is better since I have rice but noodles are extra. Let's call it ""Spicy Tofu Noodle Soup"". Base: Tofu, Gochujang, Sesame Oil. Add: Noodles, Veggie broth, Egg. (3 items). Style: Soup.
+    *   Let's stick to the previous draft but ensure styles are clearly different.
+    *   1. Korean Bowl (Stir-fry)
+    *   2. Spicy Soup (Simmered)
+    *   3. Crispy Baked (Oven)
+
+    *   *Refining Recipe 3 Description:* ""Crispy oven-baked tofu with rice."" (6 words).
+    *   *Refining Recipe 2 Description:* ""Spicy broth soup with tofu."" (6 words).
+    *   *Refining Recipe 1 Description:* ""Glazed spicy tofu over rice."" (6 words).
+
+    *   *Ingredient Check:*
+        *   R1 Add: Soy sauce, Garlic, Green onions.
+        *   R2 Add: Noodles, Broth, Egg.
+        *   R3 Add: Breadcrumbs, Flour, Cheese.
+
+    *   *Wait, R2 uses Gochujang?* Yes, spicy broth.
+    *   *R3 uses Gochujang?* Maybe as a dip or mixed in. Or I can just ignore it for this recipe since the user has it, but the recipe is valid. The prompt says ""User has..."". It doesn't say I *must* use all of them in every recipe, but the recipes should be based on the tofu primarily. I'll try to incorporate available ingredients where logical.
+    *   R1: Uses Tofu, Gochujang, Sesame, Rice.
+    *   R2: Uses Tofu, Gochujang, Sesame. (Soup base).
+    *   R3: Uses Tofu, Rice. (Baked with rice side).
+
+    *   *Final check on JSON syntax:*
+    *   `{""recipes"": [...]}`
+    *   `{""name_en"": ""Item""}` inside `add`.
+
+6.  **Constructing JSON:**
+
+{
+  ""recipes"": [
+    {
+      ""name"": ""Spicy Gochujang Tofu Bowl"",
+      ""emoji"": ""🍚"",
+      ""desc"": ""Glazed spicy tofu over rice."",
+      ""add"": [
+        {""name_en"": ""Soy sauce""},
+        {""name_en"": ""Garlic""},
+        {""name_en"": ""Green onions""}
+      ]
+    },
+    {
+      ""name"": ""Tofu Gochujang Noodle Soup"",
+      ""emoji"": ""🍜"",
+      ""desc"": ""Spicy broth soup with tofu."",
+      ""add"": [
+        {""name_en"": ""Ramen noodles""},
+        {""name_en"": ""Vegetable broth""},
+        {""name_en"": ""Egg""}
+      ]
+    },
+    {
+      ""name"": ""Crispy Baked Tofu Nuggets"",
+      ""emoji"": ""🍗"",
+      ""desc"": ""Crispy oven-baked tofu with rice."",
+      ""add"": [
+        {""name_en"": ""Breadcrumbs""},
+        {""name_en"": ""Flour""},
+        {""name_en"": ""Parmesan cheese""}
+      ]
+    }
+  ]
+}
+
+    *   Wait, I need to check the ""2-3 extra ingredients"" constraint again.
+    *   R1: 3 items.
+    *   R2: 3 items.
+    *   R3: 3 items.
+    *   All good.
+    *   Styles: Bowl, Soup, Baked/Nuggets. Distinct.
+    *   Desc max 8 words.
+    *   R1: ""Glazed spicy tofu over rice."" (6)
+    *   R2: ""Spicy broth soup with tofu."" (6)
+    *   R3: ""Crispy oven-baked tofu with rice."" (6)
+    *   JSON Only.
+
+    *   One detail: ""Respond with JSON only"". I should not include markdown ticks like  ...  if strictly interpreted, but usually, that's acceptable for code blocks. However, ""JSON only"" often means raw text. I will output raw text to be safe.
+    *   Wait, looking at the instruction ""Respond with JSON only"". I will provide the raw JSON string.
+
+    *   Wait, checking the schema again: `{""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}`
+    *   My `add` structure matches `[{""name_en"": ""Item""}]`.
+    *   Okay, ready.
+
+    *   Wait, one last check on ""User has..."".
+    *   User has: Tofu, Gochujang, Sesame oil, Rice.
+    *   Recipe 1 (Bowl): Uses Tofu, Gochujang, Sesame, Rice. Adds: Soy, Garlic, Green Onions.
+    *   Recipe 2 (Soup): Uses Tofu, Gochujang, Sesame. Adds: Noodles, Broth, Egg. (Rice not used, but available).
+    *   Recipe 3 (Baked): Uses Tofu, Rice. Adds: Breadcrumbs, Flour, Cheese. (Gochujang/Sesame optional).
+    *   Styles: Stir-fry/Bowl, Soup, Baked.
+    *   Looks solid.
+
+    *   Wait, I need to make sure I don't use markdown code blocks if the user said ""JSON only"". Sometimes they mean ""Don't talk, just JSON"". I'll output raw JSON.
+
+    *   Wait, I need to check the `add` array content. The prompt example shows `[{""name_en"": ""Item""}]`. I should follow that.
+    *   My draft: `[{""name_en"": ""Soy sauce""}, {""name_en"": ""Garlic""}, {""name_en"": ""Green onions""}]`. This matches.
+
+    *   Final check on word count for descriptions.
+    *   ""Glazed spicy tofu over rice."" -> 6 words.
+    *   ""Spicy broth soup with tofu."" -> 6 words.
+    *   ""Crispy oven-baked tofu with rice."" -> 6 words.
+    *   All under 8.
+
+    *   One more check: ""Recipes must span different cooking styles"".
+    *   1. Bowl (Stir-fry style).
+    *   2. Soup (Simmer style).
+    *   3. Baked (Oven style).
+    *   Distinct enough.
+
+    *   Let's ensure the JSON is valid (no comments, proper quotes).
+
+    *   Wait, I should check if I can use fewer ingredients to make it tighter. 2-3 is the range. 3 is fine.
+
+    *   Okay, generating raw JSON.
+
+    *   Wait, I need to be careful about newlines. JSON can have newlines for readability, but ""JSON only"" usually implies a single block. I'll format it nicely but ensure it's valid JSON.
+
+    *   Wait, I noticed the prompt example: `{""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}`.
+    *   I should match this structure exactly.
+
+    *   Wait, I need to check if ""Item"" in the example implies I should use ""Item"" or just a string. It implies the structure `{""name_en"": ""Item Name""}`. I will use specific ingredient names.
+
+    *   Okay, final verification of the output.
+    *   No markdown.
+    *   Valid JSON.
+    *   3 recipes.
+    *   Correct keys.
+
+    *   Wait, one constraint: ""each with 2-3 extra ingredients the user does NOT already have"".
+    *   User has: Tofu, Gochujang, Sesame oil, Rice.
+    *   My adds:
+        *   Soy sauce (Not in list)
+        *   Garlic (Not in list)
+        *   Green onions (Not in list)
+        *   Ramen noodles (Not in list)
+        *   Vegetable broth (Not in list)
+        *   Egg (Not in list)
+        *   Breadcrumbs (Not in list)
+        *   Flour (Not in list)
+        *   Parmesan cheese (Not in list)
+    *   All valid.
+
+    *   Ready.
+
+    *   Wait, I'll remove the markdown code block fences to ensure ""JSON only"" is strictly followed.
+
+    *   Wait, I need to check if the system instruction ""Respond with JSON only"" overrides standard markdown usage. Usually, raw text is safer.
+
+    *   Okay, proceeding.
+
+    *   Wait, one last check on the emoji. The example uses ""🍳"". I can use different emojis. I used 🍚, 🍜, 🍗. That's fine.
+
+    *   Wait, is ""Parmesan cheese"" one item? Yes.
+    *   Is ""Green onions"" one item? Yes.
+    *   Is ""Soy sauce"" one item? Yes.
+
+    *   Okay.
+
+    *   Wait, I need to make sure I don't accidentally add text before or after.
+
+    *   Okay, generating.
+
+    *   Wait, I'll double check the word count.
+    *   ""Glazed spicy tofu over rice."" -> Glazed (1) spicy (2) tofu (3) over (4) rice (5). (5 words).
+    *   ""Spicy",FAIL,0.25,,"The output does suggest practical home-cooking recipes and tofu is central in all three. It also avoids listing gochujang, sesame oil, or rice as added ingredients, and the shown descriptions are under 8 words. However, it fails key rubric requirements: the set is not consistently Korean-influenced despite gochujang and sesame oil being available, and at least 2 of the 3 recipes are not recognizably Korean dishes. Only the gochujang tofu bowl is clearly Korean-influenced; the noodle soup is generic and the baked tofu nuggets are not recognizably Korean.",
+avocado + no other items — should produce diverse recipes,avocado,none,,,"{""recipes"": [
+  {""name"": ""Guacamole Toast"", ""emoji"": ""🥖"", ""desc"": ""Mash avocado on toasted bread"", ""add"": [{""name_en"": ""Bread""}, {""name_en"": ""Lemon Juice""}]},
+  {""name"": ""Avocado Soup"", ""emoji"": ""🍲"", ""desc"": ""Blend avocado with creamy broth"", ""add"": [{""name_en"": ""Chicken Broth""}, {""name_en"": ""Cream""}]},
+  {""name"": ""Avocado Sushi Rolls"", ""emoji"": ""🍣"", ""desc"": ""Roll sushi with avocado inside"", ""add"": [{""name_en"": ""Sushi Rice""}, {""name_en"": ""Nori Sheets""}]}
+]}",FAIL,0.87,,"The recipes are practical and avocado is central in each. Descriptions are concise and within 8 words. However, the diversity requirement is not clearly met: two recipes lean toward Japanese-style/neutral toast and one soup, but the set does not clearly span distinct cuisines or styles in a strong way, and the toast recipe uses a bread emoji instead of avocado-related presentation. Because diversity is the key test, this fails.",,"{
+  ""recipes"": [
+    {
+      ""name"": ""Avocado Toast"",
+      ""emoji"": ""🍞"",
+      ""desc"": ""Simple, healthy breakfast"",
+      ""add"": [
+        {
+          ""name_en"": ""Whole grain bread""
+        },
+        {
+          ""name_en"": ""Eggs""
+        }
+      ]
+    },
+    {
+      ""name"": ""Avocado Smoothie"",
+      ""emoji"": ""🥤"",
+      ""desc"": ""Refreshing drink"",
+      ""add"": [
+        {
+          ""name_en"": ""Banana""
+        },
+        {
+          ""name_en"": ""Milk""
+        },
+        {
+          ""name_en"": ""Honey""
+        }
+      ]
+    },
+    {
+      ""name"": ""Avocado Sushi Roll"",
+      ""emoji"": ""🍣"",
+      ""desc"": ""Homemade sushi delight"",
+      ""add"": [
+        {
+          ""name_en"": ""Sushi rice""
+        },
+        {
+          ""name_en"": ""Nori sheets""
+        }
+      ]
+    }
+  ]
+}",FAIL,0.86,,"The recipes are practical and the descriptions are concise, but the output does not clearly show avocado as a key ingredient in each recipe because avocado is not listed in ingredients, and the cuisine/style diversity is only partially clear: toast, smoothie, and sushi roll are different styles, which helps, but one recipe’s use of avocado is implicit rather than explicit.",,"{name_en}).
+    *   Distinct styles (Toast, Soup, Dessert).
+
+3.  **Draft JSON Structure:**
+        {
+      ""recipes"": [
+        {
+          ""name"": ""Avocado Toast"",
+          ""emoji"": ""🍞"",
+          ""desc"": ""Creamy avocado on crispy bread with egg"",
+          ""add"": [
+            {""name_en"": ""Bread""},
+            {""name_en"": ""Egg""},
+            {""name_en"": ""Lemon""}
+          ]
+        },
+        {
+          ""name"": ""Avocado Gazpacho"",
+          ""emoji"": ""🥣"",
+          ""desc"": ""Chilled green soup with fresh tomatoes"",
+          ""add"": [
+            {""name_en"": ""Tomato""},
+            {""name_en"": ""Onion""},
+            {""name_en"": ""Garlic""}
+          ]
+        },
+        {
+          ""name"": ""Chocolate Avocado Mousse"",
+          ""emoji"": ""🍫"",
+          ""desc"": ""Rich dessert made with cocoa and fruit"",
+          ""add"": [
+            {""name_en"": ""Cocoa Powder""},
+            {""name_en"": ""Maple Syrup""},
+            {""name_en"": ""Milk""}
+          ]
+        }
+      ]
+    }
+    
+
+4.  **Review Constraints:**
+    *   JSON only? Yes.
+    *   3 recipes? Yes.
+    *   2-3 extra ingredients? Yes (3 each).
+    *   Distinct styles? Toast (Breakfast), Gazpacho (Soup/Appetizer), Mousse (Dessert). Yes.
+    *   Desc max 8 words?
+        *   ""Creamy avocado on crispy bread with egg"" -> 7 words. OK.
+        *   ""Chilled green soup with fresh tomatoes"" -> 6 words. OK.
+        *   ""Rich dessert made with cocoa and fruit"" -> 7 words. OK.
+    *   Format correct? Yes.
+
+5.  **Final Polish:** Ensure valid JSON syntax (quotes, commas, brackets).
+
+    *Self-Correction on Desc:* ""Rich dessert made with cocoa and fruit"" -> ""fruit"" refers to avocado. Maybe ""Rich dessert made with cocoa and avocado"" (7 words). Or ""Rich chocolate dessert blended with creamy avocado"" (7 words). Let's stick to the previous one but ensure it makes sense. ""Rich dessert made with cocoa and fruit"" is fine.
+
+    Let's check the word count again.
+    1. Creamy avocado on crispy bread with egg (7)
+    2. Chilled green soup with fresh tomatoes (6)
+    3. Rich dessert made with cocoa and fruit (7)
+
+    Looks good.
+
+6.  **Construct Final Output.**
+    (Ensure no markdown code blocks around JSON as per ""ONLY JSON"" instruction, though usually, it's safer to output raw text. The prompt says ""Respond with JSON only"". I will output raw JSON text).
+    Wait, often ""JSON only"" implies no markdown ticks. I will output raw JSON.
+
+    Wait, checking the prompt again: ""ONLY JSON: {""recipes"": ...}""
+    I will provide the raw JSON string.
+
+    One more check on ""2-3 extra ingredients"".
+    Recipe 1: Bread, Egg, Lemon (3)
+    Recipe 2: Tomato, Onion, Garlic (3)
+    Recipe 3: Cocoa Powder, Maple Syrup, Milk (3)
+    All within 2-3 range.
+
+    Styles: Breakfast, Soup, Dessert. Distinct.
+
+    Ready.
+
+    Wait, I need to make sure I don't add markdown formatting like  ...  if the instruction says ""ONLY JSON"". Usually, this means raw text. I will output raw text.
+
+    Wait, looking at the example format in the prompt: `{""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}`
+    I will match this schema exactly.
+
+    One detail: ""Other items: none"". So the add items must be things they don't have.
+    Avocado is the only thing they have.
+    So Bread, Egg, Lemon, Tomato, Onion, Garlic, Cocoa Powder, Maple Syrup, Milk are all valid ""extra"" items.
+
+    Final check on JSON validity.
+    Escape characters? None needed really.
+    Commas? Correct placement.
+
+    Let's assemble.
+    Recipe 1 Name: Avocado Breakfast Toast
+    Recipe 2 Name: Creamy Avocado Gazpacho
+    Recipe 3 Name: Avocado Chocolate Mousse
+
+    Desc 1: Creamy avocado spread on toasted bread with egg (8 words) -> ""Creamy avocado on crispy bread with egg"" (7 words).
+    Desc 2: Chilled green soup blended with fresh tomatoes (7 words).
+    Desc 3: Rich chocolate dessert blended with creamy avocado (7 words).
+
+    Actually, for Desc 3, mentioning avocado might be redundant since it's the base, but it clarifies. ""Rich chocolate dessert blended with creamy avocado"" is 7 words.
+    Let's try to be more creative.
+    1. Savory breakfast toast with egg and lemon (7)
+    2. Cold green soup with tomato and onion (7)
+    3. Sweet mousse dessert with cocoa and milk (7)
+
+    These are clearer.
+
+    Wait, Desc 1: ""Savory breakfast toast with egg and lemon"" (7)
+    Desc 2: ""Cold green soup with tomato and onion"" (7)
+    Desc 3: ""Sweet mousse dessert with cocoa and milk"" (7)
+
+    All under 8 words.
+    Let's finalize.
+
+    Wait, one more check on ""ONLY JSON"". I should not include markdown fences.
+
+    Wait, I need to check if the system prompt allows markdown. Usually, for ""ONLY JSON"", raw text is best.
+
+    Okay, proceeding.
+
+    Wait, I need to make sure the `add` field is a list of objects with `name_en`.
+    Example: `[{""name_en"": ""Item""}]`
+    My draft: `[{""name_en"": ""Bread""}, {""name_en"": ""Egg""}, {""name_en"": ""Lemon""}]`
+    This matches.
+
+    Final check on constraints:
+    - 3 recipe ideas.
+    - 2-3 extra ingredients each.
+    - Span different cooking styles.
+    - ONLY JSON.
+    - Desc max 8 words.
+
+    Let's write it.
+
+    Recipe 1: Avocado Toast (Breakfast)
+    Recipe 2: Avocado Gazpacho (Soup)
+    Recipe 3: Avocado Mousse (Dessert)
+
+    Ingredients:
+    1. Bread, Egg, Lemon
+    2. Tomato, Onion, Garlic
+    3. Cocoa Powder, Sugar, Milk
+
+    Wait, Sugar is 1 word, Cocoa Powder is 2 words. ""Cocoa Powder"" counts as one item name.
+    Okay.
+
+    Desc 1: Savory breakfast toast with egg and lemon (7)
+    Desc 2: Cold green soup with tomato and onion (7)
+    Desc 3: Sweet mousse dessert with cocoa and milk (7)
+
+    Looks solid.
+
+    Wait, I should check if ""Avocado Toast"" is considered a recipe name. Yes.
+    Emoji for Toast: 🍞 or 🥪. Let's use 🍞.
+    Emoji for Soup: 🥣.
+    Emoji for Mousse: 🍫 or 🍨. Let's use 🍫.
+
+    Okay, generating JSON.
+
+    One last check: ""Other items: none"".
+    The user has ""avocado"".
+    So the add items must NOT be avocado.
+    My list: Bread, Egg, Lemon, Tomato, Onion, Garlic, Cocoa Powder, Sugar, Milk. None are avocado. Correct.
+
+    Final check on JSON syntax.
+    Keys in double quotes.
+    No trailing commas.
+    Escaped characters if needed (none).
+
+    Ready.
+
+    Wait, I need to make sure I don't output any explanation text. Just the JSON.
+
+    Wait, I see ""ONLY JSON: {""recipes"": ...}"" in the prompt.
+    I will output exactly that structure.
+
+    One minor adjustment: ""Cocoa Powder"" might be better as ""Cocoa"" to keep it simple, but ""Cocoa Powder"" is more accurate. I'll stick with ""Cocoa Powder"".
+    ""Sugar"" vs ""Maple Syrup"". ""Sugar"" is simpler. I'll use ""Sugar"".
+    ""Milk"" is fine.
+
+    Desc 3: ""Sweet mousse dessert with cocoa and milk"" (7 words).
+    Actually, ""Rich mousse dessert with cocoa and milk"" (7 words). ""Rich"" sounds better.
+
+    Okay, final plan.
+    1. Avocado Breakfast Toast 🍞
+    2. Avocado Gazpacho 🥣
+    3. Chocolate Avocado Mousse 🍫
+
+    Add 1: Bread, Egg, Lemon.
+    Add 2: Tomato, Onion, Garlic.
+    Add 3: Cocoa Powder, Sugar, Milk.
+
+    Desc 1: Savory breakfast toast with egg and lemon (7)
+    Desc 2: Cold green soup with tomato and onion (7)
+    Desc 3: Rich mousse dessert with cocoa and milk (7)
+
+    Wait, Desc 2: ""Cold green soup with tomato and onion"" (7).
+    Desc 1: ""Savory breakfast toast with egg and lemon"" (7).
+
+    Okay.
+
+    Wait, I need to ensure the JSON is valid.
+    `[{""name_en"": ""Bread""}, {""name_en"": ""Egg""}, {""name_en"": ""Lemon""}]`
+    This is valid.
+
+    Let's produce the output.
+
+
+{
+  ""recipes"": [
+    {
+      ""name"": ""Avocado Breakfast Toast"",
+      ""emoji"": ""🍞"",
+      ""desc"": ""Savory breakfast toast with egg and lemon"",
+      ""add"": [
+        {
+          ""name_en"": ""Bread""
+        },
+        {
+          ""name_en"": ""Egg""
+        },
+        {
+          ""name_en"": ""Lemon""
+        }
+      ]
+    },
+    {
+      ""name"": ""Avocado Gazpacho"",
+      ""emoji"": ""🥣"",
+      ""desc"": ""Cold green soup with tomato and onion"",
+      ""add"": [
+        {
+          ""name_en"": ""Tomato""
+        },
+        {
+          ""name_en"": ""Onion""
+        },
+        {
+          ""name_en"": ""Garlic""
+        }
+      ]
+    },
+    {
+      ""name"": ""Chocolate Avocado Mousse"",
+      ""emoji"": ""🍫"",
+      ""desc"": ""Rich mousse dessert with cocoa and milk"",
+      ""add"": [
+        {
+          ""name_en"": ""Cocoa Powder""
+        },
+        {
+          ""name_en"": ""Sugar""
+        },
+        {
+          ""name_en"": ""Milk""
+        }
+      ]
+    }
+  ]
+}",FAIL,0.46,,"Custom function threw error: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+Stack Trace: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at eval (eval at handleJavascript (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:1343:34), <anonymous>:3:16)
+    at handleJavascript (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:1343:92)
+    at runAssertion (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:3557:24)
+    at file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:3608:24
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:151:38
+    at replenish (/Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:447:21)
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:452:13
+    at Object.eachOfLimit (/Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:478:36)
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:220:25
+const d = JSON.parse(output);
+const valid = d.recipes && d.recipes.length === 3 &&
+  d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+    r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+// Check diversity: all 3 recipe names should be different
+const names = d.recipes.map(r => r.name.toLowerCase());
+const diverse = new Set(names).size === 3;
+return {
+  pass: valid && diverse,
+  score: valid && diverse ? 1 : 0,
+  reason: !valid ? 'Invalid structure' : !diverse ? 'Recipes not diverse enough' : 'OK'
+};",
+chicken thigh + Mexican items + vegetarian profile — conflict handling,chicken thigh,"tortillas, cilantro, lime",,"
+Dietary: vegetarian.","{""recipes"": [{""name"": ""Veggie Fajitas"", ""emoji"": ""🔥"", ""desc"": ""Tortilla wraps with sautéed veggies"", ""add"": [{""name_en"": ""Bell Peppers""}, {""name_en"": ""Onions""}, {""name_en"": ""Mushrooms""}]}, {""name"": ""Cilantro Lime Rice Bowl"", ""emoji"": ""🍚"", ""desc"": ""Fresh cilantro and lime flavor"", ""add"": [{""name_en"": ""Rice""}, {""name_en"": ""Roasted Sweet Potatoes""}]}, {""name"": ""Grilled Portobello Tacos"", ""emoji"": ""🌮"", ""desc"": ""Meatless tacos with marinated mushrooms"", ""add"": [{""name_en"": ""Portobello Mushrooms""}, {""name_en"": ""Avocado""}]}]}",FAIL,0.68,,"The model ignores the conflict entirely — it silently provides vegetarian recipes without any acknowledgment that the user asked about chicken thigh or any note about the dietary restriction conflict. The rubric explicitly states that 'ignoring the conflict entirely is NOT acceptable.' While the recipes lean Mexican, added ingredients avoid duplicates, and descriptions are concise, the core conflict-handling requirement is not met.",,"{
+  ""recipes"": [
+    {
+      ""name"": ""Vegetarian Chicken Tacos"",
+      ""emoji"": ""🌮"",
+      ""desc"": ""Spiced tofu replaces chicken in tacos"",
+      ""add"": [
+        {
+          ""name_en"": ""Firm tofu""
+        },
+        {
+          ""name_en"": ""Taco seasoning""
+        },
+        {
+          ""name_en"": ""Avocado""
+        }
+      ]
+    },
+    {
+      ""name"": ""Cilantro Lime Rice Bowl"",
+      ""emoji"": ""🍚"",
+      ""desc"": ""Fresh and zesty vegetarian rice bowl"",
+      ""add"": [
+        {
+          ""name_en"": ""Jasmine rice""
+        },
+        {
+          ""name_en"": ""Black beans""
+        },
+        {
+          ""name_en"": ""Corn""
+        }
+      ]
+    },
+    {
+      ""name"": ""Vegetarian Tortilla Soup"",
+      ""emoji"": ""🍲"",
+      ""desc"": ""Hearty soup with a lime twist"",
+      ""add"": [
+        {
+          ""name_en"": ""Vegetable broth""
+        },
+        {
+          ""name_en"": ""Diced tomatoes""
+        },
+        {
+          ""name_en"": ""Bell peppers""
+        }
+      ]
+    }
+  ]
+}",FAIL,0.84,,"The model offers vegetarian alternatives (approach b), but doesn't explicitly note the conflict between the chicken thigh request and the vegetarian restriction. The recipe 'Vegetarian Chicken Tacos' with 'Spiced tofu replaces chicken' implicitly acknowledges the tension, which is a borderline handling. Added ingredients correctly exclude tortillas, cilantro, and lime. Recipes lean Mexican. Descriptions are concise (≤8 words). The conflict handling is present but not explicit enough to fully satisfy the rubric's requirement to 'note the conflict.'",,"{""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}`
+        *   Each recipe needs 2-3 extra ingredients the user does NOT already have.
+        *   Recipes must span different cooking styles.
+        *   **CRITICAL:** If the focal item (chicken thigh) conflicts with the dietary restriction (vegetarian), acknowledge the conflict and adapt all recipes to the restriction.
+        *   Output must be valid JSON.
+
+2.  **Identify Conflict:**
+    *   Focal item: Chicken thigh (Meat).
+    *   Dietary: Vegetarian.
+    *   Conflict: Yes, chicken is not vegetarian.
+    *   Action: I must adapt the recipes to be vegetarian, effectively replacing the chicken thigh with a vegetarian alternative (like beans, tofu, mushrooms, etc.) while keeping the spirit of the meal or explicitly noting the swap. The prompt says ""acknowledge the conflict and adapt all recipes to the restriction.""
+    *   Since the output format is strict JSON, I cannot add a separate field for ""acknowledgement"" outside the recipe list easily without breaking the schema provided in the example. However, the prompt says ""ONLY JSON"". The example schema is `{""recipes"": [...]}`. I need to fit the acknowledgement into the recipe data or the structure.
+    *   Wait, looking closely at the prompt: ""If the focal item conflicts with the user's dietary restrictions, acknowledge the conflict and adapt all recipes to the restriction.""
+    *   Since I can only output JSON, I should probably include a note in one of the recipe names or descriptions, or simply adapt the recipes without the meat (since I can't change the schema significantly).
+    *   Actually, the safest interpretation for ""ONLY JSON"" with a specific schema is to follow the schema strictly. However, the instruction says ""acknowledge the conflict"". If I don't acknowledge it, I violate the instruction. If I add a field not in the schema, I violate the ""ONLY JSON"" + schema implication.
+    *   Let's look at the schema again: `{""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}`.
+    *   I can put the acknowledgement in the `name` or `desc` of the first recipe, or I can just adapt the recipes (since the prompt says ""adapt all recipes to the restriction""). The primary instruction is ""Respond with JSON only"".
+    *   Strategy: I will replace the chicken thigh with a vegetarian alternative (e.g., black beans, chickpeas, tofu) in the recipe concepts to satisfy the dietary restriction, and I will make sure the ""add"" ingredients reflect this adaptation or simply focus on the vegetarian versions.
+    *   Wait, the prompt asks for ""3 recipe ideas..."". If I just ignore the chicken, am I acknowledging the conflict?
+    *   Better approach: I will add a note in the `name` or `desc` of the first recipe indicating the swap, or I will treat the ""chicken thigh"" as a placeholder for ""protein"" that must be swapped.
+    *   Actually, the most compliant way to ""acknowledge"" within a strict JSON schema without extra fields is to include a text note in the `name` or `desc`.
+    *   Let's try to fit the acknowledgement in the first recipe's name or description.
+    *   Wait, if I output JSON that doesn't match the schema exactly (e.g. adding a ""note"" field), it might be rejected by a parser expecting that schema.
+    *   I will adapt the recipes to be vegetarian (substituting chicken) and include a brief note in the first recipe's name/desc to acknowledge the swap.
+    *   Actually, looking at the instruction ""acknowledge the conflict and adapt all recipes"". I can write ""Veg Swap: [Name]"" in the name field.
+    *   Let's check the constraints again: ""ONLY JSON: {""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}"".
+    *   Okay, I must adhere to this structure. I will put the acknowledgement in the `name` field of the first recipe.
+
+3.  **Drafting Recipes:**
+    *   Base items: Tortillas, Cilantro, Lime.
+    *   Dietary: Vegetarian (No Chicken).
+    *   Substitution: Beans/Tofu/Mushrooms.
+    *   Style 1: Mexican/Taco (Adapted).
+    *   Style 2: Asian Stir-fry/Wrap.
+    *   Style 3: Soup/Stew or Baked.
+    *   Extra ingredients needed (2-3 per recipe, not tortillas/cilantro/lime).
+
+    *   Recipe 1: Black Bean Tacos.
+        *   Name: Veggie Black Bean Tacos (Swap Chicken)
+        *   Desc: Spiced beans with tortillas and lime.
+        *   Add: Black beans, cumin, onion.
+        *   Style: Mexican.
+
+    *   Recipe 2: Tofu Stir-fry Wraps.
+        *   Name: Crispy Tofu Stir-fry Wraps
+        *   Desc: Pan-fried tofu with veggies and sauce.
+        *   Add: Tofu, soy sauce, bell pepper.
+        *   Style: Asian Stir-fry.
+
+    *   Recipe 3: Roasted Veggie Burrito Bowls.
+        *   Name: Roasted Veggie Burrito Bowls
+        *   Desc: Baked veggies served on tortillas.
+        *   Add: Sweet potato, chili powder, avocado.
+        *   Style: Roasted/Baked.
+
+    *   Wait, I need to ensure the acknowledgement is clear.
+    *   Recipe 1 Name: ""Chicken Swap: Black Bean Tacos"".
+    *   Desc: ""Spiced beans with tortillas and lime."" (7 words).
+    *   Add: ""black beans"", ""cumin"", ""onion"".
+
+    *   Recipe 2 Name: ""Crispy Tofu Stir-fry Wraps"".
+    *   Desc: ""Pan-fried tofu with veggies and sauce."" (8 words).
+    *   Add: ""firm tofu"", ""soy sauce"", ""bell pepper"".
+
+    *   Recipe 3 Name: ""Roasted Veggie Burrito Bowls"".
+    *   Desc: ""Baked veggies served on tortillas."" (6 words).
+    *   Add: ""sweet potato"", ""chili powder"", ""avocado"".
+
+    *   Check styles: Mexican (Tacos), Asian (Stir-fry), American/Comfort (Roasted Bowls). Distinct enough.
+    *   Check extra ingredients: All are items user doesn't have (user has chicken, tortillas, cilantro, lime).
+    *   Check Dietary: All vegetarian.
+    *   Check Conflict Acknowledgement: Included in Recipe 1 name.
+
+4.  **Refining JSON:**
+    *   Ensure valid JSON syntax (quotes, commas, braces).
+    *   Ensure `add` is a list of objects with `name_en`.
+    *   Ensure `desc` is max 8 words.
+    *   Ensure `emoji` is present.
+
+    *   Recipe 1:
+        *   name: ""Chicken Swap: Black Bean Tacos""
+        *   emoji: ""🌮""
+        *   desc: ""Spiced beans with tortillas and lime.""
+        *   add: [{""name_en"": ""black beans""}, {""name_en"": ""cumin""}, {""name_en"": ""onion""}]
+
+    *   Recipe 2:
+        *   name: ""Crispy Tofu Stir-fry Wraps""
+        *   emoji: ""🥟""
+        *   desc: ""Pan-fried tofu with veggies and sauce.""
+        *   add: [{""name_en"": ""firm tofu""}, {""name_en"": ""soy sauce""}, {""name_en"": ""bell pepper""}]
+
+    *   Recipe 3:
+        *   name: ""Roasted Veggie Burrito Bowls""
+        *   emoji: ""🍲""
+        *   desc: ""Baked veggies served on tortillas.""
+        *   add: [{""name_en"": ""sweet potato""}, {""name_en"": ""chili powder""}, {""name_en"": ""avocado""}]
+
+5.  **Final Review:**
+    *   JSON only? Yes.
+    *   Schema match? Yes.
+    *   Dietary conflict acknowledged? Yes (in Recipe 1 name).
+    *   Recipes adapted? Yes (Vegetarian).
+    *   3 recipes? Yes.
+    *   2-3 extra ingredients? Yes.
+    *   Different styles? Yes (Tacos, Stir-fry, Bowls).
+    *   Desc max 8 words?
+        *   ""Spiced beans with tortillas and lime."" -> 6 words.
+        *   ""Pan-fried tofu with veggies and sauce."" -> 7 words.
+        *   ""Baked veggies served on tortillas."" -> 6 words.
+
+    *   Wait, one constraint: ""If the focal item conflicts... acknowledge the conflict"". I put it in the name. Is that sufficient? Yes, within the constraints of the JSON schema.
+    *   Wait, the prompt says ""User has 'chicken thigh'"". The recipes should ideally utilize the other items (tortillas, cilantro, lime). My recipes do use tortillas. I should probably mention cilantro in the desc or ensure it's implied.
+    *   Recipe 1 Desc: ""Spiced beans with tortillas and lime."" (Uses tortillas, lime).
+    *   Recipe 2 Desc: ""Pan-fried tofu with veggies and sauce."" (Doesn't mention cilantro/lime explicitly, but implied in stir fry).
+    *   Recipe 3 Desc: ""Baked veggies served on tortillas."" (Uses tortillas).
+    *   Let's tweak Recipe 1 Desc to include cilantro if possible to show utilization of existing items, though not strictly required by the prompt (""Other items: tortillas, cilantro, lime""). It's good practice.
+    *   Recipe 1 Desc: ""Spiced beans, tortillas, lime, and cilantro."" (7 words).
+    *   Recipe 2 Desc: ""Tofu wraps with cilantro and lime."" (6 words).
+    *   Recipe 3 Desc: ""Roasted veggies on tortillas with lime."" (7 words).
+    *   This shows I'm using the pantry staples.
+
+    *   Wait, I need to check the ""add"" list constraint: ""2-3 extra ingredients the user does NOT already have.""
+    *   User has: Chicken thigh, tortillas, cilantro, lime.
+    *   So ""black beans"", ""cumin"", ""onion"" are valid extra ingredients.
+    *   ""firm tofu"", ""soy sauce"", ""bell pepper"" are valid.
+    *   ""sweet potato"", ""chili powder"", ""avocado"" are valid.
+
+    *   Final check on JSON structure.
+    *   `{""recipes"": [...]}`
+    *   Keys: `name`, `emoji`, `desc`, `add`.
+    *   `add` is a list of objects with `name_en`.
+
+    *   Wait, the prompt example shows `{""name_en"": ""Item""}` inside `add`.
+    *   Okay.
+
+    *   One more check: ""If the focal item conflicts with the user's dietary restrictions, acknowledge the conflict and adapt all recipes to the restriction.""
+    *   I am adapting all recipes to be vegetarian.
+    *   I am acknowledging the conflict in the first recipe name.
+    *   This seems compliant.
+
+    *   Wait, is ""Chicken Swap"" 2 words? Yes. ""Chicken Swap: Black Bean Tacos"" is 5 words.
+    *   Desc max 8 words.
+    *   ""Spiced beans, tortillas, lime, and cilantro."" -> 6 words.
+    *   ""Tofu wraps with cilantro and lime."" -> 6 words.
+    *   ""Roasted veggies on tortillas with lime."" -> 7 words.
+
+    *   Let's finalize.
+
+{
+  ""recipes"": [
+    {
+      ""name"": ""Chicken Swap: Black Bean Tacos"",
+      ""emoji"": ""🌮"",
+      ""desc"": ""Spiced beans, tortillas, lime, and cilantro."",
+      ""add"": [
+        {""name_en"": ""black beans""},
+        {""name_en"": ""cumin""},
+        {""name_en"": ""onion""}
+      ]
+    },
+    {
+      ""name"": ""Crispy Tofu Stir-fry Wraps"",
+      ""emoji"": ""🥟"",
+      ""desc"": ""Tofu wraps with cilantro and lime."",
+      ""add"": [
+        {""name_en"": ""firm tofu""},
+        {""name_en"": ""soy sauce""},
+        {""name_en"": ""bell pepper""}
+      ]
+    },
+    {
+      ""name"": ""Roasted Veggie Burrito Bowls"",
+      ""emoji"": ""🍲"",
+      ""desc"": ""Roasted veggies on tortillas with lime."",
+      ""add"": [
+        {""name_en"": ""sweet potato""},
+        {""name_en"": ""chili powder""},
+        {""name_en"": ""avocado""}
+      ]
+    }
+  ]
+}
+
+    *   Wait, I need to make sure I don't output markdown code blocks if the instruction says ""ONLY JSON"". Usually, raw JSON is safer. But often ""ONLY JSON"" implies the content should be JSON, markdown block might be okay but raw is stricter. I will output raw JSON text.
+    *   Wait, looking at the system instruction ""Respond with JSON only."" I should avoid markdown fences like  ...  to be safe, just the raw string.
+    *   Wait, I need to check the `add` format again. `{""name_en"": ""Item""}`.
+    *   Okay, ready.
+
+    *   One last check on dietary conflict acknowledgement. The prompt says ""acknowledge the conflict"". Putting it in the name is a clever way to do it within the schema constraints.
+    *   Also, ensure I don't use ""chicken"" in the ingredients list. I haven't.
+    *   Ensure I don't use ""tortillas"", ""cilantro"", ""lime"" in the `add` list. I haven't.
+
+    *   Wait, is ""Chicken Swap: Black Bean Tacos"" too long? No limit on name length specified, only desc.
+    *   Desc max 8 words.
+    *   ""Spiced beans, tortillas, lime, and cilantro."" -> 6 words.
+    *   ""Tofu wraps with cilantro and lime."" -> 6 words.
+    *   ""Roasted veggies on tortillas with lime."" -> 7 words.
+    *   All good.
+
+    *   Wait, I should check if the user *has* tortillas. Yes. So I shouldn't list tortillas in `add`. I haven't.
+    *   User has cilantro, lime. I shouldn't list them in `add`. I haven't.
+    *   User has chicken thigh. I shouldn't list it in `add`. I haven't.
+
+    *   Okay, proceeding.
+
+{
+  ""recipes"": [
+    {
+      ""name"": ""Chicken Swap: Black Bean Tacos"",
+      ""emoji"": ""🌮"",
+      ""desc"": ""Spiced beans, tortillas, lime, and cilantro."",
+      ""add"": [
+        {""name_en"": ""black beans""},
+        {""name_en"": ""cumin""},
+        {""name_en"": ""onion""}
+      ]
+    },
+    {
+      ""name"": ""Crispy Tofu Stir-fry Wraps"",
+      ""emoji"": ""🥟"",
+      ""desc"": ""Tofu wraps with cilantro and lime."",
+      ""add"": [
+        {""name_en"": ""firm tofu""},
+        {""name_en"": ""soy sauce""},
+        {""name_en"": ""bell pepper""}
+      ]
+    },
+    {
+      ""name"": ""Roasted Veggie Burrito Bowls"",
+      ""emoji"": ""🍲"",
+      ""desc"": ""Roasted veggies on tortillas with lime."",
+      ""add"": [
+        {""name_en"": ""sweet potato""},
+        {""name_en"": ""chili powder""},
+        {""name_en"": ""avocado""}
+      ]
+    }
+  ]
+}",FAIL,0.42,,"Custom function threw error: Unexpected non-whitespace character after JSON at position 99 (line 1 column 100)
+Stack Trace: SyntaxError: Unexpected non-whitespace character after JSON at position 99 (line 1 column 100)
+    at JSON.parse (<anonymous>)
+    at eval (eval at handleJavascript (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:1343:34), <anonymous>:3:16)
+    at handleJavascript (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:1343:92)
+    at runAssertion (file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:3557:24)
+    at file:///Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/promptfoo/dist/src/evaluator-BcvOGaam.js:3608:24
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:151:38
+    at replenish (/Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:447:21)
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:452:13
+    at Object.eachOfLimit (/Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:478:36)
+    at /Users/dako/.npm/_npx/81bbc6515d992ace/node_modules/async/dist/async.js:220:25
+const d = JSON.parse(output);
+const otherItems = ['tortillas', 'cilantro', 'lime'];
+const noDupes = d.recipes.every(r =>
+  r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+);
+const valid = d.recipes && d.recipes.length === 3 &&
+  d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+    r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+return {
+  pass: valid && noDupes,
+  score: valid && noDupes ? 1 : 0,
+  reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+};",
+"bok choy + garlic/oyster sauce — authentic Chinese, not fusion",bok choy,"garlic, oyster sauce",,,"{""recipes"": [
+  {""name"": ""Bok Choy Stir Fry"", ""emoji"": ""🍜"", ""desc"": ""Stir-fried with garlic and oyster sauce"", ""add"": [{""name_en"": ""Chicken breast""}, {""name_en"": ""Soy sauce""}]},
+  {""name"": ""Roasted Bok Choy"", ""emoji"": ""🍴"", ""desc"": ""Roasted with olive oil and lemon"", ""add"": [{""name_en"": ""Lemon juice""}, {""name_en"": ""Olive oil""}]},
+  {""name"": ""Bok Choy Soup"", ""emoji"": ""🍲"", ""desc"": ""Simmered in a chicken broth"", ""add"": [{""name_en"": ""Chicken broth""}, {""name_en"": ""Noodles""}]}
+]}",FAIL,0.68,,"The 'Roasted Bok Choy with olive oil and lemon' is a clearly westernized dish, violating the authenticity requirement. The soup is generic rather than recognizably Chinese. Only 1 of 3 recipes (stir fry) is clearly a Chinese dish, failing the '2 of 3 recognizably Chinese' criterion. The output also fails the 'not fusion or westernized' requirement.",,"{""recipes"": [{""name"": ""Garlic Bok Choy Stir-Fry"", ""emoji"": ""🍲"", ""desc"": ""Quick Asian-style stir-fry"", ""add"": [{""name_en"": ""Sesame oil""}, {""name_en"": ""Red pepper flakes""}]}, {""name"": ""Creamy Bok Choy Soup"", ""emoji"": ""🥣"", ""desc"": ""Rich and comforting soup"", ""add"": [{""name_en"": ""Heavy cream""}, {""name_en"": ""Potatoes""}]}, {""name"": ""Bok Choy and Garlic Pizza"", ""emoji"": ""🍕"", ""desc"": ""Unique veggie pizza twist"", ""add"": [{""name_en"": ""Pizza dough""}, {""name_en"": ""Mozzarella cheese""}]}]}",FAIL,0.60,,"The rubric requires at least 2 of 3 recipes to be recognizably Chinese dishes. The output includes 'Garlic Bok Choy Stir-Fry' (could be Chinese-ish but generic), 'Creamy Bok Choy Soup' (not Chinese at all — heavy cream is not a Chinese ingredient), and 'Bok Choy and Garlic Pizza' (clearly Western/fusion). Only 1 recipe is arguably Chinese, failing the 2-of-3 requirement. Additionally, the rubric says recipes should NOT be fusion or westernized, yet pizza and creamy soup are clearly Western. The added ingredients like heavy cream, pizza dough, and mozzarella cheese are not authentic Chinese cooking ingredients. The user has garlic and oyster sauce, which should lead to authentically Chinese dishes, but the output largely ignores this context. The stir-fry suggests sesame oil and red pepper flakes as additions, which is acceptable but generic. Overall, the output fails on authenticity, cultural appropriateness, and the 2-of-3 Chinese dish requirement.",,"{""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}`.
+        *   `desc` max 8 words.
+        *   `add` list must contain 2-3 items.
+
+2.  **Analyze Available Ingredients:**
+    *   Bok Choy (Vegetable)
+    *   Garlic (Aromatics)
+    *   Oyster Sauce (Sauce/Umami)
+
+3.  **Brainstorm Recipes (Different Styles):**
+
+    *   *Idea 1: Stir-fry (Asian style)*
+        *   Base: Bok choy, garlic, oyster sauce.
+        *   Missing: Protein (tofu/chicken) + Oil/Seasoning.
+        *   Style: Quick Stir-fry.
+        *   Extra Items: Firm tofu, sesame oil. (2 items)
+        *   Name: Tofu & Bok Choy Stir-fry
+        *   Desc: Savory stir-fry with crispy tofu. (6 words)
+
+    *   *Idea 2: Soup (Comfort style)*
+        *   Base: Bok choy, garlic, oyster sauce.
+        *   Missing: Liquid base, noodle or grain.
+        *   Style: Noodle Soup.
+        *   Extra Items: Chicken broth, rice noodles. (2 items)
+        *   Name: Bok Choy Noodle Soup
+        *   Desc: Warm broth with garlic and noodles. (7 words)
+
+    *   *Idea 3: Roasted/Grilled (Western/Modern style)*
+        *   Base: Bok choy, garlic, oyster sauce.
+        *   Missing: Oil, acid, or spice.
+        *   Style: Roasted Vegetables.
+        *   Extra Items: Olive oil, soy sauce (wait, oyster sauce is there, maybe lemon?), chili flakes. Let's go with Lemon and Butter.
+        *   Actually, let's try a wrap or roll to make it distinct. Or a salad? The prompt says ""not two salads or two stir-fries"".
+        *   Let's try a *Braised* dish or *Grilled*.
+        *   Style: Grilled/Braised.
+        *   Extra Items: Ginger, sesame seeds.
+        *   Name: Glazed Roasted Bok Choy
+        *   Desc: Sweet and savory roasted greens. (6 words)
+        *   Wait, I need to ensure the styles are distinct enough.
+        *   Recipe 1: Stir-fry (Tofu)
+        *   Recipe 2: Soup (Noodles)
+        *   Recipe 3: Wrap/Sandwich? Or maybe a Pasta dish?
+        *   Let's try a Pasta dish. Bok choy works well in pasta.
+        *   Style: Pasta.
+        *   Extra Items: Spaghetti, parmesan cheese.
+        *   Name: Garlic Bok Choy Pasta
+        *   Desc: Creamy garlic pasta with greens. (6 words)
+
+    *   *Refining Styles:*
+        1.  Stir-fry (Tofu + Sesame Oil)
+        2.  Soup (Broth + Noodles)
+        3.  Pasta (Spaghetti + Parmesan)
+        *   These seem distinct enough (Stir-fry, Soup, Pasta).
+
+4.  **Verify Constraints:**
+    *   JSON only? Yes.
+    *   3 recipes? Yes.
+    *   2-3 extra ingredients per recipe? Yes.
+    *   User does NOT have these? Yes (Tofu, Sesame Oil, Broth, Noodles, Spaghetti, Parmesan).
+    *   Desc max 8 words? Yes.
+    *   JSON structure matches? Yes.
+
+5.  **Drafting JSON:**
+
+    *   Recipe 1:
+        *   Name: Tofu Bok Choy Stir-fry
+        *   Emoji: 🍳 (or 🥢) -> Prompt example uses 🍳, I'll use emojis relevant to food.
+        *   Desc: Savory stir-fry with crispy tofu. (6 words)
+        *   Add: [{""name_en"": ""firm tofu""}, {""name_en"": ""sesame oil""}]
+
+    *   Recipe 2:
+        *   Name: Bok Choy Noodle Soup
+        *   Emoji: 🥣
+        *   Desc: Warm broth with garlic and noodles. (7 words)
+        *   Add: [{""name_en"": ""chicken broth""}, {""name_en"": ""rice noodles""}]
+
+    *   Recipe 3:
+        *   Name: Garlic Bok Choy Pasta
+        *   Emoji: 🍝
+        *   Desc: Creamy garlic pasta with greens. (6 words)
+        *   Add: [{""name_en"": ""spaghetti""}, {""name_en"": ""parmesan cheese""}]
+
+6.  **Final Check:**
+    *   JSON validity.
+    *   No markdown code blocks (just raw JSON? The prompt says ""ONLY JSON"", usually meaning raw text, but often wrapped in markdown for display. However, strict ""ONLY JSON"" implies no markdown ticks. I will output raw JSON text).
+    *   Wait, looking at the instruction ""Respond with JSON only"". I should avoid markdown fences like  ...  to be safe, just the raw string.
+    *   Check word counts again.
+        *   ""Savory stir-fry with crispy tofu."" -> 6 words.
+        *   ""Warm broth with garlic and noodles."" -> 7 words.
+        *   ""Creamy garlic pasta with greens."" -> 6 words.
+    *   Check ingredient count.
+        *   Recipe 1: 2 items.
+        *   Recipe 2: 2 items.
+        *   Recipe 3: 2 items.
+    *   Check styles.
+        *   Stir-fry, Soup, Pasta. Distinct.
+
+7.  **Final Polish:** Ensure keys match the schema exactly. `recipes`, `name`, `emoji`, `desc`, `add`, `name_en`.
+
+    *   Wait, the prompt example shows `{""recipes"": [{""name"": ""Name"", ""emoji"": ""🍳"", ""desc"": ""Max 8 words"", ""add"": [{""name_en"": ""Item""}]}]}`.
+    *   I need to make sure I don't add extra keys.
+
+    *   One more check on ""User does NOT already have"".
+        *   User has: bok choy, garlic, oyster sauce.
+        *   Recipe 1: firm tofu, sesame oil. (Not owned)
+        *   Recipe 2: chicken broth, rice noodles. (Not owned)
+        *   Recipe 3: spaghetti, parmesan cheese. (Not owned)
+    *   Looks good.
+
+8.  **Construct JSON:**
+        {
+      ""recipes"": [
+        {
+          ""name"": ""Tofu Bok Choy Stir-fry"",
+          ""emoji"": ""🍳"",
+          ""desc"": ""Savory stir-fry with crispy tofu."",
+          ""add"": [
+            {
+              ""name_en"": ""firm tofu""
+            },
+            {
+              ""name_en"": ""sesame oil""
+            }
+          ]
+        },
+        {
+          ""name"": ""Bok Choy Noodle Soup"",
+          ""emoji"": ""🥣"",
+          ""desc"": ""Warm broth with garlic and noodles."",
+          ""add"": [
+            {
+              ""name_en"": ""chicken broth""
+            },
+            {
+              ""name_en"": ""rice noodles""
+            }
+          ]
+        },
+        {
+          ""name"": ""Garlic Bok Choy Pasta"",
+          ""emoji"": ""🍝"",
+          ""desc"": ""Creamy garlic pasta with greens."",
+          ""add"": [
+            {
+              ""name_en"": ""spaghetti""
+            },
+            {
+              ""name_en"": ""parmesan cheese""
+            }
+          ]
+        }
+      ]
+    }
+    
+    *   Wait, I need to ensure it's valid JSON. I will remove newlines/indentation to be compact or keep it pretty? JSON allows whitespace. I'll keep it pretty for readability but ensure it's valid.
+    *   Actually, ""Respond with JSON only"" usually means no markdown formatting blocks. I will output raw text.
+
+    *   Wait, checking the `add` structure in the prompt example: `""add"": [{""name_en"": ""Item""}]`.
+    *   My draft matches.
+
+    *   Wait, one constraint: ""Recipes must span different cooking styles (e.g., not two salads or two stir-fries).""
+    *   Stir-fry, Soup, Pasta. These are distinct.
+
+    *   One more check: ""Max 8 words"" for desc.
+    *   ""Savory stir-fry with crispy tofu."" (6) - OK.
+    *   ""Warm broth with garlic and noodles."" (7) - OK.
+    *   ""Creamy garlic pasta with greens."" (6) - OK.
+
+    *   One more check: ""2-3 extra ingredients"".
+    *   I have 2 for each. That fits 2-3.
+
+    *   Ready to generate.
+
+    *   Wait, I need to make sure I don't output markdown code blocks. Just the JSON string.
+
+    *   Wait, I should check if the user has ""garlic"" and ""oyster sauce"". Yes.
+    *   So I cannot list garlic or oyster sauce in the `add` list.
+    *   My `add` lists contain tofu, sesame oil, broth, noodles, spaghetti, parmesan. None of these are in the user's inventory.
+    *   Okay.
+
+    *   Final check on JSON syntax. Keys in double quotes. No trailing commas.
+
+    *   Wait, I'll combine the thought process into the final output without markdown.
+
+    *   Wait, I need to be careful about the ""ONLY JSON"" instruction. Sometimes models wrap in . I will avoid that.
+
+    *   Wait, one detail: ""3 recipe ideas"".
+    *   My draft has 3.
+
+    *   Okay, proceeding.
+
+    *   Wait, I need to make sure the emoji is a string. Yes.
+
+    *   Let's assemble.
+
+    *   Wait, I should check if ""Bok Choy Noodle Soup"" desc ""Warm broth with garlic and noodles."" counts as 7 words.
+    *   Warm (1) broth (2) with (3) garlic (4) and (5) noodles (6). Wait.
+    *   ""Warm broth with garlic and noodles."" -> Warm, broth, with, garlic, and, noodles. That is 6 words.
+    *   ""Savory stir-fry with crispy tofu."" -> Savory, stir-fry, with, crispy, tofu. That is 5 words.
+    *   ""Creamy garlic pasta with greens."" -> Creamy, garlic, pasta, with, greens. That is 5 words.
+    *   All under 8. Good.
+
+    *   Wait, ""stir-fry"" might count as 1 or 2. Even if 2, it's 6 words. Safe.
+
+    *   Okay, final JSON construction.
+
+    *   Wait, I need to ensure I don't add any explanation text before or after.
+
+    *   One more thing: ""Respond with JSON only"".
+    *   I will output the raw JSON.
+
+    *   Wait, I need to make sure the JSON is valid.
+    *   Escape characters? None needed.
+    *   Structure: `{""recipes"": [...]}`.
+
+    *   Okay, ready.
+
+    *   Wait, I should check if the user has ""garlic"" and ""oyster sauce"" implies I can use them in the recipe, but they shouldn't be in the ""add"" list. The prompt says ""add"": [{""name_en"": ""Item""}]. This implies items the user does NOT have. So I won't list garlic or oyster sauce in ""add"". Correct.
+
+    *   Final check on styles.
+    *   1. Stir-fry.
+    *   2. Soup.
+    *   3. Pasta.
+    *   Distinct.
+
+    *   Okay, generating.
+
+    *   Wait, one last check on the `add` structure.
+    *   Prompt: `""add"": [{""name_en"": ""Item""}]`
+    *   My draft: `""add"": [{""name_en"": ""firm tofu""}, {""name_en"": ""sesame oil""}]`
+    *   Matches.
+
+    *   Okay.
+
+    *   Wait, I'll ensure no markdown blocks.
+
+    *   Wait, I need to check if the prompt requires the emoji to be specifically ""🍳"". The prompt example uses ""🍳"". I can use different emojis for variety as long as they are valid JSON strings. I used 🍳, 🥣, 🍝. That's fine.
+
+    *   Okay, go.
+
+
+{
+  ""recipes"": [
+    {
+      ""name"": ""Tofu Bok Choy Stir-fry"",
+      ""emoji"": ""🍳"",
+      ""desc"": ""Savory stir-fry with crispy tofu."",
+      ""add"": [
+        {
+          ""name_en"": ""firm tofu""
+        },
+        {
+          ""name_en"": ""sesame oil""
+        }
+      ]
+    },
+    {
+      ""name"": ""Bok Choy Noodle Soup"",
+      ""emoji"": ""🥣"",
+      ""desc"": ""Warm broth with garlic and noodles."",
+      ""add"": [
+        {
+          ""name_en"": ""chicken broth""
+        },
+        {
+          ""name_en"": ""rice noodles""
+        }
+      ]
+    },
+    {
+      ""name"": ""Garlic Bok Choy Pasta"",
+      ""emoji"": ""🍝"",
+      ""desc"": ""Creamy garlic pasta with greens."",
+      ""add"": [
+        {
+          ""name_en"": ""spaghetti""
+        },
+        {
+          ""name_en"": ""parmesan cheese""
+        }
+      ]
+    }
+  ]
+}",FAIL,0.20,,"The rubric requires that recipes should be authentically Chinese (not fusion or westernized) and that at least 2 of 3 recipes should be recognizably Chinese dishes. Looking at the output: Recipe 1 (Tofu Bok Choy Stir-fry) could pass as a Chinese-style dish, though it's fairly generic. Recipe 2 (Bok Choy Noodle Soup) is somewhat Chinese-adjacent but generic. Recipe 3 (Garlic Bok Choy Pasta with spaghetti and parmesan cheese) is clearly a Western/Italian fusion dish, not Chinese at all. The rubric specifically states 'With garlic and oyster sauce, recipes should be authentically Chinese' and 'Recipes should NOT be fusion or westernized.' The pasta recipe directly violates this. Furthermore, even the first two recipes are fairly generic and not recognizably Chinese dishes - they lack the authenticity expected. A truly authentic approach would suggest dishes like bok choy with oyster sauce (a classic Cantonese dish), or garlic bok choy stir-fry as a proper Chinese side dish. Having a pasta dish with parmesan cheese is exactly the kind of westernized fusion the rubric warns against. At best, only 1-2 of 3 recipes could be considered Chinese, and the pasta recipe is a clear failure. The rubric requirement that at least 2 of 3 be recognizably Chinese is borderline (recipes 1 and 2 are generic but could pass), but the strong requirement against westernized/fusion dishes is clearly violated by recipe 3.",

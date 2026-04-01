@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+# Inspire Item eval config — Scenario 3: Open-source cheap tier.
+# Compares Qwen 3.5-9B vs Llama 4 Scout vs DeepSeek V3.1 (same prompt).
+# Run: npx promptfoo@latest eval -c configs/scenario3_inspire_item_cheap.yaml --env-file ../../.env --no-cache
+
+description: "Inspire Item — Scenario 3: Open-source cheap tier"
+
+prompts:
+  - file://../prompts/current/inspire_item.json
+
+providers:
+  - id: openrouter:qwen/qwen3.5-9b
+    label: "Qwen 3.5-9B ($0.05/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 4096
+  - id: openrouter:meta-llama/llama-4-scout
+    label: "Llama 4 Scout ($0.08/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 800
+  - id: openrouter:deepseek/deepseek-chat-v3.1
+    label: "DeepSeek V3.1 ($0.15/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 800
+
+defaultTest:
+  options:
+    transform: "output.replace(/<think>[\\s\\S]*?<\\/think>/g, '').replace(/```json\\n?|```/g, '').replace(/^[\\s\\S]*?(?=\\{)/m, '').trim()"
+
+tests: file://../fixtures/inspire_item_cases.yaml
