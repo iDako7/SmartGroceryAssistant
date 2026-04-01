@@ -1,0 +1,10 @@
+[project]
+name = "list-service-loadtest"
+version = "0.1.0"
+description = "Locust load tests for the List Service (Experiments 2a & 2b)"
+requires-python = ">=3.12"
+dependencies = [
+    "locust>=2.29",
+    "PyJWT>=2.8",
+    "psycopg[binary]>=3.1",
+]
