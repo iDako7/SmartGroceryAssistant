@@ -1,0 +1,2626 @@
+evalId: eval-DRI-2026-04-01T03:13:03
+results:
+  version: 3
+  timestamp: '2026-04-01T03:13:03.785Z'
+  prompts:
+    - raw: >-
+        [{"role":"system","content":"You are a grocery item translator. Respond
+        with JSON only."},{"role":"user","content":"Translate the grocery item
+        \"{{name_en}}\" to {{target_language}}.{% if profile_context
+        %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+        counterpart in {{target_language}} (e.g. baking soda vs baking powder),
+        warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\":
+        \"...\"}"}]
+      label: >-
+        prompts/current/translate.json: [{"role":"system","content":"You are a
+        grocery item translator. Respond with JSON
+        only."},{"role":"user","content":"Translate the grocery item
+        \"{{name_en}}\" to {{target_language}}.{% if profile_context
+        %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+        counterpart in {{target_language}} (e.g. baking soda vs baking powder),
+        warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\":
+        \"...\"}"}]
+      id: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      provider: GPT-5.4 Nano ($0.20/M)
+      metrics:
+        score: 4.895
+        testPassCount: 5
+        testFailCount: 0
+        testErrorCount: 0
+        assertPassCount: 20
+        assertFailCount: 0
+        totalLatencyMs: 6774
+        tokenUsage:
+          prompt: 362
+          completion: 180
+          cached: 0
+          total: 542
+          numRequests: 5
+          completionDetails:
+            reasoning: 0
+            acceptedPrediction: 0
+            rejectedPrediction: 0
+          assertions:
+            total: 3573
+            prompt: 2742
+            completion: 831
+            cached: 0
+            numRequests: 0
+            completionDetails:
+              reasoning: 0
+              acceptedPrediction: 0
+              rejectedPrediction: 0
+        namedScores: {}
+        namedScoresCount: {}
+        cost: 0
+    - raw: >-
+        [{"role":"system","content":"You are a grocery item translator. Respond
+        with JSON only."},{"role":"user","content":"Translate the grocery item
+        \"{{name_en}}\" to {{target_language}}.{% if profile_context
+        %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+        counterpart in {{target_language}} (e.g. baking soda vs baking powder),
+        warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\":
+        \"...\"}"}]
+      label: >-
+        prompts/current/translate.json: [{"role":"system","content":"You are a
+        grocery item translator. Respond with JSON
+        only."},{"role":"user","content":"Translate the grocery item
+        \"{{name_en}}\" to {{target_language}}.{% if profile_context
+        %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+        counterpart in {{target_language}} (e.g. baking soda vs baking powder),
+        warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\":
+        \"...\"}"}]
+      id: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      provider: GPT-5.4 Mini ($0.75/M)
+      metrics:
+        score: 4.9625
+        testPassCount: 5
+        testFailCount: 0
+        testErrorCount: 0
+        assertPassCount: 20
+        assertFailCount: 0
+        totalLatencyMs: 4338
+        tokenUsage:
+          prompt: 362
+          completion: 220
+          cached: 0
+          total: 582
+          numRequests: 5
+          completionDetails:
+            reasoning: 0
+            acceptedPrediction: 0
+            rejectedPrediction: 0
+          assertions:
+            total: 3639
+            prompt: 2849
+            completion: 790
+            cached: 0
+            numRequests: 0
+            completionDetails:
+              reasoning: 0
+              acceptedPrediction: 0
+              rejectedPrediction: 0
+        namedScores: {}
+        namedScoresCount: {}
+        cost: 0
+  results:
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 611
+          prompt: 485
+          completion: 126
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - name_translated
+                  - notes
+                properties:
+                  name_translated:
+                    type: string
+                  notes:
+                    type: string
+          - pass: true
+            score: 1
+            reason: Has translation
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery/cooking context. '牛奶' is the
+                standard Chinese translation for milk. Notes field provides
+                useful context when relevant, empty notes acceptable for
+                unambiguous items.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The translation '牛奶' is the standard and accurate Chinese
+              translation for 'milk' in a grocery/cooking context. The notes
+              field is empty, which is acceptable for such an unambiguous,
+              common item.
+            tokensUsed:
+              total: 323
+              prompt: 257
+              completion: 66
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"牛奶\",\"notes\":\"\"}\n</Output>\n<Rubric>\nTranslation
+                is accurate for grocery/cooking context. '牛奶' is the standard
+                Chinese translation for milk. Notes field provides useful
+                context when relevant, empty notes acceptable for unambiguous
+                items.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery/cooking context. '牛奶' is the
+                standard Chinese translation for milk. Notes field provides
+                useful context when relevant, empty notes acceptable for
+                unambiguous items.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The translation is accurate: '牛奶' is the standard Chinese word for
+              milk, which fits a grocery/cooking context. The notes field is
+              empty, which is acceptable for an unambiguous item like milk.
+            tokensUsed:
+              total: 288
+              prompt: 228
+              completion: 60
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"牛奶\",\"notes\":\"\"}\n</Output>\n<Rubric>\nTranslation
+                is accurate for grocery/cooking context. '牛奶' is the standard
+                Chinese translation for milk. Notes field provides useful
+                context when relevant, empty notes acceptable for unambiguous
+                items.\n\n</Rubric>"}]
+      id: 10c312e9-f08c-43ed-9257-41cdd0cf0572
+      latencyMs: 774
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery item translator. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Translate the grocery item \"milk\" to Chinese.\nIf the item has a commonly confused counterpart in Chinese (e.g. baking soda vs baking powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/translate.json: [{"role":"system","content":"You are a
+          grocery item translator. Respond with JSON
+          only."},{"role":"user","content":"Translate the grocery item
+          \"{{name_en}}\" to {{target_language}}.{% if profile_context
+          %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+          counterpart in {{target_language}} (e.g. baking soda vs baking
+          powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\",
+          \"notes\": \"...\"}"}]
+        config: {}
+      promptId: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: '{"name_translated":"牛奶","notes":""}'
+        tokenUsage:
+          total: 87
+          prompt: 71
+          completion: 16
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: milk to Chinese — simple unambiguous translation
+        vars: &ref_0
+          name_en: milk
+          target_language: Chinese
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - name_translated
+                - notes
+              properties:
+                name_translated:
+                  type: string
+                notes:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              return { pass: d.name_translated && d.name_translated.length > 0,
+              score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+              reason: d.name_translated ? 'Has translation' : 'Missing
+              translation' };
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery/cooking context. '牛奶' is the
+              standard Chinese translation for milk. Notes field provides useful
+              context when relevant, empty notes acceptable for unambiguous
+              items.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery/cooking context. '牛奶' is the
+              standard Chinese translation for milk. Notes field provides useful
+              context when relevant, empty notes acceptable for unambiguous
+              items.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 0
+      vars: *ref_0
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 605
+          prompt: 485
+          completion: 120
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - name_translated
+                  - notes
+                properties:
+                  name_translated:
+                    type: string
+                  notes:
+                    type: string
+          - pass: true
+            score: 1
+            reason: Has translation
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery/cooking context. '牛奶' is the
+                standard Chinese translation for milk. Notes field provides
+                useful context when relevant, empty notes acceptable for
+                unambiguous items.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The translation '牛奶' is the standard and accurate Chinese
+              translation for 'milk' in a grocery/cooking context. The notes
+              field is empty, which is acceptable for such an unambiguous,
+              common item.
+            tokensUsed:
+              total: 323
+              prompt: 257
+              completion: 66
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"牛奶\",\"notes\":\"\"}\n</Output>\n<Rubric>\nTranslation
+                is accurate for grocery/cooking context. '牛奶' is the standard
+                Chinese translation for milk. Notes field provides useful
+                context when relevant, empty notes acceptable for unambiguous
+                items.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery/cooking context. '牛奶' is the
+                standard Chinese translation for milk. Notes field provides
+                useful context when relevant, empty notes acceptable for
+                unambiguous items.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The translation '牛奶' is the standard Chinese word for 'milk' in a
+              grocery/cooking context, and the notes field being empty is
+              acceptable for an unambiguous item.
+            tokensUsed:
+              total: 282
+              prompt: 228
+              completion: 54
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"牛奶\",\"notes\":\"\"}\n</Output>\n<Rubric>\nTranslation
+                is accurate for grocery/cooking context. '牛奶' is the standard
+                Chinese translation for milk. Notes field provides useful
+                context when relevant, empty notes acceptable for unambiguous
+                items.\n\n</Rubric>"}]
+      id: 6926f286-b4ba-42f8-89b7-19417650dcb1
+      latencyMs: 779
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery item translator. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Translate the grocery item \"milk\" to Chinese.\nIf the item has a commonly confused counterpart in Chinese (e.g. baking soda vs baking powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/translate.json: [{"role":"system","content":"You are a
+          grocery item translator. Respond with JSON
+          only."},{"role":"user","content":"Translate the grocery item
+          \"{{name_en}}\" to {{target_language}}.{% if profile_context
+          %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+          counterpart in {{target_language}} (e.g. baking soda vs baking
+          powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\",
+          \"notes\": \"...\"}"}]
+        config: {}
+      promptId: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: '{"name_translated":"牛奶","notes":""}'
+        tokenUsage:
+          total: 87
+          prompt: 71
+          completion: 16
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: milk to Chinese — simple unambiguous translation
+        vars: &ref_1
+          name_en: milk
+          target_language: Chinese
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - name_translated
+                - notes
+              properties:
+                name_translated:
+                  type: string
+                notes:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              return { pass: d.name_translated && d.name_translated.length > 0,
+              score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+              reason: d.name_translated ? 'Has translation' : 'Missing
+              translation' };
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery/cooking context. '牛奶' is the
+              standard Chinese translation for milk. Notes field provides useful
+              context when relevant, empty notes acceptable for unambiguous
+              items.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery/cooking context. '牛奶' is the
+              standard Chinese translation for milk. Notes field provides useful
+              context when relevant, empty notes acceptable for unambiguous
+              items.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 0
+      vars: *ref_1
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.975
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 685
+          prompt: 507
+          completion: 178
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - name_translated
+                  - notes
+                properties:
+                  name_translated:
+                    type: string
+                  notes:
+                    type: string
+          - pass: true
+            score: 1
+            reason: Has translation
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery context. Either 香菜 or 芫荽 are
+                acceptable translations for cilantro in Chinese. Notes should
+                mention regional variants if provided. The translation should be
+                for the herb used in cooking, not coriander seeds.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.9
+            reason: >-
+              香菜 is an accurate and common Chinese translation for cilantro (the
+              herb used in cooking) in a grocery context. 香菜 is the standard
+              Mandarin term used in mainland China and is widely understood. The
+              notes field is empty, which is acceptable since the rubric says
+              'if provided' regarding regional variants - no regional variant
+              information was provided in the input to translate.
+            tokensUsed:
+              total: 374
+              prompt: 271
+              completion: 103
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"香菜\",\"notes\":\"\"}\n</Output>\n<Rubric>\nTranslation
+                is accurate for grocery context. Either 香菜 or 芫荽 are acceptable
+                translations for cilantro in Chinese. Notes should mention
+                regional variants if provided. The translation should be for the
+                herb used in cooking, not coriander seeds.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery context. Either 香菜 or 芫荽 are
+                acceptable translations for cilantro in Chinese. Notes should
+                mention regional variants if provided. The translation should be
+                for the herb used in cooking, not coriander seeds.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The translation '香菜' is an acceptable Chinese translation for
+              cilantro in a grocery/cooking context, and it refers to the herb
+              rather than coriander seeds. The notes field is empty, but the
+              rubric only requires regional variants to be mentioned if
+              provided; none were provided in the output.
+            tokensUsed:
+              total: 311
+              prompt: 236
+              completion: 75
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"香菜\",\"notes\":\"\"}\n</Output>\n<Rubric>\nTranslation
+                is accurate for grocery context. Either 香菜 or 芫荽 are acceptable
+                translations for cilantro in Chinese. Notes should mention
+                regional variants if provided. The translation should be for the
+                herb used in cooking, not coriander seeds.\n\n</Rubric>"}]
+      id: 3f065987-fa3f-424a-b3c3-ae73aee9ea8f
+      latencyMs: 672
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery item translator. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Translate the grocery item \"cilantro\" to Chinese.\nIf the item has a commonly confused counterpart in Chinese (e.g. baking soda vs baking powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/translate.json: [{"role":"system","content":"You are a
+          grocery item translator. Respond with JSON
+          only."},{"role":"user","content":"Translate the grocery item
+          \"{{name_en}}\" to {{target_language}}.{% if profile_context
+          %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+          counterpart in {{target_language}} (e.g. baking soda vs baking
+          powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\",
+          \"notes\": \"...\"}"}]
+        config: {}
+      promptId: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: '{"name_translated":"香菜","notes":""}'
+        tokenUsage:
+          total: 88
+          prompt: 72
+          completion: 16
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.975
+      success: true
+      testCase:
+        description: cilantro to Chinese — regional variant handling
+        vars: &ref_2
+          name_en: cilantro
+          target_language: Chinese
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - name_translated
+                - notes
+              properties:
+                name_translated:
+                  type: string
+                notes:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              return { pass: d.name_translated && d.name_translated.length > 0,
+              score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+              reason: d.name_translated ? 'Has translation' : 'Missing
+              translation' };
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery context. Either 香菜 or 芫荽 are
+              acceptable translations for cilantro in Chinese. Notes should
+              mention regional variants if provided. The translation should be
+              for the herb used in cooking, not coriander seeds.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery context. Either 香菜 or 芫荽 are
+              acceptable translations for cilantro in Chinese. Notes should
+              mention regional variants if provided. The translation should be
+              for the herb used in cooking, not coriander seeds.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 1
+      vars: *ref_2
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 762
+          prompt: 591
+          completion: 171
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - name_translated
+                  - notes
+                properties:
+                  name_translated:
+                    type: string
+                  notes:
+                    type: string
+          - pass: true
+            score: 1
+            reason: Has translation
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery context. Either 香菜 or 芫荽 are
+                acceptable translations for cilantro in Chinese. Notes should
+                mention regional variants if provided. The translation should be
+                for the herb used in cooking, not coriander seeds.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The translation '香菜' is accurate for cilantro in a grocery
+              context. The notes correctly clarify it refers to fresh leaves and
+              stems (not seeds), mentions the regional variant '芫荽' used in
+              China, and helpfully distinguishes it from '芹菜' (celery) and '欧芹'
+              (parsley). All rubric criteria are met.
+            tokensUsed:
+              total: 421
+              prompt: 318
+              completion: 103
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"香菜\",\"notes\":\"常指新鲜香菜叶和茎；在中国也常叫芫荽。不要与“芹菜”或“欧芹”混淆。\"}\n</Output>\n<Rubric>\nTranslation
+                is accurate for grocery context. Either 香菜 or 芫荽 are acceptable
+                translations for cilantro in Chinese. Notes should mention
+                regional variants if provided. The translation should be for the
+                herb used in cooking, not coriander seeds.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery context. Either 香菜 or 芫荽 are
+                acceptable translations for cilantro in Chinese. Notes should
+                mention regional variants if provided. The translation should be
+                for the herb used in cooking, not coriander seeds.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The translation is accurate for the grocery/herb context: 香菜 is an
+              accepted Chinese translation for cilantro, and the note correctly
+              mentions the regional/common variant 芫荽. It also indicates the
+              fresh leaves and stems used in cooking rather than coriander
+              seeds.
+            tokensUsed:
+              total: 341
+              prompt: 273
+              completion: 68
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"香菜\",\"notes\":\"常指新鲜香菜叶和茎；在中国也常叫芫荽。不要与“芹菜”或“欧芹”混淆。\"}\n</Output>\n<Rubric>\nTranslation
+                is accurate for grocery context. Either 香菜 or 芫荽 are acceptable
+                translations for cilantro in Chinese. Notes should mention
+                regional variants if provided. The translation should be for the
+                herb used in cooking, not coriander seeds.\n\n</Rubric>"}]
+      id: b469ec7d-6064-41e4-8a85-5346ba508f64
+      latencyMs: 925
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery item translator. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Translate the grocery item \"cilantro\" to Chinese.\nIf the item has a commonly confused counterpart in Chinese (e.g. baking soda vs baking powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/translate.json: [{"role":"system","content":"You are a
+          grocery item translator. Respond with JSON
+          only."},{"role":"user","content":"Translate the grocery item
+          \"{{name_en}}\" to {{target_language}}.{% if profile_context
+          %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+          counterpart in {{target_language}} (e.g. baking soda vs baking
+          powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\",
+          \"notes\": \"...\"}"}]
+        config: {}
+      promptId: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: '{"name_translated":"香菜","notes":"常指新鲜香菜叶和茎；在中国也常叫芫荽。不要与“芹菜”或“欧芹”混淆。"}'
+        tokenUsage:
+          total: 125
+          prompt: 72
+          completion: 53
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: cilantro to Chinese — regional variant handling
+        vars: &ref_3
+          name_en: cilantro
+          target_language: Chinese
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - name_translated
+                - notes
+              properties:
+                name_translated:
+                  type: string
+                notes:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              return { pass: d.name_translated && d.name_translated.length > 0,
+              score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+              reason: d.name_translated ? 'Has translation' : 'Missing
+              translation' };
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery context. Either 香菜 or 芫荽 are
+              acceptable translations for cilantro in Chinese. Notes should
+              mention regional variants if provided. The translation should be
+              for the herb used in cooking, not coriander seeds.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery context. Either 香菜 or 芫荽 are
+              acceptable translations for cilantro in Chinese. Notes should
+              mention regional variants if provided. The translation should be
+              for the herb used in cooking, not coriander seeds.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 1
+      vars: *ref_3
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.9575
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 896
+          prompt: 671
+          completion: 225
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - name_translated
+                  - notes
+                properties:
+                  name_translated:
+                    type: string
+                  notes:
+                    type: string
+          - pass: true
+            score: 1
+            reason: Has translation
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery context. The specific cut
+                (thigh, not breast or wing) must be reflected in the Korean
+                translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify
+                the cut if relevant.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.9
+            reason: >-
+              The translation '닭다리살(닭 허벅지 살)' accurately reflects the thigh cut
+              of chicken. '닭다리살' is an acceptable translation, and the
+              parenthetical '닭 허벅지 살' further clarifies it's the thigh (허벅지)
+              portion. The notes also helpfully distinguish between 'chicken
+              thigh' and 'chicken leg', which is relevant in a grocery context.
+              The specific cut (thigh) is clearly reflected.
+            tokensUsed:
+              total: 492
+              prompt: 361
+              completion: 131
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"닭다리살(닭
+                허벅지 살)\",\"notes\":\"일반적으로 ‘chicken thigh’는 ‘닭다리살’(닭 허벅지 살)로
+                번역됩니다. ‘chicken leg’(닭다리/종아리 포함)와는 부위 범위가 다를 수
+                있어요.\"}\n</Output>\n<Rubric>\nTranslation is accurate for
+                grocery context. The specific cut (thigh, not breast or wing)
+                must be reflected in the Korean translation. 닭다리 or 닭넓적다리 are
+                acceptable. Notes should clarify the cut if
+                relevant.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery context. The specific cut
+                (thigh, not breast or wing) must be reflected in the Korean
+                translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify
+                the cut if relevant.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.93
+            reason: >-
+              The translation reflects a chicken thigh cut in Korean. While it
+              uses '닭다리살(닭 허벅지 살)' rather than the exact suggested forms '닭다리'
+              or '닭넓적다리', it still accurately conveys the specific cut for
+              grocery context, and the notes clarify the distinction from
+              chicken leg.
+            tokensUsed:
+              total: 404
+              prompt: 310
+              completion: 94
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"닭다리살(닭
+                허벅지 살)\",\"notes\":\"일반적으로 ‘chicken thigh’는 ‘닭다리살’(닭 허벅지 살)로
+                번역됩니다. ‘chicken leg’(닭다리/종아리 포함)와는 부위 범위가 다를 수
+                있어요.\"}\n</Output>\n<Rubric>\nTranslation is accurate for
+                grocery context. The specific cut (thigh, not breast or wing)
+                must be reflected in the Korean translation. 닭다리 or 닭넓적다리 are
+                acceptable. Notes should clarify the cut if
+                relevant.\n\n</Rubric>"}]
+      id: 0c482c4e-3b2e-4a99-a5a0-2f3dac8340ac
+      latencyMs: 3185
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery item translator. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Translate the grocery item \"chicken thigh\" to Korean.\nIf the item has a commonly confused counterpart in Korean (e.g. baking soda vs baking powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/translate.json: [{"role":"system","content":"You are a
+          grocery item translator. Respond with JSON
+          only."},{"role":"user","content":"Translate the grocery item
+          \"{{name_en}}\" to {{target_language}}.{% if profile_context
+          %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+          counterpart in {{target_language}} (e.g. baking soda vs baking
+          powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\",
+          \"notes\": \"...\"}"}]
+        config: {}
+      promptId: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: >-
+          {"name_translated":"닭다리살(닭 허벅지 살)","notes":"일반적으로 ‘chicken thigh’는
+          ‘닭다리살’(닭 허벅지 살)로 번역됩니다. ‘chicken leg’(닭다리/종아리 포함)와는 부위 범위가 다를 수 있어요."}
+        tokenUsage:
+          total: 159
+          prompt: 73
+          completion: 86
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9575
+      success: true
+      testCase:
+        description: chicken thigh to Korean — specific cut must be reflected
+        vars: &ref_4
+          name_en: chicken thigh
+          target_language: Korean
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - name_translated
+                - notes
+              properties:
+                name_translated:
+                  type: string
+                notes:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              return { pass: d.name_translated && d.name_translated.length > 0,
+              score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+              reason: d.name_translated ? 'Has translation' : 'Missing
+              translation' };
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery context. The specific cut
+              (thigh, not breast or wing) must be reflected in the Korean
+              translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify the
+              cut if relevant.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery context. The specific cut
+              (thigh, not breast or wing) must be reflected in the Korean
+              translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify the
+              cut if relevant.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 2
+      vars: *ref_4
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 790
+          prompt: 621
+          completion: 169
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - name_translated
+                  - notes
+                properties:
+                  name_translated:
+                    type: string
+                  notes:
+                    type: string
+          - pass: true
+            score: 1
+            reason: Has translation
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery context. The specific cut
+                (thigh, not breast or wing) must be reflected in the Korean
+                translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify
+                the cut if relevant.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The translation '닭다리' is accurate for the grocery context and
+              correctly refers to the thigh/leg portion of the chicken. The
+              notes clarify that in a grocery context it typically refers to
+              chicken thighs (허벅지살), and also mentions that boneless versions
+              may be labeled separately as '닭다리살'. This appropriately reflects
+              the specific cut (thigh/leg) rather than breast or wing.
+            tokensUsed:
+              total: 448
+              prompt: 338
+              completion: 110
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"닭다리\",\"notes\":\"장보기
+                문맥에서 보통 닭의 허벅지살을 뜻합니다. 뼈가 없는 경우는 '닭다리살'로 따로 표기하기도
+                합니다.\"}\n</Output>\n<Rubric>\nTranslation is accurate for
+                grocery context. The specific cut (thigh, not breast or wing)
+                must be reflected in the Korean translation. 닭다리 or 닭넓적다리 are
+                acceptable. Notes should clarify the cut if
+                relevant.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate for grocery context. The specific cut
+                (thigh, not breast or wing) must be reflected in the Korean
+                translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify
+                the cut if relevant.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The translation is appropriate for grocery context and reflects a
+              leg/thigh cut. '닭다리' is acceptable per the rubric, and the notes
+              clarify that it refers to the thigh meat in this context.
+            tokensUsed:
+              total: 342
+              prompt: 283
+              completion: 59
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"닭다리\",\"notes\":\"장보기
+                문맥에서 보통 닭의 허벅지살을 뜻합니다. 뼈가 없는 경우는 '닭다리살'로 따로 표기하기도
+                합니다.\"}\n</Output>\n<Rubric>\nTranslation is accurate for
+                grocery context. The specific cut (thigh, not breast or wing)
+                must be reflected in the Korean translation. 닭다리 or 닭넓적다리 are
+                acceptable. Notes should clarify the cut if
+                relevant.\n\n</Rubric>"}]
+      id: 9ab99361-d835-44eb-bf26-8ff409c06543
+      latencyMs: 790
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery item translator. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Translate the grocery item \"chicken thigh\" to Korean.\nIf the item has a commonly confused counterpart in Korean (e.g. baking soda vs baking powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/translate.json: [{"role":"system","content":"You are a
+          grocery item translator. Respond with JSON
+          only."},{"role":"user","content":"Translate the grocery item
+          \"{{name_en}}\" to {{target_language}}.{% if profile_context
+          %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+          counterpart in {{target_language}} (e.g. baking soda vs baking
+          powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\",
+          \"notes\": \"...\"}"}]
+        config: {}
+      promptId: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"name_translated":"닭다리","notes":"장보기 문맥에서 보통 닭의 허벅지살을 뜻합니다. 뼈가 없는 경우는
+          '닭다리살'로 따로 표기하기도 합니다."}
+        tokenUsage:
+          total: 132
+          prompt: 73
+          completion: 59
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: chicken thigh to Korean — specific cut must be reflected
+        vars: &ref_5
+          name_en: chicken thigh
+          target_language: Korean
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - name_translated
+                - notes
+              properties:
+                name_translated:
+                  type: string
+                notes:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              return { pass: d.name_translated && d.name_translated.length > 0,
+              score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+              reason: d.name_translated ? 'Has translation' : 'Missing
+              translation' };
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery context. The specific cut
+              (thigh, not breast or wing) must be reflected in the Korean
+              translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify the
+              cut if relevant.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Translation is accurate for grocery context. The specific cut
+              (thigh, not breast or wing) must be reflected in the Korean
+              translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify the
+              cut if relevant.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 2
+      vars: *ref_5
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 691
+          prompt: 547
+          completion: 144
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - name_translated
+                  - notes
+                properties:
+                  name_translated:
+                    type: string
+                  notes:
+                    type: string
+          - pass: true
+            score: 1
+            reason: Has translation
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate. 'Bicarbonate de soude' is the standard
+                French translation. Must NOT be confused with baking powder
+                (levure chimique). Notes should clarify the distinction if
+                provided.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The translation 'bicarbonate de soude' is the standard French term
+              for baking soda. The notes correctly clarify the distinction
+              between baking soda (bicarbonate de soude) and baking powder
+              (levure chimique), explicitly stating not to confuse the two,
+              which satisfies all rubric requirements.
+            tokensUsed:
+              total: 379
+              prompt: 290
+              completion: 89
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"bicarbonate
+                de soude\",\"notes\":\"À ne pas confondre avec la levure
+                chimique (poudre à lever), qui est un agent levant
+                différent.\"}\n</Output>\n<Rubric>\nTranslation is accurate.
+                'Bicarbonate de soude' is the standard French translation. Must
+                NOT be confused with baking powder (levure chimique). Notes
+                should clarify the distinction if provided.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate. 'Bicarbonate de soude' is the standard
+                French translation. Must NOT be confused with baking powder
+                (levure chimique). Notes should clarify the distinction if
+                provided.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output uses the standard French translation 'bicarbonate de
+              soude' and explicitly clarifies that it should not be confused
+              with 'levure chimique' (baking powder).
+            tokensUsed:
+              total: 312
+              prompt: 257
+              completion: 55
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"bicarbonate
+                de soude\",\"notes\":\"À ne pas confondre avec la levure
+                chimique (poudre à lever), qui est un agent levant
+                différent.\"}\n</Output>\n<Rubric>\nTranslation is accurate.
+                'Bicarbonate de soude' is the standard French translation. Must
+                NOT be confused with baking powder (levure chimique). Notes
+                should clarify the distinction if provided.\n\n</Rubric>"}]
+      id: 1647fd17-f5c8-4036-a625-ec6ed22599f5
+      latencyMs: 695
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery item translator. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Translate the grocery item \"baking soda\" to French.\nIf the item has a commonly confused counterpart in French (e.g. baking soda vs baking powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/translate.json: [{"role":"system","content":"You are a
+          grocery item translator. Respond with JSON
+          only."},{"role":"user","content":"Translate the grocery item
+          \"{{name_en}}\" to {{target_language}}.{% if profile_context
+          %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+          counterpart in {{target_language}} (e.g. baking soda vs baking
+          powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\",
+          \"notes\": \"...\"}"}]
+        config: {}
+      promptId: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"name_translated":"bicarbonate de soude","notes":"À ne pas confondre
+          avec la levure chimique (poudre à lever), qui est un agent levant
+          différent."}
+        tokenUsage:
+          total: 117
+          prompt: 73
+          completion: 44
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: baking soda to French — must not confuse with baking powder
+        vars: &ref_6
+          name_en: baking soda
+          target_language: French
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - name_translated
+                - notes
+              properties:
+                name_translated:
+                  type: string
+                notes:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              return { pass: d.name_translated && d.name_translated.length > 0,
+              score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+              reason: d.name_translated ? 'Has translation' : 'Missing
+              translation' };
+          - type: llm-rubric
+            value: >
+              Translation is accurate. 'Bicarbonate de soude' is the standard
+              French translation. Must NOT be confused with baking powder
+              (levure chimique). Notes should clarify the distinction if
+              provided.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Translation is accurate. 'Bicarbonate de soude' is the standard
+              French translation. Must NOT be confused with baking powder
+              (levure chimique). Notes should clarify the distinction if
+              provided.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 3
+      vars: *ref_6
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 696
+          prompt: 553
+          completion: 143
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - name_translated
+                  - notes
+                properties:
+                  name_translated:
+                    type: string
+                  notes:
+                    type: string
+          - pass: true
+            score: 1
+            reason: Has translation
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate. 'Bicarbonate de soude' is the standard
+                French translation. Must NOT be confused with baking powder
+                (levure chimique). Notes should clarify the distinction if
+                provided.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The translation 'bicarbonate de soude' is the correct standard
+              French term for baking soda. The notes explicitly clarify the
+              distinction between baking soda (bicarbonate de soude) and baking
+              powder (poudre à lever/levure chimique), which is an important and
+              accurate clarification.
+            tokensUsed:
+              total: 382
+              prompt: 294
+              completion: 88
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"bicarbonate
+                de soude\",\"notes\":\"A ne pas confondre avec la poudre à lever
+                (baking powder). Le bicarbonate de soude est le baking
+                soda.\"}\n</Output>\n<Rubric>\nTranslation is accurate.
+                'Bicarbonate de soude' is the standard French translation. Must
+                NOT be confused with baking powder (levure chimique). Notes
+                should clarify the distinction if provided.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation is accurate. 'Bicarbonate de soude' is the standard
+                French translation. Must NOT be confused with baking powder
+                (levure chimique). Notes should clarify the distinction if
+                provided.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output gives the standard French translation 'bicarbonate de
+              soude' and explicitly clarifies that it should not be confused
+              with baking powder ('poudre à lever'), matching the rubric.
+            tokensUsed:
+              total: 314
+              prompt: 259
+              completion: 55
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"bicarbonate
+                de soude\",\"notes\":\"A ne pas confondre avec la poudre à lever
+                (baking powder). Le bicarbonate de soude est le baking
+                soda.\"}\n</Output>\n<Rubric>\nTranslation is accurate.
+                'Bicarbonate de soude' is the standard French translation. Must
+                NOT be confused with baking powder (levure chimique). Notes
+                should clarify the distinction if provided.\n\n</Rubric>"}]
+      id: 1c437f8d-313e-495f-a0ce-8f6a8b5f4dff
+      latencyMs: 1403
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery item translator. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Translate the grocery item \"baking soda\" to French.\nIf the item has a commonly confused counterpart in French (e.g. baking soda vs baking powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/translate.json: [{"role":"system","content":"You are a
+          grocery item translator. Respond with JSON
+          only."},{"role":"user","content":"Translate the grocery item
+          \"{{name_en}}\" to {{target_language}}.{% if profile_context
+          %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+          counterpart in {{target_language}} (e.g. baking soda vs baking
+          powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\",
+          \"notes\": \"...\"}"}]
+        config: {}
+      promptId: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: >-
+          {"name_translated":"bicarbonate de soude","notes":"A ne pas confondre
+          avec la poudre à lever (baking powder). Le bicarbonate de soude est le
+          baking soda."}
+        tokenUsage:
+          total: 119
+          prompt: 73
+          completion: 46
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: baking soda to French — must not confuse with baking powder
+        vars: &ref_7
+          name_en: baking soda
+          target_language: French
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - name_translated
+                - notes
+              properties:
+                name_translated:
+                  type: string
+                notes:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              return { pass: d.name_translated && d.name_translated.length > 0,
+              score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+              reason: d.name_translated ? 'Has translation' : 'Missing
+              translation' };
+          - type: llm-rubric
+            value: >
+              Translation is accurate. 'Bicarbonate de soude' is the standard
+              French translation. Must NOT be confused with baking powder
+              (levure chimique). Notes should clarify the distinction if
+              provided.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Translation is accurate. 'Bicarbonate de soude' is the standard
+              French translation. Must NOT be confused with baking powder
+              (levure chimique). Notes should clarify the distinction if
+              provided.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 3
+      vars: *ref_7
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.9625
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 691
+          prompt: 526
+          completion: 165
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - name_translated
+                  - notes
+                properties:
+                  name_translated:
+                    type: string
+                  notes:
+                    type: string
+          - pass: true
+            score: 1
+            reason: Has translation
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation handles the transliteration case correctly. Bok choy
+                is already a romanization of Chinese (白菜 or 小白菜). The model
+                should return the Chinese characters, not just echo back 'bok
+                choy'. Notes may mention that this is a Cantonese romanization.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.85
+            reason: >-
+              The output correctly translates 'bok choy' back to its Chinese
+              origin '小白菜' (Chinese characters), rather than simply echoing back
+              'bok choy'. This properly handles the transliteration case where
+              bok choy is a Cantonese romanization of the Chinese term. The
+              notes field is empty but doesn't need to mention the Cantonese
+              romanization origin to pass the core requirement.
+            tokensUsed:
+              total: 394
+              prompt: 283
+              completion: 111
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"小白菜\",\"notes\":\"\"}\n</Output>\n<Rubric>\nTranslation
+                handles the transliteration case correctly. Bok choy is already
+                a romanization of Chinese (白菜 or 小白菜). The model should return
+                the Chinese characters, not just echo back 'bok choy'. Notes may
+                mention that this is a Cantonese romanization.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation handles the transliteration case correctly. Bok choy
+                is already a romanization of Chinese (白菜 or 小白菜). The model
+                should return the Chinese characters, not just echo back 'bok
+                choy'. Notes may mention that this is a Cantonese romanization.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output returns the Chinese characters '小白菜' rather than
+              echoing the English/romanized form 'bok choy'. This matches the
+              rubric’s requirement for the transliteration case.
+            tokensUsed:
+              total: 297
+              prompt: 243
+              completion: 54
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"小白菜\",\"notes\":\"\"}\n</Output>\n<Rubric>\nTranslation
+                handles the transliteration case correctly. Bok choy is already
+                a romanization of Chinese (白菜 or 小白菜). The model should return
+                the Chinese characters, not just echo back 'bok choy'. Notes may
+                mention that this is a Cantonese romanization.\n\n</Rubric>"}]
+      id: c2a6c3cf-ff4d-43eb-9a1e-d5069d65e885
+      latencyMs: 735
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery item translator. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Translate the grocery item \"bok choy\" to Chinese.\nIf the item has a commonly confused counterpart in Chinese (e.g. baking soda vs baking powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/translate.json: [{"role":"system","content":"You are a
+          grocery item translator. Respond with JSON
+          only."},{"role":"user","content":"Translate the grocery item
+          \"{{name_en}}\" to {{target_language}}.{% if profile_context
+          %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+          counterpart in {{target_language}} (e.g. baking soda vs baking
+          powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\",
+          \"notes\": \"...\"}"}]
+        config: {}
+      promptId: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: '{"name_translated":"小白菜","notes":""}'
+        tokenUsage:
+          total: 89
+          prompt: 73
+          completion: 16
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9625
+      success: true
+      testCase:
+        description: bok choy to Chinese — already a romanization of Chinese
+        vars: &ref_8
+          name_en: bok choy
+          target_language: Chinese
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - name_translated
+                - notes
+              properties:
+                name_translated:
+                  type: string
+                notes:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              return { pass: d.name_translated && d.name_translated.length > 0,
+              score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+              reason: d.name_translated ? 'Has translation' : 'Missing
+              translation' };
+          - type: llm-rubric
+            value: >
+              Translation handles the transliteration case correctly. Bok choy
+              is already a romanization of Chinese (白菜 or 小白菜). The model should
+              return the Chinese characters, not just echo back 'bok choy'.
+              Notes may mention that this is a Cantonese romanization.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Translation handles the transliteration case correctly. Bok choy
+              is already a romanization of Chinese (白菜 or 小白菜). The model should
+              return the Chinese characters, not just echo back 'bok choy'.
+              Notes may mention that this is a Cantonese romanization.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 4
+      vars: *ref_8
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.9625
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 785
+          prompt: 605
+          completion: 180
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - name_translated
+                  - notes
+                properties:
+                  name_translated:
+                    type: string
+                  notes:
+                    type: string
+          - pass: true
+            score: 1
+            reason: Has translation
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation handles the transliteration case correctly. Bok choy
+                is already a romanization of Chinese (白菜 or 小白菜). The model
+                should return the Chinese characters, not just echo back 'bok
+                choy'. Notes may mention that this is a Cantonese romanization.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.85
+            reason: >-
+              The output returns '小白菜' as the Chinese characters for bok choy,
+              rather than echoing back 'bok choy'. It correctly identifies the
+              Chinese characters behind the romanization. The notes mention
+              related terms but don't explicitly note that 'bok choy' is a
+              Cantonese romanization, though this is a minor omission. The core
+              requirement of returning Chinese characters instead of echoing the
+              romanization is satisfied.
+            tokensUsed:
+              total: 444
+              prompt: 330
+              completion: 114
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"小白菜\",\"notes\":\"Also
+                commonly called 青菜 in some contexts; do not confuse with 上海青
+                (pak choi/bok choy variant) or 大白菜 (Napa
+                cabbage).\"}\n</Output>\n<Rubric>\nTranslation handles the
+                transliteration case correctly. Bok choy is already a
+                romanization of Chinese (白菜 or 小白菜). The model should return the
+                Chinese characters, not just echo back 'bok choy'. Notes may
+                mention that this is a Cantonese romanization.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Translation handles the transliteration case correctly. Bok choy
+                is already a romanization of Chinese (白菜 or 小白菜). The model
+                should return the Chinese characters, not just echo back 'bok
+                choy'. Notes may mention that this is a Cantonese romanization.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output returns the Chinese characters '小白菜' rather than
+              echoing 'bok choy', which matches the rubric's requirement to
+              handle the transliteration case correctly. The notes are also
+              compatible with the rubric’s allowance for mentioning romanization
+              context.
+            tokensUsed:
+              total: 341
+              prompt: 275
+              completion: 66
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"name_translated\":\"小白菜\",\"notes\":\"Also
+                commonly called 青菜 in some contexts; do not confuse with 上海青
+                (pak choi/bok choy variant) or 大白菜 (Napa
+                cabbage).\"}\n</Output>\n<Rubric>\nTranslation handles the
+                transliteration case correctly. Bok choy is already a
+                romanization of Chinese (白菜 or 小白菜). The model should return the
+                Chinese characters, not just echo back 'bok choy'. Notes may
+                mention that this is a Cantonese romanization.\n\n</Rubric>"}]
+      id: bba4410a-3e17-456b-9615-6952e0363cdd
+      latencyMs: 1154
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a grocery item translator. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Translate the grocery item \"bok choy\" to Chinese.\nIf the item has a commonly confused counterpart in Chinese (e.g. baking soda vs baking powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"
+            }
+          ]
+        label: >-
+          prompts/current/translate.json: [{"role":"system","content":"You are a
+          grocery item translator. Respond with JSON
+          only."},{"role":"user","content":"Translate the grocery item
+          \"{{name_en}}\" to {{target_language}}.{% if profile_context
+          %}{{profile_context}}{% endif %}\nIf the item has a commonly confused
+          counterpart in {{target_language}} (e.g. baking soda vs baking
+          powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\",
+          \"notes\": \"...\"}"}]
+        config: {}
+      promptId: d8d98070c4cffb77412f9137cf54c43ebf3517838bcb86597d1b6ebba61cc88f
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"name_translated":"小白菜","notes":"Also commonly called 青菜 in some
+          contexts; do not confuse with 上海青 (pak choi/bok choy variant) or 大白菜
+          (Napa cabbage)."}
+        tokenUsage:
+          total: 121
+          prompt: 73
+          completion: 48
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9625
+      success: true
+      testCase:
+        description: bok choy to Chinese — already a romanization of Chinese
+        vars: &ref_9
+          name_en: bok choy
+          target_language: Chinese
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - name_translated
+                - notes
+              properties:
+                name_translated:
+                  type: string
+                notes:
+                  type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              return { pass: d.name_translated && d.name_translated.length > 0,
+              score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+              reason: d.name_translated ? 'Has translation' : 'Missing
+              translation' };
+          - type: llm-rubric
+            value: >
+              Translation handles the transliteration case correctly. Bok choy
+              is already a romanization of Chinese (白菜 or 小白菜). The model should
+              return the Chinese characters, not just echo back 'bok choy'.
+              Notes may mention that this is a Cantonese romanization.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Translation handles the transliteration case correctly. Bok choy
+              is already a romanization of Chinese (白菜 or 小白菜). The model should
+              return the Chinese characters, not just echo back 'bok choy'.
+              Notes may mention that this is a Cantonese romanization.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 4
+      vars: *ref_9
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+  stats:
+    successes: 10
+    failures: 0
+    errors: 0
+    tokenUsage:
+      prompt: 724
+      completion: 400
+      cached: 0
+      total: 1124
+      numRequests: 10
+      completionDetails:
+        reasoning: 0
+        acceptedPrediction: 0
+        rejectedPrediction: 0
+      assertions:
+        total: 7212
+        prompt: 5591
+        completion: 1621
+        cached: 0
+        numRequests: 0
+        completionDetails:
+          reasoning: 0
+          acceptedPrediction: 0
+          rejectedPrediction: 0
+    durationMs: 27399
+    evaluationDurationMs: 27399
+config:
+  tags: {}
+  description: 'Translate — Scenario 1: OpenAI tier comparison (current prompt)'
+  prompts:
+    - >-
+      file:///Users/dako/LocalDocument/200-Project/SGA-ai-service/services/ai-service/tests/eval/prompts/current/translate.json
+  providers:
+    - id: openrouter:openai/gpt-5.4-nano
+      label: GPT-5.4 Nano ($0.20/M)
+      config:
+        temperature: 0.7
+        max_tokens: 512
+    - id: openrouter:openai/gpt-5.4-mini
+      label: GPT-5.4 Mini ($0.75/M)
+      config:
+        temperature: 0.7
+        max_tokens: 512
+  tests:
+    - description: milk to Chinese — simple unambiguous translation
+      vars:
+        name_en: milk
+        target_language: Chinese
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - name_translated
+              - notes
+            properties:
+              name_translated:
+                type: string
+              notes:
+                type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            return { pass: d.name_translated && d.name_translated.length > 0,
+            score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+            reason: d.name_translated ? 'Has translation' : 'Missing
+            translation' };
+        - type: llm-rubric
+          value: >
+            Translation is accurate for grocery/cooking context. '牛奶' is the
+            standard Chinese translation for milk. Notes field provides useful
+            context when relevant, empty notes acceptable for unambiguous items.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Translation is accurate for grocery/cooking context. '牛奶' is the
+            standard Chinese translation for milk. Notes field provides useful
+            context when relevant, empty notes acceptable for unambiguous items.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: cilantro to Chinese — regional variant handling
+      vars:
+        name_en: cilantro
+        target_language: Chinese
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - name_translated
+              - notes
+            properties:
+              name_translated:
+                type: string
+              notes:
+                type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            return { pass: d.name_translated && d.name_translated.length > 0,
+            score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+            reason: d.name_translated ? 'Has translation' : 'Missing
+            translation' };
+        - type: llm-rubric
+          value: >
+            Translation is accurate for grocery context. Either 香菜 or 芫荽 are
+            acceptable translations for cilantro in Chinese. Notes should
+            mention regional variants if provided. The translation should be for
+            the herb used in cooking, not coriander seeds.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Translation is accurate for grocery context. Either 香菜 or 芫荽 are
+            acceptable translations for cilantro in Chinese. Notes should
+            mention regional variants if provided. The translation should be for
+            the herb used in cooking, not coriander seeds.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: chicken thigh to Korean — specific cut must be reflected
+      vars:
+        name_en: chicken thigh
+        target_language: Korean
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - name_translated
+              - notes
+            properties:
+              name_translated:
+                type: string
+              notes:
+                type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            return { pass: d.name_translated && d.name_translated.length > 0,
+            score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+            reason: d.name_translated ? 'Has translation' : 'Missing
+            translation' };
+        - type: llm-rubric
+          value: >
+            Translation is accurate for grocery context. The specific cut
+            (thigh, not breast or wing) must be reflected in the Korean
+            translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify the
+            cut if relevant.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Translation is accurate for grocery context. The specific cut
+            (thigh, not breast or wing) must be reflected in the Korean
+            translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify the
+            cut if relevant.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: baking soda to French — must not confuse with baking powder
+      vars:
+        name_en: baking soda
+        target_language: French
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - name_translated
+              - notes
+            properties:
+              name_translated:
+                type: string
+              notes:
+                type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            return { pass: d.name_translated && d.name_translated.length > 0,
+            score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+            reason: d.name_translated ? 'Has translation' : 'Missing
+            translation' };
+        - type: llm-rubric
+          value: >
+            Translation is accurate. 'Bicarbonate de soude' is the standard
+            French translation. Must NOT be confused with baking powder (levure
+            chimique). Notes should clarify the distinction if provided.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Translation is accurate. 'Bicarbonate de soude' is the standard
+            French translation. Must NOT be confused with baking powder (levure
+            chimique). Notes should clarify the distinction if provided.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: bok choy to Chinese — already a romanization of Chinese
+      vars:
+        name_en: bok choy
+        target_language: Chinese
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - name_translated
+              - notes
+            properties:
+              name_translated:
+                type: string
+              notes:
+                type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            return { pass: d.name_translated && d.name_translated.length > 0,
+            score: d.name_translated && d.name_translated.length > 0 ? 1 : 0,
+            reason: d.name_translated ? 'Has translation' : 'Missing
+            translation' };
+        - type: llm-rubric
+          value: >
+            Translation handles the transliteration case correctly. Bok choy is
+            already a romanization of Chinese (白菜 or 小白菜). The model should
+            return the Chinese characters, not just echo back 'bok choy'. Notes
+            may mention that this is a Cantonese romanization.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Translation handles the transliteration case correctly. Bok choy is
+            already a romanization of Chinese (白菜 or 小白菜). The model should
+            return the Chinese characters, not just echo back 'bok choy'. Notes
+            may mention that this is a Cantonese romanization.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+  scenarios: []
+  env: {}
+  outputPath:
+    - results/scenario1v2_translate_20260331_201259.yaml
+    - results/scenario1v2_translate_20260331_201259.csv
+  extensions: []
+  metadata: {}
+  evaluateOptions: {}
+shareableUrl: null
+metadata:
+  promptfooVersion: 0.121.3
+  nodeVersion: v25.1.0
+  platform: darwin
+  arch: arm64
+  exportedAt: '2026-04-01T03:13:31.332Z'
+  evaluationCreatedAt: '2026-04-01T03:13:03.785Z'

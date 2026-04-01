@@ -5,6 +5,6 @@
   },
   {
     "role": "user",
-    "content": "Cooking assistant. User has \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther items: {{other_items}}{% if profile_context %}{{profile_context}}{% endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
+    "content": "Cooking assistant. User has \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther items: {{other_items}}{% if profile_context %}{{profile_context}}{% endif %}\n3 recipe ideas, each with 2-3 extra ingredients the user does NOT already have.\nRecipes must span different cooking styles (e.g., not two salads or two stir-fries).{% if profile_context %}\nIf the focal item conflicts with the user's dietary restrictions, acknowledge the conflict and adapt all recipes to the restriction.{% endif %}\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
   }
 ]
