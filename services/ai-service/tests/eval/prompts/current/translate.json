@@ -1,0 +1,4 @@
+[
+  {"role": "system", "content": "You are a grocery item translator. Respond with JSON only."},
+  {"role": "user", "content": "Translate the grocery item \"{{name_en}}\" to {{target_language}}.{% if profile_context %}{{profile_context}}{% endif %}\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"}
+]

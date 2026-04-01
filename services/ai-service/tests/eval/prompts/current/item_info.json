@@ -1,0 +1,4 @@
+[
+  {"role": "system", "content": "You are a grocery expert. Respond with JSON only."},
+  {"role": "user", "content": "Grocery expert helping someone understand \"{{name_en}}\".{% if profile_context %}{{profile_context}}{% endif %}\nONLY JSON: {\"category\": \"...\", \"typical_unit\": \"...\", \"storage_tip\": \"...\", \"nutrition_note\": \"...\"}"}
+]

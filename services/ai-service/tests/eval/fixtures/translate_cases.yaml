@@ -1,0 +1,169 @@
+# Test fixtures for the translate endpoint eval.
+# 5 cases covering multiple languages and tricky translation scenarios.
+# Each case has: is-json schema check, javascript structure validation, and 2x llm-rubric judges.
+# Variables (name_en, target_language, profile_context) map to the prompt template.
+
+# Case 1: Simple common item to Chinese
+- description: "milk to Chinese — simple unambiguous translation"
+  vars:
+    name_en: "milk"
+    target_language: "Chinese"
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["name_translated", "notes"]
+        properties:
+          name_translated: { type: string }
+          notes: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        return { pass: d.name_translated && d.name_translated.length > 0, score: d.name_translated && d.name_translated.length > 0 ? 1 : 0, reason: d.name_translated ? 'Has translation' : 'Missing translation' };
+    - type: llm-rubric
+      value: |
+        Translation is accurate for grocery/cooking context. '牛奶' is the standard Chinese translation for milk. Notes field provides useful context when relevant, empty notes acceptable for unambiguous items.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Translation is accurate for grocery/cooking context. '牛奶' is the standard Chinese translation for milk. Notes field provides useful context when relevant, empty notes acceptable for unambiguous items.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 2: Herb with regional variants
+- description: "cilantro to Chinese — regional variant handling"
+  vars:
+    name_en: "cilantro"
+    target_language: "Chinese"
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["name_translated", "notes"]
+        properties:
+          name_translated: { type: string }
+          notes: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        return { pass: d.name_translated && d.name_translated.length > 0, score: d.name_translated && d.name_translated.length > 0 ? 1 : 0, reason: d.name_translated ? 'Has translation' : 'Missing translation' };
+    - type: llm-rubric
+      value: |
+        Translation is accurate for grocery context. Either 香菜 or 芫荽 are acceptable translations for cilantro in Chinese. Notes should mention regional variants if provided. The translation should be for the herb used in cooking, not coriander seeds.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Translation is accurate for grocery context. Either 香菜 or 芫荽 are acceptable translations for cilantro in Chinese. Notes should mention regional variants if provided. The translation should be for the herb used in cooking, not coriander seeds.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 3: Specific meat cut to Korean
+- description: "chicken thigh to Korean — specific cut must be reflected"
+  vars:
+    name_en: "chicken thigh"
+    target_language: "Korean"
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["name_translated", "notes"]
+        properties:
+          name_translated: { type: string }
+          notes: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        return { pass: d.name_translated && d.name_translated.length > 0, score: d.name_translated && d.name_translated.length > 0 ? 1 : 0, reason: d.name_translated ? 'Has translation' : 'Missing translation' };
+    - type: llm-rubric
+      value: |
+        Translation is accurate for grocery context. The specific cut (thigh, not breast or wing) must be reflected in the Korean translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify the cut if relevant.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Translation is accurate for grocery context. The specific cut (thigh, not breast or wing) must be reflected in the Korean translation. 닭다리 or 닭넓적다리 are acceptable. Notes should clarify the cut if relevant.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 4: Easily confused item to French
+- description: "baking soda to French — must not confuse with baking powder"
+  vars:
+    name_en: "baking soda"
+    target_language: "French"
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["name_translated", "notes"]
+        properties:
+          name_translated: { type: string }
+          notes: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        return { pass: d.name_translated && d.name_translated.length > 0, score: d.name_translated && d.name_translated.length > 0 ? 1 : 0, reason: d.name_translated ? 'Has translation' : 'Missing translation' };
+    - type: llm-rubric
+      value: |
+        Translation is accurate. 'Bicarbonate de soude' is the standard French translation. Must NOT be confused with baking powder (levure chimique). Notes should clarify the distinction if provided.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Translation is accurate. 'Bicarbonate de soude' is the standard French translation. Must NOT be confused with baking powder (levure chimique). Notes should clarify the distinction if provided.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 5: Transliteration roundtrip
+- description: "bok choy to Chinese — already a romanization of Chinese"
+  vars:
+    name_en: "bok choy"
+    target_language: "Chinese"
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["name_translated", "notes"]
+        properties:
+          name_translated: { type: string }
+          notes: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        return { pass: d.name_translated && d.name_translated.length > 0, score: d.name_translated && d.name_translated.length > 0 ? 1 : 0, reason: d.name_translated ? 'Has translation' : 'Missing translation' };
+    - type: llm-rubric
+      value: |
+        Translation handles the transliteration case correctly. Bok choy is already a romanization of Chinese (白菜 or 小白菜). The model should return the Chinese characters, not just echo back 'bok choy'. Notes may mention that this is a Cantonese romanization.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Translation handles the transliteration case correctly. Bok choy is already a romanization of Chinese (白菜 or 小白菜). The model should return the Chinese characters, not just echo back 'bok choy'. Notes may mention that this is a Cantonese romanization.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0

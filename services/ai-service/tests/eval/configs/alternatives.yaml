@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+# Alternatives eval config — Scenario 1: OpenAI tier comparison (current prompt).
+# Tests grocery item alternative suggestions with constraint handling.
+# Run: npx promptfoo@latest eval -c configs/alternatives.yaml --env-file ../../.env --no-cache
+
+description: "Alternatives — Scenario 1: OpenAI tier comparison (current prompt)"
+
+prompts:
+  - file://../prompts/current/alternatives.json
+
+providers:
+  - id: openrouter:openai/gpt-5.4-nano
+    label: "GPT-5.4 Nano ($0.20/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 800
+  - id: openrouter:openai/gpt-5.4-mini
+    label: "GPT-5.4 Mini ($0.75/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 800
+
+tests: file://../fixtures/alternatives_cases.yaml

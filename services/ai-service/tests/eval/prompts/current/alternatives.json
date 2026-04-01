@@ -1,0 +1,4 @@
+[
+  {"role": "system", "content": "You are a grocery expert. Respond with JSON only."},
+  {"role": "user", "content": "Find 3-4 alternatives for \"{{name_en}}\" available in North American stores.{% if reason %} User reason: {{reason}}.{% endif %}{% if taste %} User taste: {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{% endif %}\nONLY JSON: {\"note\": \"1 sentence why needed\", \"alts\": [{\"name_en\": \"Name\", \"match\": \"Very close|Similar|Different but works\", \"desc\": \"1 sentence\", \"where\": \"Where in store\"}]}"}
+]
