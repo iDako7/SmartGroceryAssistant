@@ -108,6 +108,21 @@ func (r *UserRepo) GetProfileByUserID(ctx context.Context, userID string) (_ *mo
 	return &p, nil
 }
 
+func (r *UserRepo) DeleteUser(ctx context.Context, userID string) (err error) {
+	start := time.Now()
+	defer func() { observeQuery("delete_user", start, err) }()
+
+	// Profiles cascade-delete via FK, so just delete the user.
+	tag, err := r.db.Exec(ctx, `DELETE FROM users WHERE id = $1`, userID)
+	if err != nil {
+		return fmt.Errorf("delete user: %w", err)
+	}
+	if tag.RowsAffected() == 0 {
+		return fmt.Errorf("user not found")
+	}
+	return nil
+}
+
 func (r *UserRepo) UpdateProfile(ctx context.Context, userID string, req model.UpdateProfileRequest) (_ *model.Profile, err error) {
 	start := time.Now()
 	defer func() { observeQuery("update_profile", start, err) }()

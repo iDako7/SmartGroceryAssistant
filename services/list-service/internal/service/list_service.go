@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/events"
+	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/metrics"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/model"
 )
 
@@ -18,6 +19,7 @@ type ListRepository interface {
 	UpdateItem(ctx context.Context, id, userID string, req model.UpdateItemRequest) (*model.Item, error)
 	DeleteItem(ctx context.Context, id, userID string) error
 	GetFullList(ctx context.Context, userID string) ([]model.Section, map[string][]model.Item, error)
+	SoftDeleteAllByUser(ctx context.Context, userID string) (sections int64, items int64, err error)
 }
 
 // EventPublisher is the messaging interface consumed by ListService.
@@ -115,6 +117,25 @@ func (s *ListService) DeleteItem(ctx context.Context, userID, id string) error {
 		return err
 	}
 	s.pub.Publish(ctx, userID, events.ItemDeleted, map[string]string{"id": id})
+	return nil
+}
+
+// ── User cleanup ────────────────────────────────────────
+
+func (s *ListService) SoftDeleteAllByUser(ctx context.Context, userID string) error {
+	sections, items, err := s.repo.SoftDeleteAllByUser(ctx, userID)
+	if err != nil {
+		return err
+	}
+	metrics.SagaCleanupSections.Add(float64(sections))
+	metrics.SagaCleanupItems.Add(float64(items))
+	if sections > 0 || items > 0 {
+		s.pub.Publish(ctx, userID, events.SectionDeleted, map[string]any{
+			"reason":   "user_deleted",
+			"sections": sections,
+			"items":    items,
+		})
+	}
 	return nil
 }
 

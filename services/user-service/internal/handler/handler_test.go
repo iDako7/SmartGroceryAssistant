@@ -54,6 +54,10 @@ func (m *mockUserSvc) UpdateProfile(ctx context.Context, userID string, req mode
 	return args.Get(0).(*model.ProfileView), args.Error(1)
 }
 
+func (m *mockUserSvc) DeleteUser(ctx context.Context, userID string) error {
+	return m.Called(ctx, userID).Error(0)
+}
+
 // ── Helpers ──────────────────────────────────────────────
 
 func newRouter(svc *mockUserSvc) *gin.Engine {

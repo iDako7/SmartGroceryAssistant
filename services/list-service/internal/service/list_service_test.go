@@ -72,6 +72,11 @@ func (m *mockListRepo) GetFullList(ctx context.Context, userID string) ([]model.
 	return args.Get(0).([]model.Section), args.Get(1).(map[string][]model.Item), args.Error(2)
 }
 
+func (m *mockListRepo) SoftDeleteAllByUser(ctx context.Context, userID string) (int64, int64, error) {
+	args := m.Called(ctx, userID)
+	return args.Get(0).(int64), args.Get(1).(int64), args.Error(2)
+}
+
 // ── Mock publisher ───────────────────────────────────────
 
 type mockPublisher struct{ mock.Mock }
