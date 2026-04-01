@@ -94,6 +94,7 @@ func (h *Handler) DeleteUser(c *gin.Context) {
 
 // UserExists is an internal endpoint for service-to-service calls.
 // Returns 200 if user exists, 404 if not.
+// Protected by the InternalAuth middleware (requires X-Internal-API-Key header).
 func (h *Handler) UserExists(c *gin.Context) {
 	userID := c.Param("id")
 	_, err := h.svc.GetProfile(c.Request.Context(), userID)

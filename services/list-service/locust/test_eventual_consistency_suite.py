@@ -26,6 +26,7 @@ LIST_SERVICE = os.getenv("LIST_SERVICE_URL", "http://localhost:4002")
 USER_DB_URL = os.getenv("USER_DB_URL", "postgres://sga:sga_secret@localhost:5432/user_db")
 LIST_DB_URL = os.getenv("LIST_DB_URL", "postgres://sga:sga_secret@localhost:5432/list_db")
 JWT_SECRET = os.getenv("JWT_SECRET", "change_me_in_production")
+INTERNAL_API_KEY = os.getenv("INTERNAL_API_KEY", "change_me_in_production")
 
 passed = 0
 failed = 0
@@ -366,7 +367,10 @@ def test_7_rabbitmq_down_orphan_cleanup():
     print(f"    Orphaned data confirmed: {sections}s, {items}i")
 
     # Verify the user-exists endpoint correctly reports the user as gone
-    resp = requests.get(f"{USER_SERVICE}/api/v1/users/internal/exists/{uid}")
+    resp = requests.get(
+        f"{USER_SERVICE}/api/v1/users/internal/exists/{uid}",
+        headers={"X-Internal-API-Key": INTERNAL_API_KEY},
+    )
     assert resp.status_code == 404, f"Expected 404 for deleted user, got {resp.status_code}"
     print(f"    User-exists endpoint correctly returns 404")
 

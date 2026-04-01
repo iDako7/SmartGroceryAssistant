@@ -17,14 +17,18 @@ import (
 type OrphanCleanup struct {
 	listDB         *pgxpool.Pool
 	userServiceURL string
+	internalAPIKey string
 	interval       time.Duration
+	client         *http.Client
 }
 
-func NewOrphanCleanup(listDB *pgxpool.Pool, userServiceURL string, interval time.Duration) *OrphanCleanup {
+func NewOrphanCleanup(listDB *pgxpool.Pool, userServiceURL, internalAPIKey string, interval time.Duration) *OrphanCleanup {
 	return &OrphanCleanup{
 		listDB:         listDB,
 		userServiceURL: userServiceURL,
+		internalAPIKey: internalAPIKey,
 		interval:       interval,
+		client:         &http.Client{Timeout: 5 * time.Second},
 	}
 }
 
@@ -91,27 +95,17 @@ func (c *OrphanCleanup) run(ctx context.Context) {
 	}
 }
 
-// userExists checks if the user still exists by calling the User Service.
+// userExists checks if the user still exists by calling the User Service's
+// internal endpoint, authenticated with the shared INTERNAL_API_KEY.
 func (c *OrphanCleanup) userExists(ctx context.Context, userID string) (bool, error) {
-	// We can't use the /me endpoint (needs JWT). Instead, we check user_db
-	// directly via the User Service's internal health or query list_db's
-	// knowledge. Since we don't have a user-lookup endpoint, we'll query
-	// user_db directly via the connection string. However, since list-service
-	// doesn't have user_db credentials, we use a simple HTTP check.
-	//
-	// For now, we use a HEAD request to a hypothetical internal endpoint.
-	// In production, this would be an internal service-to-service call.
-	//
-	// Fallback: we hardcode a direct user_db check. The cleanup job will
-	// be configured with USER_DB_URL as an optional env var.
-
 	url := fmt.Sprintf("%s/api/v1/users/internal/exists/%s", c.userServiceURL, userID)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return false, err
 	}
+	req.Header.Set("X-Internal-API-Key", c.internalAPIKey)
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := c.client.Do(req)
 	if err != nil {
 		// If user service is down, assume user exists (don't delete data).
 		return true, nil

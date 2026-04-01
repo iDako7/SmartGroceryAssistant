@@ -74,14 +74,14 @@ func (p *Publisher) connect() error {
 
 	ch, err := conn.Channel()
 	if err != nil {
-		conn.Close()
+		_ = conn.Close()
 		return fmt.Errorf("open channel: %w", err)
 	}
 
 	// Declare the exchange so publishing doesn't fail on a missing exchange.
 	if err := ch.ExchangeDeclare(exchangeName, "fanout", true, false, false, false, nil); err != nil {
-		ch.Close()
-		conn.Close()
+		_ = ch.Close()
+		_ = conn.Close()
 		return fmt.Errorf("declare exchange: %w", err)
 	}
 
@@ -96,10 +96,10 @@ func (p *Publisher) reconnect() error {
 
 	// Close stale resources.
 	if p.ch != nil {
-		p.ch.Close()
+		_ = p.ch.Close()
 	}
 	if p.conn != nil {
-		p.conn.Close()
+		_ = p.conn.Close()
 	}
 
 	return p.connect()
@@ -171,9 +171,9 @@ func (p *Publisher) Close() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	if p.ch != nil {
-		p.ch.Close()
+		_ = p.ch.Close()
 	}
 	if p.conn != nil {
-		p.conn.Close()
+		_ = p.conn.Close()
 	}
 }

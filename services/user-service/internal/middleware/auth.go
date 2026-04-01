@@ -8,6 +8,18 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// InternalAuth validates that service-to-service requests carry the correct
+// X-Internal-API-Key header. Returns 401 if the key is missing or wrong.
+func InternalAuth(apiKey string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if c.GetHeader("X-Internal-API-Key") != apiKey {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+			return
+		}
+		c.Next()
+	}
+}
+
 func Auth(jwtSecret string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		header := c.GetHeader("Authorization")

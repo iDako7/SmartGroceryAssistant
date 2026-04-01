@@ -24,6 +24,7 @@ func main() {
 	dbURL := mustEnv("USER_DB_URL")
 	jwtSecret := mustEnv("JWT_SECRET")
 	amqpURL := getEnv("RABBITMQ_URL", "amqp://sga:sga_secret@localhost:5672/")
+	internalAPIKey := getEnv("INTERNAL_API_KEY", "change_me_in_production")
 	port := getEnv("USER_SERVICE_PORT", "4001")
 
 	db, err := pgxpool.New(context.Background(), dbURL)
@@ -76,7 +77,7 @@ func main() {
 	{
 		users.POST("/register", h.Register)
 		users.POST("/login", h.Login)
-		users.GET("/internal/exists/:id", h.UserExists) // service-to-service
+		users.GET("/internal/exists/:id", middleware.InternalAuth(internalAPIKey), h.UserExists)
 	}
 
 	// Profile — JWT required

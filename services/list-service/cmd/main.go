@@ -26,6 +26,7 @@ func main() {
 	jwtSecret := mustEnv("JWT_SECRET")
 	amqpURL := getEnv("RABBITMQ_URL", "amqp://sga:sga_secret@localhost:5672/")
 	userServiceURL := getEnv("USER_SERVICE_URL", "http://localhost:4001")
+	internalAPIKey := getEnv("INTERNAL_API_KEY", "change_me_in_production")
 	port := getEnv("LIST_SERVICE_PORT", "4002")
 
 	db, err := pgxpool.New(context.Background(), dbURL)
@@ -93,7 +94,7 @@ func main() {
 	}
 
 	// Start periodic orphan cleanup job (Option 4: safety net).
-	orphanCleanup := cleanup.NewOrphanCleanup(db, userServiceURL, 10*time.Minute)
+	orphanCleanup := cleanup.NewOrphanCleanup(db, userServiceURL, internalAPIKey, 10*time.Minute)
 	go orphanCleanup.Start(context.Background())
 
 	log.Printf("list-service listening on :%s", port)
