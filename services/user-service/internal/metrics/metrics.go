@@ -38,6 +38,24 @@ var (
 	}, []string{"operation"})
 )
 
+// User lifecycle metrics — recorded in the service layer.
+var (
+	UsersDeletedTotal = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "user_service_users_deleted_total",
+		Help: "Total number of users deleted.",
+	})
+
+	UserDeletedEventPublished = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "user_service_user_deleted_event_published_total",
+		Help: "Total user.deleted events successfully published to RabbitMQ.",
+	})
+
+	UserDeletedEventFailed = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "user_service_user_deleted_event_failed_total",
+		Help: "Total user.deleted events that failed to publish.",
+	})
+)
+
 // Connection pool metrics — recorded by a background goroutine in main.
 var (
 	DBPoolTotalConns = promauto.NewGauge(prometheus.GaugeOpts{

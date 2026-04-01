@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 
+	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/metrics"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -88,12 +90,18 @@ func (c *Consumer) handleMessage(ctx context.Context, msg amqp.Delivery) {
 
 	log.Printf("consumer: received user.deleted for user %s", event.UserID)
 
+	start := time.Now()
 	if err := c.handler(ctx, event.UserID); err != nil {
 		log.Printf("consumer: failed to handle user.deleted for %s: %v — requeueing", event.UserID, err)
+		metrics.SagaCleanupErrors.Inc()
 		msg.Nack(false, true)
 		return
 	}
 
+	duration := time.Since(start).Seconds()
+	metrics.SagaCleanupTotal.Inc()
+	metrics.SagaCleanupDuration.Observe(duration)
+
 	msg.Ack(false)
-	log.Printf("consumer: successfully cleaned up data for deleted user %s", event.UserID)
+	log.Printf("consumer: successfully cleaned up data for deleted user %s (%.3fs)", event.UserID, duration)
 }

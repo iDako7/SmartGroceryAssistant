@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/events"
+	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/metrics"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/model"
 )
 
@@ -126,6 +127,8 @@ func (s *ListService) SoftDeleteAllByUser(ctx context.Context, userID string) er
 	if err != nil {
 		return err
 	}
+	metrics.SagaCleanupSections.Add(float64(sections))
+	metrics.SagaCleanupItems.Add(float64(items))
 	if sections > 0 || items > 0 {
 		s.pub.Publish(ctx, userID, events.SectionDeleted, map[string]any{
 			"reason":   "user_deleted",

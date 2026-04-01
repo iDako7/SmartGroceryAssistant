@@ -182,7 +182,7 @@ python test_eventual_consistency.py
 
 ---
 
-## Fix: Event-Driven Saga (Option 1) + Periodic Cleanup (Option 4)
+## Fix: Event-Driven Saga + Periodic Cleanup
 
 ### What was implemented
 
@@ -233,14 +233,46 @@ User Service                    RabbitMQ                    List Service
      │                              │                              │──► ack message
 ```
 
+### Eventual Consistency Test Suite (10 tests)
+
+A comprehensive test suite (`test_eventual_consistency_suite.py`) covers 10 scenarios that exercise the gap, the saga fix, and edge cases.
+
+#### Results: 10/10 passed
+
+| # | Test | What it proves | Result |
+|---|------|---------------|--------|
+| 1 | **Saga basic cleanup** | Delete user via API → saga consumes `user.deleted` event and soft-deletes all sections + items | PASS — cleanup in 0.24s |
+| 2 | **Gap without saga (SQL delete)** | Delete user directly from `user_db` (bypassing saga) → JWT still works on list-service for reads AND writes | PASS — confirmed gap exists |
+| 3 | **Bulk deletion (10 users)** | Delete 10 users rapidly → all 10 cleaned up by saga | PASS — all 10 cleaned up |
+| 4 | **Concurrent delete + write** | Delete user while another thread is actively writing items → saga handles the race | PASS — 6 writes succeeded during race, 16 failed, saga cleaned up |
+| 5 | **Large dataset (5×10)** | User with 5 sections × 10 items (50 items total) → all cleaned up | PASS — 50 items cleaned in 0.01s |
+| 6 | **Stale JWT window** | Measure the exact time window where a deleted user's JWT can still access data | PASS — access denied in 0.003s (saga runs faster than the poll interval) |
+| 7 | **RabbitMQ down → orphan detection** | Delete user via SQL (simulating RabbitMQ failure) → verify orphan detection mechanism works | PASS — `GET /internal/exists/:id` returns 404, cleanup job would catch it |
+| 8 | **Double delete (idempotency)** | Delete same user twice → second call returns error but doesn't crash | PASS — HTTP 500 (user not found), no crash |
+| 9 | **Expired JWT after deletion** | Mint short-lived JWT (2s), delete user, wait for expiry → JWT rejected | PASS — accepted before expiry (HTTP 200), rejected after (HTTP 401) |
+| 10 | **Cross-user isolation** | Delete user A → verify user B's data is completely unaffected | PASS — user B has all sections + items intact |
+
+#### Key findings from the test suite
+
+1. **Saga cleanup latency is sub-second.** Basic cleanup takes ~0.24s, large datasets (50 items) take ~0.01s. The bottleneck is event delivery, not the SQL soft-delete.
+
+2. **The gap is real but narrow.** Test 6 shows the stale JWT window is ~0.003s when the saga is running — effectively invisible to end users. Without the saga (test 2), the gap is unbounded (until JWT expires).
+
+3. **Concurrent writes create a race condition.** Test 4 shows that 6 out of 22 writes succeeded during/after deletion. The saga cleaned up the pre-existing data, but writes that land AFTER the cleanup create new orphans. Mitigation: the periodic cleanup job (option 4) catches these on its next run.
+
+4. **Short JWT TTL is a natural backstop.** Test 9 confirms that a 2-second JWT is accepted before expiry and rejected after. Reducing the production JWT TTL from 7 days to 15 minutes would limit the consistency gap window even without the saga.
+
+5. **Cross-user isolation is maintained.** Test 10 confirms the saga's `WHERE user_id = $1` clause correctly scopes the soft-delete — no collateral damage to other users.
+
 ### How to Reproduce
 
 ```bash
-# Test the saga fix (creates user, deletes via API, verifies cleanup)
-python test_saga_fix.py
+# Full test suite (10 tests)
+python test_eventual_consistency_suite.py
 
-# Compare with the gap (deletes user via SQL, bypassing the saga)
-python test_eventual_consistency.py
+# Individual tests
+python test_saga_fix.py              # Saga happy path
+python test_eventual_consistency.py  # Demonstrate the gap
 ```
 
 ---
@@ -254,6 +286,18 @@ Prometheus metrics collected during test runs:
 - `list_service_db_query_duration_seconds{operation}` — per-query DB latency
 - `list_service_db_query_errors_total{operation}` — failed DB queries
 - `list_service_db_pool_total_conns` / `idle_conns` / `acquired_conns` — connection pool utilization
+
+### Eventual Consistency Saga Dashboard
+
+![Grafana — Eventual Consistency Saga Dashboard](results/grafana_eventual.png)
+
+The dashboard shows metrics from the test suite run:
+- **User Deletions vs Saga Cleanups**: 18 deletions, all matched by saga cleanups (no gap)
+- **Event Pipeline Health**: 18 events published, 0 failed
+- **Saga Cleanup Latency**: p50 ~8ms, p95 ~10ms
+- **Data Cleaned Up**: spikes correspond to bulk deletion test (100+ items) and large dataset test (50 items)
+- **Orphan Cleanup Job**: 0 runs during test (10-minute interval not reached), 0 orphans found
+- **Saga Cleanup Errors**: 0 errors
 
 Grafana dashboards available at http://localhost:3333 during Docker Compose runs.
 

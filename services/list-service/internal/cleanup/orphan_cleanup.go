@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/metrics"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -72,6 +73,8 @@ func (c *OrphanCleanup) run(ctx context.Context) {
 		return
 	}
 
+	metrics.OrphanCleanupRunsTotal.Inc()
+
 	for _, uid := range userIDs {
 		if ctx.Err() != nil {
 			return
@@ -82,6 +85,7 @@ func (c *OrphanCleanup) run(ctx context.Context) {
 			continue
 		}
 		if !exists {
+			metrics.OrphanCleanupFoundTotal.Inc()
 			c.cleanupUser(ctx, uid)
 		}
 	}

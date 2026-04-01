@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/metrics"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/model"
 	"github.com/jackc/pgx/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -159,13 +160,15 @@ func (s *UserService) DeleteUser(ctx context.Context, userID string) error {
 	if err := s.repo.DeleteUser(ctx, userID); err != nil {
 		return err
 	}
+	metrics.UsersDeletedTotal.Inc()
 
 	// Publish user.deleted event so downstream services can clean up.
 	if s.pub != nil {
 		if err := s.pub.PublishUserDeleted(ctx, userID); err != nil {
-			// Log but don't fail — the user is already deleted.
-			// The periodic cleanup job (option 4) will catch orphaned data.
+			metrics.UserDeletedEventFailed.Inc()
 			log.Printf("warning: failed to publish user.deleted for %s: %v", userID, err)
+		} else {
+			metrics.UserDeletedEventPublished.Inc()
 		}
 	}
 	return nil
