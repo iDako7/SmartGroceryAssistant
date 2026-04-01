@@ -55,7 +55,7 @@
         With rice and soy sauce present, recipes should lean Japanese/Asian but variety is welcome.
         Descriptions are concise and genuinely descriptive (max 8 words).
       provider:
-        id: openrouter:anthropic/claude-sonnet-4.6
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
         config:
           temperature: 0
     - type: llm-rubric
@@ -66,7 +66,7 @@
         With rice and soy sauce present, recipes should lean Japanese/Asian but variety is welcome.
         Descriptions are concise and genuinely descriptive (max 8 words).
       provider:
-        id: openrouter:openai/gpt-5.4-mini
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
         config:
           temperature: 0
 
@@ -127,7 +127,7 @@
         At least 2 of 3 recipes should be recognizably Korean dishes.
         Descriptions are concise and genuinely descriptive (max 8 words).
       provider:
-        id: openrouter:anthropic/claude-sonnet-4.6
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
         config:
           temperature: 0
     - type: llm-rubric
@@ -139,7 +139,7 @@
         At least 2 of 3 recipes should be recognizably Korean dishes.
         Descriptions are concise and genuinely descriptive (max 8 words).
       provider:
-        id: openrouter:openai/gpt-5.4-mini
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
         config:
           temperature: 0
 
@@ -199,7 +199,7 @@
         Diversity is the key test here.
         Descriptions are concise and genuinely descriptive (max 8 words).
       provider:
-        id: openrouter:anthropic/claude-sonnet-4.6
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
         config:
           temperature: 0
     - type: llm-rubric
@@ -211,7 +211,7 @@
         Diversity is the key test here.
         Descriptions are concise and genuinely descriptive (max 8 words).
       provider:
-        id: openrouter:openai/gpt-5.4-mini
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
         config:
           temperature: 0
 
@@ -276,7 +276,7 @@
         Recipes should lean Mexican given the other items.
         Descriptions are concise and genuinely descriptive (max 8 words).
       provider:
-        id: openrouter:anthropic/claude-sonnet-4.6
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
         config:
           temperature: 0
     - type: llm-rubric
@@ -292,7 +292,7 @@
         Recipes should lean Mexican given the other items.
         Descriptions are concise and genuinely descriptive (max 8 words).
       provider:
-        id: openrouter:openai/gpt-5.4-mini
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
         config:
           temperature: 0
 
@@ -355,7 +355,7 @@
         At least 2 of 3 recipes should be recognizably Chinese dishes.
         Descriptions are concise and genuinely descriptive (max 8 words).
       provider:
-        id: openrouter:anthropic/claude-sonnet-4.6
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
         config:
           temperature: 0
     - type: llm-rubric
@@ -369,6 +369,6 @@
         At least 2 of 3 recipes should be recognizably Chinese dishes.
         Descriptions are concise and genuinely descriptive (max 8 words).
       provider:
-        id: openrouter:openai/gpt-5.4-mini
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
         config:
           temperature: 0

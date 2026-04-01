@@ -39,14 +39,14 @@
       value: |
         Alternatives are genuinely available in North American grocery stores. Match levels are honest — 'Very close' should be another hot sauce, not a completely different condiment. Each alternative should be a real product. 'where' gives useful store location.
       provider:
-        id: openrouter:anthropic/claude-sonnet-4.6
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
         config:
           temperature: 0
     - type: llm-rubric
       value: |
         Alternatives are genuinely available in North American grocery stores. Match levels are honest — 'Very close' should be another hot sauce, not a completely different condiment. Each alternative should be a real product. 'where' gives useful store location.
       provider:
-        id: openrouter:openai/gpt-5.4-mini
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
         config:
           temperature: 0
 
@@ -86,14 +86,14 @@
       value: |
         ALL alternatives must be dairy-free/lactose-free since the user specified lactose intolerant. Suggesting regular margarine without checking dairy content is not acceptable. Match levels should be honest — plant-based butters are 'Similar' not 'Very close' for baking. The note should acknowledge the lactose constraint.
       provider:
-        id: openrouter:anthropic/claude-sonnet-4.6
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
         config:
           temperature: 0
     - type: llm-rubric
       value: |
         ALL alternatives must be dairy-free/lactose-free since the user specified lactose intolerant. Suggesting regular margarine without checking dairy content is not acceptable. Match levels should be honest — plant-based butters are 'Similar' not 'Very close' for baking. The note should acknowledge the lactose constraint.
       provider:
-        id: openrouter:openai/gpt-5.4-mini
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
         config:
           temperature: 0
 
@@ -133,14 +133,14 @@
       value: |
         Alternatives should be other vinegars or acidic condiments that work in similar recipes. Match levels are honest. Alternatives are available in North American stores. 'where' gives useful location (condiment aisle, Asian section).
       provider:
-        id: openrouter:anthropic/claude-sonnet-4.6
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
         config:
           temperature: 0
     - type: llm-rubric
       value: |
         Alternatives should be other vinegars or acidic condiments that work in similar recipes. Match levels are honest. Alternatives are available in North American stores. 'where' gives useful location (condiment aisle, Asian section).
       provider:
-        id: openrouter:openai/gpt-5.4-mini
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
         config:
           temperature: 0
 
@@ -180,14 +180,14 @@
       value: |
         ALL alternatives must be vegetarian — no meat, poultry, or fish. This is a protein substitution test. Alternatives like tofu, tempeh, seitan, or plant-based chicken are expected. Match levels should reflect that these are 'Different but works' or 'Similar' — not 'Very close' since texture/flavor differ significantly from chicken.
       provider:
-        id: openrouter:anthropic/claude-sonnet-4.6
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
         config:
           temperature: 0
     - type: llm-rubric
       value: |
         ALL alternatives must be vegetarian — no meat, poultry, or fish. This is a protein substitution test. Alternatives like tofu, tempeh, seitan, or plant-based chicken are expected. Match levels should reflect that these are 'Different but works' or 'Similar' — not 'Very close' since texture/flavor differ significantly from chicken.
       provider:
-        id: openrouter:openai/gpt-5.4-mini
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
         config:
           temperature: 0
 
@@ -227,13 +227,13 @@
       value: |
         Since the user has Korean taste preference, alternatives should be cuisine-appropriate. Korean alternatives like 국간장 (soup soy sauce) or 액젓 (Korean fish sauce/anchovy sauce) are ideal. Non-Korean alternatives are acceptable but should work in Korean cooking. Match levels are honest.
       provider:
-        id: openrouter:anthropic/claude-sonnet-4.6
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
         config:
           temperature: 0
     - type: llm-rubric
       value: |
         Since the user has Korean taste preference, alternatives should be cuisine-appropriate. Korean alternatives like 국간장 (soup soy sauce) or 액젓 (Korean fish sauce/anchovy sauce) are ideal. Non-Korean alternatives are acceptable but should work in Korean cooking. Match levels are honest.
       provider:
-        id: openrouter:openai/gpt-5.4-mini
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
         config:
           temperature: 0
