@@ -1,0 +1,2 @@
+services/api-gateway/locust/results/** linguist-generated
+services/user-service/locust/results/** linguist-generated
