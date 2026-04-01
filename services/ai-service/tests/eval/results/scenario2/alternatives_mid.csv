@@ -1,0 +1,275 @@
+Description,name_en,reason,taste,profile_context,"[GPT-5.4 Mini ($0.75/M)] prompts/current/alternatives.json: [{""role"":""system"",""content"":""You are a grocery expert. Respond with JSON only.""},{""role"":""user"",""content"":""Find 3-4 alternatives for \""{{name_en}}\"" available in North American stores.{% if reason %} User reason: {{reason}}.{% endif %}{% if taste %} User taste: {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{% endif %}\nIf a dietary restriction is given, EVERY alternative MUST be definitively compliant — no \""if available\"" or \""check label\"" items.\nmatch levels (use strictly): \""Very close\"" = same product, different brand (e.g., another brand of sriracha). Different product type = \""Similar\"" at best. Plant-based for meat = \""Different but works\"".\nIf user taste is specified, prioritize alternatives authentic to that cuisine.\nONLY JSON: {\""note\"": \""1 sentence why needed\"", \""alts\"": [{\""name_en\"": \""Name\"", \""match\"": \""Very close|Similar|Different but works\"", \""desc\"": \""1 sentence\"", \""where\"": \""Where in store\""}]}""}]",Status,Score,Named Scores,Grader Reason,Comment,"[Gemini 2.5 Pro ($1.25/M)] prompts/current/alternatives.json: [{""role"":""system"",""content"":""You are a grocery expert. Respond with JSON only.""},{""role"":""user"",""content"":""Find 3-4 alternatives for \""{{name_en}}\"" available in North American stores.{% if reason %} User reason: {{reason}}.{% endif %}{% if taste %} User taste: {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{% endif %}\nIf a dietary restriction is given, EVERY alternative MUST be definitively compliant — no \""if available\"" or \""check label\"" items.\nmatch levels (use strictly): \""Very close\"" = same product, different brand (e.g., another brand of sriracha). Different product type = \""Similar\"" at best. Plant-based for meat = \""Different but works\"".\nIf user taste is specified, prioritize alternatives authentic to that cuisine.\nONLY JSON: {\""note\"": \""1 sentence why needed\"", \""alts\"": [{\""name_en\"": \""Name\"", \""match\"": \""Very close|Similar|Different but works\"", \""desc\"": \""1 sentence\"", \""where\"": \""Where in store\""}]}""}]",Status,Score,Named Scores,Grader Reason,Comment,"[Claude Sonnet 4.6 ($3.00/M)] prompts/current/alternatives.json: [{""role"":""system"",""content"":""You are a grocery expert. Respond with JSON only.""},{""role"":""user"",""content"":""Find 3-4 alternatives for \""{{name_en}}\"" available in North American stores.{% if reason %} User reason: {{reason}}.{% endif %}{% if taste %} User taste: {{taste}}.{% endif %}{% if profile_context %}{{profile_context}}{% endif %}\nIf a dietary restriction is given, EVERY alternative MUST be definitively compliant — no \""if available\"" or \""check label\"" items.\nmatch levels (use strictly): \""Very close\"" = same product, different brand (e.g., another brand of sriracha). Different product type = \""Similar\"" at best. Plant-based for meat = \""Different but works\"".\nIf user taste is specified, prioritize alternatives authentic to that cuisine.\nONLY JSON: {\""note\"": \""1 sentence why needed\"", \""alts\"": [{\""name_en\"": \""Name\"", \""match\"": \""Very close|Similar|Different but works\"", \""desc\"": \""1 sentence\"", \""where\"": \""Where in store\""}]}""}]",Status,Score,Named Scores,Grader Reason,Comment
+sriracha — general alternative with no constraints,sriracha,,,,"{""note"":""These alternatives help replace sriracha’s spicy, garlicky, tangy heat with options commonly found in North American stores."",""alts"":[{""name_en"":""Huy Fong Chili Garlic Sauce"",""match"":""Very close"",""desc"":""A chili-garlic hot sauce with a similar peppery, garlicky kick and medium heat, though it is chunkier than classic sriracha."",""where"":""Asian foods aisle or hot sauce aisle""},{""name_en"":""Lee Kum Kee Sriracha Chili Sauce"",""match"":""Very close"",""desc"":""Another authentic sriracha-style sauce with the same sweet-heat profile and pourable texture."",""where"":""Asian foods aisle""},{""name_en"":""Tabasco Sriracha Sauce"",""match"":""Very close"",""desc"":""A familiar sriracha-style condiment with a slightly sharper vinegar-forward heat but the same general use case."",""where"":""Hot sauce aisle""},{""name_en"":""Flying Goose Sriracha Hot Chili Sauce"",""match"":""Very close"",""desc"":""A classic Thai-style sriracha with garlic, sweetness, and heat that closely matches the original flavor profile."",""where"":""Asian foods aisle""}]}",PASS,0.99,,All assertions passed,,"{
+  ""note"": ""A widespread shortage of the popular Huy Fong Foods sriracha has led many to seek other spicy chili sauces."",
+  ""alts"": [
+    {
+      ""name_en"": ""Underwood Ranches Sriracha"",
+      ""match"": ""Very close"",
+      ""desc"": ""A sriracha-style sauce made by the original pepper grower for Huy Fong, offering a very comparable taste and consistency."",
+      ""where"": ""Condiment aisle or specialty foods section""
+    },
+    {
+      ""name_en"": ""Chili Garlic Sauce"",
+      ""match"": ""Similar"",
+      ""desc"": ""This sauce is chunkier and has a stronger garlic flavor than sriracha but a similar heat profile and ingredients."",
+      ""where"": ""Asian foods aisle or condiment aisle""
+    },
+    {
+      ""name_en"": ""Sambal Oelek"",
+      ""match"": ""Similar"",
+      ""desc"": ""A simple, raw chili paste with more pure pepper flavor and less sweetness than sriracha, often made by the same brands."",
+      ""where"": ""Asian foods aisle or condiment aisle""
+    },
+    {
+      ""name_en"": ""Gochujang"",
+      ""match"": ""Similar"",
+      ""desc"": ""This Korean fermented chili paste provides a unique sweet, savory, and spicy depth of flavor that is thicker than sriracha."",
+      ""where"": ""Asian foods aisle""
+    }
+  ]
+}",PASS,0.99,,All assertions passed,,"{
+  ""note"": ""Sriracha may be unavailable due to supply shortages or personal preference for a different brand or heat level."",
+  ""alts"": [
+    {
+      ""name_en"": ""Huy Fong Chili Garlic Sauce"",
+      ""match"": ""Similar"",
+      ""desc"": ""Same brand as classic Sriracha but chunkier with more garlic and slightly less sweet heat."",
+      ""where"": ""Asian foods aisle or condiments section""
+    },
+    {
+      ""name_en"": ""Trader Joe's Sriracha Sauce"",
+      ""match"": ""Very close"",
+      ""desc"": ""A store-brand sriracha with a similar sweet, garlicky, tangy heat profile to the original."",
+      ""where"": ""Trader Joe's condiments aisle""
+    },
+    {
+      ""name_en"": ""Sky Valley Sriracha Sauce"",
+      ""match"": ""Very close"",
+      ""desc"": ""An organic sriracha alternative with nearly identical flavor and consistency to classic Huy Fong."",
+      ""where"": ""Natural/organic foods section or condiments aisle""
+    },
+    {
+      ""name_en"": ""Tabasco Sweet & Spicy Pepper Sauce"",
+      ""match"": ""Similar"",
+      ""desc"": ""Offers a comparable sweet-heat balance with a thinner consistency and mild vinegar tang."",
+      ""where"": ""Condiments aisle""
+    }
+  ]
+}",PASS,0.99,,All assertions passed,
+butter + lactose intolerant — all alts must be dairy-free,butter,lactose intolerant,,,"{""note"":""These alternatives avoid dairy lactose while covering common butter uses in North American stores."",""alts"":[{""name_en"":""Olive oil spread"",""match"":""Similar"",""desc"":""A dairy-free spread made from plant oils that can be used on toast and for many cooking tasks."",""where"":""Refrigerated dairy-free spread section""},{""name_en"":""Vegan buttery stick"",""match"":""Similar"",""desc"":""A plant-based butter alternative designed for baking, sautéing, and spreading with a butter-like texture."",""where"":""Refrigerated plant-based butter section""},{""name_en"":""Coconut oil spread"",""match"":""Similar"",""desc"":""A dairy-free spread with a mild buttery profile that works well for cooking and baking."",""where"":""Refrigerated plant-based spread section""},{""name_en"":""Ghee-free olive oil cooking spread"",""match"":""Similar"",""desc"":""A dairy-free cooking spread made from vegetable oils that replaces butter in sautéing and pan use."",""where"":""Refrigerated margarine/spreads section""}]}",PASS,1.00,,All assertions passed,,"{
+  ""note"": ""The user requires butter alternatives that are free from lactose due to an intolerance."",
+  ""alts"": [
+    {
+      ""name_en"": ""Vegan Butter Spread/Sticks"",
+      ""match"": ""Similar"",
+      ""desc"": ""A plant-based product made from oils specifically formulated to look, taste, and bake like dairy butter."",
+      ""where"": ""Refrigerated section, next to dairy butter and margarine.""
+    },
+    {
+      ""name_en"": ""Coconut Oil"",
+      ""match"": ""Different but works"",
+      ""desc"": ""A solid plant-based fat that can be substituted 1:1 for butter in most baking and cooking applications."",
+      ""where"": ""Baking aisle or the oil and vinegar section.""
+    },
+    {
+      ""name_en"": ""Olive Oil"",
+      ""match"": ""Different but works"",
+      ""desc"": ""A flavorful liquid fat used for sautéing, roasting, or as a finishing drizzle in place of melted butter."",
+      ""where"": ""Oil and vinegar aisle.""
+    }
+  ]
+}",PASS,1.00,,All assertions passed,,"{
+  ""note"": ""Butter contains lactose and can cause digestive issues for lactose intolerant individuals."",
+  ""alts"": [
+    {
+      ""name_en"": ""Earth Balance Vegan Butter"",
+      ""match"": ""Very close"",
+      ""desc"": ""Plant-based butter stick or spread that mimics the taste and function of dairy butter in cooking, baking, and spreading."",
+      ""where"": ""Dairy or natural foods aisle""
+    },
+    {
+      ""name_en"": ""Miyoko's Creamery Organic Vegan Butter"",
+      ""match"": ""Very close"",
+      ""desc"": ""Cashew-based vegan butter with a rich, creamy flavor very close to traditional dairy butter, suitable for all uses."",
+      ""where"": ""Dairy or natural foods aisle""
+    },
+    {
+      ""name_en"": ""Coconut Oil (refined)"",
+      ""match"": ""Similar"",
+      ""desc"": ""Refined coconut oil is solid at room temperature and works well as a 1:1 butter substitute in baking and sautéing without a coconut flavor."",
+      ""where"": ""Cooking oils aisle or natural foods section""
+    },
+    {
+      ""name_en"": ""Ghee (clarified butter)"",
+      ""match"": ""Similar"",
+      ""desc"": ""Butter with milk solids removed, making it virtually lactose-free while retaining a rich, buttery flavor ideal for cooking and baking."",
+      ""where"": ""International foods aisle or near cooking oils""
+    }
+  ]
+}",FAIL,0.66,,"Evaluating against the rubric criteria: 1) All alternatives dairy-free/lactose-free: Earth Balance (vegan, dairy-free ✓), Miyoko's (vegan, dairy-free ✓), Coconut Oil (dairy-free ✓), Ghee - this is problematic. Ghee is derived from dairy butter. While it's virtually lactose-free, it's not fully dairy-free and some lactose-intolerant individuals may still react. However, ghee is widely accepted as safe for lactose intolerant people since the milk solids (containing lactose) are removed. This is borderline but generally acceptable. 2) No regular margarine suggested without checking dairy content - correct, no margarine is suggested. 3) Match levels honesty: The rubric states plant-based butters should be 'Similar' not 'Very close' for baking. Both Earth Balance and Miyoko's are listed as 'Very close' which the rubric explicitly says is not honest for baking purposes. Plant-based butters behave differently in baking due to different fat content and water content. 4) The note acknowledges the lactose constraint - yes, it mentions lactose and digestive issues for lactose intolerant individuals. The main issue is the match levels for plant-based butters being rated 'Very close' when the rubric explicitly states they should be 'Similar' for baking. This is a clear violation of the rubric's requirement for honest match levels.",
+rice vinegar — general substitution for acidic condiment,rice vinegar,,,,"{""note"":""These alternatives help replace rice vinegar’s mild acidity and subtle sweetness in North American grocery stores."",""alts"":[{""name_en"":""Seasoned rice vinegar"",""match"":""Very close"",""desc"":""Rice vinegar with added sugar and salt, so it tastes very close to regular rice vinegar but is a bit less neutral."",""where"":""Vinegar aisle / Asian foods aisle""},{""name_en"":""White wine vinegar"",""match"":""Similar"",""desc"":""A mild, light vinegar that can stand in for rice vinegar in dressings, marinades, and quick pickles."",""where"":""Vinegar aisle""},{""name_en"":""Champagne vinegar"",""match"":""Similar"",""desc"":""Delicate and less sharp than many other vinegars, making it one of the closest Western-style substitutes."",""where"":""Vinegar aisle / gourmet condiments""},{""name_en"":""Apple cider vinegar"",""match"":""Similar"",""desc"":""Slightly fruitier and stronger than rice vinegar, but still works well when you want gentle acidity."",""where"":""Vinegar aisle""}]}",PASS,0.99,,All assertions passed,,"{
+  ""note"": ""Rice vinegar provides a mild, slightly sweet acidity essential in many Asian dishes, and a substitute is needed when it is unavailable."",
+  ""alts"": [
+    {
+      ""name_en"": ""Apple Cider Vinegar"",
+      ""match"": ""Similar"",
+      ""desc"": ""This common vinegar has a fruitier, more robust flavor but provides the necessary acidity for dressings and marinades."",
+      ""where"": ""Condiments aisle, with other vinegars and oils.""
+    },
+    {
+      ""name_en"": ""White Wine Vinegar"",
+      ""match"": ""Similar"",
+      ""desc"": ""It offers a clean, crisp acidity that is slightly less sweet but works well in most recipes calling for rice vinegar."",
+      ""where"": ""Condiments aisle, with other vinegars and oils.""
+    },
+    {
+      ""name_en"": ""Champagne Vinegar"",
+      ""match"": ""Similar"",
+      ""desc"": ""As a very delicate and mild grape-based vinegar, its flavor profile is a close match for rice vinegar's subtlety."",
+      ""where"": ""Condiments aisle, often with specialty oils and vinegars.""
+    }
+  ]
+}",PASS,1.00,,All assertions passed,,"{
+  ""note"": ""Rice vinegar may be unavailable or you may need a substitute with similar mild acidity and slight sweetness."",
+  ""alts"": [
+    {
+      ""name_en"": ""Seasoned Rice Vinegar (e.g., Marukan or Nakano brand)"",
+      ""match"": ""Very close"",
+      ""desc"": ""Same rice vinegar base with added sugar and salt, works as a near-identical swap in most recipes."",
+      ""where"": ""Asian foods aisle or international section""
+    },
+    {
+      ""name_en"": ""White Wine Vinegar"",
+      ""match"": ""Similar"",
+      ""desc"": ""Mild, slightly fruity acidity that closely mimics rice vinegar's gentle tang without being overpowering."",
+      ""where"": ""Condiments/vinegar aisle""
+    },
+    {
+      ""name_en"": ""Apple Cider Vinegar"",
+      ""match"": ""Similar"",
+      ""desc"": ""Slightly stronger and fruitier than rice vinegar but shares a comparable mild acidity suitable for dressings and marinades."",
+      ""where"": ""Condiments/vinegar aisle or health foods section""
+    },
+    {
+      ""name_en"": ""Distilled White Vinegar (diluted)"",
+      ""match"": ""Different but works"",
+      ""desc"": ""Much sharper than rice vinegar, but diluting with a little water and a pinch of sugar brings it closer in balance."",
+      ""where"": ""Condiments/vinegar aisle""
+    }
+  ]
+}",PASS,1.00,,All assertions passed,
+chicken breast + vegetarian — all alts must be meat-free,chicken breast,vegetarian,,"
+Dietary: vegetarian.","{""note"":""Vegetarian alternatives to chicken breast should be plant-based proteins that can replace it in meals while staying fully compliant."",""alts"":[{""name_en"":""Extra-firm tofu"",""match"":""Different but works"",""desc"":""A versatile high-protein soy option that can be sliced, cubed, or grilled in place of chicken breast."",""where"":""Refrigerated tofu section, near produce or plant-based proteins""},{""name_en"":""Tempeh"",""match"":""Different but works"",""desc"":""A firm fermented soy cake with a hearty texture that works well in stir-fries, sandwiches, and grilled dishes."",""where"":""Refrigerated plant-based proteins section""},{""name_en"":""Seitan"",""match"":""Different but works"",""desc"":""A wheat-gluten protein with a chewy, meat-like texture that is especially good for sautéing, grilling, or slicing."",""where"":""Refrigerated vegan meat alternatives or freezer section""},{""name_en"":""Plant-based chicken strips"",""match"":""Different but works"",""desc"":""A ready-to-cook meat alternative designed to mimic chicken in salads, wraps, and skillet meals."",""where"":""Frozen plant-based meat section""}]}",PASS,1.00,,All assertions passed,,"{
+  ""note"": ""Plant-based proteins are needed to replace the texture and protein content of chicken breast in vegetarian dishes."",
+  ""alts"": [
+    {
+      ""name_en"": ""Extra-Firm Tofu"",
+      ""match"": ""Different but works"",
+      ""desc"": ""This pressed soy-based block is excellent at absorbing marinades and can be baked or pan-fried to a chewy texture."",
+      ""where"": ""Refrigerated section, often near produce or in a dedicated vegetarian foods case""
+    },
+    {
+      ""name_en"": ""Seitan"",
+      ""match"": ""Different but works"",
+      ""desc"": ""Made from vital wheat gluten, seitan offers a uniquely dense, savory, and meat-like chew perfect for slicing or shredding."",
+      ""where"": ""Refrigerated section with other plant-based proteins like tofu and tempeh""
+    },
+    {
+      ""name_en"": ""Tempeh"",
+      ""match"": ""Different but works"",
+      ""desc"": ""A fermented soybean cake with a firm, nutty, and slightly earthy flavor that holds its shape well in stir-fries, sandwiches, or when grilled."",
+      ""where"": ""Refrigerated section, typically found alongside tofu""
+    },
+    {
+      ""name_en"": ""Plant-Based Chicken Cutlets"",
+      ""match"": ""Different but works"",
+      ""desc"": ""These processed soy or pea-protein products are specifically formulated to mimic the taste and texture of chicken breast."",
+      ""where"": ""Frozen foods aisle or refrigerated vegetarian section""
+    }
+  ]
+}",PASS,1.00,,All assertions passed,,"{
+  ""note"": ""Chicken breast is animal meat and not suitable for a vegetarian diet, so plant-based protein alternatives are needed."",
+  ""alts"": [
+    {
+      ""name_en"": ""Extra-Firm Tofu"",
+      ""match"": ""Different but works"",
+      ""desc"": ""A dense, protein-rich soy product that can be pressed, sliced, and cooked to mimic the texture of chicken breast in stir-fries, sandwiches, and bakes."",
+      ""where"": ""Refrigerated produce section or natural foods aisle""
+    },
+    {
+      ""name_en"": ""Seitan (Wheat Meat)"",
+      ""match"": ""Different but works"",
+      ""desc"": ""Made from vital wheat gluten, seitan has a chewy, meaty texture that closely resembles cooked chicken and absorbs marinades and seasonings very well."",
+      ""where"": ""Refrigerated natural foods or health food section""
+    },
+    {
+      ""name_en"": ""Jackfruit (Young/Green, Canned)"",
+      ""match"": ""Different but works"",
+      ""desc"": ""Young green jackfruit has a fibrous, shreddable texture similar to pulled chicken and works well in tacos, curries, and sandwiches."",
+      ""where"": ""Canned goods aisle or international foods section""
+    },
+    {
+      ""name_en"": ""Gardein Chick'n Scallopini"",
+      ""match"": ""Similar"",
+      ""desc"": ""A frozen plant-based product specifically designed to replicate the shape, size, and mild flavor of a chicken breast cutlet."",
+      ""where"": ""Frozen foods aisle, plant-based or meatless section""
+    }
+  ]
+}",PASS,1.00,,All assertions passed,
+fish sauce + Korean taste — cuisine-appropriate alternatives,fish sauce,,Korean,,"{""note"":""These alternatives help recreate the salty, savory depth of fish sauce in Korean-style cooking using products commonly found in North American grocery stores."",""alts"":[{""name_en"":""Aekjeot (Korean fish sauce)"",""match"":""Very close"",""desc"":""This is the most authentic Korean substitute because it is the same category of fermented fish sauce, often made from anchovy or sand lance."",""where"":""Asian foods aisle, Korean section""},{""name_en"":""Red Boat Fish Sauce"",""match"":""Very close"",""desc"":""A high-quality traditional fish sauce with a clean, umami-forward flavor that works well in Korean marinades, soups, and dipping sauces."",""where"":""Asian foods aisle or international condiments""},{""name_en"":""Squid Brand Fish Sauce"",""match"":""Very close"",""desc"":""A widely available Southeast Asian fish sauce that delivers the same salty, fermented umami profile used in many savory dishes."",""where"":""Asian foods aisle or international condiments""},{""name_en"":""Golden Mountain Seasoning Sauce"",""match"":""Similar"",""desc"":""This Thai-style seasoning sauce is less fishy but adds salty umami depth that can stand in for some of fish sauce’s role in cooking."",""where"":""Asian foods aisle or sauces/condiments""}]}",PASS,0.90,,All assertions passed,,"{
+  ""note"": ""Fish sauce provides a foundational salty and umami flavor, and Korean cuisine has several authentic ingredients that serve a similar purpose."",
+  ""alts"": [
+    {
+      ""name_en"": ""Korean Fish Sauce (Aekjeot)"",
+      ""match"": ""Very close"",
+      ""desc"": ""This is the Korean equivalent of Southeast Asian fish sauce, providing the same salty, umami depth essential for dishes like kimchi."",
+      ""where"": ""Asian foods aisle or a Korean/Asian grocery store""
+    },
+    {
+      ""name_en"": ""Korean Soup Soy Sauce (Guk-ganjang)"",
+      ""match"": ""Similar"",
+      ""desc"": ""A traditional Korean soy sauce that is saltier and has a more complex fermented flavor than regular soy sauce, often used to season soups."",
+      ""where"": ""Asian foods aisle or a Korean/Asian grocery store""
+    },
+    {
+      ""name_en"": ""Korean Fermented Salted Shrimp (Saeu-jeot)"",
+      ""match"": ""Similar"",
+      ""desc"": ""This fermented shrimp paste delivers a potent, salty seafood umami that is a hallmark of many Korean recipes, especially kimchi and stews."",
+      ""where"": ""Refrigerated section of a Korean/Asian grocery store""
+    },
+    {
+      ""name_en"": ""Korean Fermented Soybean Paste (Doenjang)"",
+      ""match"": ""Different but works"",
+      ""desc"": ""A rich, salty paste made from fermented soybeans that provides a deep, earthy umami flavor distinct from but complementary to fish sauce."",
+      ""where"": ""Asian foods aisle or a Korean/Asian grocery store""
+    }
+  ]
+}",PASS,1.00,,All assertions passed,,"{
+  ""note"": ""Fish sauce may be unavailable or needed in a Korean-friendly form for umami depth in marinades, kimchi, and stews."",
+  ""alts"": [
+    {
+      ""name_en"": ""Saeujeot (Korean Salted Fermented Shrimp)"",
+      ""match"": ""Similar"",
+      ""desc"": ""A staple Korean fermented condiment that delivers the same briny, funky umami punch used authentically in kimchi and Korean soups."",
+      ""where"": ""Asian grocery store, refrigerated section or jarred condiments aisle""
+    },
+    {
+      ""name_en"": ""Soup Soy Sauce (Guk-ganjang / Korean Soup Soy Sauce)"",
+      ""match"": ""Similar"",
+      ""desc"": ""A thin, salty, deeply fermented Korean soy sauce traditionally used to season soups and stews as a direct stand-in for fish sauce."",
+      ""where"": ""Asian grocery store, soy sauce / condiments aisle""
+    },
+    {
+      ""name_en"": ""Anchovy Broth Concentrate (Korean Myeolchi Aekjeot / Anchovy Fish Sauce)"",
+      ""match"": ""Very close"",
+      ""desc"": ""A Korean-style anchovy-based liquid seasoning that is essentially the same product as fish sauce but specifically formulated for Korean cooking."",
+      ""where"": ""Asian grocery store, condiments or soup base aisle""
+    },
+    {
+      ""name_en"": ""Soy Sauce (Regular)"",
+      ""match"": ""Different but works"",
+      ""desc"": ""Widely available and provides saltiness and umami, though it lacks the fermented seafood depth; works as a quick substitute in Korean recipes."",
+      ""where"": ""Any grocery store, condiments or international foods aisle""
+    }
+  ]
+}",PASS,0.98,,All assertions passed,
