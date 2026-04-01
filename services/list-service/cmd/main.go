@@ -4,15 +4,18 @@ import (
 	"context"
 	"log"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/events"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/handler"
+	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/metrics"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/middleware"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/repository"
 	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/service"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -40,13 +43,27 @@ func main() {
 	}
 	log.Println("connected to rabbitmq")
 
+	// Periodically export pgxpool stats to Prometheus.
+	go func() {
+		ticker := time.NewTicker(15 * time.Second)
+		defer ticker.Stop()
+		for range ticker.C {
+			stat := db.Stat()
+			metrics.DBPoolTotalConns.Set(float64(stat.TotalConns()))
+			metrics.DBPoolIdleConns.Set(float64(stat.IdleConns()))
+			metrics.DBPoolAcquiredConns.Set(float64(stat.AcquiredConns()))
+		}
+	}()
+
 	repo := repository.NewListRepo(db)
 	svc := service.NewListService(repo, pub)
 	h := handler.New(svc)
 
 	r := gin.Default()
+	r.Use(middleware.Metrics())
 
 	r.GET("/health", func(c *gin.Context) { c.JSON(200, gin.H{"status": "ok"}) })
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	auth := middleware.Auth(jwtSecret)
 
