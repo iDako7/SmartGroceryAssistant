@@ -110,7 +110,7 @@ func (c *OrphanCleanup) userExists(ctx context.Context, userID string) (bool, er
 		// If user service is down, assume user exists (don't delete data).
 		return true, nil
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	// 200 = user exists, 404 = user doesn't exist
 	return resp.StatusCode == http.StatusOK, nil

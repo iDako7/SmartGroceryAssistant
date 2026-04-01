@@ -90,7 +90,11 @@ func main() {
 	if err != nil {
 		log.Printf("warning: could not start user.deleted consumer: %v", err)
 	} else {
-		go consumer.Start(context.Background())
+		go func() {
+			if err := consumer.Start(context.Background()); err != nil {
+				log.Printf("user.deleted consumer stopped: %v", err)
+			}
+		}()
 	}
 
 	// Start periodic orphan cleanup job (Option 4: safety net).
