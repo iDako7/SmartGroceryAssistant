@@ -1,8 +1,11 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import { ChevronDown, ChevronRight, Plus, Wand2, X } from 'lucide-react';
 import { lists } from '../../lib/api';
-import type { Item, Section } from '../../types';
+import type { ClarifyQuestion, Item, Section, SuggestResponse } from '../../types';
+import SuggestResults from '../suggest/SuggestResults';
+import ClarifyPanel from './ClarifyPanel';
 import ItemRow from './ItemRow';
 
 interface Props {
@@ -15,6 +18,7 @@ interface Props {
   onItemCreated: (sectionId: string, item: Item) => void;
   onSectionDeleted: (id: string) => void;
   onSectionUpdated: (section: Section) => void;
+  onSuggest?: (sectionId: string) => void;
 }
 
 export default function SectionCard({
@@ -27,12 +31,16 @@ export default function SectionCard({
   onItemCreated,
   onSectionDeleted,
   onSectionUpdated,
+  onSuggest,
 }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [sectionName, setSectionName] = useState(section.name);
   const [addingItem, setAddingItem] = useState(false);
   const [newItemName, setNewItemName] = useState('');
+  const [showClarify, setShowClarify] = useState(false);
+  const [clarifyQuestions, setClarifyQuestions] = useState<ClarifyQuestion[]>([]);
+  const [suggestData, setSuggestData] = useState<SuggestResponse | null>(null);
 
   async function saveSectionName() {
     if (sectionName.trim() === section.name) {
@@ -53,6 +61,168 @@ export default function SectionCard({
     setAddingItem(false);
   }
 
+  async function handleSuggestClick() {
+    // TODO: replace mock with `POST /api/v1/ai/clarify` when API is ready
+    const mockQuestions: ClarifyQuestion[] = [
+      {
+        text: 'What kind of meal are you planning?',
+        text_zh: '你打算做什么类型的饭菜？',
+        options: [
+          { label: 'Weeknight dinner', label_zh: '工作日晚餐' },
+          { label: 'BBQ / Party', label_zh: '烧烤/聚会' },
+          { label: 'Meal prep', label_zh: '提前备餐' },
+          { label: 'Other...', label_zh: '其他...' },
+        ],
+      },
+      {
+        text: 'How many people will be eating?',
+        text_zh: '有多少人一起吃？',
+        options: [
+          { label: 'Just 2 of us', label_zh: '就我们两个' },
+          { label: 'Small group (4-6)', label_zh: '小聚会(4-6人)' },
+          { label: 'Larger party (7+)', label_zh: '大聚会(7人以上)' },
+          { label: 'Other...', label_zh: '其他...' },
+        ],
+      },
+      {
+        text: 'Are you missing anything?',
+        text_zh: '还缺什么吗？',
+        options: [
+          { label: 'Vegetables', label_zh: '蔬菜' },
+          { label: 'Drinks', label_zh: '饮料' },
+          { label: 'Sauces & seasonings', label_zh: '酱料调味' },
+          { label: 'All set', label_zh: '都齐了' },
+          { label: 'Other...', label_zh: '其他...' },
+        ],
+      },
+    ];
+    setClarifyQuestions(mockQuestions);
+    setShowClarify(true);
+    setCollapsed(false);
+  }
+
+  function showMockSuggestions() {
+    // TODO: replace with real API call to suggest endpoint
+    const mockSuggest: SuggestResponse = {
+      reason:
+        'Based on your BBQ items and Korean + Western ingredients, here are some suggestions to complete your cookout.',
+      clusters: [
+        {
+          name: 'Korean BBQ Sides',
+          emoji: '🥬',
+          desc: 'Essential banchan for your Korean BBQ spread',
+          items: [
+            { name_en: 'Kimchi', name_zh: '泡菜', existing: true, why: '' },
+            { name_en: 'Sesame Oil', name_zh: '芝麻油', existing: false, why: 'For dipping sauce' },
+            {
+              name_en: 'Green Onions',
+              name_zh: '葱',
+              existing: false,
+              why: 'Grill alongside meat',
+            },
+            {
+              name_en: 'Lettuce Wraps',
+              name_zh: '生菜',
+              existing: false,
+              why: 'Ssam wraps for pork belly',
+            },
+          ],
+        },
+        {
+          name: 'Grilled Mains',
+          emoji: '🥩',
+          desc: 'Your proteins are covered, adding a marinade',
+          items: [
+            { name_en: 'Pork Belly', name_zh: '五花肉', existing: true, why: '' },
+            { name_en: 'Burger Patties', name_zh: '汉堡肉饼', existing: true, why: '' },
+            {
+              name_en: 'Gochujang Sauce',
+              name_zh: '辣酱',
+              existing: false,
+              why: 'Korean BBQ marinade',
+            },
+          ],
+        },
+        {
+          name: 'Drinks & Refreshments',
+          emoji: '🍺',
+          desc: 'Stay refreshed during the cookout',
+          items: [
+            {
+              name_en: 'Sparkling Water',
+              name_zh: '气泡水',
+              existing: false,
+              why: 'Light refreshment',
+            },
+            {
+              name_en: 'Lemonade Mix',
+              name_zh: '柠檬水',
+              existing: false,
+              why: 'Easy to prepare for a group',
+            },
+          ],
+        },
+      ],
+      ungrouped: [
+        { name_en: 'Tofu', name_zh: '豆腐', existing: true },
+        { name_en: 'Seaweed', name_zh: '海苔', existing: true },
+      ],
+      storeLayout: [
+        {
+          category: 'Produce',
+          emoji: '🥬',
+          items: [
+            { name_en: 'Green Onions', name_zh: '葱', existing: false },
+            { name_en: 'Lettuce Wraps', name_zh: '生菜', existing: false },
+          ],
+        },
+        {
+          category: 'Meat & Seafood',
+          emoji: '🥩',
+          items: [
+            { name_en: 'Pork Belly', name_zh: '五花肉', existing: true },
+            { name_en: 'Burger Patties', name_zh: '汉堡肉饼', existing: true },
+          ],
+        },
+        {
+          category: 'Asian Aisle',
+          emoji: '🏪',
+          items: [
+            { name_en: 'Kimchi', name_zh: '泡菜', existing: true },
+            { name_en: 'Tofu', name_zh: '豆腐', existing: true },
+            { name_en: 'Sesame Oil', name_zh: '芝麻油', existing: false },
+            { name_en: 'Gochujang Sauce', name_zh: '辣酱', existing: false },
+            { name_en: 'Seaweed', name_zh: '海苔', existing: true },
+          ],
+        },
+        {
+          category: 'Beverages',
+          emoji: '🍺',
+          items: [
+            { name_en: 'Sparkling Water', name_zh: '气泡水', existing: false },
+            { name_en: 'Lemonade Mix', name_zh: '柠檬水', existing: false },
+          ],
+        },
+        {
+          category: 'Condiments',
+          emoji: '🧂',
+          items: [{ name_en: 'Mustard', name_zh: '芥末酱', existing: true }],
+        },
+      ],
+    };
+    setSuggestData(mockSuggest);
+  }
+
+  function handleClarifySubmit(_answers: Record<number, string[]>) {
+    setShowClarify(false);
+    showMockSuggestions();
+  }
+
+  function handleClarifySkip() {
+    setShowClarify(false);
+    showMockSuggestions();
+  }
+
   const doneCount = items.filter((i) => i.checked).length;
 
   return (
@@ -63,7 +233,7 @@ export default function SectionCard({
           onClick={() => setCollapsed((c) => !c)}
           className="text-zinc-400 transition hover:text-zinc-700 dark:hover:text-zinc-200"
         >
-          {collapsed ? '▶' : '▼'}
+          {collapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
         </button>
 
         {editingName ? (
@@ -88,12 +258,22 @@ export default function SectionCard({
           {doneCount}/{items.length}
         </span>
 
+        {onSuggest && (
+          <button
+            onClick={handleSuggestClick}
+            className="flex items-center gap-1 rounded-lg border border-emerald-200 px-2.5 py-1 text-xs font-medium text-emerald-600 transition hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-950"
+          >
+            <Wand2 size={12} />
+            Suggest
+          </button>
+        )}
+
         <button
           onClick={() => onSectionDeleted(section.id)}
-          className="text-zinc-300 transition hover:text-red-500 dark:text-zinc-600"
+          className="rounded p-0.5 text-zinc-300 transition hover:text-red-500 dark:text-zinc-600"
           title="Delete section"
         >
-          ✕
+          <X size={14} />
         </button>
       </div>
 
@@ -112,6 +292,29 @@ export default function SectionCard({
               />
             ))}
           </ul>
+
+          {showClarify && (
+            <ClarifyPanel
+              questions={clarifyQuestions}
+              onSubmit={handleClarifySubmit}
+              onSkip={handleClarifySkip}
+            />
+          )}
+
+          {suggestData && (
+            <SuggestResults
+              data={suggestData}
+              onKeep={(nameEn) => {
+                // TODO: add item to the section via API
+                console.log('Keep:', nameEn);
+              }}
+              onKeepAll={() => {
+                // TODO: add all suggested items via API
+                console.log('Keep all');
+              }}
+              onClose={() => setSuggestData(null)}
+            />
+          )}
 
           {addingItem ? (
             <form onSubmit={handleAddItem} className="mt-2 flex gap-2">
@@ -139,9 +342,10 @@ export default function SectionCard({
           ) : (
             <button
               onClick={() => setAddingItem(true)}
-              className="mt-2 text-sm text-zinc-400 hover:text-emerald-600"
+              className="mt-2 flex items-center gap-1 text-sm text-zinc-400 hover:text-emerald-600"
             >
-              + Add item
+              <Plus size={14} />
+              Add item
             </button>
           )}
         </div>
