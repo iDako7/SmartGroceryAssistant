@@ -1,9 +1,8 @@
 from fastapi import APIRouter
-from app.schemas.health import HealthResponse
 
 router = APIRouter()
 
 
-@router.get("/health", response_model=HealthResponse)
+@router.get("/health")
 async def health():
-    return HealthResponse(status="ok")
+    return {"status": "ok", "service": "ai-service"}

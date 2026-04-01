@@ -1,66 +1,162 @@
+"""Tests for LLMClient infrastructure class."""
+
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from unittest.mock import patch, AsyncMock, MagicMock
-from app.llm.client import LLMClient, LLMError
 
 
-async def test_chat_returns_parsed_json():
-    """LLMClient should call the OpenAI SDK and parse the JSON response."""
-    # Set up a fake response that mimics the OpenAI SDK's structure
-    mock_response = MagicMock()
-    mock_response.choices = [MagicMock()]
-    mock_response.choices[0].message.content = '{"name_en": "Chicken breast", "name_zh": "鸡胸肉"}'
+class TestParseJson:
+    def test_valid_json(self):
+        from app.services.llm_client import LLMClient
 
-    # AsyncMock makes awaitable methods automatically
-    mock_openai = AsyncMock()
-    mock_openai.chat.completions.create.return_value = mock_response
+        result = LLMClient.parse_json('{"key": "value"}', {"key": ""})
+        assert result == {"key": "value"}
 
-    # Patch AsyncOpenAI so LLMClient uses our mock instead of the real SDK
-    with patch("app.llm.client.AsyncOpenAI", return_value=mock_openai):
-        llm = LLMClient(api_key="fake-key")
-        result = await llm.chat([{"role": "user", "content": "translate chicken"}])
+    def test_markdown_fenced_json(self):
+        from app.services.llm_client import LLMClient
 
-    assert result == {"name_en": "Chicken breast", "name_zh": "鸡胸肉"}
+        raw = '```json\n{"name": "test"}\n```'
+        result = LLMClient.parse_json(raw, {"name": ""})
+        assert result == {"name": "test"}
 
+    def test_garbage_returns_fallback(self):
+        from app.services.llm_client import LLMClient
 
-async def test_chat_uses_json_mode():
-    """LLMClient should request JSON output format from the model."""
-    mock_response = MagicMock()
-    mock_response.choices = [MagicMock()]
-    mock_response.choices[0].message.content = '{"key": "value"}'
+        fallback = {"default": True}
+        result = LLMClient.parse_json("NOT JSON AT ALL", fallback)
+        assert result == fallback
 
-    mock_openai = AsyncMock()
-    mock_openai.chat.completions.create.return_value = mock_response
+    def test_empty_string_returns_fallback(self):
+        from app.services.llm_client import LLMClient
 
-    with patch("app.llm.client.AsyncOpenAI", return_value=mock_openai):
-        llm = LLMClient(api_key="fake-key")
-        await llm.chat([{"role": "user", "content": "test"}])
-
-    # Verify that response_format was set to JSON
-    call_kwargs = mock_openai.chat.completions.create.call_args.kwargs
-    assert call_kwargs["response_format"] == {"type": "json_object"}
+        result = LLMClient.parse_json("", {"empty": True})
+        assert result == {"empty": True}
 
 
-async def test_chat_raises_llm_error_on_api_failure():
-    """LLMClient should wrap API errors in our custom LLMError."""
-    mock_openai = AsyncMock()
-    mock_openai.chat.completions.create.side_effect = Exception("Connection failed")
+class TestCacheKey:
+    def test_deterministic(self):
+        from app.services.llm_client import LLMClient
 
-    with patch("app.llm.client.AsyncOpenAI", return_value=mock_openai):
-        llm = LLMClient(api_key="fake-key")
-        with pytest.raises(LLMError, match="LLM API call failed"):
-            await llm.chat([{"role": "user", "content": "test"}])
+        k1 = LLMClient.cache_key("translate", "Milk:Chinese")
+        k2 = LLMClient.cache_key("translate", "Milk:Chinese")
+        assert k1 == k2
+
+    def test_different_data_different_key(self):
+        from app.services.llm_client import LLMClient
+
+        k1 = LLMClient.cache_key("translate", "Milk:Chinese")
+        k2 = LLMClient.cache_key("translate", "Milk:French")
+        assert k1 != k2
+
+    def test_prefix_in_key(self):
+        from app.services.llm_client import LLMClient
+
+        key = LLMClient.cache_key("translate", "Milk")
+        assert key.startswith("ai:translate:")
 
 
-async def test_chat_raises_llm_error_on_invalid_json():
-    """LLMClient should raise LLMError if the model returns non-JSON."""
-    mock_response = MagicMock()
-    mock_response.choices = [MagicMock()]
-    mock_response.choices[0].message.content = "not valid json"
+class TestCall:
+    @pytest.mark.asyncio
+    async def test_cache_hit_skips_llm(self):
+        from app.services.llm_client import LLMClient
 
-    mock_openai = AsyncMock()
-    mock_openai.chat.completions.create.return_value = mock_response
+        client = LLMClient(api_key="test", model_fast="fast-m", model_full="full-m")
 
-    with patch("app.llm.client.AsyncOpenAI", return_value=mock_openai):
-        llm = LLMClient(api_key="fake-key")
-        with pytest.raises(LLMError, match="Failed to parse"):
-            await llm.chat([{"role": "user", "content": "test"}])
+        with patch("app.services.llm_client.cache_get", new=AsyncMock(return_value='{"cached": true}')):
+            result = await client.call("prompt", "system", "test-key")
+
+        assert result == '{"cached": true}'
+
+    @pytest.mark.asyncio
+    async def test_fast_tier_uses_fast_model(self):
+        from app.services.llm_client import LLMClient
+
+        client = LLMClient(api_key="test", model_fast="fast-m", model_full="full-m")
+
+        choice = MagicMock()
+        choice.message.content = "response"
+        response = MagicMock()
+        response.choices = [choice]
+        client._client.chat.completions.create = AsyncMock(return_value=response)
+
+        with (
+            patch("app.services.llm_client.cache_get", new=AsyncMock(return_value=None)),
+            patch("app.services.llm_client.cache_set", new=AsyncMock()),
+        ):
+            await client.call("prompt", "system", "key", tier="fast")
+
+        call_kwargs = client._client.chat.completions.create.call_args
+        assert call_kwargs.kwargs["model"] == "fast-m"
+
+    @pytest.mark.asyncio
+    async def test_full_tier_uses_full_model(self):
+        from app.services.llm_client import LLMClient
+
+        client = LLMClient(api_key="test", model_fast="fast-m", model_full="full-m")
+
+        choice = MagicMock()
+        choice.message.content = "response"
+        response = MagicMock()
+        response.choices = [choice]
+        client._client.chat.completions.create = AsyncMock(return_value=response)
+
+        with (
+            patch("app.services.llm_client.cache_get", new=AsyncMock(return_value=None)),
+            patch("app.services.llm_client.cache_set", new=AsyncMock()),
+        ):
+            await client.call("prompt", "system", "key", tier="full")
+
+        call_kwargs = client._client.chat.completions.create.call_args
+        assert call_kwargs.kwargs["model"] == "full-m"
+
+    @pytest.mark.asyncio
+    async def test_result_cached_after_llm_call(self):
+        from app.services.llm_client import LLMClient
+
+        client = LLMClient(api_key="test", model_fast="fast-m", model_full="full-m")
+
+        choice = MagicMock()
+        choice.message.content = "llm-result"
+        response = MagicMock()
+        response.choices = [choice]
+        client._client.chat.completions.create = AsyncMock(return_value=response)
+
+        mock_cache_set = AsyncMock()
+        with (
+            patch("app.services.llm_client.cache_get", new=AsyncMock(return_value=None)),
+            patch("app.services.llm_client.cache_set", mock_cache_set),
+        ):
+            result = await client.call("prompt", "system", "my-key", ttl=7200)
+
+        assert result == "llm-result"
+        mock_cache_set.assert_called_once_with("my-key", "llm-result", 7200)
+
+    @pytest.mark.asyncio
+    async def test_empty_content_returns_empty_string(self):
+        from app.services.llm_client import LLMClient
+
+        client = LLMClient(api_key="test", model_fast="fast-m", model_full="full-m")
+
+        choice = MagicMock()
+        choice.message.content = None
+        response = MagicMock()
+        response.choices = [choice]
+        client._client.chat.completions.create = AsyncMock(return_value=response)
+
+        with (
+            patch("app.services.llm_client.cache_get", new=AsyncMock(return_value=None)),
+            patch("app.services.llm_client.cache_set", new=AsyncMock()),
+        ):
+            result = await client.call("prompt", "system", "key")
+
+        assert result == ""
+
+
+class TestSingleton:
+    def test_reset_clears_instance(self):
+        from app.services.llm_client import get_llm_client, reset_llm_client
+
+        client1 = get_llm_client()
+        reset_llm_client()
+        client2 = get_llm_client()
+        assert client1 is not client2
