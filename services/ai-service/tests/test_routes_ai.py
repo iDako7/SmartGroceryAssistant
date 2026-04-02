@@ -1,6 +1,7 @@
 """Tests for AI routes — sync endpoints and job status."""
 
-from unittest.mock import AsyncMock, patch
+import uuid
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from app.models import (
     Alternative,
@@ -202,36 +203,142 @@ class TestClarify:
         assert resp.status_code == 403
 
 
+# ── POST /suggest ────────────────────────────────────────
+
+
+class TestSuggestEndpoint:
+    def test_returns_202_with_job_id(self, client, auth_headers):
+        with (
+            patch("app.routes.ai.job_store.set_job_status", new=AsyncMock()),
+            patch("app.routes.ai.suggest_task") as mock_task,
+        ):
+            mock_task.delay = MagicMock()
+            resp = client.post(
+                "/api/v1/ai/suggest",
+                json={"sections": {"Produce": ["apples"]}},
+                headers=auth_headers,
+            )
+        assert resp.status_code == 202
+        data = resp.json()
+        assert data["status"] == "pending"
+        # job_id should be a valid UUID
+        uuid.UUID(data["job_id"])
+
+    def test_job_status_set_to_pending(self, client, auth_headers):
+        with (
+            patch("app.routes.ai.job_store.set_job_status", new=AsyncMock()) as mock_status,
+            patch("app.routes.ai.suggest_task") as mock_task,
+        ):
+            mock_task.delay = MagicMock()
+            client.post(
+                "/api/v1/ai/suggest",
+                json={"sections": {"Produce": ["apples"]}},
+                headers=auth_headers,
+            )
+        mock_status.assert_called_once()
+        assert mock_status.call_args[0][1] == "pending"
+
+    def test_celery_task_enqueued(self, client, auth_headers):
+        with (
+            patch("app.routes.ai.job_store.set_job_status", new=AsyncMock()),
+            patch("app.routes.ai.suggest_task") as mock_task,
+        ):
+            mock_task.delay = MagicMock()
+            client.post(
+                "/api/v1/ai/suggest",
+                json={
+                    "sections": {"Produce": ["apples"]},
+                    "answers": [{"question": "Occasion?", "answer": "Party"}],
+                },
+                headers=auth_headers,
+            )
+        mock_task.delay.assert_called_once()
+        call_kwargs = mock_task.delay.call_args.kwargs
+        assert call_kwargs["sections"] == {"Produce": ["apples"]}
+        assert call_kwargs["answers"] == [{"question": "Occasion?", "answer": "Party"}]
+
+    def test_missing_sections_422(self, client, auth_headers):
+        resp = client.post(
+            "/api/v1/ai/suggest",
+            json={},
+            headers=auth_headers,
+        )
+        assert resp.status_code == 422
+
+    def test_unauthenticated(self, client):
+        resp = client.post(
+            "/api/v1/ai/suggest",
+            json={"sections": {"Produce": ["apples"]}},
+        )
+        assert resp.status_code == 403
+
+    def test_empty_answers_valid(self, client, auth_headers):
+        with (
+            patch("app.routes.ai.job_store.set_job_status", new=AsyncMock()),
+            patch("app.routes.ai.suggest_task") as mock_task,
+        ):
+            mock_task.delay = MagicMock()
+            resp = client.post(
+                "/api/v1/ai/suggest",
+                json={"sections": {"Produce": ["apples"]}, "answers": []},
+                headers=auth_headers,
+            )
+        assert resp.status_code == 202
+
+
 # ── Job status ────────────────────────────────────────────
 
 
 class TestGetJob:
+    def test_unknown_job_404(self, client, auth_headers):
+        with patch("app.routes.ai.job_store.get_job_status", new=AsyncMock(return_value=None)):
+            resp = client.get("/api/v1/ai/jobs/nonexistent", headers=auth_headers)
+        assert resp.status_code == 404
+
     def test_pending(self, client, auth_headers):
-        with patch("app.routes.ai.cache.cache_get", new=AsyncMock(return_value=None)):
+        with patch(
+            "app.routes.ai.job_store.get_job_status", new=AsyncMock(return_value={"status": "pending", "error": ""})
+        ):
             resp = client.get("/api/v1/ai/jobs/job-123", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "pending"
         assert data["job_id"] == "job-123"
 
-    def test_done_with_json_result(self, client, auth_headers):
-        import json
+    def test_processing(self, client, auth_headers):
+        with patch(
+            "app.routes.ai.job_store.get_job_status",
+            new=AsyncMock(return_value={"status": "processing", "error": ""}),
+        ):
+            resp = client.get("/api/v1/ai/jobs/job-123", headers=auth_headers)
+        assert resp.status_code == 200
+        assert resp.json()["status"] == "processing"
 
-        result = json.dumps({"suggestions": [{"name_en": "Bread", "category": "Bakery", "reason": "staple"}]})
-        with patch("app.routes.ai.cache.cache_get", new=AsyncMock(return_value=result)):
+    def test_done_with_result(self, client, auth_headers):
+        result = {"reason": "Test", "clusters": [], "ungrouped": [], "storeLayout": []}
+        with (
+            patch(
+                "app.routes.ai.job_store.get_job_status",
+                new=AsyncMock(return_value={"status": "done", "error": ""}),
+            ),
+            patch("app.routes.ai.job_store.get_job_result", new=AsyncMock(return_value=result)),
+        ):
             resp = client.get("/api/v1/ai/jobs/job-456", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "done"
-        assert data["result"]["suggestions"][0]["name_en"] == "Bread"
+        assert data["result"]["reason"] == "Test"
 
-    def test_done_with_plain_string(self, client, auth_headers):
-        with patch("app.routes.ai.cache.cache_get", new=AsyncMock(return_value="not-json-result")):
+    def test_failed_with_error(self, client, auth_headers):
+        with patch(
+            "app.routes.ai.job_store.get_job_status",
+            new=AsyncMock(return_value={"status": "failed", "error": "LLM timeout"}),
+        ):
             resp = client.get("/api/v1/ai/jobs/job-789", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
-        assert data["status"] == "done"
-        assert data["result"] == "not-json-result"
+        assert data["status"] == "failed"
+        assert data["error"] == "LLM timeout"
 
     def test_unauthenticated(self, client):
         resp = client.get("/api/v1/ai/jobs/job-123")

@@ -11,9 +11,11 @@ from pydantic import ValidationError
 
 from app.models import (
     AlternativesResponse,
+    ClarifyAnswer,
     ClarifyResponse,
     InspireItemResponse,
     ItemInfoResponse,
+    SuggestResponse,
     TranslateResponse,
     UserProfile,
 )
@@ -213,3 +215,62 @@ async def clarify(
         return ClarifyResponse(**parsed)
     except ValidationError:
         return ClarifyResponse(questions=[])
+
+
+# ── suggest ─────────────────────────────────────────────
+
+
+def _format_answers(answers: list[ClarifyAnswer]) -> str:
+    """Serialize ClarifyAnswer pairs into a prompt-friendly string."""
+    if not answers:
+        return ""
+    lines = [f"Q: {a.question}\nA: {a.answer}" for a in answers]
+    return "\nUser context (from their answers):\n" + "\n".join(lines)
+
+
+async def suggest(
+    client: LLMClient,
+    sections: dict[str, list[str]],
+    answers: list | None = None,
+    *,
+    profile: UserProfile | None = None,
+) -> SuggestResponse:
+    """Analyze a full grocery list and return clustered meal suggestions."""
+    ctx = _profile_context(profile)
+    answers_text = _format_answers(answers or [])
+
+    # Format sections as readable text
+    sections_text = ". ".join(f"{sec}: {', '.join(items)}" for sec, items in sections.items())
+
+    raw = await client.call(
+        prompt=(
+            f"Smart grocery assistant. Analyze this grocery list and suggest meal ideas.{ctx}\n\n"
+            f"Grocery list: {sections_text}\n"
+            f"{answers_text}\n\n"
+            f"Steps: 1) Gap analysis — what's missing for complete meals. "
+            f"2) Cultural match — respect the cuisine patterns. "
+            f"3) Recipe bridge — connect existing items into meal clusters.\n\n"
+            f"Return JSON:\n"
+            f'{{"reason": "1-sentence summary of analysis",'
+            f' "clusters": [{{"name": "Meal Name", "emoji": "🍳", "desc": "1-sentence",'
+            f' "items": [{{"name_en": "item", "existing": true/false, "why": "if new, why needed"}}]}}],'
+            f' "ungrouped": [{{"name_en": "item", "existing": true}}],'
+            f' "storeLayout": [{{"category": "Aisle", "emoji": "🛒",'
+            f' "items": [{{"name_en": "item", "existing": true/false}}]}}]}}\n\n'
+            f"Rules:\n"
+            f"- 2-4 clusters, 3-6 NEW items total across all clusters\n"
+            f"- Every existing item must appear in exactly one cluster or ungrouped\n"
+            f"- storeLayout must include ALL items (existing + new)"
+        ),
+        system="You are a smart grocery assistant. Respond with JSON only.",
+        cache_key="",
+        tier="full",
+        max_tokens=2000,
+    )
+    parsed = client.parse_json(raw, None)
+    if parsed is None:
+        return SuggestResponse(reason="", clusters=[], ungrouped=[], storeLayout=[])
+    try:
+        return SuggestResponse(**parsed)
+    except ValidationError:
+        return SuggestResponse(reason="", clusters=[], ungrouped=[], storeLayout=[])
