@@ -1,4 +1,4 @@
-# Suggest Eval Report: Prompt Iteration Experiment
+# Eval Report: Suggest Endpoint — Prompt Iteration & Model Comparison
 
 The suggest endpoint is the heaviest AI call — it takes a full grocery list + clarify answers and returns clustered meal suggestions, gap analysis, and a store layout. We evaluated 5 models across 2 tiers (cheap and mid), ran 2 prompt iterations, and identified a structural limitation that prompt changes alone cannot fix.
 
@@ -140,27 +140,51 @@ Profile context was appended after the grocery list, easy for models to overlook
 | Gemini 2.5 Flash | 0/8 | Similar to Nano |
 | Gemini 2.5 Pro | 0/8 | Catastrophic — chain-of-thought leakage, truncated outputs |
 
-## 4. Recommendation: Build storeLayout in Code
+## 4. Recommendations
+
+### Key insight
+
+The suggest prompt is qualitatively different from the 5 sync endpoints. Those produce small, focused outputs (1 translation, 3-4 alternatives). Suggest produces a large structured response with cross-referencing constraints (every item must appear in exactly one place, storeLayout must mirror clusters+ungrouped). Two lessons emerged:
+
+1. **Cross-referencing constraints are better enforced in code than in prompts.** The LLM should focus on creative work (clustering, gap analysis) and let deterministic code handle bookkeeping.
+2. **Model selection matters as much as prompt quality.** Reasoning models (Gemini Pro) waste tokens on chain-of-thought. Cheap models (Nano) are too sensitive to prompt length. The right model for suggest is a mid-tier non-reasoning model.
+
+### Recommendation A: Build storeLayout in code
 
 storeLayout is the single biggest blocker (present in 70%+ of all failures). After 2 iterations, the gap narrowed but was never eliminated — models reliably generate clusters and ungrouped but consistently drop items when constructing storeLayout.
 
-**Proposed fix**: Remove storeLayout from the LLM's responsibility. Instead:
+**Why prompts can't fix this**: storeLayout is pure bookkeeping — collect every item from clusters + ungrouped, group by aisle. LLMs are unreliable at this because they don't literally "count" items, they predict likely output. A boolean like `True` vs `true` is meaningless to an LLM but breaks `JSON.parse()`. The more mechanical/structural the task, the more it belongs in code.
 
-1. Keep the LLM prompt focused on `reason`, `clusters`, and `ungrouped` only
-2. After parsing the LLM response, construct `storeLayout` programmatically in `domains.py` by collecting all item names from clusters + ungrouped and grouping by a simple category mapping
-3. This eliminates the hardest structural constraint from the LLM, reduces output token count (~30% savings), and makes storeLayout deterministically correct
+**Proposed fix**: Remove storeLayout from the LLM's responsibility.
 
-This is a Phase 4 or Phase 5 task — it requires a category mapping (which aligns with the KB module planned for Phase 4).
+1. Strip storeLayout from the prompt and JSON schema — LLM only returns `reason`, `clusters`, and `ungrouped`
+2. After parsing the LLM response, construct `storeLayout` programmatically in `domains.py` by collecting all items from clusters + ungrouped and grouping by a category mapping
+3. The category mapping can start as a simple dict and evolve into a KB lookup in Phase 4
+
+**Impact**:
+- storeLayout becomes deterministically correct (100% pass on completeness checks)
+- Output tokens reduced ~30% (less LLM cost, lower latency, fewer truncation failures)
+- Prompt becomes shorter → cheap models regain headroom for the creative constraints
+- Eval suite simplifies: test storeLayout construction as a unit test, not an LLM assertion
+
+### Recommendation B: Drop reasoning models, route suggest to mid-tier
+
+**Why**: Gemini 2.5 Pro (a reasoning model) scored 0/8 — the worst of all 5 models. Reasoning models emit chain-of-thought tokens before producing output, which: (1) breaks JSON parsing when "Thinking:" leaks into the response, (2) consumes the output token budget causing truncation, (3) adds latency for no benefit since suggest doesn't require multi-step logical reasoning.
+
+**Proposed model strategy for suggest**:
+
+| Decision | Recommendation | Reason |
+|----------|---------------|--------|
+| Drop reasoning models | Remove Gemini 2.5 Pro from suggest | Chain-of-thought leakage is architectural, not fixable by prompt |
+| Route suggest to mid-tier | Use GPT-5.4 Mini or Claude Sonnet 4.5 | Cheap models (Nano) are too sensitive to prompt length and regressed when rules were added |
+| Keep cheap models for sync endpoints | Nano/Flash are fine for translate, item-info, etc. | Small, focused outputs don't hit the structural complexity ceiling |
+
+**Cost implication**: Suggest already uses `tier="full"` in the code. Routing to Mini (~$0.75/M) instead of Nano (~$0.20/M) costs ~$0.005 more per suggest call — negligible given suggest is called once per grocery list, not per item.
 
 ### Other remaining gaps
 
 | Gap | Root cause | Suggested fix |
 |-----|-----------|---------------|
-| Household profile-vs-answer conflict | Models defer to explicit answers over implicit profile | Stronger prompt wording, or preprocess in code to reconcile before sending to LLM |
-| "No answers" case → single cluster | Without user context, models produce minimal output | Add a default instruction: "If no user context, suggest 2-3 versatile meal ideas" |
-| Gemini Pro unusable for suggest | Chain-of-thought tokens consume output budget, truncation | Drop Gemini Pro from suggest tier, or use with much higher max_tokens |
-| Prompt length hurts Nano | Each iteration added rules, Nano regressed on simple cases | Accept Nano is too weak for suggest; route to Mini/Full tier |
-
-### Key insight
-
-The suggest prompt is qualitatively different from the 5 sync endpoints. Those produce small, focused outputs (1 translation, 3-4 alternatives). Suggest produces a large structured response with cross-referencing constraints (every item must appear in exactly one place, storeLayout must mirror clusters+ungrouped). **Cross-referencing constraints are better enforced in code than in prompts.** The LLM should focus on the creative work (clustering, gap analysis) and let deterministic code handle the bookkeeping.
+| Household profile-vs-answer conflict | Models defer to explicit answers over implicit profile | Preprocess in code: when profile and answers conflict, append a reconciliation note to the prompt |
+| "No answers" case → single cluster | Without user context, models produce minimal output | Add a default instruction: "If no user context, suggest 2-3 versatile ideas" |
+| Prompt length hurts Nano | Each iteration added rules, Nano regressed on simple cases | Resolved by Recommendation A (shorter prompt) and B (route to mid-tier) |
