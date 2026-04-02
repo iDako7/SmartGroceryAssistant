@@ -33,7 +33,7 @@ def _profile_context(profile: UserProfile | None) -> str:
         parts.append(f"Household: {profile.household_size}")
     if profile.taste:
         parts.append(f"Preferences: {profile.taste}")
-    return f"\nProfile: {'. '.join(parts)}." if parts else ""
+    return f"\nUser profile (MUST respect): {'. '.join(parts)}." if parts else ""
 
 
 def _profile_hash(profile: UserProfile | None) -> str:
@@ -244,12 +244,17 @@ async def suggest(
 
     raw = await client.call(
         prompt=(
-            f"Smart grocery assistant. Analyze this grocery list and suggest meal ideas.{ctx}\n\n"
+            f"Smart grocery assistant. Analyze this grocery list and suggest ideas.\n"
+            f"{ctx}\n"
             f"Grocery list: {sections_text}\n"
             f"{answers_text}\n\n"
-            f"Steps: 1) Gap analysis — what's missing for complete meals. "
+            f"Steps: 1) Gap analysis — what's missing for complete recipes/preparations. "
             f"2) Cultural match — respect the cuisine patterns. "
-            f"3) Recipe bridge — connect existing items into meal clusters.\n\n"
+            f"3) Recipe bridge — connect existing items into meal clusters. "
+            f"4) Store layout — collect EVERY item name from clusters and ungrouped (both existing and new). "
+            f"Group them by grocery store aisle. The total item count in storeLayout must equal "
+            f"the sum of all items in clusters + ungrouped.\n\n"
+            f"RESPOND WITH ONLY A JSON OBJECT. No explanations, no markdown, no thinking.\n\n"
             f"Return JSON:\n"
             f'{{"reason": "1-sentence summary of analysis",'
             f' "clusters": [{{"name": "Meal Name", "emoji": "🍳", "desc": "1-sentence",'
@@ -260,9 +265,12 @@ async def suggest(
             f"Rules:\n"
             f"- 2-4 clusters, 3-6 NEW items total across all clusters\n"
             f"- Every existing item must appear in exactly one cluster or ungrouped\n"
-            f"- storeLayout must include ALL items (existing + new)"
+            f"- Double-check: list all existing items from the grocery list. Each must appear in exactly one cluster or in ungrouped. None may be omitted.\n"
+            f"- When user profile conflicts with answers, profile takes precedence (it represents persistent preferences)\n"
+            f"- storeLayout must list EVERY item mentioned anywhere in clusters, ungrouped, or as new suggestions. "
+            f"Count them — the total should match."
         ),
-        system="You are a smart grocery assistant. Respond with JSON only.",
+        system="You are a smart grocery assistant. Respond with JSON only. No markdown, no explanations.",
         cache_key="",
         tier="full",
         max_tokens=2000,
