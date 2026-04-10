@@ -23,10 +23,12 @@ export default function ItemAiPanel({ itemName, feature, onClose }: Props) {
     (async () => {
       try {
         let data: unknown;
-        if (feature === 'info' || feature === 'inspire') {
+        if (feature === 'info') {
           data = await ai.itemInfo(itemName);
         } else if (feature === 'alternatives') {
           data = await ai.alternatives(itemName);
+        } else if (feature === 'inspire') {
+          data = await ai.inspireItem(itemName);
         }
         if (!cancelled) setResult(data);
       } catch (err) {
@@ -67,11 +69,10 @@ function ResultContent({ feature, data }: { feature: AiFeature; data: unknown })
   if (feature === 'info') {
     const d = data as ItemInfoResponse;
     const fields: { key: keyof ItemInfoResponse; label: string }[] = [
-      { key: 'taste', label: 'Taste' },
-      { key: 'usage', label: 'Usage' },
-      { key: 'picking', label: 'How to pick' },
-      { key: 'storage', label: 'Storage' },
-      { key: 'funFact', label: 'Fun fact' },
+      { key: 'category', label: 'Category' },
+      { key: 'typical_unit', label: 'Typical unit' },
+      { key: 'storage_tip', label: 'Storage tip' },
+      { key: 'nutrition_note', label: 'Nutrition' },
     ];
     return (
       <dl className="space-y-1">
@@ -99,7 +100,6 @@ function ResultContent({ feature, data }: { feature: AiFeature; data: unknown })
                 <span className="text-xs font-medium text-zinc-700 dark:text-zinc-200">
                   {a.name_en}
                 </span>
-                {a.name_zh && <span className="text-xs text-zinc-400">{a.name_zh}</span>}
                 <span className="ml-auto text-xs text-emerald-600">{a.match}</span>
               </div>
               {a.desc && <p className="mt-0.5 text-xs text-zinc-500">{a.desc}</p>}
@@ -121,7 +121,6 @@ function ResultContent({ feature, data }: { feature: AiFeature; data: unknown })
           <li key={i} className="rounded-md bg-white px-2 py-1.5 dark:bg-zinc-800">
             <p className="text-xs font-medium text-zinc-700 dark:text-zinc-200">
               {r.emoji} {r.name}
-              {r.name_zh && <span className="ml-1 text-zinc-400">{r.name_zh}</span>}
             </p>
             {r.desc && <p className="mt-0.5 text-xs text-zinc-500">{r.desc}</p>}
             {r.add?.length > 0 && (
