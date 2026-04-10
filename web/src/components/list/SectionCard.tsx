@@ -18,6 +18,7 @@ interface Props {
   onSectionDeleted: (id: string) => void;
   onSectionUpdated: (section: Section) => void;
   onSuggest?: (sectionId: string) => void;
+  userLanguage?: string;
 }
 
 export default function SectionCard({
@@ -31,6 +32,7 @@ export default function SectionCard({
   onSectionDeleted,
   onSectionUpdated,
   onSuggest,
+  userLanguage,
 }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [editingName, setEditingName] = useState(false);
@@ -53,10 +55,26 @@ export default function SectionCard({
   async function handleAddItem(e: FormEvent) {
     e.preventDefault();
     if (!newItemName.trim()) return;
-    const item = await lists.createItem(section.id, newItemName.trim());
+    const name = newItemName.trim();
+    const item = await lists.createItem(section.id, name);
     onItemCreated(section.id, item as Item);
     setNewItemName('');
     setAddingItem(false);
+
+    // Auto-translate in background if user has a non-English language
+    if (userLanguage && userLanguage !== 'en') {
+      const langMap: Record<string, string> = { zh: 'Chinese', es: 'Spanish' };
+      const targetLang = langMap[userLanguage] ?? userLanguage;
+      ai.translate(name, targetLang)
+        .then((res) => {
+          if (res.name_translated) {
+            const translated = { ...(item as Item), name_secondary: res.name_translated };
+            lists.updateItem((item as Item).id, { name_en: name }).catch(() => {});
+            onItemUpdated(translated);
+          }
+        })
+        .catch(() => {}); // non-blocking
+    }
   }
 
   function buildSectionsMap(): Record<string, string[]> {
