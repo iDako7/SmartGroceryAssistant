@@ -12,10 +12,16 @@ export default async function aiRoutes(app: FastifyInstance) {
       reply.from(upstream('/api/v1/ai/suggest')),
   });
 
-  app.post('/api/v1/ai/inspire', {
+  app.post('/api/v1/ai/inspire/item', {
     onRequest: auth,
     handler: (_req: FastifyRequest, reply: FastifyReply) =>
-      reply.from(upstream('/api/v1/ai/inspire')),
+      reply.from(upstream('/api/v1/ai/inspire/item')),
+  });
+
+  app.post('/api/v1/ai/clarify', {
+    onRequest: auth,
+    handler: (_req: FastifyRequest, reply: FastifyReply) =>
+      reply.from(upstream('/api/v1/ai/clarify')),
   });
 
   app.post('/api/v1/ai/translate', {

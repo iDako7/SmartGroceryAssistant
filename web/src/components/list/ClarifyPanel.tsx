@@ -41,34 +41,25 @@ export default function ClarifyPanel({ questions, onSubmit, onSkip }: Props) {
 
       {/* Questions */}
       <div className="space-y-5 px-4 py-4">
-        {questions.map((q, qi) => (
+        {questions.map((question, qi) => (
           <div key={qi}>
             <p className="mb-2.5 text-sm font-medium text-zinc-800 dark:text-zinc-200">
-              {q.text}
-              {q.text_zh && (
-                <span className="ml-1.5 font-normal text-zinc-400"> / {q.text_zh}</span>
-              )}
+              {question.q}
             </p>
             <div className="flex flex-wrap gap-2">
-              {q.options.map((opt, oi) => {
-                const selected = (answers[qi] ?? []).includes(opt.label);
+              {question.options.map((opt, oi) => {
+                const selected = (answers[qi] ?? []).includes(opt);
                 return (
                   <button
                     key={oi}
-                    onClick={() => toggleOption(qi, opt.label)}
+                    onClick={() => toggleOption(qi, opt)}
                     className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-all ${
                       selected
                         ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm dark:border-emerald-600 dark:bg-emerald-950 dark:text-emerald-300'
                         : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:shadow-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:border-zinc-500'
                     }`}
                   >
-                    {opt.label}
-                    {opt.label_zh && (
-                      <span className="ml-1 font-normal text-zinc-400 dark:text-zinc-500">
-                        {' '}
-                        / {opt.label_zh}
-                      </span>
-                    )}
+                    {opt}
                   </button>
                 );
               })}

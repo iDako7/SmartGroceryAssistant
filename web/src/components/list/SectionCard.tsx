@@ -2,9 +2,8 @@
 
 import { FormEvent, useState } from 'react';
 import { ChevronDown, ChevronRight, Plus, Wand2, X } from 'lucide-react';
-import { lists } from '../../lib/api';
-import type { ClarifyQuestion, Item, Section, SuggestResponse } from '../../types';
-import SuggestResults from '../suggest/SuggestResults';
+import { ai, lists } from '../../lib/api';
+import type { ClarifyQuestion, Item, Section } from '../../types';
 import ClarifyPanel from './ClarifyPanel';
 import ItemRow from './ItemRow';
 
@@ -40,7 +39,6 @@ export default function SectionCard({
   const [newItemName, setNewItemName] = useState('');
   const [showClarify, setShowClarify] = useState(false);
   const [clarifyQuestions, setClarifyQuestions] = useState<ClarifyQuestion[]>([]);
-  const [suggestData, setSuggestData] = useState<SuggestResponse | null>(null);
 
   async function saveSectionName() {
     if (sectionName.trim() === section.name) {
@@ -61,166 +59,31 @@ export default function SectionCard({
     setAddingItem(false);
   }
 
-  async function handleSuggestClick() {
-    // TODO: replace mock with `POST /api/v1/ai/clarify` when API is ready
-    const mockQuestions: ClarifyQuestion[] = [
-      {
-        text: 'What kind of meal are you planning?',
-        text_zh: '你打算做什么类型的饭菜？',
-        options: [
-          { label: 'Weeknight dinner', label_zh: '工作日晚餐' },
-          { label: 'BBQ / Party', label_zh: '烧烤/聚会' },
-          { label: 'Meal prep', label_zh: '提前备餐' },
-          { label: 'Other...', label_zh: '其他...' },
-        ],
-      },
-      {
-        text: 'How many people will be eating?',
-        text_zh: '有多少人一起吃？',
-        options: [
-          { label: 'Just 2 of us', label_zh: '就我们两个' },
-          { label: 'Small group (4-6)', label_zh: '小聚会(4-6人)' },
-          { label: 'Larger party (7+)', label_zh: '大聚会(7人以上)' },
-          { label: 'Other...', label_zh: '其他...' },
-        ],
-      },
-      {
-        text: 'Are you missing anything?',
-        text_zh: '还缺什么吗？',
-        options: [
-          { label: 'Vegetables', label_zh: '蔬菜' },
-          { label: 'Drinks', label_zh: '饮料' },
-          { label: 'Sauces & seasonings', label_zh: '酱料调味' },
-          { label: 'All set', label_zh: '都齐了' },
-          { label: 'Other...', label_zh: '其他...' },
-        ],
-      },
-    ];
-    setClarifyQuestions(mockQuestions);
-    setShowClarify(true);
-    setCollapsed(false);
+  function buildSectionsMap(): Record<string, string[]> {
+    return { [section.name]: items.map((i) => i.name_en) };
   }
 
-  function showMockSuggestions() {
-    // TODO: replace with real API call to suggest endpoint
-    const mockSuggest: SuggestResponse = {
-      reason:
-        'Based on your BBQ items and Korean + Western ingredients, here are some suggestions to complete your cookout.',
-      clusters: [
-        {
-          name: 'Korean BBQ Sides',
-          emoji: '🥬',
-          desc: 'Essential banchan for your Korean BBQ spread',
-          items: [
-            { name_en: 'Kimchi', name_zh: '泡菜', existing: true, why: '' },
-            { name_en: 'Sesame Oil', name_zh: '芝麻油', existing: false, why: 'For dipping sauce' },
-            {
-              name_en: 'Green Onions',
-              name_zh: '葱',
-              existing: false,
-              why: 'Grill alongside meat',
-            },
-            {
-              name_en: 'Lettuce Wraps',
-              name_zh: '生菜',
-              existing: false,
-              why: 'Ssam wraps for pork belly',
-            },
-          ],
-        },
-        {
-          name: 'Grilled Mains',
-          emoji: '🥩',
-          desc: 'Your proteins are covered, adding a marinade',
-          items: [
-            { name_en: 'Pork Belly', name_zh: '五花肉', existing: true, why: '' },
-            { name_en: 'Burger Patties', name_zh: '汉堡肉饼', existing: true, why: '' },
-            {
-              name_en: 'Gochujang Sauce',
-              name_zh: '辣酱',
-              existing: false,
-              why: 'Korean BBQ marinade',
-            },
-          ],
-        },
-        {
-          name: 'Drinks & Refreshments',
-          emoji: '🍺',
-          desc: 'Stay refreshed during the cookout',
-          items: [
-            {
-              name_en: 'Sparkling Water',
-              name_zh: '气泡水',
-              existing: false,
-              why: 'Light refreshment',
-            },
-            {
-              name_en: 'Lemonade Mix',
-              name_zh: '柠檬水',
-              existing: false,
-              why: 'Easy to prepare for a group',
-            },
-          ],
-        },
-      ],
-      ungrouped: [
-        { name_en: 'Tofu', name_zh: '豆腐', existing: true },
-        { name_en: 'Seaweed', name_zh: '海苔', existing: true },
-      ],
-      storeLayout: [
-        {
-          category: 'Produce',
-          emoji: '🥬',
-          items: [
-            { name_en: 'Green Onions', name_zh: '葱', existing: false },
-            { name_en: 'Lettuce Wraps', name_zh: '生菜', existing: false },
-          ],
-        },
-        {
-          category: 'Meat & Seafood',
-          emoji: '🥩',
-          items: [
-            { name_en: 'Pork Belly', name_zh: '五花肉', existing: true },
-            { name_en: 'Burger Patties', name_zh: '汉堡肉饼', existing: true },
-          ],
-        },
-        {
-          category: 'Asian Aisle',
-          emoji: '🏪',
-          items: [
-            { name_en: 'Kimchi', name_zh: '泡菜', existing: true },
-            { name_en: 'Tofu', name_zh: '豆腐', existing: true },
-            { name_en: 'Sesame Oil', name_zh: '芝麻油', existing: false },
-            { name_en: 'Gochujang Sauce', name_zh: '辣酱', existing: false },
-            { name_en: 'Seaweed', name_zh: '海苔', existing: true },
-          ],
-        },
-        {
-          category: 'Beverages',
-          emoji: '🍺',
-          items: [
-            { name_en: 'Sparkling Water', name_zh: '气泡水', existing: false },
-            { name_en: 'Lemonade Mix', name_zh: '柠檬水', existing: false },
-          ],
-        },
-        {
-          category: 'Condiments',
-          emoji: '🧂',
-          items: [{ name_en: 'Mustard', name_zh: '芥末酱', existing: true }],
-        },
-      ],
-    };
-    setSuggestData(mockSuggest);
+  async function handleSuggestClick() {
+    try {
+      const res = await ai.clarify(buildSectionsMap());
+      setClarifyQuestions(res.questions);
+      setShowClarify(true);
+      setCollapsed(false);
+    } catch {
+      // If clarify fails, skip directly to suggest
+      if (onSuggest) onSuggest(section.id);
+    }
   }
 
   function handleClarifySubmit(_answers: Record<number, string[]>) {
     setShowClarify(false);
-    showMockSuggestions();
+    // TODO: pass answers as context to suggest endpoint when async pipeline is ready
+    if (onSuggest) onSuggest(section.id);
   }
 
   function handleClarifySkip() {
     setShowClarify(false);
-    showMockSuggestions();
+    if (onSuggest) onSuggest(section.id);
   }
 
   const doneCount = items.filter((i) => i.checked).length;
@@ -298,21 +161,6 @@ export default function SectionCard({
               questions={clarifyQuestions}
               onSubmit={handleClarifySubmit}
               onSkip={handleClarifySkip}
-            />
-          )}
-
-          {suggestData && (
-            <SuggestResults
-              data={suggestData}
-              onKeep={(nameEn) => {
-                // TODO: add item to the section via API
-                console.log('Keep:', nameEn);
-              }}
-              onKeepAll={() => {
-                // TODO: add all suggested items via API
-                console.log('Keep all');
-              }}
-              onClose={() => setSuggestData(null)}
             />
           )}
 
