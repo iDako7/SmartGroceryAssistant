@@ -164,6 +164,7 @@ export default function ListPage() {
                 // TODO: integrate with clarify → suggest two-step flow
                 setAiOpen(true);
               }}
+              userLanguage={user?.language_preference}
             />
           ))}
 
