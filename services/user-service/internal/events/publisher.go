@@ -69,6 +69,13 @@ func (p *Publisher) reconnect() error {
 	return p.connect()
 }
 
+// Channel returns the underlying AMQP channel for reuse by the outbox poller.
+func (p *Publisher) Channel() *amqp.Channel {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	return p.ch
+}
+
 func (p *Publisher) PublishUserDeleted(ctx context.Context, userID string) error {
 	event := UserEvent{Type: "user.deleted", UserID: userID}
 	body, err := json.Marshal(event)

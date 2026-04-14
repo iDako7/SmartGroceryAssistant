@@ -123,6 +123,79 @@ func (r *UserRepo) DeleteUser(ctx context.Context, userID string) (err error) {
 	return nil
 }
 
+// DeleteUserWithOutbox deletes the user and inserts a user.deleted event into
+// the outbox table in a single atomic transaction. This eliminates the
+// dual-write problem: either both succeed or both roll back.
+func (r *UserRepo) DeleteUserWithOutbox(ctx context.Context, userID string) (err error) {
+	start := time.Now()
+	defer func() { observeQuery("delete_user_with_outbox", start, err) }()
+
+	tx, err := r.db.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("begin tx: %w", err)
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	tag, err := tx.Exec(ctx, `DELETE FROM users WHERE id = $1`, userID)
+	if err != nil {
+		return fmt.Errorf("delete user: %w", err)
+	}
+	if tag.RowsAffected() == 0 {
+		return fmt.Errorf("user not found")
+	}
+
+	_, err = tx.Exec(ctx,
+		`INSERT INTO outbox (event_type, payload)
+		 VALUES ('user.deleted', jsonb_build_object('user_id', $1::text))`,
+		userID,
+	)
+	if err != nil {
+		return fmt.Errorf("insert outbox: %w", err)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("commit tx: %w", err)
+	}
+	return nil
+}
+
+// FetchUnpublishedEvents returns outbox rows that haven't been published yet.
+func (r *UserRepo) FetchUnpublishedEvents(ctx context.Context, limit int) ([]OutboxEvent, error) {
+	rows, err := r.db.Query(ctx,
+		`SELECT id, event_type, payload FROM outbox
+		 WHERE published_at IS NULL
+		 ORDER BY created_at
+		 LIMIT $1`, limit)
+	if err != nil {
+		return nil, fmt.Errorf("query outbox: %w", err)
+	}
+	defer rows.Close()
+
+	var events []OutboxEvent
+	for rows.Next() {
+		var e OutboxEvent
+		if err := rows.Scan(&e.ID, &e.EventType, &e.Payload); err != nil {
+			return nil, fmt.Errorf("scan outbox row: %w", err)
+		}
+		events = append(events, e)
+	}
+	return events, nil
+}
+
+// MarkPublished sets published_at for the given outbox row.
+func (r *UserRepo) MarkPublished(ctx context.Context, id string) error {
+	_, err := r.db.Exec(ctx,
+		`UPDATE outbox SET published_at = NOW() WHERE id = $1`, id)
+	return err
+}
+
+// OutboxEvent represents a row in the outbox table.
+type OutboxEvent struct {
+	ID        string
+	EventType string
+	Payload   []byte // raw JSONB
+}
+
 func (r *UserRepo) UpdateProfile(ctx context.Context, userID string, req model.UpdateProfileRequest) (_ *model.Profile, err error) {
 	start := time.Now()
 	defer func() { observeQuery("update_profile", start, err) }()

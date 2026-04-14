@@ -29,6 +29,7 @@ type UserRepository interface {
 	GetProfileByUserID(ctx context.Context, userID string) (*model.Profile, error)
 	UpdateProfile(ctx context.Context, userID string, req model.UpdateProfileRequest) (*model.Profile, error)
 	DeleteUser(ctx context.Context, userID string) error
+	DeleteUserWithOutbox(ctx context.Context, userID string) error
 }
 
 // EventPublisher publishes user lifecycle events to RabbitMQ.
@@ -156,17 +157,34 @@ func (s *UserService) UpdateProfile(ctx context.Context, userID string, req mode
 	return &view, nil
 }
 
+// DeleteUser hard-deletes the user (CASCADE removes profile) and ensures a
+// user.deleted event is created for downstream cleanup.
+//
+// Layer 3 (Outbox): The DELETE and the event INSERT happen in the same DB
+// transaction — no crash window where the event could be lost.
+// A background poller publishes events from the outbox to RabbitMQ.
+//
+// Fallback: If the outbox write fails (e.g., table doesn't exist yet),
+// falls back to Layer 2 (direct publish).
 func (s *UserService) DeleteUser(ctx context.Context, userID string) error {
+	// Try Layer 3: atomic delete + outbox insert
+	err := s.repo.DeleteUserWithOutbox(ctx, userID)
+	if err == nil {
+		metrics.UsersDeletedTotal.Inc()
+		return nil // outbox poller will publish the event
+	}
+
+	// Fallback to Layer 2: separate delete + direct publish
+	log.Printf("WARN: outbox write failed, falling back to direct publish: %v", err)
 	if err := s.repo.DeleteUser(ctx, userID); err != nil {
-		return err
+		return fmt.Errorf("delete user: %w", err)
 	}
 	metrics.UsersDeletedTotal.Inc()
 
-	// Publish user.deleted event so downstream services can clean up.
 	if s.pub != nil {
 		if err := s.pub.PublishUserDeleted(ctx, userID); err != nil {
 			metrics.UserDeletedEventFailed.Inc()
-			log.Printf("warning: failed to publish user.deleted for %s: %v", userID, err)
+			log.Printf("WARN: failed to publish user.deleted event for %s: %v", userID, err)
 		} else {
 			metrics.UserDeletedEventPublished.Inc()
 		}

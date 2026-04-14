@@ -73,6 +73,7 @@ func newRouter(svc *mockUserSvc) *gin.Engine {
 	})
 	auth.GET("/me", h.GetProfile)
 	auth.PUT("/me", h.UpdateProfile)
+	auth.DELETE("/me", h.DeleteUser)
 	return r
 }
 
@@ -262,4 +263,34 @@ func TestHandler_UpdateProfile_BadJSON(t *testing.T) {
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	svc.AssertNotCalled(t, "UpdateProfile")
+}
+
+// ── DeleteUser ──────────────────────────────────────────
+
+func TestHandler_DeleteUser_Success(t *testing.T) {
+	svc := new(mockUserSvc)
+	r := newRouter(svc)
+
+	svc.On("DeleteUser", mock.Anything, "test-user-id").Return(nil)
+
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodDelete, "/api/v1/users/me", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusNoContent, w.Code)
+	svc.AssertExpectations(t)
+}
+
+func TestHandler_DeleteUser_InternalError(t *testing.T) {
+	svc := new(mockUserSvc)
+	r := newRouter(svc)
+
+	svc.On("DeleteUser", mock.Anything, "test-user-id").Return(errors.New("db error"))
+
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodDelete, "/api/v1/users/me", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+	svc.AssertExpectations(t)
 }
