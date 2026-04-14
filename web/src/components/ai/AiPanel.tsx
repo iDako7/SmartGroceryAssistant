@@ -10,7 +10,7 @@ interface Props {
   selectedItem: Item | null;
 }
 
-type Tab = 'info' | 'translate' | 'alternatives' | 'suggest' | 'inspire';
+type Tab = 'info' | 'translate' | 'alternatives' | 'suggest';
 
 export default function AiPanel({ sections, items, selectedItem }: Props) {
   const [tab, setTab] = useState<Tab>('info');
@@ -20,10 +20,9 @@ export default function AiPanel({ sections, items, selectedItem }: Props) {
   const [jobStatus, setJobStatus] = useState<string>('');
   const [targetLang, setTargetLang] = useState('Chinese');
   const [altReason, setAltReason] = useState('');
-  const [preferences, setPreferences] = useState('');
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Build sections map for suggest/inspire
+  // Build sections map for suggest
   const sectionsMap: Record<string, string[]> = {};
   for (const s of sections) {
     sectionsMap[s.name] = (items[s.id] ?? []).map((i) => i.name_en);
@@ -73,16 +72,11 @@ export default function AiPanel({ sections, items, selectedItem }: Props) {
         setJobId(job_id);
         startPoll(job_id);
         return;
-      } else if (tab === 'inspire') {
-        const { job_id } = await ai.inspire(sectionsMap, preferences);
-        setJobId(job_id);
-        startPoll(job_id);
-        return;
       }
     } catch (err) {
       setResult({ error: (err as Error).message });
     } finally {
-      if (tab !== 'suggest' && tab !== 'inspire') setLoading(false);
+      if (tab !== 'suggest') setLoading(false);
     }
   }
 
@@ -91,7 +85,6 @@ export default function AiPanel({ sections, items, selectedItem }: Props) {
     { id: 'translate', label: 'Translate' },
     { id: 'alternatives', label: 'Alternatives' },
     { id: 'suggest', label: 'Suggest' },
-    { id: 'inspire', label: 'Inspire' },
   ];
 
   const needsItem = tab === 'info' || tab === 'translate' || tab === 'alternatives';
@@ -148,15 +141,6 @@ export default function AiPanel({ sections, items, selectedItem }: Props) {
             value={altReason}
             onChange={(e) => setAltReason(e.target.value)}
             placeholder="Reason (e.g. dairy free)"
-            className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-emerald-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
-          />
-        )}
-
-        {tab === 'inspire' && (
-          <input
-            value={preferences}
-            onChange={(e) => setPreferences(e.target.value)}
-            placeholder="Dietary preferences (optional)"
             className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-emerald-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
           />
         )}
@@ -231,31 +215,6 @@ function ResultView({ data, tab }: { data: unknown; tab: Tab }) {
             <span className="font-medium text-zinc-800 dark:text-zinc-100">{s.name_en}</span>
             <span className="ml-2 text-xs text-zinc-400">{s.category}</span>
             <p className="mt-0.5 text-xs text-zinc-500">{s.reason}</p>
-          </li>
-        ))}
-      </ul>
-    );
-  }
-
-  if (tab === 'inspire') {
-    const meals =
-      (d.meals as {
-        name: string;
-        description: string;
-        ingredients_used: string[];
-        missing_ingredients: string[];
-      }[]) ?? [];
-    return (
-      <ul className="space-y-3">
-        {meals.map((m, i) => (
-          <li key={i} className="rounded-lg bg-zinc-50 px-3 py-2 text-sm dark:bg-zinc-800">
-            <p className="font-semibold text-zinc-800 dark:text-zinc-100">{m.name}</p>
-            <p className="mt-0.5 text-xs text-zinc-500">{m.description}</p>
-            {m.missing_ingredients?.length > 0 && (
-              <p className="mt-1 text-xs text-amber-500">
-                Missing: {m.missing_ingredients.join(', ')}
-              </p>
-            )}
           </li>
         ))}
       </ul>

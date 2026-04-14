@@ -7,105 +7,153 @@ import (
 	"log"
 	"time"
 
+	"github.com/iDako7/SmartGroceryAssistant/services/list-service/internal/metrics"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-// UserEvent mirrors the event envelope published by the user-service.
-type UserEvent struct {
-	Type    string `json:"type"`
-	UserID  string `json:"user_id"`
-	Payload any    `json:"payload"`
-}
+// UserDeletedHandler is called when a user.deleted event is received.
+type UserDeletedHandler func(ctx context.Context, userID string) error
 
-// UserDataCleaner is the interface the consumer calls to clean up user data.
-type UserDataCleaner interface {
-	SoftDeleteAllByUser(ctx context.Context, userID string) (int64, int64, error)
-}
-
-// Consumer listens on the user.events queue for saga events.
+// Consumer listens for user lifecycle events from RabbitMQ.
 type Consumer struct {
-	ch      *amqp.Channel
-	cleaner UserDataCleaner
+	amqpURL string
+	handler UserDeletedHandler
 }
 
-func NewConsumer(amqpURL string, cleaner UserDataCleaner) (*Consumer, error) {
+type userEvent struct {
+	Type   string `json:"type"`
+	UserID string `json:"user_id"`
+}
+
+func NewConsumer(amqpURL string, handler UserDeletedHandler) (*Consumer, error) {
+	// Verify connectivity on startup.
 	conn, err := amqp.Dial(amqpURL)
+	if err != nil {
+		return nil, fmt.Errorf("connect to rabbitmq: %w", err)
+	}
+	_ = conn.Close()
+
+	return &Consumer{amqpURL: amqpURL, handler: handler}, nil
+}
+
+func (c *Consumer) connect() (*amqp.Channel, error) {
+	conn, err := amqp.Dial(c.amqpURL)
 	if err != nil {
 		return nil, fmt.Errorf("connect to rabbitmq: %w", err)
 	}
 
 	ch, err := conn.Channel()
 	if err != nil {
+		_ = conn.Close()
 		return nil, fmt.Errorf("open channel: %w", err)
 	}
 
-	return &Consumer{ch: ch, cleaner: cleaner}, nil
-}
-
-// Start begins consuming messages in a background goroutine. It blocks until
-// ctx is cancelled or the channel is closed.
-func (c *Consumer) Start(ctx context.Context) error {
-	msgs, err := c.ch.Consume(
-		"user.events", // queue
-		"",            // consumer tag (auto-generated)
-		false,         // auto-ack disabled — we ack after processing
-		false,         // exclusive
-		false,         // no-local
-		false,         // no-wait
-		nil,           // args
-	)
-	if err != nil {
-		return fmt.Errorf("consume user.events: %w", err)
+	if err := ch.ExchangeDeclare("user", "fanout", true, false, false, false, nil); err != nil {
+		_ = ch.Close()
+		_ = conn.Close()
+		return nil, fmt.Errorf("declare exchange: %w", err)
 	}
 
-	log.Println("saga consumer: listening on user.events")
+	q, err := ch.QueueDeclare("list.user-events", true, false, false, false, nil)
+	if err != nil {
+		_ = ch.Close()
+		_ = conn.Close()
+		return nil, fmt.Errorf("declare queue: %w", err)
+	}
 
-	go func() {
-		for {
-			select {
-			case <-ctx.Done():
-				log.Println("saga consumer: context cancelled, stopping")
-				return
-			case msg, ok := <-msgs:
-				if !ok {
-					log.Println("saga consumer: channel closed, stopping")
-					return
-				}
-				c.handleMessage(ctx, msg)
-			}
+	if err := ch.QueueBind(q.Name, "", "user", false, nil); err != nil {
+		_ = ch.Close()
+		_ = conn.Close()
+		return nil, fmt.Errorf("bind queue: %w", err)
+	}
+
+	return ch, nil
+}
+
+// Start begins consuming messages with automatic reconnection.
+// Blocks until ctx is cancelled.
+func (c *Consumer) Start(ctx context.Context) error {
+	for {
+		if ctx.Err() != nil {
+			return ctx.Err()
 		}
-	}()
 
-	return nil
+		err := c.consumeLoop(ctx)
+		if ctx.Err() != nil {
+			return ctx.Err()
+		}
+
+		log.Printf("consumer: disconnected: %v — reconnecting in 5s", err)
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-time.After(5 * time.Second):
+		}
+	}
+}
+
+func (c *Consumer) consumeLoop(ctx context.Context) error {
+	ch, err := c.connect()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = ch.Close() }()
+
+	msgs, err := ch.Consume("list.user-events", "list-service", false, false, false, false, nil)
+	if err != nil {
+		return fmt.Errorf("start consuming: %w", err)
+	}
+
+	log.Println("consumer: listening for user.deleted events on list.user-events")
+
+	for {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case msg, ok := <-msgs:
+			if !ok {
+				return fmt.Errorf("consumer channel closed")
+			}
+			c.handleMessage(ctx, msg)
+		}
+	}
 }
 
 func (c *Consumer) handleMessage(ctx context.Context, msg amqp.Delivery) {
-	start := time.Now()
-
-	var event UserEvent
+	var event userEvent
 	if err := json.Unmarshal(msg.Body, &event); err != nil {
-		log.Printf("saga consumer: unmarshal error: %v", err)
-		// Nack without requeue — malformed messages won't fix themselves
-		_ = msg.Nack(false, false)
+		log.Printf("consumer: invalid message, nacking: %v", err)
+		if nackErr := msg.Nack(false, false); nackErr != nil {
+			log.Printf("consumer: nack failed: %v", nackErr)
+		}
 		return
 	}
 
-	switch event.Type {
-	case "user.deleted":
-		sections, items, err := c.cleaner.SoftDeleteAllByUser(ctx, event.UserID)
-		if err != nil {
-			log.Printf("saga consumer: cleanup failed for user %s: %v", event.UserID, err)
-			// Nack with requeue — transient failures should be retried
-			_ = msg.Nack(false, true)
-			return
+	if event.Type != "user.deleted" {
+		if ackErr := msg.Ack(false); ackErr != nil {
+			log.Printf("consumer: ack failed: %v", ackErr)
 		}
-		elapsed := time.Since(start)
-		log.Printf("saga consumer: cleaned user %s — %d sections, %d items in %v",
-			event.UserID, sections, items, elapsed)
-		_ = msg.Ack(false)
-
-	default:
-		log.Printf("saga consumer: unknown event type %q, acking", event.Type)
-		_ = msg.Ack(false)
+		return
 	}
+
+	log.Printf("consumer: received user.deleted for user %s", event.UserID)
+
+	start := time.Now()
+	if err := c.handler(ctx, event.UserID); err != nil {
+		log.Printf("consumer: failed to handle user.deleted for %s: %v — requeueing", event.UserID, err)
+		metrics.SagaCleanupErrors.Inc()
+		if nackErr := msg.Nack(false, true); nackErr != nil {
+			log.Printf("consumer: nack failed: %v", nackErr)
+		}
+		return
+	}
+
+	duration := time.Since(start).Seconds()
+	metrics.SagaCleanupTotal.Inc()
+	metrics.SagaCleanupDuration.Observe(duration)
+
+	if ackErr := msg.Ack(false); ackErr != nil {
+		log.Printf("consumer: ack failed: %v", ackErr)
+	}
+	log.Printf("consumer: successfully cleaned up data for deleted user %s (%.3fs)", event.UserID, duration)
 }

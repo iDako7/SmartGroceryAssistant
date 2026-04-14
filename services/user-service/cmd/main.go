@@ -24,6 +24,7 @@ func main() {
 	dbURL := mustEnv("USER_DB_URL")
 	jwtSecret := mustEnv("JWT_SECRET")
 	amqpURL := getEnv("RABBITMQ_URL", "amqp://sga:sga_secret@localhost:5672/")
+	internalAPIKey := getEnv("INTERNAL_API_KEY", "change_me_in_production")
 	port := getEnv("USER_SERVICE_PORT", "4001")
 
 	db, err := pgxpool.New(context.Background(), dbURL)
@@ -49,13 +50,20 @@ func main() {
 		}
 	}()
 
+	// Connect to RabbitMQ for user lifecycle events.
 	pub, err := events.NewPublisher(amqpURL)
 	if err != nil {
-		log.Printf("WARN: rabbitmq unavailable, saga events disabled: %v", err)
+		log.Printf("warning: rabbitmq not available, user.deleted events will not be published: %v", err)
+	} else {
+		log.Println("connected to rabbitmq")
 	}
 
 	repo := repository.NewUserRepo(db)
-	svc := service.NewUserService(repo, jwtSecret, pub)
+	var svcOpts []func(*service.UserService)
+	if pub != nil {
+		svcOpts = append(svcOpts, service.WithPublisher(pub))
+	}
+	svc := service.NewUserService(repo, jwtSecret, svcOpts...)
 	h := handler.New(svc)
 
 	// Start the outbox poller — publishes events written by DeleteUserWithOutbox.
@@ -90,6 +98,7 @@ func main() {
 	{
 		users.POST("/register", h.Register)
 		users.POST("/login", h.Login)
+		users.GET("/internal/exists/:id", middleware.InternalAuth(internalAPIKey), h.UserExists)
 	}
 
 	// Profile — JWT required
@@ -97,7 +106,7 @@ func main() {
 	{
 		me.GET("/me", h.GetProfile)
 		me.PUT("/me", h.UpdateProfile)
-		me.DELETE("/me", h.DeleteAccount)
+		me.DELETE("/me", h.DeleteUser)
 	}
 
 	log.Printf("user-service listening on :%s", port)

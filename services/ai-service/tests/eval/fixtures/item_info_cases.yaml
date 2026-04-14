@@ -1,0 +1,179 @@
+# Test fixtures for the item-info endpoint eval.
+# 5 cases covering common produce, specialty items, and spices.
+# Each case has: is-json schema check, javascript structure validation, and 2x llm-rubric judges.
+# Variables (name_en, profile_context) map to the prompt template.
+
+# Case 1: Common fruit
+- description: "banana — common fruit with well-known properties"
+  vars:
+    name_en: "banana"
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["category", "typical_unit", "storage_tip", "nutrition_note"]
+        properties:
+          category: { type: string }
+          typical_unit: { type: string }
+          storage_tip: { type: string }
+          nutrition_note: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.category && d.typical_unit && d.storage_tip && d.nutrition_note && d.category.length > 0 && d.typical_unit.length > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All fields present' : 'Missing fields' };
+    - type: llm-rubric
+      value: |
+        All four fields are factually accurate for banana. Category should be produce/fruit. Storage tip should be actionable (e.g., room temperature to ripen, fridge to slow). Nutrition note should highlight a specific characteristic (e.g., potassium, natural energy), not a generic statement.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        All four fields are factually accurate for banana. Category should be produce/fruit. Storage tip should be actionable (e.g., room temperature to ripen, fridge to slow). Nutrition note should highlight a specific characteristic (e.g., potassium, natural energy), not a generic statement.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 2: Korean specialty condiment
+- description: "gochujang — Korean specialty requiring specific knowledge"
+  vars:
+    name_en: "gochujang"
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["category", "typical_unit", "storage_tip", "nutrition_note"]
+        properties:
+          category: { type: string }
+          typical_unit: { type: string }
+          storage_tip: { type: string }
+          nutrition_note: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.category && d.typical_unit && d.storage_tip && d.nutrition_note && d.category.length > 0 && d.typical_unit.length > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All fields present' : 'Missing fields' };
+    - type: llm-rubric
+      value: |
+        All four fields are factually accurate for gochujang (Korean red pepper paste). Category should reflect it's a condiment/sauce/paste. Typical unit should mention jar or tub. Storage tip should distinguish opened vs unopened. Nutrition note should mention something specific (e.g., fermented, contains capsaicin, sodium content).
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        All four fields are factually accurate for gochujang (Korean red pepper paste). Category should reflect it's a condiment/sauce/paste. Typical unit should mention jar or tub. Storage tip should distinguish opened vs unopened. Nutrition note should mention something specific (e.g., fermented, contains capsaicin, sodium content).
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 3: Health-focused grain
+- description: "quinoa — grain with specific nutritional claims"
+  vars:
+    name_en: "quinoa"
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["category", "typical_unit", "storage_tip", "nutrition_note"]
+        properties:
+          category: { type: string }
+          typical_unit: { type: string }
+          storage_tip: { type: string }
+          nutrition_note: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.category && d.typical_unit && d.storage_tip && d.nutrition_note && d.category.length > 0 && d.typical_unit.length > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All fields present' : 'Missing fields' };
+    - type: llm-rubric
+      value: |
+        All four fields are factually accurate for quinoa. Category should be grains/dry goods. Storage tip should mention airtight container or cool/dry place. Nutrition note should highlight a specific trait (complete protein, gluten-free) — not generic 'healthy' statements.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        All four fields are factually accurate for quinoa. Category should be grains/dry goods. Storage tip should mention airtight container or cool/dry place. Nutrition note should highlight a specific trait (complete protein, gluten-free) — not generic 'healthy' statements.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 4: Refrigerated protein
+- description: "tofu — refrigerated item with specific storage needs"
+  vars:
+    name_en: "tofu"
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["category", "typical_unit", "storage_tip", "nutrition_note"]
+        properties:
+          category: { type: string }
+          typical_unit: { type: string }
+          storage_tip: { type: string }
+          nutrition_note: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.category && d.typical_unit && d.storage_tip && d.nutrition_note && d.category.length > 0 && d.typical_unit.length > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All fields present' : 'Missing fields' };
+    - type: llm-rubric
+      value: |
+        All four fields are factually accurate for tofu. Category should be produce/refrigerated/protein. Storage tip should mention water and refrigeration for opened tofu. Nutrition note should highlight protein content or low calorie.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        All four fields are factually accurate for tofu. Category should be produce/refrigerated/protein. Storage tip should mention water and refrigeration for opened tofu. Nutrition note should highlight protein content or low calorie.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 5: Expensive specialty spice
+- description: "saffron — expensive spice sold in tiny quantities"
+  vars:
+    name_en: "saffron"
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["category", "typical_unit", "storage_tip", "nutrition_note"]
+        properties:
+          category: { type: string }
+          typical_unit: { type: string }
+          storage_tip: { type: string }
+          nutrition_note: { type: string }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.category && d.typical_unit && d.storage_tip && d.nutrition_note && d.category.length > 0 && d.typical_unit.length > 0 && d.storage_tip.length > 0 && d.nutrition_note.length > 0;
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'All fields present' : 'Missing fields' };
+    - type: llm-rubric
+      value: |
+        All four fields are factually accurate for saffron. Category should be spices. Typical unit should reflect it's sold in very small quantities (grams, pinch). Storage tip should mention airtight, dark, cool. Nutrition note should mention antioxidants or specific properties — not just 'expensive spice'.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        All four fields are factually accurate for saffron. Category should be spices. Typical unit should reflect it's sold in very small quantities (grams, pinch). Storage tip should mention airtight, dark, cool. Nutrition note should mention antioxidants or specific properties — not just 'expensive spice'.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0

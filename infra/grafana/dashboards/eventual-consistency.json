@@ -1,0 +1,249 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "User Deletions vs Saga Cleanups",
+      "description": "Compares user deletions (user-service) with saga cleanups (list-service). A gap indicates the eventual consistency window.",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "pointSize": 5,
+            "showPoints": "auto"
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "increase(user_service_users_deleted_total[1m])",
+          "legendFormat": "Users Deleted (user-service)",
+          "refId": "A"
+        },
+        {
+          "expr": "increase(list_service_saga_cleanup_total[1m])",
+          "legendFormat": "Saga Cleanups (list-service)",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "Event Pipeline Health",
+      "description": "Published vs failed user.deleted events. Failed events indicate RabbitMQ issues — the cleanup job will catch these.",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Events Published" },
+            "properties": [
+              { "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Events Failed" },
+            "properties": [
+              { "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }
+            ]
+          }
+        ]
+      },
+      "targets": [
+        {
+          "expr": "user_service_user_deleted_event_published_total",
+          "legendFormat": "Events Published",
+          "refId": "A"
+        },
+        {
+          "expr": "user_service_user_deleted_event_failed_total",
+          "legendFormat": "Events Failed",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "Consistency Gap (Deletions - Cleanups)",
+      "description": "Difference between user deletions and saga cleanups. Non-zero means some deletions haven't been cleaned up yet.",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 5 }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "user_service_users_deleted_total - list_service_saga_cleanup_total",
+          "legendFormat": "Unprocessed Deletions",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Saga Cleanup Latency",
+      "description": "Time from receiving user.deleted event to completing soft-delete of all orphaned data.",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, rate(list_service_saga_cleanup_duration_seconds_bucket[5m]))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(list_service_saga_cleanup_duration_seconds_bucket[5m]))",
+          "legendFormat": "p95",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.99, rate(list_service_saga_cleanup_duration_seconds_bucket[5m]))",
+          "legendFormat": "p99",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "title": "Data Cleaned Up by Saga",
+      "description": "Cumulative sections and items soft-deleted by the user.deleted event consumer.",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "bars",
+            "lineWidth": 1,
+            "fillOpacity": 50
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "increase(list_service_saga_cleanup_sections_total[1m])",
+          "legendFormat": "Sections Deleted",
+          "refId": "A"
+        },
+        {
+          "expr": "increase(list_service_saga_cleanup_items_total[1m])",
+          "legendFormat": "Items Deleted",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "Orphan Cleanup Job (Safety Net)",
+      "description": "Periodic job that scans for orphaned data. 'Orphans Found' > 0 means the saga missed a deletion (e.g., RabbitMQ was down).",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "list_service_orphan_cleanup_runs_total",
+          "legendFormat": "Job Runs",
+          "refId": "A"
+        },
+        {
+          "expr": "list_service_orphan_cleanup_found_total",
+          "legendFormat": "Orphans Found",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "Saga Cleanup Errors",
+      "description": "Errors during event processing. These events are requeued for retry.",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "red" },
+          "custom": {
+            "drawStyle": "bars",
+            "lineWidth": 1,
+            "fillOpacity": 80
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "increase(list_service_saga_cleanup_errors_total[1m])",
+          "legendFormat": "Errors",
+          "refId": "A"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["smart-grocery", "eventual-consistency", "saga"],
+  "templating": { "list": [] },
+  "time": { "from": "now-30m", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Eventual Consistency — User Deletion Saga",
+  "uid": "eventual-consistency-saga",
+  "version": 1
+}

@@ -1,0 +1,234 @@
+# Test fixtures for the clarify endpoint eval.
+# 5 cases covering obvious lists, mixed cuisines, and ambiguous scale.
+# Each case has: is-json schema check, javascript structure validation, and 2x llm-rubric judges.
+# Variables (sections_text, profile_context) map to the prompt template.
+
+# Case 1: Obvious Asian meal (should generate just 1 question)
+- description: "chicken/rice/soy sauce — obvious Asian meal, minimal questions"
+  vars:
+    sections_text: '{"produce": ["chicken", "rice", "soy sauce"]}'
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["questions"]
+        properties:
+          questions:
+            type: array
+            minItems: 1
+            maxItems: 3
+            items:
+              type: object
+              required: ["q", "options", "allowOther"]
+              properties:
+                q: { type: string }
+                options:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items: { type: string }
+                allowOther: { type: boolean }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.questions && d.questions.length >= 1 && d.questions.length <= 3 && d.questions.every(q => q.q && q.options && q.options.length >= 3 && q.options.length <= 4 && q.options.every(o => o.split(/\s+/).length <= 5));
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid structure or option length' };
+    - type: llm-rubric
+      value: |
+        This is a straightforward Asian meal list. The model should generate just 1 question since the purpose is fairly obvious. Questions should be specific to this list (not generic like 'What cuisine?'). Options should be short (2-5 words) and tappable. The tone should be conversational.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        This is a straightforward Asian meal list. The model should generate just 1 question since the purpose is fairly obvious. Questions should be specific to this list (not generic like 'What cuisine?'). Options should be short (2-5 words) and tappable. The tone should be conversational.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 2: Mixed cuisines (should generate 2-3 questions)
+- description: "tortillas/cheese/kimchi/naan — mixed cuisine signals"
+  vars:
+    sections_text: '{"produce": ["tortillas", "cheese", "kimchi", "naan"]}'
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["questions"]
+        properties:
+          questions:
+            type: array
+            minItems: 1
+            maxItems: 3
+            items:
+              type: object
+              required: ["q", "options", "allowOther"]
+              properties:
+                q: { type: string }
+                options:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items: { type: string }
+                allowOther: { type: boolean }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.questions && d.questions.length >= 1 && d.questions.length <= 3 && d.questions.every(q => q.q && q.options && q.options.length >= 3 && q.options.length <= 4 && q.options.every(o => o.split(/\s+/).length <= 5));
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid structure or option length' };
+    - type: llm-rubric
+      value: |
+        This list mixes Mexican (tortillas), Korean (kimchi), and Indian (naan) signals. The model should generate 2-3 questions to clarify the mixed cuisine patterns. Questions should be specific to the conflict in this list. Options should be short and tappable.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        This list mixes Mexican (tortillas), Korean (kimchi), and Indian (naan) signals. The model should generate 2-3 questions to clarify the mixed cuisine patterns. Questions should be specific to the conflict in this list. Options should be short and tappable.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 3: Obvious party list
+- description: "chips/soda/cups/napkins — obvious party, minimal questions"
+  vars:
+    sections_text: '{"produce": ["chips", "soda", "cups", "napkins"]}'
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["questions"]
+        properties:
+          questions:
+            type: array
+            minItems: 1
+            maxItems: 3
+            items:
+              type: object
+              required: ["q", "options", "allowOther"]
+              properties:
+                q: { type: string }
+                options:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items: { type: string }
+                allowOther: { type: boolean }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.questions && d.questions.length >= 1 && d.questions.length <= 3 && d.questions.every(q => q.q && q.options && q.options.length >= 3 && q.options.length <= 4 && q.options.every(o => o.split(/\s+/).length <= 5));
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid structure or option length' };
+    - type: llm-rubric
+      value: |
+        This is an obvious party/gathering list. The model should generate just 1 question since the purpose is clear. The question might ask about party size, type of event, or whether they need food beyond snacks. Questions should NOT ask 'what are you cooking?' since this isn't a cooking list.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        This is an obvious party/gathering list. The model should generate just 1 question since the purpose is clear. The question might ask about party size, type of event, or whether they need food beyond snacks. Questions should NOT ask 'what are you cooking?' since this isn't a cooking list.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 4: Baking list
+- description: "flour/sugar/butter/eggs/vanilla — clear baking list"
+  vars:
+    sections_text: '{"produce": ["flour", "sugar", "butter", "eggs", "vanilla"]}'
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["questions"]
+        properties:
+          questions:
+            type: array
+            minItems: 1
+            maxItems: 3
+            items:
+              type: object
+              required: ["q", "options", "allowOther"]
+              properties:
+                q: { type: string }
+                options:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items: { type: string }
+                allowOther: { type: boolean }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.questions && d.questions.length >= 1 && d.questions.length <= 3 && d.questions.every(q => q.q && q.options && q.options.length >= 3 && q.options.length <= 4 && q.options.every(o => o.split(/\s+/).length <= 5));
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid structure or option length' };
+    - type: llm-rubric
+      value: |
+        This is a clear baking list. The model should generate just 1 question. The question could ask what they're baking or for how many people. Questions should be specific to baking, not generic. Options should reference baking items (cookies, cake, bread, etc.).
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        This is a clear baking list. The model should generate just 1 question. The question could ask what they're baking or for how many people. Questions should be specific to baking, not generic. Options should reference baking items (cookies, cake, bread, etc.).
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0
+
+# Case 5: Ambiguous scale (expensive proteins)
+- description: "salmon/steak/shrimp/lobster + butter/cream — ambiguous scale"
+  vars:
+    sections_text: '{"produce": ["salmon", "steak", "shrimp", "lobster"], "dairy": ["butter", "cream"]}'
+    profile_context: ""
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["questions"]
+        properties:
+          questions:
+            type: array
+            minItems: 1
+            maxItems: 3
+            items:
+              type: object
+              required: ["q", "options", "allowOther"]
+              properties:
+                q: { type: string }
+                options:
+                  type: array
+                  minItems: 3
+                  maxItems: 4
+                  items: { type: string }
+                allowOther: { type: boolean }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output);
+        const valid = d.questions && d.questions.length >= 1 && d.questions.length <= 3 && d.questions.every(q => q.q && q.options && q.options.length >= 3 && q.options.length <= 4 && q.options.every(o => o.split(/\s+/).length <= 5));
+        return { pass: valid, score: valid ? 1 : 0, reason: valid ? 'Structure valid' : 'Invalid structure or option length' };
+    - type: llm-rubric
+      value: |
+        This list has expensive proteins in quantity — ambiguous between a date night and a dinner party. The model should generate 2-3 questions to clarify scale and occasion. Questions should address the ambiguity (how many people? special occasion?). Options should be short and tappable.
+      provider:
+        id: openrouter:anthropic/claude-sonnet-4.6
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        This list has expensive proteins in quantity — ambiguous between a date night and a dinner party. The model should generate 2-3 questions to clarify scale and occasion. Questions should address the ambiguity (how many people? special occasion?). Options should be short and tappable.
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        config:
+          temperature: 0

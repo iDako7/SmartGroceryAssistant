@@ -38,18 +38,22 @@ var (
 	}, []string{"operation"})
 )
 
-// Saga metrics — recorded by the service layer.
+// User lifecycle metrics — recorded in the service layer.
 var (
-	SagaEventsPublished = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name: "user_service_saga_events_published_total",
-		Help: "Total saga events published to RabbitMQ.",
-	}, []string{"event_type", "status"})
+	UsersDeletedTotal = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "user_service_users_deleted_total",
+		Help: "Total number of users deleted.",
+	})
 
-	SagaPublishDuration = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:    "user_service_saga_publish_duration_seconds",
-		Help:    "Time to publish a saga event.",
-		Buckets: []float64{.001, .005, .01, .025, .05, .1, .25, .5, 1},
-	}, []string{"event_type"})
+	UserDeletedEventPublished = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "user_service_user_deleted_event_published_total",
+		Help: "Total user.deleted events successfully published to RabbitMQ.",
+	})
+
+	UserDeletedEventFailed = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "user_service_user_deleted_event_failed_total",
+		Help: "Total user.deleted events that failed to publish.",
+	})
 )
 
 // Connection pool metrics — recorded by a background goroutine in main.

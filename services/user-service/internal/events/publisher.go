@@ -5,58 +5,116 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"sync"
+	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-type EventType string
-
-const (
-	UserDeleted EventType = "user.deleted"
-)
+const exchangeName = "user"
 
 type UserEvent struct {
-	Type    EventType `json:"type"`
-	UserID  string    `json:"user_id"`
-	Payload any       `json:"payload"`
+	Type   string `json:"type"`
+	UserID string `json:"user_id"`
 }
 
 type Publisher struct {
-	ch *amqp.Channel
+	amqpURL string
+	conn    *amqp.Connection
+	ch      *amqp.Channel
+	mu      sync.Mutex
 }
 
 func NewPublisher(amqpURL string) (*Publisher, error) {
-	conn, err := amqp.Dial(amqpURL)
+	p := &Publisher{amqpURL: amqpURL}
+	if err := p.connect(); err != nil {
+		return nil, err
+	}
+	return p, nil
+}
+
+func (p *Publisher) connect() error {
+	conn, err := amqp.Dial(p.amqpURL)
 	if err != nil {
-		return nil, fmt.Errorf("connect to rabbitmq: %w", err)
+		return fmt.Errorf("connect to rabbitmq: %w", err)
 	}
 
 	ch, err := conn.Channel()
 	if err != nil {
-		return nil, fmt.Errorf("open channel: %w", err)
+		_ = conn.Close()
+		return fmt.Errorf("open channel: %w", err)
 	}
 
-	return &Publisher{ch: ch}, nil
+	if err := ch.ExchangeDeclare(exchangeName, "fanout", true, false, false, false, nil); err != nil {
+		_ = ch.Close()
+		_ = conn.Close()
+		return fmt.Errorf("declare exchange: %w", err)
+	}
+
+	p.conn = conn
+	p.ch = ch
+	return nil
+}
+
+func (p *Publisher) reconnect() error {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	if p.ch != nil {
+		_ = p.ch.Close()
+	}
+	if p.conn != nil {
+		_ = p.conn.Close()
+	}
+	return p.connect()
 }
 
 // Channel returns the underlying AMQP channel for reuse by the outbox poller.
-func (p *Publisher) Channel() *amqp.Channel { return p.ch }
+func (p *Publisher) Channel() *amqp.Channel {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	return p.ch
+}
 
-func (p *Publisher) Publish(ctx context.Context, userID string, eventType EventType, payload any) error {
-	event := UserEvent{Type: eventType, UserID: userID, Payload: payload}
+func (p *Publisher) PublishUserDeleted(ctx context.Context, userID string) error {
+	event := UserEvent{Type: "user.deleted", UserID: userID}
 	body, err := json.Marshal(event)
 	if err != nil {
 		return fmt.Errorf("marshal event: %w", err)
 	}
 
-	err = p.ch.PublishWithContext(ctx, "user", "", false, false, amqp.Publishing{
+	p.mu.Lock()
+	ch := p.ch
+	p.mu.Unlock()
+
+	pubCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	err = ch.PublishWithContext(pubCtx, exchangeName, "", false, false, amqp.Publishing{
 		ContentType:  "application/json",
 		DeliveryMode: amqp.Persistent,
 		Body:         body,
 	})
 	if err != nil {
-		log.Printf("publish event %s: %v", eventType, err)
-		return fmt.Errorf("publish event: %w", err)
+		log.Printf("publish user.deleted failed: %v — attempting reconnect", err)
+		if reconnErr := p.reconnect(); reconnErr != nil {
+			return fmt.Errorf("publish user.deleted after reconnect failure: %w", reconnErr)
+		}
+		// Retry once after reconnect.
+		p.mu.Lock()
+		ch = p.ch
+		p.mu.Unlock()
+		pubCtx2, cancel2 := context.WithTimeout(ctx, 5*time.Second)
+		defer cancel2()
+		if err := ch.PublishWithContext(pubCtx2, exchangeName, "", false, false, amqp.Publishing{
+			ContentType:  "application/json",
+			DeliveryMode: amqp.Persistent,
+			Body:         body,
+		}); err != nil {
+			return fmt.Errorf("publish user.deleted after reconnect: %w", err)
+		}
 	}
+
+	log.Printf("published user.deleted event for user %s", userID)
 	return nil
 }

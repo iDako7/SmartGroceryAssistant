@@ -1,0 +1,4 @@
+[
+  {"role": "system", "content": "You are a grocery item translator. Respond with JSON only."},
+  {"role": "user", "content": "Translate the grocery item \"{{name_en}}\" to {{target_language}}.{% if profile_context %}{{profile_context}}{% endif %}\nIf the item has a commonly confused counterpart in {{target_language}} (e.g. baking soda vs baking powder), warn in notes.\nReturn JSON: {\"name_translated\": \"...\", \"notes\": \"...\"}"}
+]

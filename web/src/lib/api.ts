@@ -1,4 +1,13 @@
-import type { Item, ProfileUpdate, Section, User } from '../types';
+import type {
+  AlternativesResponse,
+  ClarifyResponse,
+  Item,
+  ItemInfoResponse,
+  PerItemInspireResponse,
+  ProfileUpdate,
+  Section,
+  User,
+} from '../types';
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
@@ -145,26 +154,29 @@ export const ai = {
       body: JSON.stringify({ name_en, target_language }),
     }),
   itemInfo: (name_en: string) =>
-    request<{
-      category: string;
-      typical_unit: string;
-      storage_tip: string;
-      nutrition_note: string;
-    }>('/api/v1/ai/item-info', { method: 'POST', body: JSON.stringify({ name_en }) }),
+    request<ItemInfoResponse>('/api/v1/ai/item-info', {
+      method: 'POST',
+      body: JSON.stringify({ name_en }),
+    }),
   alternatives: (name_en: string, reason = '') =>
-    request<{ alternatives: { name: string; reason: string }[] }>('/api/v1/ai/alternatives', {
+    request<AlternativesResponse>('/api/v1/ai/alternatives', {
       method: 'POST',
       body: JSON.stringify({ name_en, reason }),
+    }),
+  inspireItem: (name_en: string, other_items: string[] = []) =>
+    request<PerItemInspireResponse>('/api/v1/ai/inspire/item', {
+      method: 'POST',
+      body: JSON.stringify({ name_en, other_items }),
+    }),
+  clarify: (sections: Record<string, string[]>) =>
+    request<ClarifyResponse>('/api/v1/ai/clarify', {
+      method: 'POST',
+      body: JSON.stringify({ sections }),
     }),
   suggest: (sections: Record<string, string[]>) =>
     request<{ job_id: string; status: string }>('/api/v1/ai/suggest', {
       method: 'POST',
       body: JSON.stringify({ sections }),
-    }),
-  inspire: (sections: Record<string, string[]>, preferences = '') =>
-    request<{ job_id: string; status: string }>('/api/v1/ai/inspire', {
-      method: 'POST',
-      body: JSON.stringify({ sections, preferences }),
     }),
   pollJob: (jobId: string) =>
     request<{ job_id: string; status: string; result?: unknown }>(`/api/v1/ai/jobs/${jobId}`),

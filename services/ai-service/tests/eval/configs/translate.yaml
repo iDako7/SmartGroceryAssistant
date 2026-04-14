@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+# Translate eval config — Scenario 1: OpenAI tier comparison (current prompt).
+# Tests grocery item translation across multiple languages.
+# Run: npx promptfoo@latest eval -c configs/translate.yaml --env-file ../../.env --no-cache
+
+description: "Translate — Scenario 1: OpenAI tier comparison (current prompt)"
+
+prompts:
+  - file://../prompts/current/translate.json
+
+providers:
+  - id: openrouter:openai/gpt-5.4-nano
+    label: "GPT-5.4 Nano ($0.20/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 512
+  - id: openrouter:openai/gpt-5.4-mini
+    label: "GPT-5.4 Mini ($0.75/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 512
+
+tests: file://../fixtures/translate_cases.yaml

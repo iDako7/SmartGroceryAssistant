@@ -112,10 +112,8 @@ func (r *UserRepo) DeleteUser(ctx context.Context, userID string) (err error) {
 	start := time.Now()
 	defer func() { observeQuery("delete_user", start, err) }()
 
-	tag, err := r.db.Exec(ctx,
-		`DELETE FROM users WHERE id = $1`,
-		userID,
-	)
+	// Profiles cascade-delete via FK, so just delete the user.
+	tag, err := r.db.Exec(ctx, `DELETE FROM users WHERE id = $1`, userID)
 	if err != nil {
 		return fmt.Errorf("delete user: %w", err)
 	}

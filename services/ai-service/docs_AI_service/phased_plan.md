@@ -12,6 +12,8 @@
 
 ## Phase 1: Foundation + First Sync Endpoints
 
+**Success story:** User can translate a grocery item and get quick info about it (taste, storage tips, fun facts). The AI service exists and talks to an LLM.
+
 **Goal:** AI service skeleton is running. Two simplest endpoints work end-to-end with LLM.
 
 **Endpoints:** `POST /translate`, `POST /item-info`, `GET /health`
@@ -50,6 +52,8 @@ POST /item-info  --> get_item_info()  --> llm_client.chat()   --> structured JSO
 
 ## Phase 2: Remaining Sync Endpoints
 
+**Success story:** User can ask "what can I substitute for milk?" or "what can I cook with chicken breast?" and get smart answers. Optionally personalized (e.g. "I'm vegan, family of 4"). All real-time AI features work.
+
 **Goal:** All sync AI features from the prototype are working. LLMClient extracted as shared infrastructure; domain logic stays as standalone functions.
 
 **Endpoints:** `POST /alternatives` (upgraded), `POST /inspire/item` (new), `POST /clarify` (new)
@@ -64,7 +68,7 @@ POST /item-info  --> get_item_info()  --> llm_client.chat()   --> structured JSO
   - Alternatives: match levels (Very close / Similar / Different but works), aisle hints. Breaking schema change from Phase 1.
   - Per-item inspire: 3 recipes with missing ingredients and "Add All" support
   - Clarify: 1-3 adaptive questions with tappable chip options, `allowOther` flag
-- **Inspire split:** Two separate paths -- `POST /inspire/item` (sync, Phase 2) and `POST /inspire/list` (async, Phase 3). NOT a single endpoint with mode detection.
+- **Inspire:** Single sync path -- `POST /inspire/item` (per-item recipes). Per-list inspire deferred to Future Considerations.
 
 **Not in scope:** cache, KB, async, bilingual output, input normalization
 
@@ -87,11 +91,13 @@ Route (function) --> domain function --> LLMClient --> OpenRouter API
 
 ---
 
-## Phase 3: Async Pipeline (Suggest + Per-List Inspire)
+## Phase 3: Async Pipeline (Suggest)
 
-**Goal:** The two heavy AI features work as async jobs. The two-step suggest flow (clarify --> suggest) is wired end-to-end.
+**Success story:** User submits their whole grocery list and gets it reorganized into meal clusters with shopping suggestions. Runs in the background since it's heavier.
 
-**Endpoints:** `POST /suggest`, `POST /inspire/list`, `GET /jobs/:id`
+**Goal:** The suggest async pipeline works end-to-end. The two-step suggest flow (clarify --> suggest) is wired.
+
+**Endpoints:** `POST /suggest`, `GET /jobs/:id`
 
 **Scope:**
 - Celery app with Redis as broker
@@ -99,7 +105,6 @@ Route (function) --> domain function --> LLMClient --> OpenRouter API
 - Async job lifecycle: submit --> enqueue --> worker processes --> result in Redis --> client polls
 - Two-step suggest flow: client calls `/clarify` (sync, Phase 2) --> submits answers to `/suggest` (async) with user context
 - Suggest response schema: `{reason, clusters, ungrouped, storeLayout}` -- powers both Smart View and List View
-- Per-list inspire: async job returning 3 meal ideas with missing ingredients from full grocery list
 - Result storage: `ai:result:{job_id}` in Redis with TTL 3600s
 - Client polls `GET /jobs/:id` every 2s
 - Retry logic (Celery built-in, max 3 retries with exponential backoff)
@@ -120,7 +125,7 @@ graph TD
         end
 
         subgraph AsyncFlow[Async Endpoints]
-            AsyncRoutes[Routes: suggest, inspire/list]
+            AsyncRoutes[Routes: suggest]
             CeleryBroker[(Redis Broker)]
 
             AsyncRoutes -->|enqueue task| CeleryBroker
@@ -139,7 +144,7 @@ graph TD
 
     Client -->|POST sync endpoints| SyncRoutes
     DomainFns -->|structured JSON| Client
-    Client -->|POST suggest / inspire| AsyncRoutes
+    Client -->|POST suggest| AsyncRoutes
     AsyncRoutes -->|job_id, status: pending| Client
     Client -.->|poll GET /jobs/:id| ResultStore
     ResultStore -.->|completed result| Client
@@ -156,7 +161,6 @@ graph TD
 
 **Exit criteria:**
 - Submit grocery list --> get `{reason, clusters, ungrouped, storeLayout}` via polling
-- Per-list inspire returns 3 meal ideas with missing ingredients
 - Jobs complete within 15s
 - Retry on transient LLM failures
 - Two-step flow: clarify answers feed into suggest as user context
@@ -164,6 +168,8 @@ graph TD
 ---
 
 ## Phase 4: Knowledge Base + Tier Routing
+
+**Success story:** Common questions (popular items, known recipes) get answered instantly from a local database instead of calling the LLM. Faster and cheaper for known data.
 
 **Goal:** Common queries are served from KB without hitting LLM. The AI service is cheaper and faster for known data.
 
@@ -199,7 +205,7 @@ graph TD
         end
 
         subgraph AsyncFlow[Async Endpoints]
-            AsyncRoutes[suggest / inspire per-list]
+            AsyncRoutes[suggest]
             CeleryBroker[(Redis Broker)]
             AsyncRoutes --> CeleryBroker
         end
@@ -243,6 +249,8 @@ graph TD
 ---
 
 ## Phase 5: Cache + Optimization + RabbitMQ Experiment
+
+**Success story:** Repeat requests are served from cache. System is load-tested and production-ready. 70%+ of requests never touch the LLM.
 
 **Goal:** Full 3-tier routing is wired. The system is production-hardened with load test data.
 
@@ -347,6 +355,7 @@ graph TD
 
 ## Future Considerations
 
+- **Per-List Inspire:** Async endpoint (`POST /inspire/list`) returning meal ideas with missing ingredients from a full grocery list. Requires the async pipeline from Phase 3 as prerequisite. Deferred because per-item inspire covers the core use case; per-list adds complexity without clear MVP value.
 - **RAG:** Vector embeddings (text-embedding-3-small) + semantic search (pgvector or ChromaDB) when KB grows beyond FTS5 capability (200-500+ products). The pluggable retrieval interface from Phase 4 enables swapping in a vector store without changing the service layer.
 - **`/restock` endpoint (OQ-7):** Routine grocery shopping using PCSV framework (Protein, Carb, Sauce, Vegetable) + flavor profiles. KB schema from Phase 4 includes `component_role` and `flavor_tags` to support this. Requires inventory tracking and gap detection (product features, not AI service scope).
 - **KB expansion:** More cuisines, more products, multilingual names (name_zh, name_ko, name_es via LLM translation or manual curation), aisle hints (requires in-store data).

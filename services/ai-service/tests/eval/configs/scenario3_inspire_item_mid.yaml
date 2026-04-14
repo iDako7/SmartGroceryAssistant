@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+# Inspire Item eval config — Scenario 3: Open-source mid tier.
+# Compares Llama 4 Maverick vs DeepSeek V3.2 vs Qwen 3.5-35B-A3B (same prompt).
+# Run: npx promptfoo@latest eval -c configs/scenario3_inspire_item_mid.yaml --env-file ../../.env --no-cache
+
+description: "Inspire Item — Scenario 3: Open-source mid tier"
+
+prompts:
+  - file://../prompts/current/inspire_item.json
+
+providers:
+  - id: openrouter:meta-llama/llama-4-maverick
+    label: "Llama 4 Maverick ($0.15/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 4096
+  - id: openrouter:deepseek/deepseek-chat-v3-0324
+    label: "DeepSeek V3.2 ($0.26/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 4096
+  - id: openrouter:qwen/qwen3.5-35b-a3b
+    label: "Qwen 3.5-35B-A3B ($0.16/M)"
+    config:
+      temperature: 0.7
+      max_tokens: 4096
+
+defaultTest:
+  options:
+    transform: "output.replace(/<think>[\\s\\S]*?<\\/think>/g, '').replace(/```json\\n?|```/g, '').replace(/^[\\s\\S]*?(?=\\{)/m, '').trim()"
+
+tests: file://../fixtures/inspire_item_cases.yaml

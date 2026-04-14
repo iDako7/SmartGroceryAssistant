@@ -1,0 +1,4546 @@
+evalId: eval-scz-2026-04-01T02:44:59
+results:
+  version: 3
+  timestamp: '2026-04-01T02:44:59.820Z'
+  prompts:
+    - raw: >-
+        [{"role":"system","content":"You are a creative cooking assistant.
+        Respond with JSON only."},{"role":"user","content":"Cooking assistant.
+        User has \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif
+        %}\nOther items: {{other_items}}{% if profile_context
+        %}{{profile_context}}{% endif %}\n3 recipe ideas, each with 2-3 extra
+        ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\",
+        \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+        \"Item\"}]}]}"}]
+      label: >-
+        prompts/current/inspire_item.json: [{"role":"system","content":"You are
+        a creative cooking assistant. Respond with JSON
+        only."},{"role":"user","content":"Cooking assistant. User has
+        \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+        items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+        endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+        list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\",
+        \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"}]
+      id: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      provider: GPT-5.4 Nano ($0.20/M)
+      metrics:
+        score: 4.685
+        testPassCount: 3
+        testFailCount: 2
+        testErrorCount: 0
+        assertPassCount: 18
+        assertFailCount: 2
+        totalLatencyMs: 9559
+        tokenUsage:
+          prompt: 485
+          completion: 1178
+          cached: 0
+          total: 1663
+          numRequests: 5
+          completionDetails:
+            reasoning: 0
+            acceptedPrediction: 0
+            rejectedPrediction: 0
+          assertions:
+            total: 7044
+            prompt: 4765
+            completion: 2279
+            cached: 0
+            numRequests: 0
+            completionDetails:
+              reasoning: 0
+              acceptedPrediction: 0
+              rejectedPrediction: 0
+        namedScores: {}
+        namedScoresCount: {}
+        cost: 0
+    - raw: >-
+        [{"role":"system","content":"You are a creative cooking assistant.
+        Respond with JSON only."},{"role":"user","content":"Cooking assistant.
+        User has \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif
+        %}\nOther items: {{other_items}}{% if profile_context
+        %}{{profile_context}}{% endif %}\n3 recipe ideas, each with 2-3 extra
+        ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\",
+        \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+        \"Item\"}]}]}"}]
+      label: >-
+        prompts/current/inspire_item.json: [{"role":"system","content":"You are
+        a creative cooking assistant. Respond with JSON
+        only."},{"role":"user","content":"Cooking assistant. User has
+        \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+        items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+        endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+        list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\",
+        \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"}]
+      id: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      provider: GPT-5.4 Mini ($0.75/M)
+      metrics:
+        score: 4.5875
+        testPassCount: 3
+        testFailCount: 2
+        testErrorCount: 0
+        assertPassCount: 18
+        assertFailCount: 2
+        totalLatencyMs: 9748
+        tokenUsage:
+          prompt: 485
+          completion: 745
+          cached: 0
+          total: 1230
+          numRequests: 5
+          completionDetails:
+            reasoning: 0
+            acceptedPrediction: 0
+            rejectedPrediction: 0
+          assertions:
+            total: 6848
+            prompt: 4659
+            completion: 2189
+            cached: 0
+            numRequests: 0
+            completionDetails:
+              reasoning: 0
+              acceptedPrediction: 0
+              rejectedPrediction: 0
+        namedScores: {}
+        namedScoresCount: {}
+        cost: 0
+  results:
+    - cost: 0
+      error: >-
+        The recipes are practical home-cooking style and all feature salmon as a
+        key ingredient. The added ingredients are not rice or soy sauce. The
+        overall flavor profile leans Japanese/Asian. However, the descriptions
+        exceed the 8-word maximum for at least the first two recipes, so the
+        rubric is not fully satisfied.
+      gradingResult:
+        pass: false
+        score: 0.9175
+        reason: >-
+          The recipes are practical home-cooking style and all feature salmon as
+          a key ingredient. The added ingredients are not rice or soy sauce. The
+          overall flavor profile leans Japanese/Asian. However, the descriptions
+          exceed the 8-word maximum for at least the first two recipes, so the
+          rubric is not fully satisfied.
+        namedScores: {}
+        tokensUsed:
+          total: 1202
+          prompt: 901
+          completion: 301
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - recipes
+                properties:
+                  recipes:
+                    type: array
+                    minItems: 3
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - name
+                        - emoji
+                        - desc
+                        - add
+                      properties:
+                        name:
+                          type: string
+                        emoji:
+                          type: string
+                        desc:
+                          type: string
+                        add:
+                          type: array
+                          minItems: 2
+                          maxItems: 3
+                          items:
+                            type: object
+                            required:
+                              - name_en
+                            properties:
+                              name_en:
+                                type: string
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses salmon as a key ingredient, not a
+                garnish.
+
+                Added ingredients (add items) are NOT rice or soy sauce (already
+                in user's list).
+
+                With rice and soy sauce present, recipes should lean
+                Japanese/Asian but variety is welcome.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              All three recipes are practical home cooking dishes (rice bowls,
+              pan-seared salmon) that a home cook could easily make. Salmon is
+              clearly the star ingredient in each recipe, not a garnish. The
+              added ingredients (honey, ginger, sesame oil, garlic, lime juice,
+              green onions, miso paste, maple syrup, toasted sesame seeds) are
+              all distinct from rice and soy sauce. The recipes appropriately
+              lean Japanese/Asian given the rice and soy sauce base, while
+              offering some variety (soy-glazed, garlic-ginger, miso-maple). All
+              descriptions are concise and under 8 words ('Sticky salmon over
+              savory rice' = 5 words, 'Pan-seared salmon, garlicky soy finish' =
+              5 words, 'Sweet-savory salmon, quick rice base' = 5 words).
+            tokensUsed:
+              total: 707
+              prompt: 492
+              completion: 215
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Soy-Glazed
+                Salmon Rice Bowls\",\"emoji\":\"🍣\",\"desc\":\"Sticky salmon
+                over savory
+                rice\",\"add\":[{\"name_en\":\"honey\"},{\"name_en\":\"ginger\"},{\"name_en\":\"sesame
+                oil\"}]},{\"name\":\"Garlic-Ginger Salmon with Soy
+                Rice\",\"emoji\":\"🧄\",\"desc\":\"Pan-seared salmon, garlicky
+                soy
+                finish\",\"add\":[{\"name_en\":\"garlic\"},{\"name_en\":\"lime
+                juice\"},{\"name_en\":\"green onions\"}]},{\"name\":\"Miso-Maple
+                Salmon Rice Bowl\",\"emoji\":\"🥢\",\"desc\":\"Sweet-savory
+                salmon, quick rice base\",\"add\":[{\"name_en\":\"miso
+                paste\"},{\"name_en\":\"maple syrup\"},{\"name_en\":\"toasted
+                sesame seeds\"}]}]}\n</Output>\n<Rubric>\nRecipes are practical
+                home cooking, not restaurant complexity.\nEach recipe genuinely
+                uses salmon as a key ingredient, not a garnish.\nAdded
+                ingredients (add items) are NOT rice or soy sauce (already in
+                user's list).\nWith rice and soy sauce present, recipes should
+                lean Japanese/Asian but variety is welcome.\nDescriptions are
+                concise and genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses salmon as a key ingredient, not a
+                garnish.
+
+                Added ingredients (add items) are NOT rice or soy sauce (already
+                in user's list).
+
+                With rice and soy sauce present, recipes should lean
+                Japanese/Asian but variety is welcome.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.67
+            reason: >-
+              The recipes are practical home-cooking style and all feature
+              salmon as a key ingredient. The added ingredients are not rice or
+              soy sauce. The overall flavor profile leans Japanese/Asian.
+              However, the descriptions exceed the 8-word maximum for at least
+              the first two recipes, so the rubric is not fully satisfied.
+            tokensUsed:
+              total: 495
+              prompt: 409
+              completion: 86
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Soy-Glazed
+                Salmon Rice Bowls\",\"emoji\":\"🍣\",\"desc\":\"Sticky salmon
+                over savory
+                rice\",\"add\":[{\"name_en\":\"honey\"},{\"name_en\":\"ginger\"},{\"name_en\":\"sesame
+                oil\"}]},{\"name\":\"Garlic-Ginger Salmon with Soy
+                Rice\",\"emoji\":\"🧄\",\"desc\":\"Pan-seared salmon, garlicky
+                soy
+                finish\",\"add\":[{\"name_en\":\"garlic\"},{\"name_en\":\"lime
+                juice\"},{\"name_en\":\"green onions\"}]},{\"name\":\"Miso-Maple
+                Salmon Rice Bowl\",\"emoji\":\"🥢\",\"desc\":\"Sweet-savory
+                salmon, quick rice base\",\"add\":[{\"name_en\":\"miso
+                paste\"},{\"name_en\":\"maple syrup\"},{\"name_en\":\"toasted
+                sesame seeds\"}]}]}\n</Output>\n<Rubric>\nRecipes are practical
+                home cooking, not restaurant complexity.\nEach recipe genuinely
+                uses salmon as a key ingredient, not a garnish.\nAdded
+                ingredients (add items) are NOT rice or soy sauce (already in
+                user's list).\nWith rice and soy sauce present, recipes should
+                lean Japanese/Asian but variety is welcome.\nDescriptions are
+                concise and genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+      id: 776fdb88-94e1-4831-9978-df80e2d32f8d
+      latencyMs: 1777
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a creative cooking assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Cooking assistant. User has \"salmon\".\nOther items: rice, soy sauce\n3 recipe ideas, each with 2-3 extra ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
+            }
+          ]
+        label: >-
+          prompts/current/inspire_item.json: [{"role":"system","content":"You
+          are a creative cooking assistant. Respond with JSON
+          only."},{"role":"user","content":"Cooking assistant. User has
+          \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+          items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+          endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+          list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\":
+          \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+          \"Item\"}]}]}"}]
+        config: {}
+      promptId: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "recipes": [
+              {
+                "name": "Soy-Glazed Salmon Rice Bowls",
+                "emoji": "🍣",
+                "desc": "Sticky salmon over savory rice",
+                "add": [
+                  { "name_en": "honey" },
+                  { "name_en": "ginger" },
+                  { "name_en": "sesame oil" }
+                ]
+              },
+              {
+                "name": "Garlic-Ginger Salmon with Soy Rice",
+                "emoji": "🧄",
+                "desc": "Pan-seared salmon, garlicky soy finish",
+                "add": [
+                  { "name_en": "garlic" },
+                  { "name_en": "lime juice" },
+                  { "name_en": "green onions" }
+                ]
+              },
+              {
+                "name": "Miso-Maple Salmon Rice Bowl",
+                "emoji": "🥢",
+                "desc": "Sweet-savory salmon, quick rice base",
+                "add": [
+                  { "name_en": "miso paste" },
+                  { "name_en": "maple syrup" },
+                  { "name_en": "toasted sesame seeds" }
+                ]
+              }
+            ]
+          }
+        tokenUsage:
+          total: 353
+          prompt: 95
+          completion: 258
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9175
+      success: false
+      testCase:
+        description: salmon + rice/soy sauce — simple Japanese direction
+        vars: &ref_0
+          name_en: salmon
+          other_items: rice, soy sauce
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - recipes
+              properties:
+                recipes:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - emoji
+                      - desc
+                      - add
+                    properties:
+                      name:
+                        type: string
+                      emoji:
+                        type: string
+                      desc:
+                        type: string
+                      add:
+                        type: array
+                        minItems: 2
+                        maxItems: 3
+                        items:
+                          type: object
+                          required:
+                            - name_en
+                          properties:
+                            name_en:
+                              type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.recipes && d.recipes.length === 3 &&
+                d.recipes.every(r =>
+                  r.name && r.emoji && r.desc &&
+                  r.desc.split(/\s+/).length <= 8 &&
+                  r.add && r.add.length >= 2 && r.add.length <= 3 &&
+                  r.add.every(a => a.name_en)
+                );
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid recipe structure' };
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses salmon as a key ingredient, not a
+              garnish.
+
+              Added ingredients (add items) are NOT rice or soy sauce (already
+              in user's list).
+
+              With rice and soy sauce present, recipes should lean
+              Japanese/Asian but variety is welcome.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses salmon as a key ingredient, not a
+              garnish.
+
+              Added ingredients (add items) are NOT rice or soy sauce (already
+              in user's list).
+
+              With rice and soy sauce present, recipes should lean
+              Japanese/Asian but variety is welcome.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 0
+      vars: *ref_0
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 1170
+          prompt: 867
+          completion: 303
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - recipes
+                properties:
+                  recipes:
+                    type: array
+                    minItems: 3
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - name
+                        - emoji
+                        - desc
+                        - add
+                      properties:
+                        name:
+                          type: string
+                        emoji:
+                          type: string
+                        desc:
+                          type: string
+                        add:
+                          type: array
+                          minItems: 2
+                          maxItems: 3
+                          items:
+                            type: object
+                            required:
+                              - name_en
+                            properties:
+                              name_en:
+                                type: string
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses salmon as a key ingredient, not a
+                garnish.
+
+                Added ingredients (add items) are NOT rice or soy sauce (already
+                in user's list).
+
+                With rice and soy sauce present, recipes should lean
+                Japanese/Asian but variety is welcome.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              1. All three recipes (rice bowl, fried rice, rice plate) are
+              practical home cooking dishes, not restaurant-level complex
+              preparations. 2. Salmon is clearly a key ingredient in all three -
+              it's in the name and central to each dish. 3. The added
+              ingredients (garlic, honey, green onions, egg, carrot, sesame oil,
+              ginger, broccoli, lime) are all distinct from rice and soy sauce.
+              4. All three recipes lean Japanese/Asian (soy-glazed, teriyaki,
+              fried rice) while offering variety in preparation style. 5.
+              Descriptions are concise: 'Savory salmon over warm rice' (5
+              words), 'Quick fried rice with salmon' (5 words), 'Sweet salmon
+              with fluffy rice' (5 words) - all under 8 words and genuinely
+              descriptive.
+            tokensUsed:
+              total: 692
+              prompt: 477
+              completion: 215
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Soy-Glazed
+                Salmon Rice Bowl\",\"emoji\":\"🍚\",\"desc\":\"Savory salmon
+                over warm
+                rice\",\"add\":[{\"name_en\":\"Garlic\"},{\"name_en\":\"Honey\"},{\"name_en\":\"Green
+                onions\"}]},{\"name\":\"Crispy Salmon Fried
+                Rice\",\"emoji\":\"🍳\",\"desc\":\"Quick fried rice with
+                salmon\",\"add\":[{\"name_en\":\"Egg\"},{\"name_en\":\"Carrot\"},{\"name_en\":\"Sesame
+                oil\"}]},{\"name\":\"Teriyaki Salmon Rice
+                Plate\",\"emoji\":\"🐟\",\"desc\":\"Sweet salmon with fluffy
+                rice\",\"add\":[{\"name_en\":\"Ginger\"},{\"name_en\":\"Broccoli\"},{\"name_en\":\"Lime\"}]}]}\n</Output>\n<Rubric>\nRecipes
+                are practical home cooking, not restaurant complexity.\nEach
+                recipe genuinely uses salmon as a key ingredient, not a
+                garnish.\nAdded ingredients (add items) are NOT rice or soy
+                sauce (already in user's list).\nWith rice and soy sauce
+                present, recipes should lean Japanese/Asian but variety is
+                welcome.\nDescriptions are concise and genuinely descriptive
+                (max 8 words).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses salmon as a key ingredient, not a
+                garnish.
+
+                Added ingredients (add items) are NOT rice or soy sauce (already
+                in user's list).
+
+                With rice and soy sauce present, recipes should lean
+                Japanese/Asian but variety is welcome.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The recipes are practical home-cooking ideas and each uses salmon
+              as a key ingredient. The added ingredients are not rice or soy
+              sauce, and the set leans Japanese/Asian. However, several
+              descriptions exceed 8 words? Actually each is 5-6 words, so that's
+              fine. Overall the output satisfies the rubric.
+            tokensUsed:
+              total: 478
+              prompt: 390
+              completion: 88
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Soy-Glazed
+                Salmon Rice Bowl\",\"emoji\":\"🍚\",\"desc\":\"Savory salmon
+                over warm
+                rice\",\"add\":[{\"name_en\":\"Garlic\"},{\"name_en\":\"Honey\"},{\"name_en\":\"Green
+                onions\"}]},{\"name\":\"Crispy Salmon Fried
+                Rice\",\"emoji\":\"🍳\",\"desc\":\"Quick fried rice with
+                salmon\",\"add\":[{\"name_en\":\"Egg\"},{\"name_en\":\"Carrot\"},{\"name_en\":\"Sesame
+                oil\"}]},{\"name\":\"Teriyaki Salmon Rice
+                Plate\",\"emoji\":\"🐟\",\"desc\":\"Sweet salmon with fluffy
+                rice\",\"add\":[{\"name_en\":\"Ginger\"},{\"name_en\":\"Broccoli\"},{\"name_en\":\"Lime\"}]}]}\n</Output>\n<Rubric>\nRecipes
+                are practical home cooking, not restaurant complexity.\nEach
+                recipe genuinely uses salmon as a key ingredient, not a
+                garnish.\nAdded ingredients (add items) are NOT rice or soy
+                sauce (already in user's list).\nWith rice and soy sauce
+                present, recipes should lean Japanese/Asian but variety is
+                welcome.\nDescriptions are concise and genuinely descriptive
+                (max 8 words).\n\n</Rubric>"}]
+      id: 7bec61b4-3d52-404e-9a10-66895733fc32
+      latencyMs: 1220
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a creative cooking assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Cooking assistant. User has \"salmon\".\nOther items: rice, soy sauce\n3 recipe ideas, each with 2-3 extra ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
+            }
+          ]
+        label: >-
+          prompts/current/inspire_item.json: [{"role":"system","content":"You
+          are a creative cooking assistant. Respond with JSON
+          only."},{"role":"user","content":"Cooking assistant. User has
+          \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+          items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+          endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+          list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\":
+          \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+          \"Item\"}]}]}"}]
+        config: {}
+      promptId: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"recipes":[{"name":"Soy-Glazed Salmon Rice
+          Bowl","emoji":"🍚","desc":"Savory salmon over warm
+          rice","add":[{"name_en":"Garlic"},{"name_en":"Honey"},{"name_en":"Green
+          onions"}]},{"name":"Crispy Salmon Fried
+          Rice","emoji":"🍳","desc":"Quick fried rice with
+          salmon","add":[{"name_en":"Egg"},{"name_en":"Carrot"},{"name_en":"Sesame
+          oil"}]},{"name":"Teriyaki Salmon Rice
+          Plate","emoji":"🐟","desc":"Sweet salmon with fluffy
+          rice","add":[{"name_en":"Ginger"},{"name_en":"Broccoli"},{"name_en":"Lime"}]}]}
+        tokenUsage:
+          total: 239
+          prompt: 95
+          completion: 144
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: salmon + rice/soy sauce — simple Japanese direction
+        vars: &ref_1
+          name_en: salmon
+          other_items: rice, soy sauce
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - recipes
+              properties:
+                recipes:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - emoji
+                      - desc
+                      - add
+                    properties:
+                      name:
+                        type: string
+                      emoji:
+                        type: string
+                      desc:
+                        type: string
+                      add:
+                        type: array
+                        minItems: 2
+                        maxItems: 3
+                        items:
+                          type: object
+                          required:
+                            - name_en
+                          properties:
+                            name_en:
+                              type: string
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.recipes && d.recipes.length === 3 &&
+                d.recipes.every(r =>
+                  r.name && r.emoji && r.desc &&
+                  r.desc.split(/\s+/).length <= 8 &&
+                  r.add && r.add.length >= 2 && r.add.length <= 3 &&
+                  r.add.every(a => a.name_en)
+                );
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid recipe structure' };
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses salmon as a key ingredient, not a
+              garnish.
+
+              Added ingredients (add items) are NOT rice or soy sauce (already
+              in user's list).
+
+              With rice and soy sauce present, recipes should lean
+              Japanese/Asian but variety is welcome.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses salmon as a key ingredient, not a
+              garnish.
+
+              Added ingredients (add items) are NOT rice or soy sauce (already
+              in user's list).
+
+              With rice and soy sauce present, recipes should lean
+              Japanese/Asian but variety is welcome.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 0
+      vars: *ref_1
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      error: >-
+        The output fails several rubric requirements: the third recipe
+        title/description ('Tofu Rice Cakes' / 'Sticky tofu over fragrant rice')
+        is not clearly Korean-influenced, only one or two recipes are
+        recognizably Korean, and the descriptions are not all within 8 words?
+        Actually they are concise enough, but the added ingredients are all
+        acceptable. The main issue is that these look like simple home-cooking
+        recipes with tofu as a key ingredient, yet 'Tofu Rice Cakes' is not a
+        Korean dish and the set does not clearly satisfy 'at least 2 of 3
+        recipes should be recognizably Korean dishes' because only the first two
+        are clearly Korean-inspired.
+      gradingResult:
+        pass: false
+        score: 0.845
+        reason: >-
+          The output fails several rubric requirements: the third recipe
+          title/description ('Tofu Rice Cakes' / 'Sticky tofu over fragrant
+          rice') is not clearly Korean-influenced, only one or two recipes are
+          recognizably Korean, and the descriptions are not all within 8 words?
+          Actually they are concise enough, but the added ingredients are all
+          acceptable. The main issue is that these look like simple home-cooking
+          recipes with tofu as a key ingredient, yet 'Tofu Rice Cakes' is not a
+          Korean dish and the set does not clearly satisfy 'at least 2 of 3
+          recipes should be recognizably Korean dishes' because only the first
+          two are clearly Korean-inspired.
+        namedScores: {}
+        tokensUsed:
+          total: 1543
+          prompt: 925
+          completion: 618
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - recipes
+                properties:
+                  recipes:
+                    type: array
+                    minItems: 3
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - name
+                        - emoji
+                        - desc
+                        - add
+                      properties:
+                        name:
+                          type: string
+                        emoji:
+                          type: string
+                        desc:
+                          type: string
+                        add:
+                          type: array
+                          minItems: 2
+                          maxItems: 3
+                          items:
+                            type: object
+                            required:
+                              - name_en
+                            properties:
+                              name_en:
+                                type: string
+          - pass: true
+            score: 1
+            reason: OK
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses tofu as a key ingredient, not a
+                garnish.
+
+                Added ingredients are NOT gochujang, sesame oil, or rice
+                (already in user's list).
+
+                With gochujang and sesame oil present, recipes MUST be
+                Korean-influenced.
+
+                At least 2 of 3 recipes should be recognizably Korean dishes.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              All six criteria are met: recipes are practical home cooking, tofu
+              is a key ingredient in each, no added ingredients duplicate the
+              user's existing items (gochujang/sesame oil/rice), all recipes are
+              Korean-influenced, at least 2 are recognizably Korean dishes, and
+              all descriptions are concise and under 8 words.
+            tokensUsed:
+              total: 969
+              prompt: 511
+              completion: 458
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Gochujang
+                Tofu Rice Bowl\",\"emoji\":\"🍚\",\"desc\":\"Spicy, savory bowl
+                with crispy
+                tofu\",\"add\":[{\"name_en\":\"Scallions\"},{\"name_en\":\"Garlic\"},{\"name_en\":\"Cucumber\"}]},{\"name\":\"Sesame
+                Gochujang Stir-Fry\",\"emoji\":\"🔥\",\"desc\":\"Quick tofu with
+                bold
+                sauce\",\"add\":[{\"name_en\":\"Broccoli\"},{\"name_en\":\"Carrot\"},{\"name_en\":\"Honey\"}]},{\"name\":\"Tofu
+                Rice Cakes\",\"emoji\":\"🥢\",\"desc\":\"Sticky tofu over
+                fragrant
+                rice\",\"add\":[{\"name_en\":\"Mushrooms\"},{\"name_en\":\"Spinach\"},{\"name_en\":\"Sesame
+                seeds\"}]}]}\n</Output>\n<Rubric>\nRecipes are practical home
+                cooking, not restaurant complexity.\nEach recipe genuinely uses
+                tofu as a key ingredient, not a garnish.\nAdded ingredients are
+                NOT gochujang, sesame oil, or rice (already in user's
+                list).\nWith gochujang and sesame oil present, recipes MUST be
+                Korean-influenced.\nAt least 2 of 3 recipes should be
+                recognizably Korean dishes.\nDescriptions are concise and
+                genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses tofu as a key ingredient, not a
+                garnish.
+
+                Added ingredients are NOT gochujang, sesame oil, or rice
+                (already in user's list).
+
+                With gochujang and sesame oil present, recipes MUST be
+                Korean-influenced.
+
+                At least 2 of 3 recipes should be recognizably Korean dishes.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.38
+            reason: >-
+              The output fails several rubric requirements: the third recipe
+              title/description ('Tofu Rice Cakes' / 'Sticky tofu over fragrant
+              rice') is not clearly Korean-influenced, only one or two recipes
+              are recognizably Korean, and the descriptions are not all within 8
+              words? Actually they are concise enough, but the added ingredients
+              are all acceptable. The main issue is that these look like simple
+              home-cooking recipes with tofu as a key ingredient, yet 'Tofu Rice
+              Cakes' is not a Korean dish and the set does not clearly satisfy
+              'at least 2 of 3 recipes should be recognizably Korean dishes'
+              because only the first two are clearly Korean-inspired.
+            tokensUsed:
+              total: 574
+              prompt: 414
+              completion: 160
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Gochujang
+                Tofu Rice Bowl\",\"emoji\":\"🍚\",\"desc\":\"Spicy, savory bowl
+                with crispy
+                tofu\",\"add\":[{\"name_en\":\"Scallions\"},{\"name_en\":\"Garlic\"},{\"name_en\":\"Cucumber\"}]},{\"name\":\"Sesame
+                Gochujang Stir-Fry\",\"emoji\":\"🔥\",\"desc\":\"Quick tofu with
+                bold
+                sauce\",\"add\":[{\"name_en\":\"Broccoli\"},{\"name_en\":\"Carrot\"},{\"name_en\":\"Honey\"}]},{\"name\":\"Tofu
+                Rice Cakes\",\"emoji\":\"🥢\",\"desc\":\"Sticky tofu over
+                fragrant
+                rice\",\"add\":[{\"name_en\":\"Mushrooms\"},{\"name_en\":\"Spinach\"},{\"name_en\":\"Sesame
+                seeds\"}]}]}\n</Output>\n<Rubric>\nRecipes are practical home
+                cooking, not restaurant complexity.\nEach recipe genuinely uses
+                tofu as a key ingredient, not a garnish.\nAdded ingredients are
+                NOT gochujang, sesame oil, or rice (already in user's
+                list).\nWith gochujang and sesame oil present, recipes MUST be
+                Korean-influenced.\nAt least 2 of 3 recipes should be
+                recognizably Korean dishes.\nDescriptions are concise and
+                genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+      id: 7dce3652-7441-4b76-b9db-a391828a2875
+      latencyMs: 1305
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a creative cooking assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Cooking assistant. User has \"tofu\".\nOther items: gochujang, sesame oil, rice\n3 recipe ideas, each with 2-3 extra ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
+            }
+          ]
+        label: >-
+          prompts/current/inspire_item.json: [{"role":"system","content":"You
+          are a creative cooking assistant. Respond with JSON
+          only."},{"role":"user","content":"Cooking assistant. User has
+          \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+          items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+          endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+          list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\":
+          \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+          \"Item\"}]}]}"}]
+        config: {}
+      promptId: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"recipes":[{"name":"Gochujang Tofu Rice
+          Bowl","emoji":"🍚","desc":"Spicy, savory bowl with crispy
+          tofu","add":[{"name_en":"Scallions"},{"name_en":"Garlic"},{"name_en":"Cucumber"}]},{"name":"Sesame
+          Gochujang Stir-Fry","emoji":"🔥","desc":"Quick tofu with bold
+          sauce","add":[{"name_en":"Broccoli"},{"name_en":"Carrot"},{"name_en":"Honey"}]},{"name":"Tofu
+          Rice Cakes","emoji":"🥢","desc":"Sticky tofu over fragrant
+          rice","add":[{"name_en":"Mushrooms"},{"name_en":"Spinach"},{"name_en":"Sesame
+          seeds"}]}]}
+        tokenUsage:
+          total: 250
+          prompt: 100
+          completion: 150
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.845
+      success: false
+      testCase:
+        description: tofu + gochujang/sesame oil/rice — Korean direction
+        vars: &ref_2
+          name_en: tofu
+          other_items: gochujang, sesame oil, rice
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - recipes
+              properties:
+                recipes:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - emoji
+                      - desc
+                      - add
+                    properties:
+                      name:
+                        type: string
+                      emoji:
+                        type: string
+                      desc:
+                        type: string
+                      add:
+                        type: array
+                        minItems: 2
+                        maxItems: 3
+                        items:
+                          type: object
+                          required:
+                            - name_en
+                          properties:
+                            name_en:
+                              type: string
+          - type: javascript
+            value: |
+              const d = JSON.parse(output);
+              const otherItems = ['gochujang', 'sesame oil', 'rice'];
+              const noDupes = d.recipes.every(r =>
+                r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+              );
+              const valid = d.recipes && d.recipes.length === 3 &&
+                d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                  r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+              return {
+                pass: valid && noDupes,
+                score: valid && noDupes ? 1 : 0,
+                reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+              };
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses tofu as a key ingredient, not a
+              garnish.
+
+              Added ingredients are NOT gochujang, sesame oil, or rice (already
+              in user's list).
+
+              With gochujang and sesame oil present, recipes MUST be
+              Korean-influenced.
+
+              At least 2 of 3 recipes should be recognizably Korean dishes.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses tofu as a key ingredient, not a
+              garnish.
+
+              Added ingredients are NOT gochujang, sesame oil, or rice (already
+              in user's list).
+
+              With gochujang and sesame oil present, recipes MUST be
+              Korean-influenced.
+
+              At least 2 of 3 recipes should be recognizably Korean dishes.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 1
+      vars: *ref_2
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 1519
+          prompt: 947
+          completion: 572
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - recipes
+                properties:
+                  recipes:
+                    type: array
+                    minItems: 3
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - name
+                        - emoji
+                        - desc
+                        - add
+                      properties:
+                        name:
+                          type: string
+                        emoji:
+                          type: string
+                        desc:
+                          type: string
+                        add:
+                          type: array
+                          minItems: 2
+                          maxItems: 3
+                          items:
+                            type: object
+                            required:
+                              - name_en
+                            properties:
+                              name_en:
+                                type: string
+          - pass: true
+            score: 1
+            reason: OK
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses tofu as a key ingredient, not a
+                garnish.
+
+                Added ingredients are NOT gochujang, sesame oil, or rice
+                (already in user's list).
+
+                With gochujang and sesame oil present, recipes MUST be
+                Korean-influenced.
+
+                At least 2 of 3 recipes should be recognizably Korean dishes.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              All six criteria are met: recipes are practical home cooking, tofu
+              is central to each dish, no added ingredients duplicate the user's
+              existing list (gochujang/sesame oil/rice), all recipes are
+              Korean-influenced given the key ingredients, at least 2 are
+              recognizably Korean dishes, and all descriptions are concise and
+              under 8 words.
+            tokensUsed:
+              total: 948
+              prompt: 521
+              completion: 427
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Gochujang
+                Sesame Tofu Bowls\",\"emoji\":\"🥘\",\"desc\":\"Spicy-sweet tofu
+                over
+                rice\",\"add\":[{\"name_en\":\"garlic\"},{\"name_en\":\"ginger\"},{\"name_en\":\"green
+                onions\"}]},{\"name\":\"Crispy Gochujang Sesame
+                Tofu\",\"emoji\":\"🍢\",\"desc\":\"Sticky glaze, sesame aroma,
+                crunchy
+                bite\",\"add\":[{\"name_en\":\"cornstarch\"},{\"name_en\":\"soy
+                sauce\"},{\"name_en\":\"lime juice\"}]},{\"name\":\"Gochujang
+                Sesame Tofu Rice Bowl\",\"emoji\":\"🍛\",\"desc\":\"Savory heat
+                with sesame-rich
+                finish\",\"add\":[{\"name_en\":\"mushrooms\"},{\"name_en\":\"soy
+                sauce\"},{\"name_en\":\"black
+                pepper\"}]}]}\n</Output>\n<Rubric>\nRecipes are practical home
+                cooking, not restaurant complexity.\nEach recipe genuinely uses
+                tofu as a key ingredient, not a garnish.\nAdded ingredients are
+                NOT gochujang, sesame oil, or rice (already in user's
+                list).\nWith gochujang and sesame oil present, recipes MUST be
+                Korean-influenced.\nAt least 2 of 3 recipes should be
+                recognizably Korean dishes.\nDescriptions are concise and
+                genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses tofu as a key ingredient, not a
+                garnish.
+
+                Added ingredients are NOT gochujang, sesame oil, or rice
+                (already in user's list).
+
+                With gochujang and sesame oil present, recipes MUST be
+                Korean-influenced.
+
+                At least 2 of 3 recipes should be recognizably Korean dishes.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The recipes are practical home-cooking-style tofu dishes, each
+              clearly centers tofu as the main ingredient, and none of the added
+              ingredients include gochujang, sesame oil, or rice. They are
+              Korean-influenced and all three are recognizable as Korean-style
+              tofu bowls/dishes. However, the descriptions exceed the 8-word
+              maximum for at least one item: 'Sticky glaze, sesame aroma,
+              crunchy bite' is 6 words, 'Savory heat with sesame-rich finish' is
+              5, and 'Spicy-sweet tofu over rice' is 4, so that part is fine.
+              Overall the output satisfies the rubric.
+            tokensUsed:
+              total: 571
+              prompt: 426
+              completion: 145
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Gochujang
+                Sesame Tofu Bowls\",\"emoji\":\"🥘\",\"desc\":\"Spicy-sweet tofu
+                over
+                rice\",\"add\":[{\"name_en\":\"garlic\"},{\"name_en\":\"ginger\"},{\"name_en\":\"green
+                onions\"}]},{\"name\":\"Crispy Gochujang Sesame
+                Tofu\",\"emoji\":\"🍢\",\"desc\":\"Sticky glaze, sesame aroma,
+                crunchy
+                bite\",\"add\":[{\"name_en\":\"cornstarch\"},{\"name_en\":\"soy
+                sauce\"},{\"name_en\":\"lime juice\"}]},{\"name\":\"Gochujang
+                Sesame Tofu Rice Bowl\",\"emoji\":\"🍛\",\"desc\":\"Savory heat
+                with sesame-rich
+                finish\",\"add\":[{\"name_en\":\"mushrooms\"},{\"name_en\":\"soy
+                sauce\"},{\"name_en\":\"black
+                pepper\"}]}]}\n</Output>\n<Rubric>\nRecipes are practical home
+                cooking, not restaurant complexity.\nEach recipe genuinely uses
+                tofu as a key ingredient, not a garnish.\nAdded ingredients are
+                NOT gochujang, sesame oil, or rice (already in user's
+                list).\nWith gochujang and sesame oil present, recipes MUST be
+                Korean-influenced.\nAt least 2 of 3 recipes should be
+                recognizably Korean dishes.\nDescriptions are concise and
+                genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+      id: 2645d8ea-128d-4a02-bf5a-0e754aaf3e74
+      latencyMs: 1767
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a creative cooking assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Cooking assistant. User has \"tofu\".\nOther items: gochujang, sesame oil, rice\n3 recipe ideas, each with 2-3 extra ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
+            }
+          ]
+        label: >-
+          prompts/current/inspire_item.json: [{"role":"system","content":"You
+          are a creative cooking assistant. Respond with JSON
+          only."},{"role":"user","content":"Cooking assistant. User has
+          \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+          items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+          endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+          list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\":
+          \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+          \"Item\"}]}]}"}]
+        config: {}
+      promptId: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "recipes": [
+              {
+                "name": "Gochujang Sesame Tofu Bowls",
+                "emoji": "🥘",
+                "desc": "Spicy-sweet tofu over rice",
+                "add": [
+                  { "name_en": "garlic" },
+                  { "name_en": "ginger" },
+                  { "name_en": "green onions" }
+                ]
+              },
+              {
+                "name": "Crispy Gochujang Sesame Tofu",
+                "emoji": "🍢",
+                "desc": "Sticky glaze, sesame aroma, crunchy bite",
+                "add": [
+                  { "name_en": "cornstarch" },
+                  { "name_en": "soy sauce" },
+                  { "name_en": "lime juice" }
+                ]
+              },
+              {
+                "name": "Gochujang Sesame Tofu Rice Bowl",
+                "emoji": "🍛",
+                "desc": "Savory heat with sesame-rich finish",
+                "add": [
+                  { "name_en": "mushrooms" },
+                  { "name_en": "soy sauce" },
+                  { "name_en": "black pepper" }
+                ]
+              }
+            ]
+          }
+        tokenUsage:
+          total: 357
+          prompt: 100
+          completion: 257
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: tofu + gochujang/sesame oil/rice — Korean direction
+        vars: &ref_3
+          name_en: tofu
+          other_items: gochujang, sesame oil, rice
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - recipes
+              properties:
+                recipes:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - emoji
+                      - desc
+                      - add
+                    properties:
+                      name:
+                        type: string
+                      emoji:
+                        type: string
+                      desc:
+                        type: string
+                      add:
+                        type: array
+                        minItems: 2
+                        maxItems: 3
+                        items:
+                          type: object
+                          required:
+                            - name_en
+                          properties:
+                            name_en:
+                              type: string
+          - type: javascript
+            value: |
+              const d = JSON.parse(output);
+              const otherItems = ['gochujang', 'sesame oil', 'rice'];
+              const noDupes = d.recipes.every(r =>
+                r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+              );
+              const valid = d.recipes && d.recipes.length === 3 &&
+                d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                  r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+              return {
+                pass: valid && noDupes,
+                score: valid && noDupes ? 1 : 0,
+                reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+              };
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses tofu as a key ingredient, not a
+              garnish.
+
+              Added ingredients are NOT gochujang, sesame oil, or rice (already
+              in user's list).
+
+              With gochujang and sesame oil present, recipes MUST be
+              Korean-influenced.
+
+              At least 2 of 3 recipes should be recognizably Korean dishes.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses tofu as a key ingredient, not a
+              garnish.
+
+              Added ingredients are NOT gochujang, sesame oil, or rice (already
+              in user's list).
+
+              With gochujang and sesame oil present, recipes MUST be
+              Korean-influenced.
+
+              At least 2 of 3 recipes should be recognizably Korean dishes.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 1
+      vars: *ref_3
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.975
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 1116
+          prompt: 879
+          completion: 237
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - recipes
+                properties:
+                  recipes:
+                    type: array
+                    minItems: 3
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - name
+                        - emoji
+                        - desc
+                        - add
+                      properties:
+                        name:
+                          type: string
+                        emoji:
+                          type: string
+                        desc:
+                          type: string
+                        add:
+                          type: array
+                          minItems: 2
+                          maxItems: 3
+                          items:
+                            type: object
+                            required:
+                              - name_en
+                            properties:
+                              name_en:
+                                type: string
+          - pass: true
+            score: 1
+            reason: OK
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses avocado as a key ingredient, not a
+                garnish.
+
+                With NO other items or cuisine hints, the 3 recipes should span
+                different
+
+                cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3
+                Mexican dishes).
+
+                Diversity is the key test here.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.9
+            reason: >-
+              The three recipes are: (1) Avocado Toast - a Western/American
+              style dish, (2) Avocado Smoothie - a beverage/drink style, and (3)
+              Avocado Lime Salad - a salad style. All three are practical home
+              cooking, not restaurant-level complexity. Avocado is a key
+              ingredient in all three, not just a garnish. The styles span
+              toast/bread dish, smoothie/drink, and salad - showing good
+              diversity across different meal types and styles. All descriptions
+              are concise and under 8 words.
+            tokensUsed:
+              total: 632
+              prompt: 484
+              completion: 148
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Simple
+                Avocado Toast\",\"emoji\":\"🥑\",\"desc\":\"Creamy avocado on
+                toasted
+                bread.\",\"add\":[{\"name_en\":\"bread\"},{\"name_en\":\"lemon
+                juice\"},{\"name_en\":\"salt\"}]},{\"name\":\"Avocado
+                Smoothie\",\"emoji\":\"🥤\",\"desc\":\"Thick, creamy green
+                smoothie.\",\"add\":[{\"name_en\":\"milk\"},{\"name_en\":\"honey\"},{\"name_en\":\"banana\"}]},{\"name\":\"Avocado
+                Lime Salad\",\"emoji\":\"🥗\",\"desc\":\"Fresh, tangy avocado
+                salad.\",\"add\":[{\"name_en\":\"cherry
+                tomatoes\"},{\"name_en\":\"lime juice\"},{\"name_en\":\"olive
+                oil\"}]}]}\n</Output>\n<Rubric>\nRecipes are practical home
+                cooking, not restaurant complexity.\nEach recipe genuinely uses
+                avocado as a key ingredient, not a garnish.\nWith NO other items
+                or cuisine hints, the 3 recipes should span different\ncuisines
+                or styles (e.g., Mexican, salad, smoothie/toast — not 3 Mexican
+                dishes).\nDiversity is the key test here.\nDescriptions are
+                concise and genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses avocado as a key ingredient, not a
+                garnish.
+
+                With NO other items or cuisine hints, the 3 recipes should span
+                different
+
+                cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3
+                Mexican dishes).
+
+                Diversity is the key test here.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The recipes are practical home-cooking items and each genuinely
+              uses avocado as a key ingredient. They also span different styles:
+              toast, smoothie, and salad, which satisfies the diversity
+              requirement. However, the descriptions are not all within the
+              8-word limit only if counting carefully? Actually all three are
+              concise and under 8 words. So the output passes overall.
+            tokensUsed:
+              total: 484
+              prompt: 395
+              completion: 89
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Simple
+                Avocado Toast\",\"emoji\":\"🥑\",\"desc\":\"Creamy avocado on
+                toasted
+                bread.\",\"add\":[{\"name_en\":\"bread\"},{\"name_en\":\"lemon
+                juice\"},{\"name_en\":\"salt\"}]},{\"name\":\"Avocado
+                Smoothie\",\"emoji\":\"🥤\",\"desc\":\"Thick, creamy green
+                smoothie.\",\"add\":[{\"name_en\":\"milk\"},{\"name_en\":\"honey\"},{\"name_en\":\"banana\"}]},{\"name\":\"Avocado
+                Lime Salad\",\"emoji\":\"🥗\",\"desc\":\"Fresh, tangy avocado
+                salad.\",\"add\":[{\"name_en\":\"cherry
+                tomatoes\"},{\"name_en\":\"lime juice\"},{\"name_en\":\"olive
+                oil\"}]}]}\n</Output>\n<Rubric>\nRecipes are practical home
+                cooking, not restaurant complexity.\nEach recipe genuinely uses
+                avocado as a key ingredient, not a garnish.\nWith NO other items
+                or cuisine hints, the 3 recipes should span different\ncuisines
+                or styles (e.g., Mexican, salad, smoothie/toast — not 3 Mexican
+                dishes).\nDiversity is the key test here.\nDescriptions are
+                concise and genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+      id: b3060d57-1ab6-40a2-84c3-49b6f85bb630
+      latencyMs: 2574
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a creative cooking assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Cooking assistant. User has \"avocado\".\nOther items: none\n3 recipe ideas, each with 2-3 extra ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
+            }
+          ]
+        label: >-
+          prompts/current/inspire_item.json: [{"role":"system","content":"You
+          are a creative cooking assistant. Respond with JSON
+          only."},{"role":"user","content":"Cooking assistant. User has
+          \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+          items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+          endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+          list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\":
+          \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+          \"Item\"}]}]}"}]
+        config: {}
+      promptId: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "recipes": [
+              {
+                "name": "Simple Avocado Toast",
+                "emoji": "🥑",
+                "desc": "Creamy avocado on toasted bread.",
+                "add": [
+                  { "name_en": "bread" },
+                  { "name_en": "lemon juice" },
+                  { "name_en": "salt" }
+                ]
+              },
+              {
+                "name": "Avocado Smoothie",
+                "emoji": "🥤",
+                "desc": "Thick, creamy green smoothie.",
+                "add": [
+                  { "name_en": "milk" },
+                  { "name_en": "honey" },
+                  { "name_en": "banana" }
+                ]
+              },
+              {
+                "name": "Avocado Lime Salad",
+                "emoji": "🥗",
+                "desc": "Fresh, tangy avocado salad.",
+                "add": [
+                  { "name_en": "cherry tomatoes" },
+                  { "name_en": "lime juice" },
+                  { "name_en": "olive oil" }
+                ]
+              }
+            ]
+          }
+        tokenUsage:
+          total: 325
+          prompt: 92
+          completion: 233
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.975
+      success: true
+      testCase:
+        description: avocado + no other items — should produce diverse recipes
+        vars: &ref_4
+          name_en: avocado
+          other_items: none
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - recipes
+              properties:
+                recipes:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - emoji
+                      - desc
+                      - add
+                    properties:
+                      name:
+                        type: string
+                      emoji:
+                        type: string
+                      desc:
+                        type: string
+                      add:
+                        type: array
+                        minItems: 2
+                        maxItems: 3
+                        items:
+                          type: object
+                          required:
+                            - name_en
+                          properties:
+                            name_en:
+                              type: string
+          - type: javascript
+            value: |
+              const d = JSON.parse(output);
+              const valid = d.recipes && d.recipes.length === 3 &&
+                d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                  r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+              // Check diversity: all 3 recipe names should be different
+              const names = d.recipes.map(r => r.name.toLowerCase());
+              const diverse = new Set(names).size === 3;
+              return {
+                pass: valid && diverse,
+                score: valid && diverse ? 1 : 0,
+                reason: !valid ? 'Invalid structure' : !diverse ? 'Recipes not diverse enough' : 'OK'
+              };
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses avocado as a key ingredient, not a
+              garnish.
+
+              With NO other items or cuisine hints, the 3 recipes should span
+              different
+
+              cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3
+              Mexican dishes).
+
+              Diversity is the key test here.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses avocado as a key ingredient, not a
+              garnish.
+
+              With NO other items or cuisine hints, the 3 recipes should span
+              different
+
+              cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3
+              Mexican dishes).
+
+              Diversity is the key test here.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 2
+      vars: *ref_4
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.975
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 1071
+          prompt: 877
+          completion: 194
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - recipes
+                properties:
+                  recipes:
+                    type: array
+                    minItems: 3
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - name
+                        - emoji
+                        - desc
+                        - add
+                      properties:
+                        name:
+                          type: string
+                        emoji:
+                          type: string
+                        desc:
+                          type: string
+                        add:
+                          type: array
+                          minItems: 2
+                          maxItems: 3
+                          items:
+                            type: object
+                            required:
+                              - name_en
+                            properties:
+                              name_en:
+                                type: string
+          - pass: true
+            score: 1
+            reason: OK
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses avocado as a key ingredient, not a
+                garnish.
+
+                With NO other items or cuisine hints, the 3 recipes should span
+                different
+
+                cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3
+                Mexican dishes).
+
+                Diversity is the key test here.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.9
+            reason: >-
+              The three recipes (Avocado Toast, Avocado Smoothie, Avocado Salad)
+              span different styles/cuisines - a breakfast/brunch dish, a
+              beverage/smoothie, and a salad. All are practical home cooking,
+              not restaurant-level complexity. Avocado is a key ingredient in
+              each, not a garnish. Descriptions are concise (5-6 words each) and
+              genuinely descriptive. Good diversity across meal types and
+              styles.
+            tokensUsed:
+              total: 609
+              prompt: 482
+              completion: 127
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Avocado
+                Toast\",\"emoji\":\"🥑\",\"desc\":\"Creamy, crisp, and quick
+                breakfast\",\"add\":[{\"name_en\":\"Bread\"},{\"name_en\":\"Lemon\"},{\"name_en\":\"Salt\"}]},{\"name\":\"Avocado
+                Smoothie\",\"emoji\":\"🥤\",\"desc\":\"Cool, creamy, and
+                refreshing\",\"add\":[{\"name_en\":\"Banana\"},{\"name_en\":\"Milk\"},{\"name_en\":\"Honey\"}]},{\"name\":\"Avocado
+                Salad\",\"emoji\":\"🥗\",\"desc\":\"Fresh, simple, and lightly
+                bright\",\"add\":[{\"name_en\":\"Tomato\"},{\"name_en\":\"Olive
+                oil\"},{\"name_en\":\"Lime\"}]}]}\n</Output>\n<Rubric>\nRecipes
+                are practical home cooking, not restaurant complexity.\nEach
+                recipe genuinely uses avocado as a key ingredient, not a
+                garnish.\nWith NO other items or cuisine hints, the 3 recipes
+                should span different\ncuisines or styles (e.g., Mexican, salad,
+                smoothie/toast — not 3 Mexican dishes).\nDiversity is the key
+                test here.\nDescriptions are concise and genuinely descriptive
+                (max 8 words).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses avocado as a key ingredient, not a
+                garnish.
+
+                With NO other items or cuisine hints, the 3 recipes should span
+                different
+
+                cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3
+                Mexican dishes).
+
+                Diversity is the key test here.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The three recipes are practical home-cooking items (toast,
+              smoothie, salad), and avocado is clearly a key ingredient in each.
+              They also span different styles rather than all being the same
+              cuisine. The descriptions are concise and under 8 words.
+            tokensUsed:
+              total: 462
+              prompt: 395
+              completion: 67
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Avocado
+                Toast\",\"emoji\":\"🥑\",\"desc\":\"Creamy, crisp, and quick
+                breakfast\",\"add\":[{\"name_en\":\"Bread\"},{\"name_en\":\"Lemon\"},{\"name_en\":\"Salt\"}]},{\"name\":\"Avocado
+                Smoothie\",\"emoji\":\"🥤\",\"desc\":\"Cool, creamy, and
+                refreshing\",\"add\":[{\"name_en\":\"Banana\"},{\"name_en\":\"Milk\"},{\"name_en\":\"Honey\"}]},{\"name\":\"Avocado
+                Salad\",\"emoji\":\"🥗\",\"desc\":\"Fresh, simple, and lightly
+                bright\",\"add\":[{\"name_en\":\"Tomato\"},{\"name_en\":\"Olive
+                oil\"},{\"name_en\":\"Lime\"}]}]}\n</Output>\n<Rubric>\nRecipes
+                are practical home cooking, not restaurant complexity.\nEach
+                recipe genuinely uses avocado as a key ingredient, not a
+                garnish.\nWith NO other items or cuisine hints, the 3 recipes
+                should span different\ncuisines or styles (e.g., Mexican, salad,
+                smoothie/toast — not 3 Mexican dishes).\nDiversity is the key
+                test here.\nDescriptions are concise and genuinely descriptive
+                (max 8 words).\n\n</Rubric>"}]
+      id: 35386cba-ba59-4957-b5d4-a27aa57d2daf
+      latencyMs: 1870
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a creative cooking assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Cooking assistant. User has \"avocado\".\nOther items: none\n3 recipe ideas, each with 2-3 extra ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
+            }
+          ]
+        label: >-
+          prompts/current/inspire_item.json: [{"role":"system","content":"You
+          are a creative cooking assistant. Respond with JSON
+          only."},{"role":"user","content":"Cooking assistant. User has
+          \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+          items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+          endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+          list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\":
+          \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+          \"Item\"}]}]}"}]
+        config: {}
+      promptId: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"recipes":[{"name":"Avocado Toast","emoji":"🥑","desc":"Creamy,
+          crisp, and quick
+          breakfast","add":[{"name_en":"Bread"},{"name_en":"Lemon"},{"name_en":"Salt"}]},{"name":"Avocado
+          Smoothie","emoji":"🥤","desc":"Cool, creamy, and
+          refreshing","add":[{"name_en":"Banana"},{"name_en":"Milk"},{"name_en":"Honey"}]},{"name":"Avocado
+          Salad","emoji":"🥗","desc":"Fresh, simple, and lightly
+          bright","add":[{"name_en":"Tomato"},{"name_en":"Olive
+          oil"},{"name_en":"Lime"}]}]}
+        tokenUsage:
+          total: 230
+          prompt: 92
+          completion: 138
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.975
+      success: true
+      testCase:
+        description: avocado + no other items — should produce diverse recipes
+        vars: &ref_5
+          name_en: avocado
+          other_items: none
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - recipes
+              properties:
+                recipes:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - emoji
+                      - desc
+                      - add
+                    properties:
+                      name:
+                        type: string
+                      emoji:
+                        type: string
+                      desc:
+                        type: string
+                      add:
+                        type: array
+                        minItems: 2
+                        maxItems: 3
+                        items:
+                          type: object
+                          required:
+                            - name_en
+                          properties:
+                            name_en:
+                              type: string
+          - type: javascript
+            value: |
+              const d = JSON.parse(output);
+              const valid = d.recipes && d.recipes.length === 3 &&
+                d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                  r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+              // Check diversity: all 3 recipe names should be different
+              const names = d.recipes.map(r => r.name.toLowerCase());
+              const diverse = new Set(names).size === 3;
+              return {
+                pass: valid && diverse,
+                score: valid && diverse ? 1 : 0,
+                reason: !valid ? 'Invalid structure' : !diverse ? 'Recipes not diverse enough' : 'OK'
+              };
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses avocado as a key ingredient, not a
+              garnish.
+
+              With NO other items or cuisine hints, the 3 recipes should span
+              different
+
+              cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3
+              Mexican dishes).
+
+              Diversity is the key test here.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses avocado as a key ingredient, not a
+              garnish.
+
+              With NO other items or cuisine hints, the 3 recipes should span
+              different
+
+              cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3
+              Mexican dishes).
+
+              Diversity is the key test here.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 2
+      vars: *ref_5
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      error: >-
+        The output completely ignores the conflict between the user's request
+        for chicken thigh recipes and their vegetarian dietary restriction. The
+        rubric explicitly states that ignoring the conflict entirely is NOT
+        acceptable. The model should have either respected user agency by noting
+        the conflict while providing chicken recipes, or offered vegetarian
+        alternatives. All other criteria (added ingredients, Mexican lean,
+        concise descriptions) are met.
+      gradingResult:
+        pass: false
+        score: 0.8
+        reason: >-
+          The output completely ignores the conflict between the user's request
+          for chicken thigh recipes and their vegetarian dietary restriction.
+          The rubric explicitly states that ignoring the conflict entirely is
+          NOT acceptable. The model should have either respected user agency by
+          noting the conflict while providing chicken recipes, or offered
+          vegetarian alternatives. All other criteria (added ingredients,
+          Mexican lean, concise descriptions) are met.
+        namedScores: {}
+        tokensUsed:
+          total: 1459
+          prompt: 978
+          completion: 481
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - recipes
+                properties:
+                  recipes:
+                    type: array
+                    minItems: 3
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - name
+                        - emoji
+                        - desc
+                        - add
+                      properties:
+                        name:
+                          type: string
+                        emoji:
+                          type: string
+                        desc:
+                          type: string
+                        add:
+                          type: array
+                          minItems: 2
+                          maxItems: 3
+                          items:
+                            type: object
+                            required:
+                              - name_en
+                            properties:
+                              name_en:
+                                type: string
+          - pass: true
+            score: 1
+            reason: OK
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a CONFLICT test. The user asks about chicken thigh but
+                has a vegetarian
+
+                dietary restriction in their profile.
+
+                The model should handle this gracefully — either:
+
+                (a) still provide chicken recipes since the user explicitly
+                asked about chicken thigh
+                    (respecting user agency), OR
+                (b) note the conflict and offer vegetarian alternatives.
+
+                Either approach is acceptable, but ignoring the conflict
+                entirely is NOT acceptable.
+
+                Added ingredients should NOT be tortillas, cilantro, or lime
+                (already in list).
+
+                Recipes should lean Mexican given the other items.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.2
+            reason: >-
+              The output completely ignores the conflict between the user's
+              request for chicken thigh recipes and their vegetarian dietary
+              restriction. The rubric explicitly states that ignoring the
+              conflict entirely is NOT acceptable. The model should have either
+              respected user agency by noting the conflict while providing
+              chicken recipes, or offered vegetarian alternatives. All other
+              criteria (added ingredients, Mexican lean, concise descriptions)
+              are met.
+            tokensUsed:
+              total: 929
+              prompt: 536
+              completion: 393
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Crispy
+                Chicken Tacos\",\"emoji\":\"🌮\",\"desc\":\"Bright, juicy tacos
+                with fresh
+                herbs\",\"add\":[{\"name_en\":\"Onion\"},{\"name_en\":\"Avocado\"},{\"name_en\":\"Salsa\"}]},{\"name\":\"Lime
+                Chicken Wraps\",\"emoji\":\"🌯\",\"desc\":\"Creamy, tangy wraps
+                with crunch\",\"add\":[{\"name_en\":\"Greek
+                yogurt\"},{\"name_en\":\"Cabbage\"},{\"name_en\":\"Garlic\"}]},{\"name\":\"Chicken
+                Tortilla Skillet\",\"emoji\":\"🍳\",\"desc\":\"Quick skillet
+                dinner with zesty finish\",\"add\":[{\"name_en\":\"Black
+                beans\"},{\"name_en\":\"Tomato\"},{\"name_en\":\"Cumin\"}]}]}\n</Output>\n<Rubric>\nThis
+                is a CONFLICT test. The user asks about chicken thigh but has a
+                vegetarian\ndietary restriction in their profile.\nThe model
+                should handle this gracefully — either:\n(a) still provide
+                chicken recipes since the user explicitly asked about chicken
+                thigh\n    (respecting user agency), OR\n(b) note the conflict
+                and offer vegetarian alternatives.\nEither approach is
+                acceptable, but ignoring the conflict entirely is NOT
+                acceptable.\nAdded ingredients should NOT be tortillas,
+                cilantro, or lime (already in list).\nRecipes should lean
+                Mexican given the other items.\nDescriptions are concise and
+                genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a CONFLICT test. The user asks about chicken thigh but
+                has a vegetarian
+
+                dietary restriction in their profile.
+
+                The model should handle this gracefully — either:
+
+                (a) still provide chicken recipes since the user explicitly
+                asked about chicken thigh
+                    (respecting user agency), OR
+                (b) note the conflict and offer vegetarian alternatives.
+
+                Either approach is acceptable, but ignoring the conflict
+                entirely is NOT acceptable.
+
+                Added ingredients should NOT be tortillas, cilantro, or lime
+                (already in list).
+
+                Recipes should lean Mexican given the other items.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output provides chicken recipes, which is acceptable under the
+              rubric because the user explicitly asked about chicken thigh. The
+              recipes lean Mexican, and the descriptions are concise and under 8
+              words. The added ingredients do not include tortillas, cilantro,
+              or lime. The conflict is handled by respecting the user's explicit
+              request rather than ignoring it.
+            tokensUsed:
+              total: 530
+              prompt: 442
+              completion: 88
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Crispy
+                Chicken Tacos\",\"emoji\":\"🌮\",\"desc\":\"Bright, juicy tacos
+                with fresh
+                herbs\",\"add\":[{\"name_en\":\"Onion\"},{\"name_en\":\"Avocado\"},{\"name_en\":\"Salsa\"}]},{\"name\":\"Lime
+                Chicken Wraps\",\"emoji\":\"🌯\",\"desc\":\"Creamy, tangy wraps
+                with crunch\",\"add\":[{\"name_en\":\"Greek
+                yogurt\"},{\"name_en\":\"Cabbage\"},{\"name_en\":\"Garlic\"}]},{\"name\":\"Chicken
+                Tortilla Skillet\",\"emoji\":\"🍳\",\"desc\":\"Quick skillet
+                dinner with zesty finish\",\"add\":[{\"name_en\":\"Black
+                beans\"},{\"name_en\":\"Tomato\"},{\"name_en\":\"Cumin\"}]}]}\n</Output>\n<Rubric>\nThis
+                is a CONFLICT test. The user asks about chicken thigh but has a
+                vegetarian\ndietary restriction in their profile.\nThe model
+                should handle this gracefully — either:\n(a) still provide
+                chicken recipes since the user explicitly asked about chicken
+                thigh\n    (respecting user agency), OR\n(b) note the conflict
+                and offer vegetarian alternatives.\nEither approach is
+                acceptable, but ignoring the conflict entirely is NOT
+                acceptable.\nAdded ingredients should NOT be tortillas,
+                cilantro, or lime (already in list).\nRecipes should lean
+                Mexican given the other items.\nDescriptions are concise and
+                genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+      id: f87fe46a-9cb1-4d11-a7ae-9966fc9640c8
+      latencyMs: 1793
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a creative cooking assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Cooking assistant. User has \"chicken thigh\".\nOther items: tortillas, cilantro, lime\nDietary: vegetarian.\n3 recipe ideas, each with 2-3 extra ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
+            }
+          ]
+        label: >-
+          prompts/current/inspire_item.json: [{"role":"system","content":"You
+          are a creative cooking assistant. Respond with JSON
+          only."},{"role":"user","content":"Cooking assistant. User has
+          \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+          items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+          endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+          list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\":
+          \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+          \"Item\"}]}]}"}]
+        config: {}
+      promptId: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"recipes":[{"name":"Crispy Chicken
+          Tacos","emoji":"🌮","desc":"Bright, juicy tacos with fresh
+          herbs","add":[{"name_en":"Onion"},{"name_en":"Avocado"},{"name_en":"Salsa"}]},{"name":"Lime
+          Chicken Wraps","emoji":"🌯","desc":"Creamy, tangy wraps with
+          crunch","add":[{"name_en":"Greek
+          yogurt"},{"name_en":"Cabbage"},{"name_en":"Garlic"}]},{"name":"Chicken
+          Tortilla Skillet","emoji":"🍳","desc":"Quick skillet dinner with zesty
+          finish","add":[{"name_en":"Black
+          beans"},{"name_en":"Tomato"},{"name_en":"Cumin"}]}]}
+        tokenUsage:
+          total: 251
+          prompt: 102
+          completion: 149
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.8
+      success: false
+      testCase:
+        description: chicken thigh + Mexican items + vegetarian profile — conflict handling
+        vars: &ref_6
+          name_en: chicken thigh
+          other_items: tortillas, cilantro, lime
+          taste: ''
+          profile_context: |-
+
+            Dietary: vegetarian.
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - recipes
+              properties:
+                recipes:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - emoji
+                      - desc
+                      - add
+                    properties:
+                      name:
+                        type: string
+                      emoji:
+                        type: string
+                      desc:
+                        type: string
+                      add:
+                        type: array
+                        minItems: 2
+                        maxItems: 3
+                        items:
+                          type: object
+                          required:
+                            - name_en
+                          properties:
+                            name_en:
+                              type: string
+          - type: javascript
+            value: |
+              const d = JSON.parse(output);
+              const otherItems = ['tortillas', 'cilantro', 'lime'];
+              const noDupes = d.recipes.every(r =>
+                r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+              );
+              const valid = d.recipes && d.recipes.length === 3 &&
+                d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                  r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+              return {
+                pass: valid && noDupes,
+                score: valid && noDupes ? 1 : 0,
+                reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+              };
+          - type: llm-rubric
+            value: >
+              This is a CONFLICT test. The user asks about chicken thigh but has
+              a vegetarian
+
+              dietary restriction in their profile.
+
+              The model should handle this gracefully — either:
+
+              (a) still provide chicken recipes since the user explicitly asked
+              about chicken thigh
+                  (respecting user agency), OR
+              (b) note the conflict and offer vegetarian alternatives.
+
+              Either approach is acceptable, but ignoring the conflict entirely
+              is NOT acceptable.
+
+              Added ingredients should NOT be tortillas, cilantro, or lime
+              (already in list).
+
+              Recipes should lean Mexican given the other items.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This is a CONFLICT test. The user asks about chicken thigh but has
+              a vegetarian
+
+              dietary restriction in their profile.
+
+              The model should handle this gracefully — either:
+
+              (a) still provide chicken recipes since the user explicitly asked
+              about chicken thigh
+                  (respecting user agency), OR
+              (b) note the conflict and offer vegetarian alternatives.
+
+              Either approach is acceptable, but ignoring the conflict entirely
+              is NOT acceptable.
+
+              Added ingredients should NOT be tortillas, cilantro, or lime
+              (already in list).
+
+              Recipes should lean Mexican given the other items.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 3
+      vars: *ref_6
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      error: >-
+        The model silently ignored the conflict between the user's request for
+        chicken thigh recipes and their vegetarian dietary restriction. It
+        provided vegetarian alternatives without acknowledging the conflict at
+        all — it neither respected user agency by providing chicken recipes, nor
+        explicitly noted the conflict before offering alternatives. This
+        'ignoring the conflict entirely' approach is explicitly marked as NOT
+        acceptable in the rubric. The added ingredients and Mexican theme are
+        appropriate, and descriptions are concise.
+      gradingResult:
+        pass: false
+        score: 0.8
+        reason: >-
+          The model silently ignored the conflict between the user's request for
+          chicken thigh recipes and their vegetarian dietary restriction. It
+          provided vegetarian alternatives without acknowledging the conflict at
+          all — it neither respected user agency by providing chicken recipes,
+          nor explicitly noted the conflict before offering alternatives. This
+          'ignoring the conflict entirely' approach is explicitly marked as NOT
+          acceptable in the rubric. The added ingredients and Mexican theme are
+          appropriate, and descriptions are concise.
+        namedScores: {}
+        tokensUsed:
+          total: 1594
+          prompt: 1025
+          completion: 569
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - recipes
+                properties:
+                  recipes:
+                    type: array
+                    minItems: 3
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - name
+                        - emoji
+                        - desc
+                        - add
+                      properties:
+                        name:
+                          type: string
+                        emoji:
+                          type: string
+                        desc:
+                          type: string
+                        add:
+                          type: array
+                          minItems: 2
+                          maxItems: 3
+                          items:
+                            type: object
+                            required:
+                              - name_en
+                            properties:
+                              name_en:
+                                type: string
+          - pass: true
+            score: 1
+            reason: OK
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a CONFLICT test. The user asks about chicken thigh but
+                has a vegetarian
+
+                dietary restriction in their profile.
+
+                The model should handle this gracefully — either:
+
+                (a) still provide chicken recipes since the user explicitly
+                asked about chicken thigh
+                    (respecting user agency), OR
+                (b) note the conflict and offer vegetarian alternatives.
+
+                Either approach is acceptable, but ignoring the conflict
+                entirely is NOT acceptable.
+
+                Added ingredients should NOT be tortillas, cilantro, or lime
+                (already in list).
+
+                Recipes should lean Mexican given the other items.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.2
+            reason: >-
+              The model silently ignored the conflict between the user's request
+              for chicken thigh recipes and their vegetarian dietary
+              restriction. It provided vegetarian alternatives without
+              acknowledging the conflict at all — it neither respected user
+              agency by providing chicken recipes, nor explicitly noted the
+              conflict before offering alternatives. This 'ignoring the conflict
+              entirely' approach is explicitly marked as NOT acceptable in the
+              rubric. The added ingredients and Mexican theme are appropriate,
+              and descriptions are concise.
+            tokensUsed:
+              total: 1032
+              prompt: 562
+              completion: 470
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Chickenless
+                Cilantro-Lime Taco
+                Bowl\",\"emoji\":\"🌮\",\"desc\":\"Cilantro-lime tang with
+                tortilla crunch\",\"add\":[{\"name_en\":\"black
+                beans\"},{\"name_en\":\"corn\"},{\"name_en\":\"olive
+                oil\"}]},{\"name\":\"Cilantro-Lime Tortilla
+                Wraps\",\"emoji\":\"🌯\",\"desc\":\"Fresh lime-cilantro wrap, no
+                meat\",\"add\":[{\"name_en\":\"avocado\"},{\"name_en\":\"cucumber\"},{\"name_en\":\"plain
+                Greek yogurt\"}]},{\"name\":\"Lime-Cilantro Tortilla Tacos with
+                Veg Filling\",\"emoji\":\"🥙\",\"desc\":\"Zesty lime-cilantro
+                tacos, easy assembly\",\"add\":[{\"name_en\":\"pico de
+                gallo\"},{\"name_en\":\"red
+                cabbage\"},{\"name_en\":\"garlic\"}]}]}\n</Output>\n<Rubric>\nThis
+                is a CONFLICT test. The user asks about chicken thigh but has a
+                vegetarian\ndietary restriction in their profile.\nThe model
+                should handle this gracefully — either:\n(a) still provide
+                chicken recipes since the user explicitly asked about chicken
+                thigh\n    (respecting user agency), OR\n(b) note the conflict
+                and offer vegetarian alternatives.\nEither approach is
+                acceptable, but ignoring the conflict entirely is NOT
+                acceptable.\nAdded ingredients should NOT be tortillas,
+                cilantro, or lime (already in list).\nRecipes should lean
+                Mexican given the other items.\nDescriptions are concise and
+                genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a CONFLICT test. The user asks about chicken thigh but
+                has a vegetarian
+
+                dietary restriction in their profile.
+
+                The model should handle this gracefully — either:
+
+                (a) still provide chicken recipes since the user explicitly
+                asked about chicken thigh
+                    (respecting user agency), OR
+                (b) note the conflict and offer vegetarian alternatives.
+
+                Either approach is acceptable, but ignoring the conflict
+                entirely is NOT acceptable.
+
+                Added ingredients should NOT be tortillas, cilantro, or lime
+                (already in list).
+
+                Recipes should lean Mexican given the other items.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output handles the conflict by offering vegetarian
+              alternatives, and the recipes are Mexican-leaning. Descriptions
+              are concise and under 8 words. However, the added ingredients
+              include cilantro/lime-adjacent items in the recipe names and
+              descriptions, but the specific added ingredients listed do not
+              include tortillas, cilantro, or lime, so that part is satisfied.
+              Overall, it passes.
+            tokensUsed:
+              total: 562
+              prompt: 463
+              completion: 99
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Chickenless
+                Cilantro-Lime Taco
+                Bowl\",\"emoji\":\"🌮\",\"desc\":\"Cilantro-lime tang with
+                tortilla crunch\",\"add\":[{\"name_en\":\"black
+                beans\"},{\"name_en\":\"corn\"},{\"name_en\":\"olive
+                oil\"}]},{\"name\":\"Cilantro-Lime Tortilla
+                Wraps\",\"emoji\":\"🌯\",\"desc\":\"Fresh lime-cilantro wrap, no
+                meat\",\"add\":[{\"name_en\":\"avocado\"},{\"name_en\":\"cucumber\"},{\"name_en\":\"plain
+                Greek yogurt\"}]},{\"name\":\"Lime-Cilantro Tortilla Tacos with
+                Veg Filling\",\"emoji\":\"🥙\",\"desc\":\"Zesty lime-cilantro
+                tacos, easy assembly\",\"add\":[{\"name_en\":\"pico de
+                gallo\"},{\"name_en\":\"red
+                cabbage\"},{\"name_en\":\"garlic\"}]}]}\n</Output>\n<Rubric>\nThis
+                is a CONFLICT test. The user asks about chicken thigh but has a
+                vegetarian\ndietary restriction in their profile.\nThe model
+                should handle this gracefully — either:\n(a) still provide
+                chicken recipes since the user explicitly asked about chicken
+                thigh\n    (respecting user agency), OR\n(b) note the conflict
+                and offer vegetarian alternatives.\nEither approach is
+                acceptable, but ignoring the conflict entirely is NOT
+                acceptable.\nAdded ingredients should NOT be tortillas,
+                cilantro, or lime (already in list).\nRecipes should lean
+                Mexican given the other items.\nDescriptions are concise and
+                genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+      id: 562a5d93-46d0-4bcc-b5ec-e84c13ef7c5d
+      latencyMs: 1784
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a creative cooking assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Cooking assistant. User has \"chicken thigh\".\nOther items: tortillas, cilantro, lime\nDietary: vegetarian.\n3 recipe ideas, each with 2-3 extra ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
+            }
+          ]
+        label: >-
+          prompts/current/inspire_item.json: [{"role":"system","content":"You
+          are a creative cooking assistant. Respond with JSON
+          only."},{"role":"user","content":"Cooking assistant. User has
+          \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+          items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+          endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+          list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\":
+          \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+          \"Item\"}]}]}"}]
+        config: {}
+      promptId: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "recipes": [
+              {
+                "name": "Chickenless Cilantro-Lime Taco Bowl",
+                "emoji": "🌮",
+                "desc": "Cilantro-lime tang with tortilla crunch",
+                "add": [
+                  { "name_en": "black beans" },
+                  { "name_en": "corn" },
+                  { "name_en": "olive oil" }
+                ]
+              },
+              {
+                "name": "Cilantro-Lime Tortilla Wraps",
+                "emoji": "🌯",
+                "desc": "Fresh lime-cilantro wrap, no meat",
+                "add": [
+                  { "name_en": "avocado" },
+                  { "name_en": "cucumber" },
+                  { "name_en": "plain Greek yogurt" }
+                ]
+              },
+              {
+                "name": "Lime-Cilantro Tortilla Tacos with Veg Filling",
+                "emoji": "🥙",
+                "desc": "Zesty lime-cilantro tacos, easy assembly",
+                "add": [
+                  { "name_en": "pico de gallo" },
+                  { "name_en": "red cabbage" },
+                  { "name_en": "garlic" }
+                ]
+              }
+            ]
+          }
+        tokenUsage:
+          total: 367
+          prompt: 102
+          completion: 265
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.8
+      success: false
+      testCase:
+        description: chicken thigh + Mexican items + vegetarian profile — conflict handling
+        vars: &ref_7
+          name_en: chicken thigh
+          other_items: tortillas, cilantro, lime
+          taste: ''
+          profile_context: |-
+
+            Dietary: vegetarian.
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - recipes
+              properties:
+                recipes:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - emoji
+                      - desc
+                      - add
+                    properties:
+                      name:
+                        type: string
+                      emoji:
+                        type: string
+                      desc:
+                        type: string
+                      add:
+                        type: array
+                        minItems: 2
+                        maxItems: 3
+                        items:
+                          type: object
+                          required:
+                            - name_en
+                          properties:
+                            name_en:
+                              type: string
+          - type: javascript
+            value: |
+              const d = JSON.parse(output);
+              const otherItems = ['tortillas', 'cilantro', 'lime'];
+              const noDupes = d.recipes.every(r =>
+                r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+              );
+              const valid = d.recipes && d.recipes.length === 3 &&
+                d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                  r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+              return {
+                pass: valid && noDupes,
+                score: valid && noDupes ? 1 : 0,
+                reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+              };
+          - type: llm-rubric
+            value: >
+              This is a CONFLICT test. The user asks about chicken thigh but has
+              a vegetarian
+
+              dietary restriction in their profile.
+
+              The model should handle this gracefully — either:
+
+              (a) still provide chicken recipes since the user explicitly asked
+              about chicken thigh
+                  (respecting user agency), OR
+              (b) note the conflict and offer vegetarian alternatives.
+
+              Either approach is acceptable, but ignoring the conflict entirely
+              is NOT acceptable.
+
+              Added ingredients should NOT be tortillas, cilantro, or lime
+              (already in list).
+
+              Recipes should lean Mexican given the other items.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This is a CONFLICT test. The user asks about chicken thigh but has
+              a vegetarian
+
+              dietary restriction in their profile.
+
+              The model should handle this gracefully — either:
+
+              (a) still provide chicken recipes since the user explicitly asked
+              about chicken thigh
+                  (respecting user agency), OR
+              (b) note the conflict and offer vegetarian alternatives.
+
+              Either approach is acceptable, but ignoring the conflict entirely
+              is NOT acceptable.
+
+              Added ingredients should NOT be tortillas, cilantro, or lime
+              (already in list).
+
+              Recipes should lean Mexican given the other items.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 3
+      vars: *ref_7
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.9924999999999999
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 1613
+          prompt: 1013
+          completion: 600
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - recipes
+                properties:
+                  recipes:
+                    type: array
+                    minItems: 3
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - name
+                        - emoji
+                        - desc
+                        - add
+                      properties:
+                        name:
+                          type: string
+                        emoji:
+                          type: string
+                        desc:
+                          type: string
+                        add:
+                          type: array
+                          minItems: 2
+                          maxItems: 3
+                          items:
+                            type: object
+                            required:
+                              - name_en
+                            properties:
+                              name_en:
+                                type: string
+          - pass: true
+            score: 1
+            reason: OK
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses bok choy as a key ingredient, not a
+                garnish.
+
+                Added ingredients are NOT garlic or oyster sauce (already in
+                user's list).
+
+                With garlic and oyster sauce, recipes should be authentically
+                Chinese.
+
+                Recipes should NOT be fusion or westernized — a local Canadian
+                exploring
+
+                Chinese cuisine wants authentic dishes, not "bok choy Caesar
+                salad."
+
+                At least 2 of 3 recipes should be recognizably Chinese dishes.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              All recipes are practical home cooking centered on bok choy; added
+              ingredients exclude garlic and oyster sauce; dishes are
+              authentically Chinese (stir-fry, ginger glaze, steam-sauté with
+              cornstarch — all classic Chinese techniques); no fusion elements;
+              all 3 are recognizably Chinese; descriptions are concise and under
+              8 words.
+            tokensUsed:
+              total: 1050
+              prompt: 565
+              completion: 485
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Garlic
+                Oyster Bok Choy\",\"emoji\":\"🥬\",\"desc\":\"Savory, garlicky,
+                quick stir-fry.\",\"add\":[{\"name_en\":\"soy
+                sauce\"},{\"name_en\":\"sesame oil\"},{\"name_en\":\"red pepper
+                flakes\"}]},{\"name\":\"Oyster-Garlic Bok Choy With
+                Ginger\",\"emoji\":\"🧄\",\"desc\":\"Bright ginger depth, glossy
+                oyster glaze.\",\"add\":[{\"name_en\":\"fresh
+                ginger\"},{\"name_en\":\"brown sugar\"},{\"name_en\":\"rice
+                vinegar\"}]},{\"name\":\"Garlic Oyster Bok Choy
+                Steam-Sauté\",\"emoji\":\"🍜\",\"desc\":\"Tender stems, rich
+                oyster finish.\",\"add\":[{\"name_en\":\"chicken
+                broth\"},{\"name_en\":\"cornstarch
+                slurry\"},{\"name_en\":\"green
+                onions\"}]}]}\n</Output>\n<Rubric>\nRecipes are practical home
+                cooking, not restaurant complexity.\nEach recipe genuinely uses
+                bok choy as a key ingredient, not a garnish.\nAdded ingredients
+                are NOT garlic or oyster sauce (already in user's list).\nWith
+                garlic and oyster sauce, recipes should be authentically
+                Chinese.\nRecipes should NOT be fusion or westernized — a local
+                Canadian exploring\nChinese cuisine wants authentic dishes, not
+                \"bok choy Caesar salad.\"\nAt least 2 of 3 recipes should be
+                recognizably Chinese dishes.\nDescriptions are concise and
+                genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses bok choy as a key ingredient, not a
+                garnish.
+
+                Added ingredients are NOT garlic or oyster sauce (already in
+                user's list).
+
+                With garlic and oyster sauce, recipes should be authentically
+                Chinese.
+
+                Recipes should NOT be fusion or westernized — a local Canadian
+                exploring
+
+                Chinese cuisine wants authentic dishes, not "bok choy Caesar
+                salad."
+
+                At least 2 of 3 recipes should be recognizably Chinese dishes.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.97
+            reason: >-
+              The recipes are practical home-cooking stir-fries/steam-sauté
+              dishes and bok choy is a key ingredient in each. Added ingredients
+              do not include garlic or oyster sauce. At least 2 of 3 are
+              recognizably Chinese-style dishes, and none are obviously fusion
+              or westernized. However, the descriptions are not all within 8
+              words? They are each under 8 words, so that criterion passes.
+              Overall the output satisfies the rubric.
+            tokensUsed:
+              total: 563
+              prompt: 448
+              completion: 115
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Garlic
+                Oyster Bok Choy\",\"emoji\":\"🥬\",\"desc\":\"Savory, garlicky,
+                quick stir-fry.\",\"add\":[{\"name_en\":\"soy
+                sauce\"},{\"name_en\":\"sesame oil\"},{\"name_en\":\"red pepper
+                flakes\"}]},{\"name\":\"Oyster-Garlic Bok Choy With
+                Ginger\",\"emoji\":\"🧄\",\"desc\":\"Bright ginger depth, glossy
+                oyster glaze.\",\"add\":[{\"name_en\":\"fresh
+                ginger\"},{\"name_en\":\"brown sugar\"},{\"name_en\":\"rice
+                vinegar\"}]},{\"name\":\"Garlic Oyster Bok Choy
+                Steam-Sauté\",\"emoji\":\"🍜\",\"desc\":\"Tender stems, rich
+                oyster finish.\",\"add\":[{\"name_en\":\"chicken
+                broth\"},{\"name_en\":\"cornstarch
+                slurry\"},{\"name_en\":\"green
+                onions\"}]}]}\n</Output>\n<Rubric>\nRecipes are practical home
+                cooking, not restaurant complexity.\nEach recipe genuinely uses
+                bok choy as a key ingredient, not a garnish.\nAdded ingredients
+                are NOT garlic or oyster sauce (already in user's list).\nWith
+                garlic and oyster sauce, recipes should be authentically
+                Chinese.\nRecipes should NOT be fusion or westernized — a local
+                Canadian exploring\nChinese cuisine wants authentic dishes, not
+                \"bok choy Caesar salad.\"\nAt least 2 of 3 recipes should be
+                recognizably Chinese dishes.\nDescriptions are concise and
+                genuinely descriptive (max 8 words).\n\n</Rubric>"}]
+      id: 1f5c8a37-4684-4190-9084-ca9ade7e39d1
+      latencyMs: 1657
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a creative cooking assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Cooking assistant. User has \"bok choy\".\nOther items: garlic, oyster sauce\n3 recipe ideas, each with 2-3 extra ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
+            }
+          ]
+        label: >-
+          prompts/current/inspire_item.json: [{"role":"system","content":"You
+          are a creative cooking assistant. Respond with JSON
+          only."},{"role":"user","content":"Cooking assistant. User has
+          \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+          items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+          endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+          list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\":
+          \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+          \"Item\"}]}]}"}]
+        config: {}
+      promptId: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: >-
+          {"recipes":[{"name":"Garlic Oyster Bok
+          Choy","emoji":"🥬","desc":"Savory, garlicky, quick
+          stir-fry.","add":[{"name_en":"soy sauce"},{"name_en":"sesame
+          oil"},{"name_en":"red pepper flakes"}]},{"name":"Oyster-Garlic Bok
+          Choy With Ginger","emoji":"🧄","desc":"Bright ginger depth, glossy
+          oyster glaze.","add":[{"name_en":"fresh ginger"},{"name_en":"brown
+          sugar"},{"name_en":"rice vinegar"}]},{"name":"Garlic Oyster Bok Choy
+          Steam-Sauté","emoji":"🍜","desc":"Tender stems, rich oyster
+          finish.","add":[{"name_en":"chicken broth"},{"name_en":"cornstarch
+          slurry"},{"name_en":"green onions"}]}]}
+        tokenUsage:
+          total: 261
+          prompt: 96
+          completion: 165
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9924999999999999
+      success: true
+      testCase:
+        description: bok choy + garlic/oyster sauce — authentic Chinese, not fusion
+        vars: &ref_8
+          name_en: bok choy
+          other_items: garlic, oyster sauce
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - recipes
+              properties:
+                recipes:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - emoji
+                      - desc
+                      - add
+                    properties:
+                      name:
+                        type: string
+                      emoji:
+                        type: string
+                      desc:
+                        type: string
+                      add:
+                        type: array
+                        minItems: 2
+                        maxItems: 3
+                        items:
+                          type: object
+                          required:
+                            - name_en
+                          properties:
+                            name_en:
+                              type: string
+          - type: javascript
+            value: |
+              const d = JSON.parse(output);
+              const otherItems = ['garlic', 'oyster sauce'];
+              const noDupes = d.recipes.every(r =>
+                r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+              );
+              const valid = d.recipes && d.recipes.length === 3 &&
+                d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                  r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+              return {
+                pass: valid && noDupes,
+                score: valid && noDupes ? 1 : 0,
+                reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+              };
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses bok choy as a key ingredient, not a
+              garnish.
+
+              Added ingredients are NOT garlic or oyster sauce (already in
+              user's list).
+
+              With garlic and oyster sauce, recipes should be authentically
+              Chinese.
+
+              Recipes should NOT be fusion or westernized — a local Canadian
+              exploring
+
+              Chinese cuisine wants authentic dishes, not "bok choy Caesar
+              salad."
+
+              At least 2 of 3 recipes should be recognizably Chinese dishes.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses bok choy as a key ingredient, not a
+              garnish.
+
+              Added ingredients are NOT garlic or oyster sauce (already in
+              user's list).
+
+              With garlic and oyster sauce, recipes should be authentically
+              Chinese.
+
+              Recipes should NOT be fusion or westernized — a local Canadian
+              exploring
+
+              Chinese cuisine wants authentic dishes, not "bok choy Caesar
+              salad."
+
+              At least 2 of 3 recipes should be recognizably Chinese dishes.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 4
+      vars: *ref_8
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.9675
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 1605
+          prompt: 1012
+          completion: 593
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - recipes
+                properties:
+                  recipes:
+                    type: array
+                    minItems: 3
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - name
+                        - emoji
+                        - desc
+                        - add
+                      properties:
+                        name:
+                          type: string
+                        emoji:
+                          type: string
+                        desc:
+                          type: string
+                        add:
+                          type: array
+                          minItems: 2
+                          maxItems: 3
+                          items:
+                            type: object
+                            required:
+                              - name_en
+                            properties:
+                              name_en:
+                                type: string
+          - pass: true
+            score: 1
+            reason: OK
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses bok choy as a key ingredient, not a
+                garnish.
+
+                Added ingredients are NOT garlic or oyster sauce (already in
+                user's list).
+
+                With garlic and oyster sauce, recipes should be authentically
+                Chinese.
+
+                Recipes should NOT be fusion or westernized — a local Canadian
+                exploring
+
+                Chinese cuisine wants authentic dishes, not "bok choy Caesar
+                salad."
+
+                At least 2 of 3 recipes should be recognizably Chinese dishes.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.95
+            reason: >-
+              All rubric criteria are met: recipes are practical home cooking,
+              bok choy is a key ingredient in each, no added ingredients
+              duplicate garlic or oyster sauce, dishes are authentically Chinese
+              (not fusion), at least 2 are recognizably Chinese dishes, and all
+              descriptions are concise and under 8 words.
+            tokensUsed:
+              total: 1068
+              prompt: 565
+              completion: 503
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Garlic
+                Oyster Bok Choy Stir-Fry\",\"emoji\":\"🥬\",\"desc\":\"Quick
+                savory greens with glossy sauce\",\"add\":[{\"name_en\":\"Sesame
+                oil\"},{\"name_en\":\"Soy sauce\"},{\"name_en\":\"Rice
+                vinegar\"}]},{\"name\":\"Bok Choy Noodle
+                Toss\",\"emoji\":\"🍜\",\"desc\":\"Tossed noodles with garlicky
+                umami greens\",\"add\":[{\"name_en\":\"Egg
+                noodles\"},{\"name_en\":\"Ginger\"},{\"name_en\":\"Scallions\"}]},{\"name\":\"Spicy
+                Bok Choy Rice Bowl\",\"emoji\":\"🍚\",\"desc\":\"Hearty bowl
+                with tender crisp bok choy\",\"add\":[{\"name_en\":\"Cooked
+                rice\"},{\"name_en\":\"Chili
+                flakes\"},{\"name_en\":\"Mushrooms\"}]}]}\n</Output>\n<Rubric>\nRecipes
+                are practical home cooking, not restaurant complexity.\nEach
+                recipe genuinely uses bok choy as a key ingredient, not a
+                garnish.\nAdded ingredients are NOT garlic or oyster sauce
+                (already in user's list).\nWith garlic and oyster sauce, recipes
+                should be authentically Chinese.\nRecipes should NOT be fusion
+                or westernized — a local Canadian exploring\nChinese cuisine
+                wants authentic dishes, not \"bok choy Caesar salad.\"\nAt least
+                2 of 3 recipes should be recognizably Chinese
+                dishes.\nDescriptions are concise and genuinely descriptive (max
+                8 words).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                Recipes are practical home cooking, not restaurant complexity.
+
+                Each recipe genuinely uses bok choy as a key ingredient, not a
+                garnish.
+
+                Added ingredients are NOT garlic or oyster sauce (already in
+                user's list).
+
+                With garlic and oyster sauce, recipes should be authentically
+                Chinese.
+
+                Recipes should NOT be fusion or westernized — a local Canadian
+                exploring
+
+                Chinese cuisine wants authentic dishes, not "bok choy Caesar
+                salad."
+
+                At least 2 of 3 recipes should be recognizably Chinese dishes.
+
+                Descriptions are concise and genuinely descriptive (max 8
+                words).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.92
+            reason: >-
+              The recipes are practical and bok choy is a key ingredient in
+              each. The added ingredients do not include garlic or oyster sauce.
+              Two of the three recipes are recognizably Chinese-style dishes,
+              and the descriptions are concise and under 8 words. However, one
+              recipe is somewhat generic, but the set still largely fits the
+              rubric.
+            tokensUsed:
+              total: 537
+              prompt: 447
+              completion: 90
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"recipes\":[{\"name\":\"Garlic
+                Oyster Bok Choy Stir-Fry\",\"emoji\":\"🥬\",\"desc\":\"Quick
+                savory greens with glossy sauce\",\"add\":[{\"name_en\":\"Sesame
+                oil\"},{\"name_en\":\"Soy sauce\"},{\"name_en\":\"Rice
+                vinegar\"}]},{\"name\":\"Bok Choy Noodle
+                Toss\",\"emoji\":\"🍜\",\"desc\":\"Tossed noodles with garlicky
+                umami greens\",\"add\":[{\"name_en\":\"Egg
+                noodles\"},{\"name_en\":\"Ginger\"},{\"name_en\":\"Scallions\"}]},{\"name\":\"Spicy
+                Bok Choy Rice Bowl\",\"emoji\":\"🍚\",\"desc\":\"Hearty bowl
+                with tender crisp bok choy\",\"add\":[{\"name_en\":\"Cooked
+                rice\"},{\"name_en\":\"Chili
+                flakes\"},{\"name_en\":\"Mushrooms\"}]}]}\n</Output>\n<Rubric>\nRecipes
+                are practical home cooking, not restaurant complexity.\nEach
+                recipe genuinely uses bok choy as a key ingredient, not a
+                garnish.\nAdded ingredients are NOT garlic or oyster sauce
+                (already in user's list).\nWith garlic and oyster sauce, recipes
+                should be authentically Chinese.\nRecipes should NOT be fusion
+                or westernized — a local Canadian exploring\nChinese cuisine
+                wants authentic dishes, not \"bok choy Caesar salad.\"\nAt least
+                2 of 3 recipes should be recognizably Chinese
+                dishes.\nDescriptions are concise and genuinely descriptive (max
+                8 words).\n\n</Rubric>"}]
+      id: b5c7161a-c49b-4b6f-9c03-e8f7644cb5e7
+      latencyMs: 3560
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a creative cooking assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "Cooking assistant. User has \"bok choy\".\nOther items: garlic, oyster sauce\n3 recipe ideas, each with 2-3 extra ingredients NOT in list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\": \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\": \"Item\"}]}]}"
+            }
+          ]
+        label: >-
+          prompts/current/inspire_item.json: [{"role":"system","content":"You
+          are a creative cooking assistant. Respond with JSON
+          only."},{"role":"user","content":"Cooking assistant. User has
+          \"{{name_en}}\".{% if taste %} Prefs: {{taste}}.{% endif %}\nOther
+          items: {{other_items}}{% if profile_context %}{{profile_context}}{%
+          endif %}\n3 recipe ideas, each with 2-3 extra ingredients NOT in
+          list.\nONLY JSON: {\"recipes\": [{\"name\": \"Name\", \"emoji\":
+          \"🍳\", \"desc\": \"Max 8 words\", \"add\": [{\"name_en\":
+          \"Item\"}]}]}"}]
+        config: {}
+      promptId: e0118c1a86c70465759441c5cc6d56fd2345b45cf483b0fc9616c6d2dbf35efb
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"recipes":[{"name":"Garlic Oyster Bok Choy
+          Stir-Fry","emoji":"🥬","desc":"Quick savory greens with glossy
+          sauce","add":[{"name_en":"Sesame oil"},{"name_en":"Soy
+          sauce"},{"name_en":"Rice vinegar"}]},{"name":"Bok Choy Noodle
+          Toss","emoji":"🍜","desc":"Tossed noodles with garlicky umami
+          greens","add":[{"name_en":"Egg
+          noodles"},{"name_en":"Ginger"},{"name_en":"Scallions"}]},{"name":"Spicy
+          Bok Choy Rice Bowl","emoji":"🍚","desc":"Hearty bowl with tender crisp
+          bok choy","add":[{"name_en":"Cooked rice"},{"name_en":"Chili
+          flakes"},{"name_en":"Mushrooms"}]}]}
+        tokenUsage:
+          total: 260
+          prompt: 96
+          completion: 164
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9675
+      success: true
+      testCase:
+        description: bok choy + garlic/oyster sauce — authentic Chinese, not fusion
+        vars: &ref_9
+          name_en: bok choy
+          other_items: garlic, oyster sauce
+          taste: ''
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - recipes
+              properties:
+                recipes:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - emoji
+                      - desc
+                      - add
+                    properties:
+                      name:
+                        type: string
+                      emoji:
+                        type: string
+                      desc:
+                        type: string
+                      add:
+                        type: array
+                        minItems: 2
+                        maxItems: 3
+                        items:
+                          type: object
+                          required:
+                            - name_en
+                          properties:
+                            name_en:
+                              type: string
+          - type: javascript
+            value: |
+              const d = JSON.parse(output);
+              const otherItems = ['garlic', 'oyster sauce'];
+              const noDupes = d.recipes.every(r =>
+                r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+              );
+              const valid = d.recipes && d.recipes.length === 3 &&
+                d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                  r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+              return {
+                pass: valid && noDupes,
+                score: valid && noDupes ? 1 : 0,
+                reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+              };
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses bok choy as a key ingredient, not a
+              garnish.
+
+              Added ingredients are NOT garlic or oyster sauce (already in
+              user's list).
+
+              With garlic and oyster sauce, recipes should be authentically
+              Chinese.
+
+              Recipes should NOT be fusion or westernized — a local Canadian
+              exploring
+
+              Chinese cuisine wants authentic dishes, not "bok choy Caesar
+              salad."
+
+              At least 2 of 3 recipes should be recognizably Chinese dishes.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              Recipes are practical home cooking, not restaurant complexity.
+
+              Each recipe genuinely uses bok choy as a key ingredient, not a
+              garnish.
+
+              Added ingredients are NOT garlic or oyster sauce (already in
+              user's list).
+
+              With garlic and oyster sauce, recipes should be authentically
+              Chinese.
+
+              Recipes should NOT be fusion or westernized — a local Canadian
+              exploring
+
+              Chinese cuisine wants authentic dishes, not "bok choy Caesar
+              salad."
+
+              At least 2 of 3 recipes should be recognizably Chinese dishes.
+
+              Descriptions are concise and genuinely descriptive (max 8 words).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 4
+      vars: *ref_9
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+  stats:
+    successes: 6
+    failures: 4
+    errors: 0
+    tokenUsage:
+      prompt: 970
+      completion: 1923
+      cached: 0
+      total: 2893
+      numRequests: 10
+      completionDetails:
+        reasoning: 0
+        acceptedPrediction: 0
+        rejectedPrediction: 0
+      assertions:
+        total: 13892
+        prompt: 9424
+        completion: 4468
+        cached: 0
+        numRequests: 0
+        completionDetails:
+          reasoning: 0
+          acceptedPrediction: 0
+          rejectedPrediction: 0
+    durationMs: 71641
+    evaluationDurationMs: 71641
+config:
+  tags: {}
+  description: 'Inspire Item — Scenario 1: OpenAI tier comparison (current prompt)'
+  prompts:
+    - >-
+      file:///Users/dako/LocalDocument/200-Project/SGA-ai-service/services/ai-service/tests/eval/prompts/current/inspire_item.json
+  providers:
+    - id: openrouter:openai/gpt-5.4-nano
+      label: GPT-5.4 Nano ($0.20/M)
+      config:
+        temperature: 0.7
+        max_tokens: 800
+    - id: openrouter:openai/gpt-5.4-mini
+      label: GPT-5.4 Mini ($0.75/M)
+      config:
+        temperature: 0.7
+        max_tokens: 800
+  tests:
+    - description: salmon + rice/soy sauce — simple Japanese direction
+      vars:
+        name_en: salmon
+        other_items: rice, soy sauce
+        taste: ''
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - recipes
+            properties:
+              recipes:
+                type: array
+                minItems: 3
+                maxItems: 3
+                items:
+                  type: object
+                  required:
+                    - name
+                    - emoji
+                    - desc
+                    - add
+                  properties:
+                    name:
+                      type: string
+                    emoji:
+                      type: string
+                    desc:
+                      type: string
+                    add:
+                      type: array
+                      minItems: 2
+                      maxItems: 3
+                      items:
+                        type: object
+                        required:
+                          - name_en
+                        properties:
+                          name_en:
+                            type: string
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const valid = d.recipes && d.recipes.length === 3 &&
+              d.recipes.every(r =>
+                r.name && r.emoji && r.desc &&
+                r.desc.split(/\s+/).length <= 8 &&
+                r.add && r.add.length >= 2 && r.add.length <= 3 &&
+                r.add.every(a => a.name_en)
+              );
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+            'Structure valid' : 'Invalid recipe structure' };
+        - type: llm-rubric
+          value: >
+            Recipes are practical home cooking, not restaurant complexity.
+
+            Each recipe genuinely uses salmon as a key ingredient, not a
+            garnish.
+
+            Added ingredients (add items) are NOT rice or soy sauce (already in
+            user's list).
+
+            With rice and soy sauce present, recipes should lean Japanese/Asian
+            but variety is welcome.
+
+            Descriptions are concise and genuinely descriptive (max 8 words).
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Recipes are practical home cooking, not restaurant complexity.
+
+            Each recipe genuinely uses salmon as a key ingredient, not a
+            garnish.
+
+            Added ingredients (add items) are NOT rice or soy sauce (already in
+            user's list).
+
+            With rice and soy sauce present, recipes should lean Japanese/Asian
+            but variety is welcome.
+
+            Descriptions are concise and genuinely descriptive (max 8 words).
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: tofu + gochujang/sesame oil/rice — Korean direction
+      vars:
+        name_en: tofu
+        other_items: gochujang, sesame oil, rice
+        taste: ''
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - recipes
+            properties:
+              recipes:
+                type: array
+                minItems: 3
+                maxItems: 3
+                items:
+                  type: object
+                  required:
+                    - name
+                    - emoji
+                    - desc
+                    - add
+                  properties:
+                    name:
+                      type: string
+                    emoji:
+                      type: string
+                    desc:
+                      type: string
+                    add:
+                      type: array
+                      minItems: 2
+                      maxItems: 3
+                      items:
+                        type: object
+                        required:
+                          - name_en
+                        properties:
+                          name_en:
+                            type: string
+        - type: javascript
+          value: |
+            const d = JSON.parse(output);
+            const otherItems = ['gochujang', 'sesame oil', 'rice'];
+            const noDupes = d.recipes.every(r =>
+              r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+            );
+            const valid = d.recipes && d.recipes.length === 3 &&
+              d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+            return {
+              pass: valid && noDupes,
+              score: valid && noDupes ? 1 : 0,
+              reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+            };
+        - type: llm-rubric
+          value: >
+            Recipes are practical home cooking, not restaurant complexity.
+
+            Each recipe genuinely uses tofu as a key ingredient, not a garnish.
+
+            Added ingredients are NOT gochujang, sesame oil, or rice (already in
+            user's list).
+
+            With gochujang and sesame oil present, recipes MUST be
+            Korean-influenced.
+
+            At least 2 of 3 recipes should be recognizably Korean dishes.
+
+            Descriptions are concise and genuinely descriptive (max 8 words).
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Recipes are practical home cooking, not restaurant complexity.
+
+            Each recipe genuinely uses tofu as a key ingredient, not a garnish.
+
+            Added ingredients are NOT gochujang, sesame oil, or rice (already in
+            user's list).
+
+            With gochujang and sesame oil present, recipes MUST be
+            Korean-influenced.
+
+            At least 2 of 3 recipes should be recognizably Korean dishes.
+
+            Descriptions are concise and genuinely descriptive (max 8 words).
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: avocado + no other items — should produce diverse recipes
+      vars:
+        name_en: avocado
+        other_items: none
+        taste: ''
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - recipes
+            properties:
+              recipes:
+                type: array
+                minItems: 3
+                maxItems: 3
+                items:
+                  type: object
+                  required:
+                    - name
+                    - emoji
+                    - desc
+                    - add
+                  properties:
+                    name:
+                      type: string
+                    emoji:
+                      type: string
+                    desc:
+                      type: string
+                    add:
+                      type: array
+                      minItems: 2
+                      maxItems: 3
+                      items:
+                        type: object
+                        required:
+                          - name_en
+                        properties:
+                          name_en:
+                            type: string
+        - type: javascript
+          value: |
+            const d = JSON.parse(output);
+            const valid = d.recipes && d.recipes.length === 3 &&
+              d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+            // Check diversity: all 3 recipe names should be different
+            const names = d.recipes.map(r => r.name.toLowerCase());
+            const diverse = new Set(names).size === 3;
+            return {
+              pass: valid && diverse,
+              score: valid && diverse ? 1 : 0,
+              reason: !valid ? 'Invalid structure' : !diverse ? 'Recipes not diverse enough' : 'OK'
+            };
+        - type: llm-rubric
+          value: >
+            Recipes are practical home cooking, not restaurant complexity.
+
+            Each recipe genuinely uses avocado as a key ingredient, not a
+            garnish.
+
+            With NO other items or cuisine hints, the 3 recipes should span
+            different
+
+            cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3
+            Mexican dishes).
+
+            Diversity is the key test here.
+
+            Descriptions are concise and genuinely descriptive (max 8 words).
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Recipes are practical home cooking, not restaurant complexity.
+
+            Each recipe genuinely uses avocado as a key ingredient, not a
+            garnish.
+
+            With NO other items or cuisine hints, the 3 recipes should span
+            different
+
+            cuisines or styles (e.g., Mexican, salad, smoothie/toast — not 3
+            Mexican dishes).
+
+            Diversity is the key test here.
+
+            Descriptions are concise and genuinely descriptive (max 8 words).
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: chicken thigh + Mexican items + vegetarian profile — conflict handling
+      vars:
+        name_en: chicken thigh
+        other_items: tortillas, cilantro, lime
+        taste: ''
+        profile_context: |-
+
+          Dietary: vegetarian.
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - recipes
+            properties:
+              recipes:
+                type: array
+                minItems: 3
+                maxItems: 3
+                items:
+                  type: object
+                  required:
+                    - name
+                    - emoji
+                    - desc
+                    - add
+                  properties:
+                    name:
+                      type: string
+                    emoji:
+                      type: string
+                    desc:
+                      type: string
+                    add:
+                      type: array
+                      minItems: 2
+                      maxItems: 3
+                      items:
+                        type: object
+                        required:
+                          - name_en
+                        properties:
+                          name_en:
+                            type: string
+        - type: javascript
+          value: |
+            const d = JSON.parse(output);
+            const otherItems = ['tortillas', 'cilantro', 'lime'];
+            const noDupes = d.recipes.every(r =>
+              r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+            );
+            const valid = d.recipes && d.recipes.length === 3 &&
+              d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+            return {
+              pass: valid && noDupes,
+              score: valid && noDupes ? 1 : 0,
+              reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+            };
+        - type: llm-rubric
+          value: >
+            This is a CONFLICT test. The user asks about chicken thigh but has a
+            vegetarian
+
+            dietary restriction in their profile.
+
+            The model should handle this gracefully — either:
+
+            (a) still provide chicken recipes since the user explicitly asked
+            about chicken thigh
+                (respecting user agency), OR
+            (b) note the conflict and offer vegetarian alternatives.
+
+            Either approach is acceptable, but ignoring the conflict entirely is
+            NOT acceptable.
+
+            Added ingredients should NOT be tortillas, cilantro, or lime
+            (already in list).
+
+            Recipes should lean Mexican given the other items.
+
+            Descriptions are concise and genuinely descriptive (max 8 words).
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            This is a CONFLICT test. The user asks about chicken thigh but has a
+            vegetarian
+
+            dietary restriction in their profile.
+
+            The model should handle this gracefully — either:
+
+            (a) still provide chicken recipes since the user explicitly asked
+            about chicken thigh
+                (respecting user agency), OR
+            (b) note the conflict and offer vegetarian alternatives.
+
+            Either approach is acceptable, but ignoring the conflict entirely is
+            NOT acceptable.
+
+            Added ingredients should NOT be tortillas, cilantro, or lime
+            (already in list).
+
+            Recipes should lean Mexican given the other items.
+
+            Descriptions are concise and genuinely descriptive (max 8 words).
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: bok choy + garlic/oyster sauce — authentic Chinese, not fusion
+      vars:
+        name_en: bok choy
+        other_items: garlic, oyster sauce
+        taste: ''
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - recipes
+            properties:
+              recipes:
+                type: array
+                minItems: 3
+                maxItems: 3
+                items:
+                  type: object
+                  required:
+                    - name
+                    - emoji
+                    - desc
+                    - add
+                  properties:
+                    name:
+                      type: string
+                    emoji:
+                      type: string
+                    desc:
+                      type: string
+                    add:
+                      type: array
+                      minItems: 2
+                      maxItems: 3
+                      items:
+                        type: object
+                        required:
+                          - name_en
+                        properties:
+                          name_en:
+                            type: string
+        - type: javascript
+          value: |
+            const d = JSON.parse(output);
+            const otherItems = ['garlic', 'oyster sauce'];
+            const noDupes = d.recipes.every(r =>
+              r.add.every(a => !otherItems.some(o => a.name_en.toLowerCase() === o))
+            );
+            const valid = d.recipes && d.recipes.length === 3 &&
+              d.recipes.every(r => r.name && r.emoji && r.desc && r.desc.split(/\s+/).length <= 8 &&
+                r.add && r.add.length >= 2 && r.add.length <= 3 && r.add.every(a => a.name_en));
+            return {
+              pass: valid && noDupes,
+              score: valid && noDupes ? 1 : 0,
+              reason: !valid ? 'Invalid structure' : !noDupes ? 'Add items duplicate existing items' : 'OK'
+            };
+        - type: llm-rubric
+          value: >
+            Recipes are practical home cooking, not restaurant complexity.
+
+            Each recipe genuinely uses bok choy as a key ingredient, not a
+            garnish.
+
+            Added ingredients are NOT garlic or oyster sauce (already in user's
+            list).
+
+            With garlic and oyster sauce, recipes should be authentically
+            Chinese.
+
+            Recipes should NOT be fusion or westernized — a local Canadian
+            exploring
+
+            Chinese cuisine wants authentic dishes, not "bok choy Caesar salad."
+
+            At least 2 of 3 recipes should be recognizably Chinese dishes.
+
+            Descriptions are concise and genuinely descriptive (max 8 words).
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            Recipes are practical home cooking, not restaurant complexity.
+
+            Each recipe genuinely uses bok choy as a key ingredient, not a
+            garnish.
+
+            Added ingredients are NOT garlic or oyster sauce (already in user's
+            list).
+
+            With garlic and oyster sauce, recipes should be authentically
+            Chinese.
+
+            Recipes should NOT be fusion or westernized — a local Canadian
+            exploring
+
+            Chinese cuisine wants authentic dishes, not "bok choy Caesar salad."
+
+            At least 2 of 3 recipes should be recognizably Chinese dishes.
+
+            Descriptions are concise and genuinely descriptive (max 8 words).
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+  scenarios: []
+  env: {}
+  outputPath:
+    - results/scenario1_inspire_item_20260331_193835.yaml
+    - results/scenario1_inspire_item_20260331_193835.csv
+  extensions: []
+  metadata: {}
+  evaluateOptions: {}
+shareableUrl: null
+metadata:
+  promptfooVersion: 0.121.3
+  nodeVersion: v25.1.0
+  platform: darwin
+  arch: arm64
+  exportedAt: '2026-04-01T02:46:11.487Z'
+  evaluationCreatedAt: '2026-04-01T02:44:59.820Z'

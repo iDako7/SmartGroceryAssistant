@@ -166,13 +166,13 @@ class TestAlternatives:
 
 class TestInspireItem:
     @pytest.mark.asyncio
-    async def test_uses_full_tier(self):
+    async def test_uses_fast_tier(self):
         from app.services.domains import inspire_item
 
         client = _make_mock_client('{"recipes": []}')
         await inspire_item(client, "chicken", other_items=["rice"])
         kwargs = client.call.call_args.kwargs
-        assert kwargs["tier"] == "full"
+        assert kwargs["tier"] == "fast"
 
     @pytest.mark.asyncio
     async def test_other_items_in_prompt(self):

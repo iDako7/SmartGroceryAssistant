@@ -42,15 +42,14 @@ export interface AiJob {
   result?: unknown;
 }
 
-// ── AI Response Types (aligned with MVP-PRD §3) ──────────
+// ── AI Response Types (aligned with actual backend models.py) ──
 
 /** POST /api/v1/ai/item-info */
 export interface ItemInfoResponse {
-  taste: string;
-  usage: string;
-  picking: string;
-  storage: string;
-  funFact: string;
+  category: string;
+  typical_unit: string;
+  storage_tip: string;
+  nutrition_note: string;
 }
 
 /** POST /api/v1/ai/alternatives */
@@ -58,21 +57,19 @@ export interface AlternativesResponse {
   note: string;
   alts: {
     name_en: string;
-    name_zh: string;
-    match: 'Very close' | 'Similar' | 'Different but works';
+    match: string;
     desc: string;
     where: string;
   }[];
 }
 
-/** POST /api/v1/ai/inspire (per-item) */
+/** POST /api/v1/ai/inspire/item */
 export interface PerItemInspireResponse {
   recipes: {
     name: string;
-    name_zh: string;
     emoji: string;
     desc: string;
-    add: { name_en: string; name_zh: string }[];
+    add: { name_en: string }[];
   }[];
 }
 
@@ -108,9 +105,9 @@ export interface SuggestResponse {
 
 /** Clarifying questions before suggest (two-step flow) */
 export interface ClarifyQuestion {
-  text: string;
-  text_zh: string;
-  options: { label: string; label_zh: string }[];
+  q: string;
+  options: string[];
+  allowOther: boolean;
 }
 
 export interface ClarifyResponse {

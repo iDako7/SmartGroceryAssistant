@@ -157,7 +157,7 @@ async def inspire_item(
         ),
         system="You are a creative cooking assistant. Respond with JSON only.",
         cache_key=key,
-        tier="full",
+        tier="fast",
         max_tokens=800,
         ttl=3600,
     )

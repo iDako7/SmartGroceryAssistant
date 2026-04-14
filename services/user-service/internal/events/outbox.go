@@ -60,11 +60,9 @@ func (p *OutboxPoller) poll(ctx context.Context) {
 	}
 
 	for _, row := range rows {
-		// Build the full event JSON the consumer expects:
-		// {"type":"user.deleted","user_id":"...","payload":{...}}
 		body := buildEventBody(row.EventType, row.Payload)
 
-		err := p.ch.PublishWithContext(ctx, "user", "", false, false, amqp.Publishing{
+		err := p.ch.PublishWithContext(ctx, exchangeName, "", false, false, amqp.Publishing{
 			ContentType:  "application/json",
 			DeliveryMode: amqp.Persistent,
 			Body:         body,
@@ -85,15 +83,14 @@ func (p *OutboxPoller) poll(ctx context.Context) {
 // buildEventBody wraps the raw outbox payload into the event envelope
 // that the list-service consumer expects.
 // Outbox payload is {"user_id":"<id>"} from jsonb_build_object.
-// Consumer expects {"type":"user.deleted","user_id":"<id>","payload":{"user_id":"<id>"}}.
+// Consumer expects {"type":"user.deleted","user_id":"<id>"}.
 func buildEventBody(eventType string, payload []byte) []byte {
 	var p map[string]any
 	_ = json.Unmarshal(payload, &p)
 
 	envelope := UserEvent{
-		Type:    EventType(eventType),
-		UserID:  fmt.Sprint(p["user_id"]),
-		Payload: p,
+		Type:   eventType,
+		UserID: fmt.Sprint(p["user_id"]),
 	}
 	body, _ := json.Marshal(envelope)
 	return body

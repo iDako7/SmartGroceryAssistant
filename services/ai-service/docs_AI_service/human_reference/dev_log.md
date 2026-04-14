@@ -10,18 +10,21 @@ For full reasoning, see `design_decisions.md`. For open items, see `open_questio
 **Decision:** Scrape Costco Sameday via GraphQL API (two-step: Chrome MCP for ID discovery + GraphQL for batch fetch)
 
 **What we tried:**
+
 - bb-browser (browser automation) — couldn't reliably scroll/render pages, scroll events didn't trigger lazy loading
 - Direct GraphQL API only — fast but collection queries need auth, so can't discover product IDs without a browser
 - Chrome DevTools MCP only — full data including price, but slow (~4 min for 7 products due to sequential page navigation)
 - **Winner:** Chrome DevTools MCP to scroll department pages and collect product IDs from Apollo cache, then GraphQL API to batch-fetch all product details (28s for 443 products)
 
 **Benchmark (7 products, same data):**
+
 - Chrome MCP: 238s, full data including price
 - GraphQL API: 19s, everything except price (null without auth)
 
 **Result:** 396 unique products (443 raw, 47 cross-department duplicates) across 7 departments — Meat & Seafood (58), Produce (69), Pantry (69), Deli & Dairy (56), Frozen (51), Snacks & Candy (76), Beverages (64). Verified 10 random products against Chrome MCP — 10/10 match.
 
 **Key learnings:**
+
 - Costco Sameday is Instacart-powered — Apollo Client with GraphQL backend
 - `CollectionProductsWithFeaturedProducts` query needs auth, `Items` query doesn't (except for price field)
 - Department pages load products lazily in subcategory carousels (~50-70 visible per department via scrolling, not the full catalog)
@@ -34,9 +37,7 @@ For full reasoning, see `design_decisions.md`. For open items, see `open_questio
 
 ---
 
-## 2026-03-30 — Phase 1 Reflection
-
-### Personal Learning
+## 2026-03-30 — Phase 1 Reflection: How to learn through coding
 
 I wanted to learn deeply during implementation. If I learned and wrote everything from scratch, this phase could take around one week.
 So I asked Claude Code to generate a very detailed implementation guide (around 1,500 lines, with step-by-step code and explanations).
@@ -63,3 +64,9 @@ The downside is speed: it is still too slow for my current delivery target.
 
 My focus going forward is clear: deliver a useful, usable product with a robust codebase I can maintain.
 This Phase 1 method helped me learn, but it is not fast enough, so I will improve the execution style in Phase 2.
+
+## 2026-04-01
+
+I think developing a personal project with passion is quite different from working, especially compared with the old days. I use AI coding, and I am still a learner, so for me each phase is not only about implementing features, but also about giving myself a chance to learn. Before this phase started, I thought I knew enough and had made a good plan. But after the implementation, I realized I had learned new things, discovered new ideas, and received new feedback from my customer or colleague. Then the plan changed.
+
+This feels very different from the old days. Back then, most of my time was spent handling process, checking progress, and managing collaboration, maybe 80% of it, while only 20% was used for real thinking. And even for that thinking, maybe half of the time was spent presenting the result, so I had to do many chores like preparing slides or writing documents. Nowadays things are quite different, and honestly most of it feels happy to me, because I learn a lot. Almost every day I feel something new, and that makes me feel I am making progress. It reminds me of what I love about skiing: every day there is something new to experience, and some different challenge to face.

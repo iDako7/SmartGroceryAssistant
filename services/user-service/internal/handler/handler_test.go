@@ -54,9 +54,8 @@ func (m *mockUserSvc) UpdateProfile(ctx context.Context, userID string, req mode
 	return args.Get(0).(*model.ProfileView), args.Error(1)
 }
 
-func (m *mockUserSvc) DeleteAccount(ctx context.Context, userID string) error {
-	args := m.Called(ctx, userID)
-	return args.Error(0)
+func (m *mockUserSvc) DeleteUser(ctx context.Context, userID string) error {
+	return m.Called(ctx, userID).Error(0)
 }
 
 // ── Helpers ──────────────────────────────────────────────
@@ -74,7 +73,7 @@ func newRouter(svc *mockUserSvc) *gin.Engine {
 	})
 	auth.GET("/me", h.GetProfile)
 	auth.PUT("/me", h.UpdateProfile)
-	auth.DELETE("/me", h.DeleteAccount)
+	auth.DELETE("/me", h.DeleteUser)
 	return r
 }
 
@@ -266,13 +265,13 @@ func TestHandler_UpdateProfile_BadJSON(t *testing.T) {
 	svc.AssertNotCalled(t, "UpdateProfile")
 }
 
-// ── DeleteAccount ───────────────────────────────────────
+// ── DeleteUser ──────────────────────────────────────────
 
-func TestHandler_DeleteAccount_Success(t *testing.T) {
+func TestHandler_DeleteUser_Success(t *testing.T) {
 	svc := new(mockUserSvc)
 	r := newRouter(svc)
 
-	svc.On("DeleteAccount", mock.Anything, "test-user-id").Return(nil)
+	svc.On("DeleteUser", mock.Anything, "test-user-id").Return(nil)
 
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodDelete, "/api/v1/users/me", nil)
@@ -282,11 +281,11 @@ func TestHandler_DeleteAccount_Success(t *testing.T) {
 	svc.AssertExpectations(t)
 }
 
-func TestHandler_DeleteAccount_InternalError(t *testing.T) {
+func TestHandler_DeleteUser_InternalError(t *testing.T) {
 	svc := new(mockUserSvc)
 	r := newRouter(svc)
 
-	svc.On("DeleteAccount", mock.Anything, "test-user-id").Return(errors.New("db error"))
+	svc.On("DeleteUser", mock.Anything, "test-user-id").Return(errors.New("db error"))
 
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodDelete, "/api/v1/users/me", nil)

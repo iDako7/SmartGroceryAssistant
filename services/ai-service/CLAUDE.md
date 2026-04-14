@@ -29,9 +29,8 @@ Request --> Cache (Redis) --> KB (SQLite + FTS5) --> LLM (OpenRouter)
 ```
 
 - **Sync endpoints** (translate, item-info, alternatives, per-item inspire, clarify): direct response, tier routing added in Phase 4-5
-- **Async endpoints** (suggest, per-list inspire): Celery + Redis broker (Phase 3), async job lifecycle
+- **Async endpoint** (suggest): Celery + Redis broker (Phase 3), async job lifecycle
 - **Two-step suggest flow**: clarify endpoint (sync, 1-3 questions with chip options) --> suggest endpoint (async, user context from answers)
-- **Two inspire modes**: per-item (sync -- "recipes using this item") and per-list (async -- "meal ideas from full grocery list")
 - **LLM output**: structured JSON mode across all tiers (uniform interface)
 - **KB**: read-only SQLite deployed as file alongside code, populated offline (Phase 4)
 
@@ -46,6 +45,10 @@ uv run pytest -k "test_name"                         # Single test by name
 uv run ruff check .                                  # Lint
 uv run ruff format --check .                         # Format check
 ```
+
+## Eval
+
+- **Use `/promptfoo-evals` skill** when creating or updating promptfoo evaluation configs -- it enforces correct patterns (file-based tests, deterministic assertions first, `promptfoo validate`)
 
 ## Code Style
 

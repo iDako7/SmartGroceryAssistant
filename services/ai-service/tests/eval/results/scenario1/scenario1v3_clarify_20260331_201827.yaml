@@ -1,0 +1,3545 @@
+evalId: eval-XuW-2026-04-01T03:18:30
+results:
+  version: 3
+  timestamp: '2026-04-01T03:18:30.235Z'
+  prompts:
+    - raw: >-
+        [{"role":"system","content":"You are a smart grocery assistant. Respond
+        with JSON only."},{"role":"user","content":"You are a smart grocery
+        assistant. Before making suggestions, understand the user's intent.{% if
+        profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+        sections:\n{{sections_text}}\n\nAnalyze the list and generate clarifying
+        questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly
+        point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1
+        question. Do NOT add follow-up questions about servings or spice
+        level.\n- Items span multiple cuisines or occasion is genuinely unclear
+        → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose
+        obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the
+        scale unclear (date night vs dinner party)?\n\nEach question should have
+        3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\":
+        \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option
+        3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n-
+        Options should be short (2-5 words each)\n- Reference specific items
+        from the list in your options, not generic categories\n- Questions
+        should feel conversational, like a friend asking \"what are we
+        cooking?\"\n- 3-4 options per question"}]
+      label: >-
+        prompts/current/clarify.json: [{"role":"system","content":"You are a
+        smart grocery assistant. Respond with JSON
+        only."},{"role":"user","content":"You are a smart grocery assistant.
+        Before making suggestions, understand the user's intent.{% if
+        profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+        sections:\n{{sections_text}}\n\nAnalyze the list and generate clarifying
+        questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly
+        point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1
+        question. Do NOT add follow-up questions about servings or spice
+        level.\n- Items span multiple cuisines or occasion is genuinely unclear
+        → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose
+        obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the
+        scale unclear (date night vs dinner party)?\n\nEach question should have
+        3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\":
+        \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option
+        3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n-
+        Options should be short (2-5 words each)\n- Reference specific items
+        from the list in your options, not generic categories\n- Questions
+        should feel conversational, like a friend asking \"what are we
+        cooking?\"\n- 3-4 options per question"}]
+      id: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      provider: GPT-5.4 Nano ($0.20/M)
+      metrics:
+        score: 3.87
+        testPassCount: 2
+        testFailCount: 3
+        testErrorCount: 0
+        assertPassCount: 15
+        assertFailCount: 5
+        totalLatencyMs: 5305
+        tokenUsage:
+          prompt: 1383
+          completion: 363
+          cached: 0
+          total: 1746
+          numRequests: 5
+          completionDetails:
+            reasoning: 0
+            acceptedPrediction: 0
+            rejectedPrediction: 0
+          assertions:
+            total: 4042
+            prompt: 3116
+            completion: 926
+            cached: 0
+            numRequests: 0
+            completionDetails:
+              reasoning: 0
+              acceptedPrediction: 0
+              rejectedPrediction: 0
+        namedScores: {}
+        namedScoresCount: {}
+        cost: 0
+    - raw: >-
+        [{"role":"system","content":"You are a smart grocery assistant. Respond
+        with JSON only."},{"role":"user","content":"You are a smart grocery
+        assistant. Before making suggestions, understand the user's intent.{% if
+        profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+        sections:\n{{sections_text}}\n\nAnalyze the list and generate clarifying
+        questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly
+        point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1
+        question. Do NOT add follow-up questions about servings or spice
+        level.\n- Items span multiple cuisines or occasion is genuinely unclear
+        → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose
+        obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the
+        scale unclear (date night vs dinner party)?\n\nEach question should have
+        3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\":
+        \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option
+        3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n-
+        Options should be short (2-5 words each)\n- Reference specific items
+        from the list in your options, not generic categories\n- Questions
+        should feel conversational, like a friend asking \"what are we
+        cooking?\"\n- 3-4 options per question"}]
+      label: >-
+        prompts/current/clarify.json: [{"role":"system","content":"You are a
+        smart grocery assistant. Respond with JSON
+        only."},{"role":"user","content":"You are a smart grocery assistant.
+        Before making suggestions, understand the user's intent.{% if
+        profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+        sections:\n{{sections_text}}\n\nAnalyze the list and generate clarifying
+        questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly
+        point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1
+        question. Do NOT add follow-up questions about servings or spice
+        level.\n- Items span multiple cuisines or occasion is genuinely unclear
+        → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose
+        obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the
+        scale unclear (date night vs dinner party)?\n\nEach question should have
+        3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\":
+        \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option
+        3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n-
+        Options should be short (2-5 words each)\n- Reference specific items
+        from the list in your options, not generic categories\n- Questions
+        should feel conversational, like a friend asking \"what are we
+        cooking?\"\n- 3-4 options per question"}]
+      id: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      provider: GPT-5.4 Mini ($0.75/M)
+      metrics:
+        score: 4.125
+        testPassCount: 3
+        testFailCount: 2
+        testErrorCount: 0
+        assertPassCount: 16
+        assertFailCount: 4
+        totalLatencyMs: 7508
+        tokenUsage:
+          prompt: 1383
+          completion: 374
+          cached: 0
+          total: 1757
+          numRequests: 5
+          completionDetails:
+            reasoning: 0
+            acceptedPrediction: 0
+            rejectedPrediction: 0
+          assertions:
+            total: 4272
+            prompt: 3274
+            completion: 998
+            cached: 0
+            numRequests: 0
+            completionDetails:
+              reasoning: 0
+              acceptedPrediction: 0
+              rejectedPrediction: 0
+        namedScores: {}
+        namedScoresCount: {}
+        cost: 0
+  results:
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.9450000000000001
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 839
+          prompt: 636
+          completion: 203
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - questions
+                properties:
+                  questions:
+                    type: array
+                    minItems: 1
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - q
+                        - options
+                        - allowOther
+                      properties:
+                        q:
+                          type: string
+                        options:
+                          type: array
+                          minItems: 3
+                          maxItems: 4
+                          items:
+                            type: string
+                        allowOther:
+                          type: boolean
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a straightforward Asian meal list. The model should
+                generate just 1 question since the purpose is fairly obvious.
+                Questions should be specific to this list (not generic like
+                'What cuisine?'). Options should be short (2-5 words) and
+                tappable. The tone should be conversational.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.85
+            reason: >-
+              The output generates exactly 1 question, which is appropriate. The
+              question is specific to the ingredients listed (chicken, rice, soy
+              sauce). The options are short (3-6 words) and tappable. The tone
+              is conversational. The options are reasonable variations of what
+              could be made with these ingredients. The 'allowOther' field is
+              included for flexibility. Overall this meets all the rubric
+              criteria well.
+            tokensUsed:
+              total: 450
+              prompt: 341
+              completion: 109
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are you making with the chicken, rice, and soy
+                sauce?\",\"options\":[\"Stir-fry chicken over rice\",\"Soy sauce
+                chicken rice bowl\",\"Ginger-soy chicken and rice\",\"Soy sauce
+                chicken fried
+                rice\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis is a
+                straightforward Asian meal list. The model should generate just
+                1 question since the purpose is fairly obvious. Questions should
+                be specific to this list (not generic like 'What cuisine?').
+                Options should be short (2-5 words) and tappable. The tone
+                should be conversational.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a straightforward Asian meal list. The model should
+                generate just 1 question since the purpose is fairly obvious.
+                Questions should be specific to this list (not generic like
+                'What cuisine?'). Options should be short (2-5 words) and
+                tappable. The tone should be conversational.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.93
+            reason: >-
+              The output generates just 1 question, and the question is specific
+              to the ingredient list and conversational. The options are short
+              and tappable. However, the question is phrased as 'What are you
+              making with the chicken, rice, and soy sauce?' which is
+              understandable, but it may be a bit less direct than ideal for a
+              straightforward meal list. Overall it satisfies the rubric.
+            tokensUsed:
+              total: 389
+              prompt: 295
+              completion: 94
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are you making with the chicken, rice, and soy
+                sauce?\",\"options\":[\"Stir-fry chicken over rice\",\"Soy sauce
+                chicken rice bowl\",\"Ginger-soy chicken and rice\",\"Soy sauce
+                chicken fried
+                rice\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis is a
+                straightforward Asian meal list. The model should generate just
+                1 question since the purpose is fairly obvious. Questions should
+                be specific to this list (not generic like 'What cuisine?').
+                Options should be short (2-5 words) and tappable. The tone
+                should be conversational.\n\n</Rubric>"}]
+      id: b5b348db-71f0-4db3-bd1b-5eeb3d0d0d81
+      latencyMs: 1094
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a smart grocery assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "You are a smart grocery assistant. Before making suggestions, understand the user's intent.\n\nGrocery list sections:\n{\"produce\": [\"chicken\", \"rice\", \"soy sauce\"]}\n\nAnalyze the list and generate clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1 question. Do NOT add follow-up questions about servings or spice level.\n- Items span multiple cuisines or occasion is genuinely unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the scale unclear (date night vs dinner party)?\n\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Reference specific items from the list in your options, not generic categories\n- Questions should feel conversational, like a friend asking \"what are we cooking?\"\n- 3-4 options per question"
+            }
+          ]
+        label: >-
+          prompts/current/clarify.json: [{"role":"system","content":"You are a
+          smart grocery assistant. Respond with JSON
+          only."},{"role":"user","content":"You are a smart grocery assistant.
+          Before making suggestions, understand the user's intent.{% if
+          profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+          sections:\n{{sections_text}}\n\nAnalyze the list and generate
+          clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All
+          items clearly point to ONE purpose (Asian meal, baking, party snacks)
+          → EXACTLY 1 question. Do NOT add follow-up questions about servings or
+          spice level.\n- Items span multiple cuisines or occasion is genuinely
+          unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the
+          purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n-
+          Is the scale unclear (date night vs dinner party)?\n\nEach question
+          should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\":
+          [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\",
+          \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions
+          maximum\n- Options should be short (2-5 words each)\n- Reference
+          specific items from the list in your options, not generic
+          categories\n- Questions should feel conversational, like a friend
+          asking \"what are we cooking?\"\n- 3-4 options per question"}]
+        config: {}
+      promptId: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: >-
+          {"questions":[{"q":"What are you making with the chicken, rice, and
+          soy sauce?","options":["Stir-fry chicken over rice","Soy sauce chicken
+          rice bowl","Ginger-soy chicken and rice","Soy sauce chicken fried
+          rice"],"allowOther":true}]}
+        tokenUsage:
+          total: 332
+          prompt: 270
+          completion: 62
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.9450000000000001
+      success: true
+      testCase:
+        description: chicken/rice/soy sauce — obvious Asian meal, minimal questions
+        vars: &ref_0
+          sections_text: '{"produce": ["chicken", "rice", "soy sauce"]}'
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - questions
+              properties:
+                questions:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - q
+                      - options
+                      - allowOther
+                    properties:
+                      q:
+                        type: string
+                      options:
+                        type: array
+                        minItems: 3
+                        maxItems: 4
+                        items:
+                          type: string
+                      allowOther:
+                        type: boolean
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.questions && d.questions.length >= 1 &&
+              d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+              && q.options.length >= 3 && q.options.length <= 4 &&
+              q.options.every(o => o.split(/\s+/).length <= 5));
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or option length' };
+          - type: llm-rubric
+            value: >
+              This is a straightforward Asian meal list. The model should
+              generate just 1 question since the purpose is fairly obvious.
+              Questions should be specific to this list (not generic like 'What
+              cuisine?'). Options should be short (2-5 words) and tappable. The
+              tone should be conversational.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This is a straightforward Asian meal list. The model should
+              generate just 1 question since the purpose is fairly obvious.
+              Questions should be specific to this list (not generic like 'What
+              cuisine?'). Options should be short (2-5 words) and tappable. The
+              tone should be conversational.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 0
+      vars: *ref_0
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.975
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 755
+          prompt: 617
+          completion: 138
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - questions
+                properties:
+                  questions:
+                    type: array
+                    minItems: 1
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - q
+                        - options
+                        - allowOther
+                      properties:
+                        q:
+                          type: string
+                        options:
+                          type: array
+                          minItems: 3
+                          maxItems: 4
+                          items:
+                            type: string
+                        allowOther:
+                          type: boolean
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a straightforward Asian meal list. The model should
+                generate just 1 question since the purpose is fairly obvious.
+                Questions should be specific to this list (not generic like
+                'What cuisine?'). Options should be short (2-5 words) and
+                tappable. The tone should be conversational.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.9
+            reason: >-
+              The output generates exactly 1 question, which is appropriate. The
+              question is specific to the ingredients listed (chicken, rice, soy
+              sauce). The options are short (2-5 words) and tappable. The tone
+              is conversational. The allowOther field is included for
+              flexibility. This meets all the rubric criteria well.
+            tokensUsed:
+              total: 422
+              prompt: 331
+              completion: 91
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are you making with the chicken, rice, and soy
+                sauce?\",\"options\":[\"Chicken fried rice\",\"Teriyaki chicken
+                bowls\",\"Soy chicken stir-fry\",\"Something
+                else\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis is a
+                straightforward Asian meal list. The model should generate just
+                1 question since the purpose is fairly obvious. Questions should
+                be specific to this list (not generic like 'What cuisine?').
+                Options should be short (2-5 words) and tappable. The tone
+                should be conversational.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a straightforward Asian meal list. The model should
+                generate just 1 question since the purpose is fairly obvious.
+                Questions should be specific to this list (not generic like
+                'What cuisine?'). Options should be short (2-5 words) and
+                tappable. The tone should be conversational.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output contains exactly 1 question, it is specific to the
+              listed ingredients, the options are short and tappable, and the
+              tone is conversational.
+            tokensUsed:
+              total: 333
+              prompt: 286
+              completion: 47
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are you making with the chicken, rice, and soy
+                sauce?\",\"options\":[\"Chicken fried rice\",\"Teriyaki chicken
+                bowls\",\"Soy chicken stir-fry\",\"Something
+                else\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis is a
+                straightforward Asian meal list. The model should generate just
+                1 question since the purpose is fairly obvious. Questions should
+                be specific to this list (not generic like 'What cuisine?').
+                Options should be short (2-5 words) and tappable. The tone
+                should be conversational.\n\n</Rubric>"}]
+      id: e922cecd-53c8-4f93-b004-1aeca8a39186
+      latencyMs: 1305
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a smart grocery assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "You are a smart grocery assistant. Before making suggestions, understand the user's intent.\n\nGrocery list sections:\n{\"produce\": [\"chicken\", \"rice\", \"soy sauce\"]}\n\nAnalyze the list and generate clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1 question. Do NOT add follow-up questions about servings or spice level.\n- Items span multiple cuisines or occasion is genuinely unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the scale unclear (date night vs dinner party)?\n\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Reference specific items from the list in your options, not generic categories\n- Questions should feel conversational, like a friend asking \"what are we cooking?\"\n- 3-4 options per question"
+            }
+          ]
+        label: >-
+          prompts/current/clarify.json: [{"role":"system","content":"You are a
+          smart grocery assistant. Respond with JSON
+          only."},{"role":"user","content":"You are a smart grocery assistant.
+          Before making suggestions, understand the user's intent.{% if
+          profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+          sections:\n{{sections_text}}\n\nAnalyze the list and generate
+          clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All
+          items clearly point to ONE purpose (Asian meal, baking, party snacks)
+          → EXACTLY 1 question. Do NOT add follow-up questions about servings or
+          spice level.\n- Items span multiple cuisines or occasion is genuinely
+          unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the
+          purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n-
+          Is the scale unclear (date night vs dinner party)?\n\nEach question
+          should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\":
+          [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\",
+          \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions
+          maximum\n- Options should be short (2-5 words each)\n- Reference
+          specific items from the list in your options, not generic
+          categories\n- Questions should feel conversational, like a friend
+          asking \"what are we cooking?\"\n- 3-4 options per question"}]
+        config: {}
+      promptId: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"questions":[{"q":"What are you making with the chicken, rice, and
+          soy sauce?","options":["Chicken fried rice","Teriyaki chicken
+          bowls","Soy chicken stir-fry","Something else"],"allowOther":true}]}
+        tokenUsage:
+          total: 323
+          prompt: 270
+          completion: 53
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.975
+      success: true
+      testCase:
+        description: chicken/rice/soy sauce — obvious Asian meal, minimal questions
+        vars: &ref_1
+          sections_text: '{"produce": ["chicken", "rice", "soy sauce"]}'
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - questions
+              properties:
+                questions:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - q
+                      - options
+                      - allowOther
+                    properties:
+                      q:
+                        type: string
+                      options:
+                        type: array
+                        minItems: 3
+                        maxItems: 4
+                        items:
+                          type: string
+                      allowOther:
+                        type: boolean
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.questions && d.questions.length >= 1 &&
+              d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+              && q.options.length >= 3 && q.options.length <= 4 &&
+              q.options.every(o => o.split(/\s+/).length <= 5));
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or option length' };
+          - type: llm-rubric
+            value: >
+              This is a straightforward Asian meal list. The model should
+              generate just 1 question since the purpose is fairly obvious.
+              Questions should be specific to this list (not generic like 'What
+              cuisine?'). Options should be short (2-5 words) and tappable. The
+              tone should be conversational.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This is a straightforward Asian meal list. The model should
+              generate just 1 question since the purpose is fairly obvious.
+              Questions should be specific to this list (not generic like 'What
+              cuisine?'). Options should be short (2-5 words) and tappable. The
+              tone should be conversational.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 0
+      vars: *ref_1
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      error: >-
+        The output only generates 1 question instead of the required 2-3
+        questions to clarify the mixed cuisine patterns. While the single
+        question does address the fusion/conflict between Mexican (tortillas),
+        Korean (kimchi), and Indian (naan) ingredients, it fails to meet the
+        rubric's requirement of 2-3 clarifying questions. The options are short
+        and tappable, and the question is relevant to the conflict, but the
+        quantity requirement is not met.
+      gradingResult:
+        pass: false
+        score: 0.575
+        reason: >-
+          The output only generates 1 question instead of the required 2-3
+          questions to clarify the mixed cuisine patterns. While the single
+          question does address the fusion/conflict between Mexican (tortillas),
+          Korean (kimchi), and Indian (naan) ingredients, it fails to meet the
+          rubric's requirement of 2-3 clarifying questions. The options are
+          short and tappable, and the question is relevant to the conflict, but
+          the quantity requirement is not met.
+        namedScores: {}
+        tokensUsed:
+          total: 801
+          prompt: 620
+          completion: 181
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - questions
+                properties:
+                  questions:
+                    type: array
+                    minItems: 1
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - q
+                        - options
+                        - allowOther
+                      properties:
+                        q:
+                          type: string
+                        options:
+                          type: array
+                          minItems: 3
+                          maxItems: 4
+                          items:
+                            type: string
+                        allowOther:
+                          type: boolean
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                This list mixes Mexican (tortillas), Korean (kimchi), and Indian
+                (naan) signals. The model should generate 2-3 questions to
+                clarify the mixed cuisine patterns. Questions should be specific
+                to the conflict in this list. Options should be short and
+                tappable.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.3
+            reason: >-
+              The output only generates 1 question instead of the required 2-3
+              questions to clarify the mixed cuisine patterns. While the single
+              question does address the fusion/conflict between Mexican
+              (tortillas), Korean (kimchi), and Indian (naan) ingredients, it
+              fails to meet the rubric's requirement of 2-3 clarifying
+              questions. The options are short and tappable, and the question is
+              relevant to the conflict, but the quantity requirement is not met.
+            tokensUsed:
+              total: 453
+              prompt: 333
+              completion: 120
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are we making with tortillas, cheese, kimchi, and
+                naan?\",\"options\":[\"Kimchi tacos with tortillas\",\"Cheesy
+                naan melt\",\"Kimchi quesadilla vibe\",\"Something like fusion
+                wraps\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis list
+                mixes Mexican (tortillas), Korean (kimchi), and Indian (naan)
+                signals. The model should generate 2-3 questions to clarify the
+                mixed cuisine patterns. Questions should be specific to the
+                conflict in this list. Options should be short and
+                tappable.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This list mixes Mexican (tortillas), Korean (kimchi), and Indian
+                (naan) signals. The model should generate 2-3 questions to
+                clarify the mixed cuisine patterns. Questions should be specific
+                to the conflict in this list. Options should be short and
+                tappable.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0
+            reason: >-
+              The output contains only 1 question, but the rubric requires 2-3
+              questions to clarify the mixed cuisine patterns. While the
+              question is specific and the options are short/tappable, the
+              quantity requirement is not met.
+            tokensUsed:
+              total: 348
+              prompt: 287
+              completion: 61
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are we making with tortillas, cheese, kimchi, and
+                naan?\",\"options\":[\"Kimchi tacos with tortillas\",\"Cheesy
+                naan melt\",\"Kimchi quesadilla vibe\",\"Something like fusion
+                wraps\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis list
+                mixes Mexican (tortillas), Korean (kimchi), and Indian (naan)
+                signals. The model should generate 2-3 questions to clarify the
+                mixed cuisine patterns. Questions should be specific to the
+                conflict in this list. Options should be short and
+                tappable.\n\n</Rubric>"}]
+      id: 947a4a8f-b0ff-4045-ad0e-d648581e5eb1
+      latencyMs: 922
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a smart grocery assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "You are a smart grocery assistant. Before making suggestions, understand the user's intent.\n\nGrocery list sections:\n{\"produce\": [\"tortillas\", \"cheese\", \"kimchi\", \"naan\"]}\n\nAnalyze the list and generate clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1 question. Do NOT add follow-up questions about servings or spice level.\n- Items span multiple cuisines or occasion is genuinely unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the scale unclear (date night vs dinner party)?\n\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Reference specific items from the list in your options, not generic categories\n- Questions should feel conversational, like a friend asking \"what are we cooking?\"\n- 3-4 options per question"
+            }
+          ]
+        label: >-
+          prompts/current/clarify.json: [{"role":"system","content":"You are a
+          smart grocery assistant. Respond with JSON
+          only."},{"role":"user","content":"You are a smart grocery assistant.
+          Before making suggestions, understand the user's intent.{% if
+          profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+          sections:\n{{sections_text}}\n\nAnalyze the list and generate
+          clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All
+          items clearly point to ONE purpose (Asian meal, baking, party snacks)
+          → EXACTLY 1 question. Do NOT add follow-up questions about servings or
+          spice level.\n- Items span multiple cuisines or occasion is genuinely
+          unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the
+          purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n-
+          Is the scale unclear (date night vs dinner party)?\n\nEach question
+          should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\":
+          [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\",
+          \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions
+          maximum\n- Options should be short (2-5 words each)\n- Reference
+          specific items from the list in your options, not generic
+          categories\n- Questions should feel conversational, like a friend
+          asking \"what are we cooking?\"\n- 3-4 options per question"}]
+        config: {}
+      promptId: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "questions": [
+              {
+                "q": "What are we making with tortillas, cheese, kimchi, and naan?",
+                "options": ["Kimchi tacos with tortillas", "Cheesy naan melt", "Kimchi quesadilla vibe", "Something like fusion wraps"],
+                "allowOther": true
+              }
+            ]
+          }
+        tokenUsage:
+          total: 349
+          prompt: 275
+          completion: 74
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.575
+      success: false
+      testCase:
+        description: tortillas/cheese/kimchi/naan — mixed cuisine signals
+        vars: &ref_2
+          sections_text: '{"produce": ["tortillas", "cheese", "kimchi", "naan"]}'
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - questions
+              properties:
+                questions:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - q
+                      - options
+                      - allowOther
+                    properties:
+                      q:
+                        type: string
+                      options:
+                        type: array
+                        minItems: 3
+                        maxItems: 4
+                        items:
+                          type: string
+                      allowOther:
+                        type: boolean
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.questions && d.questions.length >= 1 &&
+              d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+              && q.options.length >= 3 && q.options.length <= 4 &&
+              q.options.every(o => o.split(/\s+/).length <= 5));
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or option length' };
+          - type: llm-rubric
+            value: >
+              This list mixes Mexican (tortillas), Korean (kimchi), and Indian
+              (naan) signals. The model should generate 2-3 questions to clarify
+              the mixed cuisine patterns. Questions should be specific to the
+              conflict in this list. Options should be short and tappable.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This list mixes Mexican (tortillas), Korean (kimchi), and Indian
+              (naan) signals. The model should generate 2-3 questions to clarify
+              the mixed cuisine patterns. Questions should be specific to the
+              conflict in this list. Options should be short and tappable.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 1
+      vars: *ref_2
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 0.975
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 915
+          prompt: 685
+          completion: 230
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - questions
+                properties:
+                  questions:
+                    type: array
+                    minItems: 1
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - q
+                        - options
+                        - allowOther
+                      properties:
+                        q:
+                          type: string
+                        options:
+                          type: array
+                          minItems: 3
+                          maxItems: 4
+                          items:
+                            type: string
+                        allowOther:
+                          type: boolean
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                This list mixes Mexican (tortillas), Korean (kimchi), and Indian
+                (naan) signals. The model should generate 2-3 questions to
+                clarify the mixed cuisine patterns. Questions should be specific
+                to the conflict in this list. Options should be short and
+                tappable.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 0.9
+            reason: >-
+              The output generates exactly 2 questions that are specific to the
+              mixed cuisine signals in the list (Mexican tortillas, Korean
+              kimchi, Indian naan). The first question directly addresses the
+              fusion conflict by asking what the user is making with these
+              culturally diverse ingredients, with options like 'Kimchi
+              quesadillas' and 'Naan pizza' that reflect the actual ingredient
+              combinations. The second question clarifies intent (meal vs.
+              snack). Options are short and tappable (2-4 words each). The
+              questions are clearly tailored to this specific list's conflict
+              rather than being generic. The output falls within the 2-3
+              question range specified.
+            tokensUsed:
+              total: 527
+              prompt: 366
+              completion: 161
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are you making with the tortillas, cheese, kimchi, and
+                naan?\",\"options\":[\"Kimchi quesadillas\",\"Naan
+                pizza\",\"Fusion wraps\",\"Just
+                snacks\"],\"allowOther\":true},{\"q\":\"Does this list lean more
+                toward a meal or a snack spread?\",\"options\":[\"Quick
+                dinner\",\"Snack board\",\"Party food\",\"Not sure
+                yet\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis list
+                mixes Mexican (tortillas), Korean (kimchi), and Indian (naan)
+                signals. The model should generate 2-3 questions to clarify the
+                mixed cuisine patterns. Questions should be specific to the
+                conflict in this list. Options should be short and
+                tappable.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This list mixes Mexican (tortillas), Korean (kimchi), and Indian
+                (naan) signals. The model should generate 2-3 questions to
+                clarify the mixed cuisine patterns. Questions should be specific
+                to the conflict in this list. Options should be short and
+                tappable.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output provides exactly 2 questions, and both are specific to
+              the mixed-cuisine conflict in the list (tortillas, kimchi, naan,
+              cheese). The options are short and tappable. It satisfies the
+              rubric.
+            tokensUsed:
+              total: 388
+              prompt: 319
+              completion: 69
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are you making with the tortillas, cheese, kimchi, and
+                naan?\",\"options\":[\"Kimchi quesadillas\",\"Naan
+                pizza\",\"Fusion wraps\",\"Just
+                snacks\"],\"allowOther\":true},{\"q\":\"Does this list lean more
+                toward a meal or a snack spread?\",\"options\":[\"Quick
+                dinner\",\"Snack board\",\"Party food\",\"Not sure
+                yet\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis list
+                mixes Mexican (tortillas), Korean (kimchi), and Indian (naan)
+                signals. The model should generate 2-3 questions to clarify the
+                mixed cuisine patterns. Questions should be specific to the
+                conflict in this list. Options should be short and
+                tappable.\n\n</Rubric>"}]
+      id: 20e1667a-4208-4011-9db1-49b7db42a7c4
+      latencyMs: 1613
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a smart grocery assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "You are a smart grocery assistant. Before making suggestions, understand the user's intent.\n\nGrocery list sections:\n{\"produce\": [\"tortillas\", \"cheese\", \"kimchi\", \"naan\"]}\n\nAnalyze the list and generate clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1 question. Do NOT add follow-up questions about servings or spice level.\n- Items span multiple cuisines or occasion is genuinely unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the scale unclear (date night vs dinner party)?\n\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Reference specific items from the list in your options, not generic categories\n- Questions should feel conversational, like a friend asking \"what are we cooking?\"\n- 3-4 options per question"
+            }
+          ]
+        label: >-
+          prompts/current/clarify.json: [{"role":"system","content":"You are a
+          smart grocery assistant. Respond with JSON
+          only."},{"role":"user","content":"You are a smart grocery assistant.
+          Before making suggestions, understand the user's intent.{% if
+          profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+          sections:\n{{sections_text}}\n\nAnalyze the list and generate
+          clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All
+          items clearly point to ONE purpose (Asian meal, baking, party snacks)
+          → EXACTLY 1 question. Do NOT add follow-up questions about servings or
+          spice level.\n- Items span multiple cuisines or occasion is genuinely
+          unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the
+          purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n-
+          Is the scale unclear (date night vs dinner party)?\n\nEach question
+          should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\":
+          [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\",
+          \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions
+          maximum\n- Options should be short (2-5 words each)\n- Reference
+          specific items from the list in your options, not generic
+          categories\n- Questions should feel conversational, like a friend
+          asking \"what are we cooking?\"\n- 3-4 options per question"}]
+        config: {}
+      promptId: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"questions":[{"q":"What are you making with the tortillas, cheese,
+          kimchi, and naan?","options":["Kimchi quesadillas","Naan
+          pizza","Fusion wraps","Just snacks"],"allowOther":true},{"q":"Does
+          this list lean more toward a meal or a snack
+          spread?","options":["Quick dinner","Snack board","Party food","Not
+          sure yet"],"allowOther":true}]}
+        tokenUsage:
+          total: 364
+          prompt: 275
+          completion: 89
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.975
+      success: true
+      testCase:
+        description: tortillas/cheese/kimchi/naan — mixed cuisine signals
+        vars: &ref_3
+          sections_text: '{"produce": ["tortillas", "cheese", "kimchi", "naan"]}'
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - questions
+              properties:
+                questions:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - q
+                      - options
+                      - allowOther
+                    properties:
+                      q:
+                        type: string
+                      options:
+                        type: array
+                        minItems: 3
+                        maxItems: 4
+                        items:
+                          type: string
+                      allowOther:
+                        type: boolean
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.questions && d.questions.length >= 1 &&
+              d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+              && q.options.length >= 3 && q.options.length <= 4 &&
+              q.options.every(o => o.split(/\s+/).length <= 5));
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or option length' };
+          - type: llm-rubric
+            value: >
+              This list mixes Mexican (tortillas), Korean (kimchi), and Indian
+              (naan) signals. The model should generate 2-3 questions to clarify
+              the mixed cuisine patterns. Questions should be specific to the
+              conflict in this list. Options should be short and tappable.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This list mixes Mexican (tortillas), Korean (kimchi), and Indian
+              (naan) signals. The model should generate 2-3 questions to clarify
+              the mixed cuisine patterns. Questions should be specific to the
+              conflict in this list. Options should be short and tappable.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 1
+      vars: *ref_3
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      error: >-
+        The output does generate just 1 question, which is good. However, the
+        question asks 'are we doing an Asian meal or just party snacks?' which
+        essentially asks what they are cooking/preparing food-wise. The rubric
+        explicitly states questions should NOT ask 'what are you cooking?' since
+        this isn't a cooking list. The list clearly contains party supplies
+        (cups, napkins, chips, soda) making it an obvious party/gathering list,
+        and the question should focus on party size, type of event, or whether
+        they need food beyond snacks — not on what Asian meal they might be
+        making.
+      gradingResult:
+        pass: false
+        score: 0.8
+        reason: >-
+          The output does generate just 1 question, which is good. However, the
+          question asks 'are we doing an Asian meal or just party snacks?' which
+          essentially asks what they are cooking/preparing food-wise. The rubric
+          explicitly states questions should NOT ask 'what are you cooking?'
+          since this isn't a cooking list. The list clearly contains party
+          supplies (cups, napkins, chips, soda) making it an obvious
+          party/gathering list, and the question should focus on party size,
+          type of event, or whether they need food beyond snacks — not on what
+          Asian meal they might be making.
+        namedScores: {}
+        tokensUsed:
+          total: 852
+          prompt: 636
+          completion: 216
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - questions
+                properties:
+                  questions:
+                    type: array
+                    minItems: 1
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - q
+                        - options
+                        - allowOther
+                      properties:
+                        q:
+                          type: string
+                        options:
+                          type: array
+                          minItems: 3
+                          maxItems: 4
+                          items:
+                            type: string
+                        allowOther:
+                          type: boolean
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is an obvious party/gathering list. The model should
+                generate just 1 question since the purpose is clear. The
+                question might ask about party size, type of event, or whether
+                they need food beyond snacks. Questions should NOT ask 'what are
+                you cooking?' since this isn't a cooking list.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.2
+            reason: >-
+              The output does generate just 1 question, which is good. However,
+              the question asks 'are we doing an Asian meal or just party
+              snacks?' which essentially asks what they are cooking/preparing
+              food-wise. The rubric explicitly states questions should NOT ask
+              'what are you cooking?' since this isn't a cooking list. The list
+              clearly contains party supplies (cups, napkins, chips, soda)
+              making it an obvious party/gathering list, and the question should
+              focus on party size, type of event, or whether they need food
+              beyond snacks — not on what Asian meal they might be making.
+            tokensUsed:
+              total: 484
+              prompt: 336
+              completion: 148
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What’s
+                the plan for these items—are we doing an Asian meal or just
+                party snacks?\",\"options\":[\"Asian meal + soda\",\"Party
+                snacks with chips\",\"Drinks for a get-together\",\"Snacks with
+                cups/napkins\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis
+                is an obvious party/gathering list. The model should generate
+                just 1 question since the purpose is clear. The question might
+                ask about party size, type of event, or whether they need food
+                beyond snacks. Questions should NOT ask 'what are you cooking?'
+                since this isn't a cooking list.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is an obvious party/gathering list. The model should
+                generate just 1 question since the purpose is clear. The
+                question might ask about party size, type of event, or whether
+                they need food beyond snacks. Questions should NOT ask 'what are
+                you cooking?' since this isn't a cooking list.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output contains exactly 1 question, and it asks whether the
+              items are for an Asian meal or party snacks, which fits the
+              rubric’s acceptable themes (type of event / food beyond snacks).
+              It does not ask 'what are you cooking?'.
+            tokensUsed:
+              total: 368
+              prompt: 300
+              completion: 68
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What’s
+                the plan for these items—are we doing an Asian meal or just
+                party snacks?\",\"options\":[\"Asian meal + soda\",\"Party
+                snacks with chips\",\"Drinks for a get-together\",\"Snacks with
+                cups/napkins\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis
+                is an obvious party/gathering list. The model should generate
+                just 1 question since the purpose is clear. The question might
+                ask about party size, type of event, or whether they need food
+                beyond snacks. Questions should NOT ask 'what are you cooking?'
+                since this isn't a cooking list.\n\n</Rubric>"}]
+      id: 03ec13aa-e47e-4a37-b4ca-a178c9f46738
+      latencyMs: 1169
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a smart grocery assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "You are a smart grocery assistant. Before making suggestions, understand the user's intent.\n\nGrocery list sections:\n{\"produce\": [\"chips\", \"soda\", \"cups\", \"napkins\"]}\n\nAnalyze the list and generate clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1 question. Do NOT add follow-up questions about servings or spice level.\n- Items span multiple cuisines or occasion is genuinely unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the scale unclear (date night vs dinner party)?\n\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Reference specific items from the list in your options, not generic categories\n- Questions should feel conversational, like a friend asking \"what are we cooking?\"\n- 3-4 options per question"
+            }
+          ]
+        label: >-
+          prompts/current/clarify.json: [{"role":"system","content":"You are a
+          smart grocery assistant. Respond with JSON
+          only."},{"role":"user","content":"You are a smart grocery assistant.
+          Before making suggestions, understand the user's intent.{% if
+          profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+          sections:\n{{sections_text}}\n\nAnalyze the list and generate
+          clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All
+          items clearly point to ONE purpose (Asian meal, baking, party snacks)
+          → EXACTLY 1 question. Do NOT add follow-up questions about servings or
+          spice level.\n- Items span multiple cuisines or occasion is genuinely
+          unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the
+          purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n-
+          Is the scale unclear (date night vs dinner party)?\n\nEach question
+          should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\":
+          [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\",
+          \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions
+          maximum\n- Options should be short (2-5 words each)\n- Reference
+          specific items from the list in your options, not generic
+          categories\n- Questions should feel conversational, like a friend
+          asking \"what are we cooking?\"\n- 3-4 options per question"}]
+        config: {}
+      promptId: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "questions": [
+              {
+                "q": "What’s the plan for these items—are we doing an Asian meal or just party snacks?",
+                "options": [
+                  "Asian meal + soda",
+                  "Party snacks with chips",
+                  "Drinks for a get-together",
+                  "Snacks with cups/napkins"
+                ],
+                "allowOther": true
+              }
+            ]
+          }
+        tokenUsage:
+          total: 362
+          prompt: 273
+          completion: 89
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.8
+      success: false
+      testCase:
+        description: chips/soda/cups/napkins — obvious party, minimal questions
+        vars: &ref_4
+          sections_text: '{"produce": ["chips", "soda", "cups", "napkins"]}'
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - questions
+              properties:
+                questions:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - q
+                      - options
+                      - allowOther
+                    properties:
+                      q:
+                        type: string
+                      options:
+                        type: array
+                        minItems: 3
+                        maxItems: 4
+                        items:
+                          type: string
+                      allowOther:
+                        type: boolean
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.questions && d.questions.length >= 1 &&
+              d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+              && q.options.length >= 3 && q.options.length <= 4 &&
+              q.options.every(o => o.split(/\s+/).length <= 5));
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or option length' };
+          - type: llm-rubric
+            value: >
+              This is an obvious party/gathering list. The model should generate
+              just 1 question since the purpose is clear. The question might ask
+              about party size, type of event, or whether they need food beyond
+              snacks. Questions should NOT ask 'what are you cooking?' since
+              this isn't a cooking list.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This is an obvious party/gathering list. The model should generate
+              just 1 question since the purpose is clear. The question might ask
+              about party size, type of event, or whether they need food beyond
+              snacks. Questions should NOT ask 'what are you cooking?' since
+              this isn't a cooking list.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 2
+      vars: *ref_4
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      error: >-
+        The model generated 2 questions instead of 1. The rubric specifies that
+        since this is an obvious party/gathering list, only 1 question should be
+        generated. Additionally, the first question asks about the type of event
+        (party vs casual snack spread) which is somewhat reasonable, but the
+        second question about drinks and serving items is more of a
+        suggestion/upsell than a clarifying question. The model failed to
+        consolidate into a single meaningful question about party size, type of
+        event, or food beyond snacks.
+      gradingResult:
+        pass: false
+        score: 0.55
+        reason: >-
+          The model generated 2 questions instead of 1. The rubric specifies
+          that since this is an obvious party/gathering list, only 1 question
+          should be generated. Additionally, the first question asks about the
+          type of event (party vs casual snack spread) which is somewhat
+          reasonable, but the second question about drinks and serving items is
+          more of a suggestion/upsell than a clarifying question. The model
+          failed to consolidate into a single meaningful question about party
+          size, type of event, or food beyond snacks.
+        namedScores: {}
+        tokensUsed:
+          total: 873
+          prompt: 675
+          completion: 198
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - questions
+                properties:
+                  questions:
+                    type: array
+                    minItems: 1
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - q
+                        - options
+                        - allowOther
+                      properties:
+                        q:
+                          type: string
+                        options:
+                          type: array
+                          minItems: 3
+                          maxItems: 4
+                          items:
+                            type: string
+                        allowOther:
+                          type: boolean
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is an obvious party/gathering list. The model should
+                generate just 1 question since the purpose is clear. The
+                question might ask about party size, type of event, or whether
+                they need food beyond snacks. Questions should NOT ask 'what are
+                you cooking?' since this isn't a cooking list.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.2
+            reason: >-
+              The model generated 2 questions instead of 1. The rubric specifies
+              that since this is an obvious party/gathering list, only 1
+              question should be generated. Additionally, the first question
+              asks about the type of event (party vs casual snack spread) which
+              is somewhat reasonable, but the second question about drinks and
+              serving items is more of a suggestion/upsell than a clarifying
+              question. The model failed to consolidate into a single meaningful
+              question about party size, type of event, or food beyond snacks.
+            tokensUsed:
+              total: 487
+              prompt: 357
+              completion: 130
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"Are
+                you planning a party or a casual snack spread with these
+                items?\",\"options\":[\"Party snacks\",\"Game night\",\"Movie
+                night\",\"Just browsing\"],\"allowOther\":true},{\"q\":\"Should
+                I suggest drinks and serving items to go with the
+                chips?\",\"options\":[\"Add soda\",\"Add cups\",\"Add
+                napkins\",\"Just
+                chips\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis is an
+                obvious party/gathering list. The model should generate just 1
+                question since the purpose is clear. The question might ask
+                about party size, type of event, or whether they need food
+                beyond snacks. Questions should NOT ask 'what are you cooking?'
+                since this isn't a cooking list.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is an obvious party/gathering list. The model should
+                generate just 1 question since the purpose is clear. The
+                question might ask about party size, type of event, or whether
+                they need food beyond snacks. Questions should NOT ask 'what are
+                you cooking?' since this isn't a cooking list.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0
+            reason: >-
+              The output contains 2 questions, but the rubric explicitly says
+              the model should generate just 1 question since the purpose is
+              clear. It also does not ask about party size, type of event, or
+              whether they need food beyond snacks in a single question.
+            tokensUsed:
+              total: 386
+              prompt: 318
+              completion: 68
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"Are
+                you planning a party or a casual snack spread with these
+                items?\",\"options\":[\"Party snacks\",\"Game night\",\"Movie
+                night\",\"Just browsing\"],\"allowOther\":true},{\"q\":\"Should
+                I suggest drinks and serving items to go with the
+                chips?\",\"options\":[\"Add soda\",\"Add cups\",\"Add
+                napkins\",\"Just
+                chips\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis is an
+                obvious party/gathering list. The model should generate just 1
+                question since the purpose is clear. The question might ask
+                about party size, type of event, or whether they need food
+                beyond snacks. Questions should NOT ask 'what are you cooking?'
+                since this isn't a cooking list.\n\n</Rubric>"}]
+      id: 2b20cac8-2398-4c1f-806a-78f00f825737
+      latencyMs: 1603
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a smart grocery assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "You are a smart grocery assistant. Before making suggestions, understand the user's intent.\n\nGrocery list sections:\n{\"produce\": [\"chips\", \"soda\", \"cups\", \"napkins\"]}\n\nAnalyze the list and generate clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1 question. Do NOT add follow-up questions about servings or spice level.\n- Items span multiple cuisines or occasion is genuinely unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the scale unclear (date night vs dinner party)?\n\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Reference specific items from the list in your options, not generic categories\n- Questions should feel conversational, like a friend asking \"what are we cooking?\"\n- 3-4 options per question"
+            }
+          ]
+        label: >-
+          prompts/current/clarify.json: [{"role":"system","content":"You are a
+          smart grocery assistant. Respond with JSON
+          only."},{"role":"user","content":"You are a smart grocery assistant.
+          Before making suggestions, understand the user's intent.{% if
+          profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+          sections:\n{{sections_text}}\n\nAnalyze the list and generate
+          clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All
+          items clearly point to ONE purpose (Asian meal, baking, party snacks)
+          → EXACTLY 1 question. Do NOT add follow-up questions about servings or
+          spice level.\n- Items span multiple cuisines or occasion is genuinely
+          unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the
+          purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n-
+          Is the scale unclear (date night vs dinner party)?\n\nEach question
+          should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\":
+          [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\",
+          \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions
+          maximum\n- Options should be short (2-5 words each)\n- Reference
+          specific items from the list in your options, not generic
+          categories\n- Questions should feel conversational, like a friend
+          asking \"what are we cooking?\"\n- 3-4 options per question"}]
+        config: {}
+      promptId: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"questions":[{"q":"Are you planning a party or a casual snack spread
+          with these items?","options":["Party snacks","Game night","Movie
+          night","Just browsing"],"allowOther":true},{"q":"Should I suggest
+          drinks and serving items to go with the chips?","options":["Add
+          soda","Add cups","Add napkins","Just chips"],"allowOther":true}]}
+        tokenUsage:
+          total: 356
+          prompt: 273
+          completion: 83
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.55
+      success: false
+      testCase:
+        description: chips/soda/cups/napkins — obvious party, minimal questions
+        vars: &ref_5
+          sections_text: '{"produce": ["chips", "soda", "cups", "napkins"]}'
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - questions
+              properties:
+                questions:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - q
+                      - options
+                      - allowOther
+                    properties:
+                      q:
+                        type: string
+                      options:
+                        type: array
+                        minItems: 3
+                        maxItems: 4
+                        items:
+                          type: string
+                      allowOther:
+                        type: boolean
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.questions && d.questions.length >= 1 &&
+              d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+              && q.options.length >= 3 && q.options.length <= 4 &&
+              q.options.every(o => o.split(/\s+/).length <= 5));
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or option length' };
+          - type: llm-rubric
+            value: >
+              This is an obvious party/gathering list. The model should generate
+              just 1 question since the purpose is clear. The question might ask
+              about party size, type of event, or whether they need food beyond
+              snacks. Questions should NOT ask 'what are you cooking?' since
+              this isn't a cooking list.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This is an obvious party/gathering list. The model should generate
+              just 1 question since the purpose is clear. The question might ask
+              about party size, type of event, or whether they need food beyond
+              snacks. Questions should NOT ask 'what are you cooking?' since
+              this isn't a cooking list.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 2
+      vars: *ref_5
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 766
+          prompt: 601
+          completion: 165
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - questions
+                properties:
+                  questions:
+                    type: array
+                    minItems: 1
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - q
+                        - options
+                        - allowOther
+                      properties:
+                        q:
+                          type: string
+                        options:
+                          type: array
+                          minItems: 3
+                          maxItems: 4
+                          items:
+                            type: string
+                        allowOther:
+                          type: boolean
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a clear baking list. The model should generate just 1
+                question. The question could ask what they're baking or for how
+                many people. Questions should be specific to baking, not
+                generic. Options should reference baking items (cookies, cake,
+                bread, etc.).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output generates exactly 1 question, which is specific to
+              baking (asking what they're making with the listed baking
+              ingredients). The options reference specific baking items
+              (cupcakes, butter cookies, classic baking dessert), which are
+              relevant to the ingredients listed (flour, sugar, butter, eggs,
+              vanilla). The question is not generic and directly addresses the
+              baking context.
+            tokensUsed:
+              total: 420
+              prompt: 320
+              completion: 100
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"Hey—what
+                are you making with the flour, sugar, butter, eggs, and
+                vanilla?\",\"options\":[\"Classic baking dessert\",\"Simple
+                vanilla cupcakes\",\"Rich butter cookies\",\"Something
+                else\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis is a
+                clear baking list. The model should generate just 1 question.
+                The question could ask what they're baking or for how many
+                people. Questions should be specific to baking, not generic.
+                Options should reference baking items (cookies, cake, bread,
+                etc.).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a clear baking list. The model should generate just 1
+                question. The question could ask what they're baking or for how
+                many people. Questions should be specific to baking, not
+                generic. Options should reference baking items (cookies, cake,
+                bread, etc.).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output contains exactly 1 question, and it is specific to
+              baking. It asks what is being made with flour, sugar, butter,
+              eggs, and vanilla, and the options reference baking items such as
+              dessert, cupcakes, and cookies.
+            tokensUsed:
+              total: 346
+              prompt: 281
+              completion: 65
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"Hey—what
+                are you making with the flour, sugar, butter, eggs, and
+                vanilla?\",\"options\":[\"Classic baking dessert\",\"Simple
+                vanilla cupcakes\",\"Rich butter cookies\",\"Something
+                else\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis is a
+                clear baking list. The model should generate just 1 question.
+                The question could ask what they're baking or for how many
+                people. Questions should be specific to baking, not generic.
+                Options should reference baking items (cookies, cake, bread,
+                etc.).\n\n</Rubric>"}]
+      id: 3fa3c05a-6e14-4f77-ade6-540455af83d1
+      latencyMs: 1197
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a smart grocery assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "You are a smart grocery assistant. Before making suggestions, understand the user's intent.\n\nGrocery list sections:\n{\"produce\": [\"flour\", \"sugar\", \"butter\", \"eggs\", \"vanilla\"]}\n\nAnalyze the list and generate clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1 question. Do NOT add follow-up questions about servings or spice level.\n- Items span multiple cuisines or occasion is genuinely unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the scale unclear (date night vs dinner party)?\n\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Reference specific items from the list in your options, not generic categories\n- Questions should feel conversational, like a friend asking \"what are we cooking?\"\n- 3-4 options per question"
+            }
+          ]
+        label: >-
+          prompts/current/clarify.json: [{"role":"system","content":"You are a
+          smart grocery assistant. Respond with JSON
+          only."},{"role":"user","content":"You are a smart grocery assistant.
+          Before making suggestions, understand the user's intent.{% if
+          profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+          sections:\n{{sections_text}}\n\nAnalyze the list and generate
+          clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All
+          items clearly point to ONE purpose (Asian meal, baking, party snacks)
+          → EXACTLY 1 question. Do NOT add follow-up questions about servings or
+          spice level.\n- Items span multiple cuisines or occasion is genuinely
+          unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the
+          purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n-
+          Is the scale unclear (date night vs dinner party)?\n\nEach question
+          should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\":
+          [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\",
+          \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions
+          maximum\n- Options should be short (2-5 words each)\n- Reference
+          specific items from the list in your options, not generic
+          categories\n- Questions should feel conversational, like a friend
+          asking \"what are we cooking?\"\n- 3-4 options per question"}]
+        config: {}
+      promptId: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: >-
+          {"questions":[{"q":"Hey—what are you making with the flour, sugar,
+          butter, eggs, and vanilla?","options":["Classic baking
+          dessert","Simple vanilla cupcakes","Rich butter cookies","Something
+          else"] ,"allowOther":true}]}
+        tokenUsage:
+          total: 333
+          prompt: 279
+          completion: 54
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: flour/sugar/butter/eggs/vanilla — clear baking list
+        vars: &ref_6
+          sections_text: '{"produce": ["flour", "sugar", "butter", "eggs", "vanilla"]}'
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - questions
+              properties:
+                questions:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - q
+                      - options
+                      - allowOther
+                    properties:
+                      q:
+                        type: string
+                      options:
+                        type: array
+                        minItems: 3
+                        maxItems: 4
+                        items:
+                          type: string
+                      allowOther:
+                        type: boolean
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.questions && d.questions.length >= 1 &&
+              d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+              && q.options.length >= 3 && q.options.length <= 4 &&
+              q.options.every(o => o.split(/\s+/).length <= 5));
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or option length' };
+          - type: llm-rubric
+            value: >
+              This is a clear baking list. The model should generate just 1
+              question. The question could ask what they're baking or for how
+              many people. Questions should be specific to baking, not generic.
+              Options should reference baking items (cookies, cake, bread,
+              etc.).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This is a clear baking list. The model should generate just 1
+              question. The question could ask what they're baking or for how
+              many people. Questions should be specific to baking, not generic.
+              Options should reference baking items (cookies, cake, bread,
+              etc.).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 3
+      vars: *ref_6
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      gradingResult:
+        pass: true
+        score: 1
+        reason: All assertions passed
+        namedScores: {}
+        tokensUsed:
+          total: 777
+          prompt: 606
+          completion: 171
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - questions
+                properties:
+                  questions:
+                    type: array
+                    minItems: 1
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - q
+                        - options
+                        - allowOther
+                      properties:
+                        q:
+                          type: string
+                        options:
+                          type: array
+                          minItems: 3
+                          maxItems: 4
+                          items:
+                            type: string
+                        allowOther:
+                          type: boolean
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a clear baking list. The model should generate just 1
+                question. The question could ask what they're baking or for how
+                many people. Questions should be specific to baking, not
+                generic. Options should reference baking items (cookies, cake,
+                bread, etc.).
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output generates exactly 1 question, which is specific to
+              baking (asking what they're making with the listed baking
+              ingredients). The options all reference baking items (Cake,
+              Cookies, Cupcakes, Other dessert), and the question is tailored to
+              the specific ingredients mentioned (flour, sugar, butter, eggs,
+              vanilla). This meets all the rubric criteria.
+            tokensUsed:
+              total: 425
+              prompt: 324
+              completion: 101
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"Looks
+                like these ingredients are for baking—what are you making with
+                the flour, sugar, butter, eggs, and
+                vanilla?\",\"options\":[\"Cake\",\"Cookies\",\"Cupcakes\",\"Other
+                dessert\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis is
+                a clear baking list. The model should generate just 1 question.
+                The question could ask what they're baking or for how many
+                people. Questions should be specific to baking, not generic.
+                Options should reference baking items (cookies, cake, bread,
+                etc.).\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This is a clear baking list. The model should generate just 1
+                question. The question could ask what they're baking or for how
+                many people. Questions should be specific to baking, not
+                generic. Options should reference baking items (cookies, cake,
+                bread, etc.).
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: true
+            score: 1
+            reason: >-
+              The output generates exactly 1 question, and it is clearly
+              specific to baking, asking what is being made with flour, sugar,
+              butter, eggs, and vanilla. The options also reference baking items
+              such as cake, cookies, and cupcakes, which matches the rubric.
+            tokensUsed:
+              total: 352
+              prompt: 282
+              completion: 70
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"Looks
+                like these ingredients are for baking—what are you making with
+                the flour, sugar, butter, eggs, and
+                vanilla?\",\"options\":[\"Cake\",\"Cookies\",\"Cupcakes\",\"Other
+                dessert\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis is
+                a clear baking list. The model should generate just 1 question.
+                The question could ask what they're baking or for how many
+                people. Questions should be specific to baking, not generic.
+                Options should reference baking items (cookies, cake, bread,
+                etc.).\n\n</Rubric>"}]
+      id: 6cf8e08c-4191-43a3-a12e-d61e9f846480
+      latencyMs: 1548
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a smart grocery assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "You are a smart grocery assistant. Before making suggestions, understand the user's intent.\n\nGrocery list sections:\n{\"produce\": [\"flour\", \"sugar\", \"butter\", \"eggs\", \"vanilla\"]}\n\nAnalyze the list and generate clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1 question. Do NOT add follow-up questions about servings or spice level.\n- Items span multiple cuisines or occasion is genuinely unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the scale unclear (date night vs dinner party)?\n\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Reference specific items from the list in your options, not generic categories\n- Questions should feel conversational, like a friend asking \"what are we cooking?\"\n- 3-4 options per question"
+            }
+          ]
+        label: >-
+          prompts/current/clarify.json: [{"role":"system","content":"You are a
+          smart grocery assistant. Respond with JSON
+          only."},{"role":"user","content":"You are a smart grocery assistant.
+          Before making suggestions, understand the user's intent.{% if
+          profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+          sections:\n{{sections_text}}\n\nAnalyze the list and generate
+          clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All
+          items clearly point to ONE purpose (Asian meal, baking, party snacks)
+          → EXACTLY 1 question. Do NOT add follow-up questions about servings or
+          spice level.\n- Items span multiple cuisines or occasion is genuinely
+          unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the
+          purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n-
+          Is the scale unclear (date night vs dinner party)?\n\nEach question
+          should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\":
+          [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\",
+          \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions
+          maximum\n- Options should be short (2-5 words each)\n- Reference
+          specific items from the list in your options, not generic
+          categories\n- Questions should feel conversational, like a friend
+          asking \"what are we cooking?\"\n- 3-4 options per question"}]
+        config: {}
+      promptId: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"questions":[{"q":"Looks like these ingredients are for baking—what
+          are you making with the flour, sugar, butter, eggs, and
+          vanilla?","options":["Cake", "Cookies", "Cupcakes", "Other
+          dessert"],"allowOther":true}]}
+        tokenUsage:
+          total: 337
+          prompt: 279
+          completion: 58
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 1
+      success: true
+      testCase:
+        description: flour/sugar/butter/eggs/vanilla — clear baking list
+        vars: &ref_7
+          sections_text: '{"produce": ["flour", "sugar", "butter", "eggs", "vanilla"]}'
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - questions
+              properties:
+                questions:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - q
+                      - options
+                      - allowOther
+                    properties:
+                      q:
+                        type: string
+                      options:
+                        type: array
+                        minItems: 3
+                        maxItems: 4
+                        items:
+                          type: string
+                      allowOther:
+                        type: boolean
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.questions && d.questions.length >= 1 &&
+              d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+              && q.options.length >= 3 && q.options.length <= 4 &&
+              q.options.every(o => o.split(/\s+/).length <= 5));
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or option length' };
+          - type: llm-rubric
+            value: >
+              This is a clear baking list. The model should generate just 1
+              question. The question could ask what they're baking or for how
+              many people. Questions should be specific to baking, not generic.
+              Options should reference baking items (cookies, cake, bread,
+              etc.).
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This is a clear baking list. The model should generate just 1
+              question. The question could ask what they're baking or for how
+              many people. Questions should be specific to baking, not generic.
+              Options should reference baking items (cookies, cake, bread,
+              etc.).
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 3
+      vars: *ref_7
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 0
+    - cost: 0
+      error: >-
+        The output only generates 1 question, but the rubric requires 2-3
+        questions to clarify scale and occasion. The single question asks about
+        the dish type/style but fails to address the key ambiguities: how many
+        people are being served (scale) and what the occasion is (date night vs
+        dinner party). These are the core clarifications needed given the
+        expensive proteins in quantity.
+      gradingResult:
+        pass: false
+        score: 0.55
+        reason: >-
+          The output only generates 1 question, but the rubric requires 2-3
+          questions to clarify scale and occasion. The single question asks
+          about the dish type/style but fails to address the key ambiguities:
+          how many people are being served (scale) and what the occasion is
+          (date night vs dinner party). These are the core clarifications needed
+          given the expensive proteins in quantity.
+        namedScores: {}
+        tokensUsed:
+          total: 784
+          prompt: 623
+          completion: 161
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - questions
+                properties:
+                  questions:
+                    type: array
+                    minItems: 1
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - q
+                        - options
+                        - allowOther
+                      properties:
+                        q:
+                          type: string
+                        options:
+                          type: array
+                          minItems: 3
+                          maxItems: 4
+                          items:
+                            type: string
+                        allowOther:
+                          type: boolean
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                This list has expensive proteins in quantity — ambiguous between
+                a date night and a dinner party. The model should generate 2-3
+                questions to clarify scale and occasion. Questions should
+                address the ambiguity (how many people? special occasion?).
+                Options should be short and tappable.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.2
+            reason: >-
+              The output only generates 1 question, but the rubric requires 2-3
+              questions to clarify scale and occasion. The single question asks
+              about the dish type/style but fails to address the key
+              ambiguities: how many people are being served (scale) and what the
+              occasion is (date night vs dinner party). These are the core
+              clarifications needed given the expensive proteins in quantity.
+            tokensUsed:
+              total: 437
+              prompt: 335
+              completion: 102
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are we making with the salmon, steak, shrimp, and
+                lobster?\",\"options\":[\"Asian-style surf &
+                turf\",\"Garlic-butter seafood night\",\"Steakhouse surf &
+                turf\",\"Big seafood party
+                spread\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis list
+                has expensive proteins in quantity — ambiguous between a date
+                night and a dinner party. The model should generate 2-3
+                questions to clarify scale and occasion. Questions should
+                address the ambiguity (how many people? special occasion?).
+                Options should be short and tappable.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This list has expensive proteins in quantity — ambiguous between
+                a date night and a dinner party. The model should generate 2-3
+                questions to clarify scale and occasion. Questions should
+                address the ambiguity (how many people? special occasion?).
+                Options should be short and tappable.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0
+            reason: >-
+              The output contains only 1 question, not the requested 2-3
+              clarification questions. It does ask about the meal, but it does
+              not sufficiently clarify scale and occasion with multiple short,
+              tappable options.
+            tokensUsed:
+              total: 347
+              prompt: 288
+              completion: 59
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are we making with the salmon, steak, shrimp, and
+                lobster?\",\"options\":[\"Asian-style surf &
+                turf\",\"Garlic-butter seafood night\",\"Steakhouse surf &
+                turf\",\"Big seafood party
+                spread\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis list
+                has expensive proteins in quantity — ambiguous between a date
+                night and a dinner party. The model should generate 2-3
+                questions to clarify scale and occasion. Questions should
+                address the ambiguity (how many people? special occasion?).
+                Options should be short and tappable.\n\n</Rubric>"}]
+      id: 49d90957-c237-48e8-b2ed-1b508e148917
+      latencyMs: 923
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a smart grocery assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "You are a smart grocery assistant. Before making suggestions, understand the user's intent.\n\nGrocery list sections:\n{\"produce\": [\"salmon\", \"steak\", \"shrimp\", \"lobster\"], \"dairy\": [\"butter\", \"cream\"]}\n\nAnalyze the list and generate clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1 question. Do NOT add follow-up questions about servings or spice level.\n- Items span multiple cuisines or occasion is genuinely unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the scale unclear (date night vs dinner party)?\n\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Reference specific items from the list in your options, not generic categories\n- Questions should feel conversational, like a friend asking \"what are we cooking?\"\n- 3-4 options per question"
+            }
+          ]
+        label: >-
+          prompts/current/clarify.json: [{"role":"system","content":"You are a
+          smart grocery assistant. Respond with JSON
+          only."},{"role":"user","content":"You are a smart grocery assistant.
+          Before making suggestions, understand the user's intent.{% if
+          profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+          sections:\n{{sections_text}}\n\nAnalyze the list and generate
+          clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All
+          items clearly point to ONE purpose (Asian meal, baking, party snacks)
+          → EXACTLY 1 question. Do NOT add follow-up questions about servings or
+          spice level.\n- Items span multiple cuisines or occasion is genuinely
+          unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the
+          purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n-
+          Is the scale unclear (date night vs dinner party)?\n\nEach question
+          should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\":
+          [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\",
+          \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions
+          maximum\n- Options should be short (2-5 words each)\n- Reference
+          specific items from the list in your options, not generic
+          categories\n- Questions should feel conversational, like a friend
+          asking \"what are we cooking?\"\n- 3-4 options per question"}]
+        config: {}
+      promptId: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      promptIdx: 0
+      provider:
+        id: openrouter:openai/gpt-5.4-nano
+        label: GPT-5.4 Nano ($0.20/M)
+      response:
+        output: |-
+          {
+            "questions": [
+              {
+                "q": "What are we making with the salmon, steak, shrimp, and lobster?",
+                "options": [
+                  "Asian-style surf & turf",
+                  "Garlic-butter seafood night",
+                  "Steakhouse surf & turf",
+                  "Big seafood party spread"
+                ],
+                "allowOther": true
+              }
+            ]
+          }
+        tokenUsage:
+          total: 370
+          prompt: 286
+          completion: 84
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.55
+      success: false
+      testCase:
+        description: salmon/steak/shrimp/lobster + butter/cream — ambiguous scale
+        vars: &ref_8
+          sections_text: >-
+            {"produce": ["salmon", "steak", "shrimp", "lobster"], "dairy":
+            ["butter", "cream"]}
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - questions
+              properties:
+                questions:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - q
+                      - options
+                      - allowOther
+                    properties:
+                      q:
+                        type: string
+                      options:
+                        type: array
+                        minItems: 3
+                        maxItems: 4
+                        items:
+                          type: string
+                      allowOther:
+                        type: boolean
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.questions && d.questions.length >= 1 &&
+              d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+              && q.options.length >= 3 && q.options.length <= 4 &&
+              q.options.every(o => o.split(/\s+/).length <= 5));
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or option length' };
+          - type: llm-rubric
+            value: >
+              This list has expensive proteins in quantity — ambiguous between a
+              date night and a dinner party. The model should generate 2-3
+              questions to clarify scale and occasion. Questions should address
+              the ambiguity (how many people? special occasion?). Options should
+              be short and tappable.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This list has expensive proteins in quantity — ambiguous between a
+              date night and a dinner party. The model should generate 2-3
+              questions to clarify scale and occasion. Questions should address
+              the ambiguity (how many people? special occasion?). Options should
+              be short and tappable.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 4
+      vars: *ref_8
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+    - cost: 0
+      error: >-
+        The output generates 2 questions which is within the 2-3 range. However,
+        the questions don't effectively address the key ambiguities: scale (how
+        many people?) and occasion (special event?). The first question asks
+        what they're making, which is circular since the rubric notes the
+        ambiguity is between date night and dinner party. Neither question
+        directly asks about the number of people or whether it's a special
+        occasion. The options in question 1 do hint at scale/occasion but the
+        question framing is poor. Question 2 asks about direction but doesn't
+        address scale or occasion at all. The options are short and tappable,
+        which is good. Overall, the questions partially address the ambiguity
+        but miss the core clarifying questions about scale and occasion.
+      gradingResult:
+        pass: false
+        score: 0.625
+        reason: >-
+          The output generates 2 questions which is within the 2-3 range.
+          However, the questions don't effectively address the key ambiguities:
+          scale (how many people?) and occasion (special event?). The first
+          question asks what they're making, which is circular since the rubric
+          notes the ambiguity is between date night and dinner party. Neither
+          question directly asks about the number of people or whether it's a
+          special occasion. The options in question 1 do hint at scale/occasion
+          but the question framing is poor. Question 2 asks about direction but
+          doesn't address scale or occasion at all. The options are short and
+          tappable, which is good. Overall, the questions partially address the
+          ambiguity but miss the core clarifying questions about scale and
+          occasion.
+        namedScores: {}
+        tokensUsed:
+          total: 952
+          prompt: 691
+          completion: 261
+          cached: 0
+          numRequests: 2
+        componentResults:
+          - pass: true
+            score: 1
+            reason: Assertion passed
+            assertion:
+              type: is-json
+              value:
+                type: object
+                required:
+                  - questions
+                properties:
+                  questions:
+                    type: array
+                    minItems: 1
+                    maxItems: 3
+                    items:
+                      type: object
+                      required:
+                        - q
+                        - options
+                        - allowOther
+                      properties:
+                        q:
+                          type: string
+                        options:
+                          type: array
+                          minItems: 3
+                          maxItems: 4
+                          items:
+                            type: string
+                        allowOther:
+                          type: boolean
+          - pass: true
+            score: 1
+            reason: Structure valid
+          - assertion:
+              type: llm-rubric
+              value: >
+                This list has expensive proteins in quantity — ambiguous between
+                a date night and a dinner party. The model should generate 2-3
+                questions to clarify scale and occasion. Questions should
+                address the ambiguity (how many people? special occasion?).
+                Options should be short and tappable.
+              provider:
+                id: openrouter:anthropic/claude-sonnet-4.6
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.3
+            reason: >-
+              The output generates 2 questions which is within the 2-3 range.
+              However, the questions don't effectively address the key
+              ambiguities: scale (how many people?) and occasion (special
+              event?). The first question asks what they're making, which is
+              circular since the rubric notes the ambiguity is between date
+              night and dinner party. Neither question directly asks about the
+              number of people or whether it's a special occasion. The options
+              in question 1 do hint at scale/occasion but the question framing
+              is poor. Question 2 asks about direction but doesn't address scale
+              or occasion at all. The options are short and tappable, which is
+              good. Overall, the questions partially address the ambiguity but
+              miss the core clarifying questions about scale and occasion.
+            tokensUsed:
+              total: 556
+              prompt: 372
+              completion: 184
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are you making with the salmon, steak, shrimp, lobster, butter,
+                and cream?\",\"options\":[\"Date-night surf & turf\",\"Fancy
+                dinner party\",\"Surf & turf pasta\",\"Not sure
+                yet\"],\"allowOther\":true},{\"q\":\"Which direction fits best
+                for these ingredients?\",\"options\":[\"Steak and
+                lobster\",\"Seafood feast\",\"Creamy seafood
+                pasta\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis list
+                has expensive proteins in quantity — ambiguous between a date
+                night and a dinner party. The model should generate 2-3
+                questions to clarify scale and occasion. Questions should
+                address the ambiguity (how many people? special occasion?).
+                Options should be short and tappable.\n\n</Rubric>"}]
+          - assertion:
+              type: llm-rubric
+              value: >
+                This list has expensive proteins in quantity — ambiguous between
+                a date night and a dinner party. The model should generate 2-3
+                questions to clarify scale and occasion. Questions should
+                address the ambiguity (how many people? special occasion?).
+                Options should be short and tappable.
+              provider:
+                id: openrouter:openai/gpt-5.4-mini
+                config:
+                  temperature: 0
+            pass: false
+            score: 0.2
+            reason: >-
+              The output asks 2 questions, but they focus on dish type rather
+              than clarifying scale or occasion. The rubric specifically wants
+              questions about ambiguity like how many people and whether it's
+              for a special occasion, with short tappable options. This output
+              does not address those points.
+            tokensUsed:
+              total: 396
+              prompt: 319
+              completion: 77
+              cached: 0
+              numRequests: 1
+              completionDetails:
+                reasoning: 0
+                acceptedPrediction: 0
+                rejectedPrediction: 0
+            metadata:
+              renderedGradingPrompt: >-
+                [{"role":"system","content":"You are grading output according to
+                a user-specified rubric. If the statement in the rubric is true,
+                then the output passes the test. You respond with a JSON object
+                with this structure: {reason: string, pass: boolean, score:
+                number}\n\nExamples:\n\n<Output>Hello
+                world</Output>\n<Rubric>Content contains a
+                greeting</Rubric>\n{\"reason\": \"the content contains the word
+                'Hello'\", \"pass\": true, \"score\": 1.0}\n\n<Output>Avast ye
+                swabs, repel the invaders!</Output>\n<Rubric>Does not speak like
+                a pirate</Rubric>\n{\"reason\": \"'avast ye' is a common pirate
+                term\", \"pass\": false, \"score\":
+                0.0}"},{"role":"user","content":"<Output>\n{\"questions\":[{\"q\":\"What
+                are you making with the salmon, steak, shrimp, lobster, butter,
+                and cream?\",\"options\":[\"Date-night surf & turf\",\"Fancy
+                dinner party\",\"Surf & turf pasta\",\"Not sure
+                yet\"],\"allowOther\":true},{\"q\":\"Which direction fits best
+                for these ingredients?\",\"options\":[\"Steak and
+                lobster\",\"Seafood feast\",\"Creamy seafood
+                pasta\"],\"allowOther\":true}]}\n</Output>\n<Rubric>\nThis list
+                has expensive proteins in quantity — ambiguous between a date
+                night and a dinner party. The model should generate 2-3
+                questions to clarify scale and occasion. Questions should
+                address the ambiguity (how many people? special occasion?).
+                Options should be short and tappable.\n\n</Rubric>"}]
+      id: eb646f9c-9d53-4d80-90ea-8d4039facb06
+      latencyMs: 1439
+      namedScores: {}
+      prompt:
+        raw: |-
+          [
+            {
+              "role": "system",
+              "content": "You are a smart grocery assistant. Respond with JSON only."
+            },
+            {
+              "role": "user",
+              "content": "You are a smart grocery assistant. Before making suggestions, understand the user's intent.\n\nGrocery list sections:\n{\"produce\": [\"salmon\", \"steak\", \"shrimp\", \"lobster\"], \"dairy\": [\"butter\", \"cream\"]}\n\nAnalyze the list and generate clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All items clearly point to ONE purpose (Asian meal, baking, party snacks) → EXACTLY 1 question. Do NOT add follow-up questions about servings or spice level.\n- Items span multiple cuisines or occasion is genuinely unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n- Is the scale unclear (date night vs dinner party)?\n\nEach question should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\": [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\", \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions maximum\n- Options should be short (2-5 words each)\n- Reference specific items from the list in your options, not generic categories\n- Questions should feel conversational, like a friend asking \"what are we cooking?\"\n- 3-4 options per question"
+            }
+          ]
+        label: >-
+          prompts/current/clarify.json: [{"role":"system","content":"You are a
+          smart grocery assistant. Respond with JSON
+          only."},{"role":"user","content":"You are a smart grocery assistant.
+          Before making suggestions, understand the user's intent.{% if
+          profile_context %}{{profile_context}}{% endif %}\n\nGrocery list
+          sections:\n{{sections_text}}\n\nAnalyze the list and generate
+          clarifying questions.\n\nQUESTION COUNT (follow strictly):\n- All
+          items clearly point to ONE purpose (Asian meal, baking, party snacks)
+          → EXACTLY 1 question. Do NOT add follow-up questions about servings or
+          spice level.\n- Items span multiple cuisines or occasion is genuinely
+          unclear → 2-3 questions about the ambiguity.\n\nConsider:\n- Is the
+          purpose obvious or ambiguous?\n- Are there mixed cuisine patterns?\n-
+          Is the scale unclear (date night vs dinner party)?\n\nEach question
+          should have 3-4 tappable chip options.\n\nONLY JSON: {\"questions\":
+          [{\"q\": \"Question text\", \"options\": [\"Option 1\", \"Option 2\",
+          \"Option 3\"], \"allowOther\": true}]}\n\nRules:\n- 1-3 questions
+          maximum\n- Options should be short (2-5 words each)\n- Reference
+          specific items from the list in your options, not generic
+          categories\n- Questions should feel conversational, like a friend
+          asking \"what are we cooking?\"\n- 3-4 options per question"}]
+        config: {}
+      promptId: 029f1c5f97391af1a2bc4f42d9179bad545d1328851e885d794c468fa007193c
+      promptIdx: 1
+      provider:
+        id: openrouter:openai/gpt-5.4-mini
+        label: GPT-5.4 Mini ($0.75/M)
+      response:
+        output: >-
+          {"questions":[{"q":"What are you making with the salmon, steak,
+          shrimp, lobster, butter, and cream?","options":["Date-night surf &
+          turf","Fancy dinner party","Surf & turf pasta","Not sure
+          yet"],"allowOther":true},{"q":"Which direction fits best for these
+          ingredients?","options":["Steak and lobster","Seafood feast","Creamy
+          seafood pasta"],"allowOther":true}]}
+        tokenUsage:
+          total: 377
+          prompt: 286
+          completion: 91
+          numRequests: 1
+          completionDetails:
+            reasoning: 0
+        cached: false
+        finishReason: stop
+      score: 0.625
+      success: false
+      testCase:
+        description: salmon/steak/shrimp/lobster + butter/cream — ambiguous scale
+        vars: &ref_9
+          sections_text: >-
+            {"produce": ["salmon", "steak", "shrimp", "lobster"], "dairy":
+            ["butter", "cream"]}
+          profile_context: ''
+        assert:
+          - type: is-json
+            value:
+              type: object
+              required:
+                - questions
+              properties:
+                questions:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  items:
+                    type: object
+                    required:
+                      - q
+                      - options
+                      - allowOther
+                    properties:
+                      q:
+                        type: string
+                      options:
+                        type: array
+                        minItems: 3
+                        maxItems: 4
+                        items:
+                          type: string
+                      allowOther:
+                        type: boolean
+          - type: javascript
+            value: >
+              const d = JSON.parse(output);
+
+              const valid = d.questions && d.questions.length >= 1 &&
+              d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+              && q.options.length >= 3 && q.options.length <= 4 &&
+              q.options.every(o => o.split(/\s+/).length <= 5));
+
+              return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+              'Structure valid' : 'Invalid structure or option length' };
+          - type: llm-rubric
+            value: >
+              This list has expensive proteins in quantity — ambiguous between a
+              date night and a dinner party. The model should generate 2-3
+              questions to clarify scale and occasion. Questions should address
+              the ambiguity (how many people? special occasion?). Options should
+              be short and tappable.
+            provider:
+              id: openrouter:anthropic/claude-sonnet-4.6
+              config:
+                temperature: 0
+          - type: llm-rubric
+            value: >
+              This list has expensive proteins in quantity — ambiguous between a
+              date night and a dinner party. The model should generate 2-3
+              questions to clarify scale and occasion. Questions should address
+              the ambiguity (how many people? special occasion?). Options should
+              be short and tappable.
+            provider:
+              id: openrouter:openai/gpt-5.4-mini
+              config:
+                temperature: 0
+        options: {}
+        metadata: {}
+      testIdx: 4
+      vars: *ref_9
+      metadata:
+        _promptfooFileMetadata: {}
+      failureReason: 1
+  stats:
+    successes: 5
+    failures: 5
+    errors: 0
+    tokenUsage:
+      prompt: 2766
+      completion: 737
+      cached: 0
+      total: 3503
+      numRequests: 10
+      completionDetails:
+        reasoning: 0
+        acceptedPrediction: 0
+        rejectedPrediction: 0
+      assertions:
+        total: 8314
+        prompt: 6390
+        completion: 1924
+        cached: 0
+        numRequests: 0
+        completionDetails:
+          reasoning: 0
+          acceptedPrediction: 0
+          rejectedPrediction: 0
+    durationMs: 21785
+    evaluationDurationMs: 21785
+config:
+  tags: {}
+  description: 'Clarify — Scenario 1: OpenAI tier comparison (current prompt)'
+  prompts:
+    - >-
+      file:///Users/dako/LocalDocument/200-Project/SGA-ai-service/services/ai-service/tests/eval/prompts/current/clarify.json
+  providers:
+    - id: openrouter:openai/gpt-5.4-nano
+      label: GPT-5.4 Nano ($0.20/M)
+      config:
+        temperature: 0.7
+        max_tokens: 600
+    - id: openrouter:openai/gpt-5.4-mini
+      label: GPT-5.4 Mini ($0.75/M)
+      config:
+        temperature: 0.7
+        max_tokens: 600
+  tests:
+    - description: chicken/rice/soy sauce — obvious Asian meal, minimal questions
+      vars:
+        sections_text: '{"produce":["chicken","rice","soy sauce"]}'
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - questions
+            properties:
+              questions:
+                type: array
+                minItems: 1
+                maxItems: 3
+                items:
+                  type: object
+                  required:
+                    - q
+                    - options
+                    - allowOther
+                  properties:
+                    q:
+                      type: string
+                    options:
+                      type: array
+                      minItems: 3
+                      maxItems: 4
+                      items:
+                        type: string
+                    allowOther:
+                      type: boolean
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const valid = d.questions && d.questions.length >= 1 &&
+            d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+            && q.options.length >= 3 && q.options.length <= 4 &&
+            q.options.every(o => o.split(/\s+/).length <= 5));
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+            'Structure valid' : 'Invalid structure or option length' };
+        - type: llm-rubric
+          value: >
+            This is a straightforward Asian meal list. The model should generate
+            just 1 question since the purpose is fairly obvious. Questions
+            should be specific to this list (not generic like 'What cuisine?').
+            Options should be short (2-5 words) and tappable. The tone should be
+            conversational.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            This is a straightforward Asian meal list. The model should generate
+            just 1 question since the purpose is fairly obvious. Questions
+            should be specific to this list (not generic like 'What cuisine?').
+            Options should be short (2-5 words) and tappable. The tone should be
+            conversational.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: tortillas/cheese/kimchi/naan — mixed cuisine signals
+      vars:
+        sections_text: '{"produce":["tortillas","cheese","kimchi","naan"]}'
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - questions
+            properties:
+              questions:
+                type: array
+                minItems: 1
+                maxItems: 3
+                items:
+                  type: object
+                  required:
+                    - q
+                    - options
+                    - allowOther
+                  properties:
+                    q:
+                      type: string
+                    options:
+                      type: array
+                      minItems: 3
+                      maxItems: 4
+                      items:
+                        type: string
+                    allowOther:
+                      type: boolean
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const valid = d.questions && d.questions.length >= 1 &&
+            d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+            && q.options.length >= 3 && q.options.length <= 4 &&
+            q.options.every(o => o.split(/\s+/).length <= 5));
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+            'Structure valid' : 'Invalid structure or option length' };
+        - type: llm-rubric
+          value: >
+            This list mixes Mexican (tortillas), Korean (kimchi), and Indian
+            (naan) signals. The model should generate 2-3 questions to clarify
+            the mixed cuisine patterns. Questions should be specific to the
+            conflict in this list. Options should be short and tappable.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            This list mixes Mexican (tortillas), Korean (kimchi), and Indian
+            (naan) signals. The model should generate 2-3 questions to clarify
+            the mixed cuisine patterns. Questions should be specific to the
+            conflict in this list. Options should be short and tappable.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: chips/soda/cups/napkins — obvious party, minimal questions
+      vars:
+        sections_text: '{"produce":["chips","soda","cups","napkins"]}'
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - questions
+            properties:
+              questions:
+                type: array
+                minItems: 1
+                maxItems: 3
+                items:
+                  type: object
+                  required:
+                    - q
+                    - options
+                    - allowOther
+                  properties:
+                    q:
+                      type: string
+                    options:
+                      type: array
+                      minItems: 3
+                      maxItems: 4
+                      items:
+                        type: string
+                    allowOther:
+                      type: boolean
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const valid = d.questions && d.questions.length >= 1 &&
+            d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+            && q.options.length >= 3 && q.options.length <= 4 &&
+            q.options.every(o => o.split(/\s+/).length <= 5));
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+            'Structure valid' : 'Invalid structure or option length' };
+        - type: llm-rubric
+          value: >
+            This is an obvious party/gathering list. The model should generate
+            just 1 question since the purpose is clear. The question might ask
+            about party size, type of event, or whether they need food beyond
+            snacks. Questions should NOT ask 'what are you cooking?' since this
+            isn't a cooking list.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            This is an obvious party/gathering list. The model should generate
+            just 1 question since the purpose is clear. The question might ask
+            about party size, type of event, or whether they need food beyond
+            snacks. Questions should NOT ask 'what are you cooking?' since this
+            isn't a cooking list.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: flour/sugar/butter/eggs/vanilla — clear baking list
+      vars:
+        sections_text: '{"produce":["flour","sugar","butter","eggs","vanilla"]}'
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - questions
+            properties:
+              questions:
+                type: array
+                minItems: 1
+                maxItems: 3
+                items:
+                  type: object
+                  required:
+                    - q
+                    - options
+                    - allowOther
+                  properties:
+                    q:
+                      type: string
+                    options:
+                      type: array
+                      minItems: 3
+                      maxItems: 4
+                      items:
+                        type: string
+                    allowOther:
+                      type: boolean
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const valid = d.questions && d.questions.length >= 1 &&
+            d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+            && q.options.length >= 3 && q.options.length <= 4 &&
+            q.options.every(o => o.split(/\s+/).length <= 5));
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+            'Structure valid' : 'Invalid structure or option length' };
+        - type: llm-rubric
+          value: >
+            This is a clear baking list. The model should generate just 1
+            question. The question could ask what they're baking or for how many
+            people. Questions should be specific to baking, not generic. Options
+            should reference baking items (cookies, cake, bread, etc.).
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            This is a clear baking list. The model should generate just 1
+            question. The question could ask what they're baking or for how many
+            people. Questions should be specific to baking, not generic. Options
+            should reference baking items (cookies, cake, bread, etc.).
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+    - description: salmon/steak/shrimp/lobster + butter/cream — ambiguous scale
+      vars:
+        sections_text: >-
+          {"produce":["salmon","steak","shrimp","lobster"],"dairy":["butter","cream"]}
+        profile_context: ''
+      assert:
+        - type: is-json
+          value:
+            type: object
+            required:
+              - questions
+            properties:
+              questions:
+                type: array
+                minItems: 1
+                maxItems: 3
+                items:
+                  type: object
+                  required:
+                    - q
+                    - options
+                    - allowOther
+                  properties:
+                    q:
+                      type: string
+                    options:
+                      type: array
+                      minItems: 3
+                      maxItems: 4
+                      items:
+                        type: string
+                    allowOther:
+                      type: boolean
+        - type: javascript
+          value: >
+            const d = JSON.parse(output);
+
+            const valid = d.questions && d.questions.length >= 1 &&
+            d.questions.length <= 3 && d.questions.every(q => q.q && q.options
+            && q.options.length >= 3 && q.options.length <= 4 &&
+            q.options.every(o => o.split(/\s+/).length <= 5));
+
+            return { pass: valid, score: valid ? 1 : 0, reason: valid ?
+            'Structure valid' : 'Invalid structure or option length' };
+        - type: llm-rubric
+          value: >
+            This list has expensive proteins in quantity — ambiguous between a
+            date night and a dinner party. The model should generate 2-3
+            questions to clarify scale and occasion. Questions should address
+            the ambiguity (how many people? special occasion?). Options should
+            be short and tappable.
+          provider:
+            id: openrouter:anthropic/claude-sonnet-4.6
+            config:
+              temperature: 0
+        - type: llm-rubric
+          value: >
+            This list has expensive proteins in quantity — ambiguous between a
+            date night and a dinner party. The model should generate 2-3
+            questions to clarify scale and occasion. Questions should address
+            the ambiguity (how many people? special occasion?). Options should
+            be short and tappable.
+          provider:
+            id: openrouter:openai/gpt-5.4-mini
+            config:
+              temperature: 0
+  scenarios: []
+  env: {}
+  outputPath:
+    - results/scenario1v3_clarify_20260331_201827.yaml
+    - results/scenario1v3_clarify_20260331_201827.csv
+  extensions: []
+  metadata: {}
+  evaluateOptions: {}
+shareableUrl: null
+metadata:
+  promptfooVersion: 0.121.3
+  nodeVersion: v25.1.0
+  platform: darwin
+  arch: arm64
+  exportedAt: '2026-04-01T03:18:52.129Z'
+  evaluationCreatedAt: '2026-04-01T03:18:30.235Z'
