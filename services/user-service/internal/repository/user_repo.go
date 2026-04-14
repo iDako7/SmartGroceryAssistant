@@ -134,7 +134,7 @@ func (r *UserRepo) DeleteUserWithOutbox(ctx context.Context, userID string) (err
 	if err != nil {
 		return fmt.Errorf("begin tx: %w", err)
 	}
-	defer tx.Rollback(ctx)
+	defer func() { _ = tx.Rollback(ctx) }()
 
 	tag, err := tx.Exec(ctx, `DELETE FROM users WHERE id = $1`, userID)
 	if err != nil {
