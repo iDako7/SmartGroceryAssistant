@@ -65,6 +65,16 @@ func (m *mockUserRepo) UpdateProfile(ctx context.Context, userID string, req mod
 	return args.Get(0).(*model.Profile), args.Error(1)
 }
 
+func (m *mockUserRepo) DeleteUser(ctx context.Context, userID string) error {
+	args := m.Called(ctx, userID)
+	return args.Error(0)
+}
+
+func (m *mockUserRepo) DeleteUserWithOutbox(ctx context.Context, userID string) error {
+	args := m.Called(ctx, userID)
+	return args.Error(0)
+}
+
 // ── Helpers ──────────────────────────────────────────────
 
 var testUUID = pgtype.UUID{
@@ -90,7 +100,7 @@ func makeProfile() *model.Profile {
 
 func TestUserService_Register_Success(t *testing.T) {
 	repo := new(mockUserRepo)
-	svc := service.NewUserService(repo, "test-secret")
+	svc := service.NewUserService(repo, "test-secret", nil)
 
 	user := makeUser("test@example.com", "password123")
 	profile := makeProfile()
@@ -111,7 +121,7 @@ func TestUserService_Register_Success(t *testing.T) {
 
 func TestUserService_Register_EmailTaken(t *testing.T) {
 	repo := new(mockUserRepo)
-	svc := service.NewUserService(repo, "test-secret")
+	svc := service.NewUserService(repo, "test-secret", nil)
 
 	pgErr := errors.New("ERROR: duplicate key value violates unique constraint (SQLSTATE 23505)")
 	repo.On("CreateUser", mock.Anything, mock.Anything, mock.Anything).Return(nil, pgErr)
@@ -126,7 +136,7 @@ func TestUserService_Register_EmailTaken(t *testing.T) {
 
 func TestUserService_Register_CreateProfileError(t *testing.T) {
 	repo := new(mockUserRepo)
-	svc := service.NewUserService(repo, "test-secret")
+	svc := service.NewUserService(repo, "test-secret", nil)
 
 	user := makeUser("test@example.com", "password123")
 	repo.On("CreateUser", mock.Anything, mock.Anything, mock.Anything).Return(user, nil)
@@ -144,7 +154,7 @@ func TestUserService_Register_CreateProfileError(t *testing.T) {
 
 func TestUserService_Login_Success(t *testing.T) {
 	repo := new(mockUserRepo)
-	svc := service.NewUserService(repo, "test-secret")
+	svc := service.NewUserService(repo, "test-secret", nil)
 
 	user := makeUser("test@example.com", "password123")
 	profile := makeProfile()
@@ -164,7 +174,7 @@ func TestUserService_Login_Success(t *testing.T) {
 
 func TestUserService_Login_UserNotFound(t *testing.T) {
 	repo := new(mockUserRepo)
-	svc := service.NewUserService(repo, "test-secret")
+	svc := service.NewUserService(repo, "test-secret", nil)
 
 	repo.On("GetUserByEmail", mock.Anything, mock.Anything).
 		Return(nil, errors.New("no rows in result set"))
@@ -179,7 +189,7 @@ func TestUserService_Login_UserNotFound(t *testing.T) {
 
 func TestUserService_Login_WrongPassword(t *testing.T) {
 	repo := new(mockUserRepo)
-	svc := service.NewUserService(repo, "test-secret")
+	svc := service.NewUserService(repo, "test-secret", nil)
 
 	user := makeUser("test@example.com", "correct_password")
 	repo.On("GetUserByEmail", mock.Anything, "test@example.com").Return(user, nil)
@@ -196,7 +206,7 @@ func TestUserService_Login_WrongPassword(t *testing.T) {
 
 func TestUserService_GetProfile_Success(t *testing.T) {
 	repo := new(mockUserRepo)
-	svc := service.NewUserService(repo, "test-secret")
+	svc := service.NewUserService(repo, "test-secret", nil)
 
 	user := makeUser("test@example.com", "password123")
 	profile := makeProfile()
@@ -215,7 +225,7 @@ func TestUserService_GetProfile_Success(t *testing.T) {
 
 func TestUserService_GetProfile_UserNotFound(t *testing.T) {
 	repo := new(mockUserRepo)
-	svc := service.NewUserService(repo, "test-secret")
+	svc := service.NewUserService(repo, "test-secret", nil)
 
 	repo.On("GetUserByID", mock.Anything, mock.Anything).Return(nil, errors.New("not found"))
 
@@ -229,7 +239,7 @@ func TestUserService_GetProfile_UserNotFound(t *testing.T) {
 
 func TestUserService_UpdateProfile_Success(t *testing.T) {
 	repo := new(mockUserRepo)
-	svc := service.NewUserService(repo, "test-secret")
+	svc := service.NewUserService(repo, "test-secret", nil)
 
 	profile := makeProfile()
 	profile.LanguagePreference = "zh"

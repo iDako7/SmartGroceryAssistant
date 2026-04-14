@@ -18,6 +18,7 @@ type userServicer interface {
 	Login(ctx context.Context, req model.LoginRequest) (*model.AuthResponse, error)
 	GetProfile(ctx context.Context, userID string) (*model.ProfileView, error)
 	UpdateProfile(ctx context.Context, userID string, req model.UpdateProfileRequest) (*model.ProfileView, error)
+	DeleteAccount(ctx context.Context, userID string) error
 }
 
 type Handler struct {
@@ -96,4 +97,15 @@ func (h *Handler) UpdateProfile(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, profile)
+}
+
+func (h *Handler) DeleteAccount(c *gin.Context) {
+	userID, _ := c.Get("userID")
+
+	if err := h.svc.DeleteAccount(c.Request.Context(), userID.(string)); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not delete account"})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
 }

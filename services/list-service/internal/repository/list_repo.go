@@ -204,6 +204,48 @@ func (r *ListRepo) DeleteItem(ctx context.Context, id, userID string) (err error
 	return nil
 }
 
+// ── Saga: bulk soft-delete ───────────────────────────────
+
+// SoftDeleteAllByUser soft-deletes every section and item belonging to a user.
+// Returns the count of sections and items affected.
+func (r *ListRepo) SoftDeleteAllByUser(ctx context.Context, userID string) (sections int64, items int64, err error) {
+	start := time.Now()
+	defer func() { observeQuery("soft_delete_all_by_user", start, err) }()
+
+	tx, err := r.db.Begin(ctx)
+	if err != nil {
+		return 0, 0, fmt.Errorf("begin tx: %w", err)
+	}
+	defer tx.Rollback(ctx)
+
+	// Soft-delete items belonging to this user's sections
+	itemTag, err := tx.Exec(ctx,
+		`UPDATE items SET deleted_at = NOW(), updated_at = NOW()
+		 FROM sections s
+		 WHERE items.section_id = s.id AND s.user_id = $1 AND items.deleted_at IS NULL`,
+		userID,
+	)
+	if err != nil {
+		return 0, 0, fmt.Errorf("soft delete items: %w", err)
+	}
+
+	// Soft-delete all sections belonging to this user
+	secTag, err := tx.Exec(ctx,
+		`UPDATE sections SET deleted_at = NOW(), updated_at = NOW()
+		 WHERE user_id = $1 AND deleted_at IS NULL`,
+		userID,
+	)
+	if err != nil {
+		return 0, 0, fmt.Errorf("soft delete sections: %w", err)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return 0, 0, fmt.Errorf("commit tx: %w", err)
+	}
+
+	return secTag.RowsAffected(), itemTag.RowsAffected(), nil
+}
+
 // ── Full list ────────────────────────────────────────────
 
 func (r *ListRepo) GetFullList(ctx context.Context, userID string) ([]model.Section, map[string][]model.Item, error) {

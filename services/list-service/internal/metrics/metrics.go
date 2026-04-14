@@ -38,6 +38,30 @@ var (
 	}, []string{"operation"})
 )
 
+// Saga metrics — recorded by the event consumer.
+var (
+	SagaEventsConsumed = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "list_service_saga_events_consumed_total",
+		Help: "Total saga events consumed from RabbitMQ.",
+	}, []string{"event_type", "status"})
+
+	SagaCleanupDuration = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:    "list_service_saga_cleanup_duration_seconds",
+		Help:    "Time to clean up user data on saga event.",
+		Buckets: []float64{.001, .005, .01, .025, .05, .1, .25, .5, 1},
+	}, []string{"event_type"})
+
+	SagaSectionsDeleted = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "list_service_saga_sections_deleted_total",
+		Help: "Total sections soft-deleted by saga cleanup.",
+	})
+
+	SagaItemsDeleted = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "list_service_saga_items_deleted_total",
+		Help: "Total items soft-deleted by saga cleanup.",
+	})
+)
+
 // Connection pool metrics — recorded by a background goroutine in main.
 var (
 	DBPoolTotalConns = promauto.NewGauge(prometheus.GaugeOpts{

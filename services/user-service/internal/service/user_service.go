@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/events"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/model"
 	"github.com/jackc/pgx/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -26,17 +28,26 @@ type UserRepository interface {
 	CreateProfile(ctx context.Context, user model.User) (*model.Profile, error)
 	GetProfileByUserID(ctx context.Context, userID string) (*model.Profile, error)
 	UpdateProfile(ctx context.Context, userID string, req model.UpdateProfileRequest) (*model.Profile, error)
+	DeleteUser(ctx context.Context, userID string) error
+	DeleteUserWithOutbox(ctx context.Context, userID string) error
+}
+
+// EventPublisher is the messaging interface for saga events.
+type EventPublisher interface {
+	Publish(ctx context.Context, userID string, eventType events.EventType, payload any) error
 }
 
 type UserService struct {
 	repo      UserRepository
+	pub       EventPublisher
 	jwtSecret string
 	jwtTTL    time.Duration
 }
 
-func NewUserService(repo UserRepository, jwtSecret string) *UserService {
+func NewUserService(repo UserRepository, jwtSecret string, pub EventPublisher) *UserService {
 	return &UserService{
 		repo:      repo,
+		pub:       pub,
 		jwtSecret: jwtSecret,
 		jwtTTL:    7 * 24 * time.Hour,
 	}
@@ -166,6 +177,35 @@ func toProfileView(user *model.User, profile *model.Profile) model.ProfileView {
 		HouseholdSize:       profile.HouseholdSize,
 		TastePreferences:    profile.TastePreferences,
 	}
+}
+
+// DeleteAccount hard-deletes the user (CASCADE removes profile) and ensures a
+// user.deleted event is created for downstream cleanup.
+//
+// Layer 3 (Outbox): The DELETE and the event INSERT happen in the same DB
+// transaction — no crash window where the event could be lost.
+// A background poller publishes events from the outbox to RabbitMQ.
+//
+// Fallback: If the outbox write fails (e.g., table doesn't exist yet),
+// falls back to Layer 2 (direct publish).
+func (s *UserService) DeleteAccount(ctx context.Context, userID string) error {
+	// Try Layer 3: atomic delete + outbox insert
+	err := s.repo.DeleteUserWithOutbox(ctx, userID)
+	if err == nil {
+		return nil // outbox poller will publish the event
+	}
+
+	// Fallback to Layer 2: separate delete + direct publish
+	log.Printf("WARN: outbox write failed, falling back to direct publish: %v", err)
+	if err := s.repo.DeleteUser(ctx, userID); err != nil {
+		return fmt.Errorf("delete user: %w", err)
+	}
+	if s.pub != nil {
+		if err := s.pub.Publish(ctx, userID, events.UserDeleted, map[string]string{"user_id": userID}); err != nil {
+			log.Printf("WARN: failed to publish user.deleted event for %s: %v", userID, err)
+		}
+	}
+	return nil
 }
 
 func isUniqueViolation(err error) bool {

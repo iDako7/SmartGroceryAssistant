@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/events"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/handler"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/metrics"
 	"github.com/iDako7/SmartGroceryAssistant/services/user-service/internal/middleware"
@@ -22,6 +23,7 @@ func main() {
 
 	dbURL := mustEnv("USER_DB_URL")
 	jwtSecret := mustEnv("JWT_SECRET")
+	amqpURL := getEnv("RABBITMQ_URL", "amqp://sga:sga_secret@localhost:5672/")
 	port := getEnv("USER_SERVICE_PORT", "4001")
 
 	db, err := pgxpool.New(context.Background(), dbURL)
@@ -47,9 +49,35 @@ func main() {
 		}
 	}()
 
+	pub, err := events.NewPublisher(amqpURL)
+	if err != nil {
+		log.Printf("WARN: rabbitmq unavailable, saga events disabled: %v", err)
+	}
+
 	repo := repository.NewUserRepo(db)
-	svc := service.NewUserService(repo, jwtSecret)
+	svc := service.NewUserService(repo, jwtSecret, pub)
 	h := handler.New(svc)
+
+	// Start the outbox poller — publishes events written by DeleteUserWithOutbox.
+	if pub != nil {
+		poller := events.NewOutboxPoller(
+			func(ctx context.Context, limit int) ([]events.OutboxRow, error) {
+				repoEvents, err := repo.FetchUnpublishedEvents(ctx, limit)
+				if err != nil {
+					return nil, err
+				}
+				out := make([]events.OutboxRow, len(repoEvents))
+				for i, e := range repoEvents {
+					out[i] = events.OutboxRow{ID: e.ID, EventType: e.EventType, Payload: e.Payload}
+				}
+				return out, nil
+			},
+			repo.MarkPublished,
+			pub.Channel(),
+			500*time.Millisecond,
+		)
+		go poller.Run(context.Background())
+	}
 
 	r := gin.Default()
 	r.Use(middleware.Metrics())
@@ -69,6 +97,7 @@ func main() {
 	{
 		me.GET("/me", h.GetProfile)
 		me.PUT("/me", h.UpdateProfile)
+		me.DELETE("/me", h.DeleteAccount)
 	}
 
 	log.Printf("user-service listening on :%s", port)

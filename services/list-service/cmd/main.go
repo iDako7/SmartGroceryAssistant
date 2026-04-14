@@ -59,6 +59,16 @@ func main() {
 	svc := service.NewListService(repo, pub)
 	h := handler.New(svc)
 
+	// Start the saga consumer for user.deleted events.
+	consumer, err := events.NewConsumer(amqpURL, repo)
+	if err != nil {
+		log.Printf("WARN: saga consumer disabled: %v", err)
+	} else {
+		if err := consumer.Start(context.Background()); err != nil {
+			log.Fatalf("start saga consumer: %v", err)
+		}
+	}
+
 	r := gin.Default()
 	r.Use(middleware.Metrics())
 
