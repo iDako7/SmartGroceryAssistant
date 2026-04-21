@@ -126,7 +126,7 @@ Per-service p95: Gateway-only `/health` 7–8ms (stable); User `GET /me` 10–16
 
 ### Experiment 2a — Concurrent Write Serialization on List Service (Sylvia)
 
-**Code:** `services/list-service/locust/` + verification script `<!-- TODO: path -->`
+**Code:** `services/list-service/locust/` + verification script `<!-- TODO: path -->` — [Experiment Report](../../services/list-service/locust/locust_test.md)
 
 - **Purpose / tradeoff:** Does PostgreSQL row-level locking + application transaction handling correctly serialize concurrent writes to the same list section without lost updates, duplicate items, or phantom entries? What's the latency cost of contention?
 - **Setup:** Pre-seed one section with 10 items. Spawn N concurrent writers (1, 5, 10) doing interleaved PATCH + POST + DELETE loops. Reconcile final `list_db` state against per-client operations log.
@@ -146,7 +146,7 @@ Bcrypt (login/register) is the bottleneck — avg climbs from 70ms → 1.6s. Rea
 
 ### Experiment 2b — Cross-Database Ownership Enforcement Under Load (Sylvia)
 
-**Code:** `services/list-service/experiments/saga-benchmark/` + `<!-- TODO: ownership test script path -->`
+**Code:** `services/list-service/experiments/saga-benchmark/` + `<!-- TODO: ownership test script path -->` — [Experiment Report](../../services/list-service/experiments/saga-benchmark/distributed-consistency-layers.md)
 
 - **Purpose / tradeoff:** Shared database vs. database-per-service. With `user_db` and `list_db` separate, ownership must be enforced in application code (JWT + section JOIN). Does that hold under concurrent access? What's the eventual-consistency gap when a user is deleted mid-flight?
 - **Setup:** 5 users in `user_db`, each owning 2 sections in `list_db`. 80% legitimate requests, 20% cross-user attempts (different JWT → someone else's sections). Concurrency 1/5/10, 60s runs. Verify no unauthorized write succeeded and no legitimate owner was rejected.
