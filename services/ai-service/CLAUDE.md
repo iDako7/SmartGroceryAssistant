@@ -16,7 +16,7 @@ Dako (@iDako7) -- AI Service + AI Worker + KB module
 
 **Being rewritten from scratch** with hybrid code style (OOP where needed, functions for pure logic) and TDD methodology. LLM-first approach: all endpoints work with LLM before adding KB and cache layers.
 
-Current phase: **Phase 2** -- All sync endpoints (translate, item-info, alternatives, per-item inspire, clarify) with LLMClient + domain functions architecture, two-tier model config, and optional user profile support.
+Current phase: **Phase 3** -- Async suggest pipeline with Celery + Redis broker. All sync endpoints from Phase 2 plus async suggest (POST /suggest -> Celery worker -> GET /jobs/{job_id}).
 
 ## Architecture
 
@@ -39,6 +39,7 @@ Request --> Cache (Redis) --> KB (SQLite + FTS5) --> LLM (OpenRouter)
 ```bash
 uv sync                                              # Install deps (not pip/poetry)
 uv run uvicorn app.main:app --reload --port 4003     # Dev server
+uv run celery -A worker worker --loglevel=info       # Celery worker (separate terminal)
 uv run pytest                                        # All tests
 uv run pytest tests/test_file.py                     # Single test file
 uv run pytest -k "test_name"                         # Single test by name

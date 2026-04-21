@@ -61,7 +61,7 @@ go test ./internal/handler/...   # Single package
 ```bash
 uv sync                          # Install deps (not pip/poetry)
 uv run uvicorn app.main:app --reload --port 4003   # Dev server
-uv run celery -A worker worker --loglevel=info   # Celery async worker
+uv run python worker.py          # Async job worker
 uv run pytest                    # All tests
 uv run pytest tests/test_ai.py   # Single test file
 uv run pytest -k "test_name"     # Single test by name
