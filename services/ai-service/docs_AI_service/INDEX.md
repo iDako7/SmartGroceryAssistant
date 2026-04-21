@@ -11,6 +11,15 @@ Living index for the AI Service rewrite. Use this page to find the current sourc
 | [Phase 2 Implementation Plan](phase_plan/phase2_implementation_plan.md) | Step-by-step TDD implementation plan for remaining sync endpoints |
 | [Phase 2 Walkthrough](phase_plan/phase2_walkthrough.md) | Narrative explanation of the Phase 2 architecture and request flow |
 
+## Cross-Team Reference
+
+Documents for other services to consume when integrating with or testing against the AI Service.
+
+| Document | Description |
+| -------- | ----------- |
+| [API Reference](api_reference.md) | All endpoints, request/response schemas, mock data fixtures, and JWT examples |
+| [Architecture Report](architecture_report.md) | Internal technical architecture: layers, async pipeline, caching, error handling |
+
 ## Current Working Docs
 
 These documents reflect the current rewrite effort and should be treated as the default reference set.
