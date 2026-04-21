@@ -45,10 +45,7 @@ Thumbs.db
 k8s/secret.yaml
 
 # Claude
-.claude/settings.local.json
-.claude/skills/
-.claude/commands/
-.claude/agents/
+.claude/
 
 # Local document
 chat_history/

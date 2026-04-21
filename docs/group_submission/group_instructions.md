@@ -1,0 +1,13 @@
+
+This is a team assignment, so you only need ONE shared version for the following, but please make sure EACH team member uploads it under their own submission on Canvas!   YES, you are making replicas!  That way we will NOT miss anyone :)
+
+1. **[5 marks] Video! ** This is a screen capture video, where each team member presents for 2-3 minutes on the part of the project they worked on  (No AI voice overs, this is REALLY you)
+2. **[5 marks] Code!   **This is a link to your shared repo, and can also include links to individual repos that were active during the creation of your final project.  The README should introduce the project and why you built it!  The idea here is to show "activity" along the way, with how the project progressed over time (commits, issues, etc., everything you have)
+3. **[5 Marks] Project Management!  **This is a representation of how you moved from your initial *design* to your final state (however you represented this is fine, show how you broke the problem down, who worked on what, problems encountered along the way etc.)
+4. **[10 marks] Experiments!  **This is a detailed representation of experiments and results in a report that can be shared as a .pdf.  This should be no more than 5 pages, and should show off your technical abilities without drowning the reader in data and details!  For each experiment, please provide:
+   1. The **purpose** of this experiment, the tradeoff you were exploring, the limitations of what you did
+   2. The  **results** , in detail, with appropriate charts and graphs
+   3. An **analysis** of the results, what evidence they revealed in terms of the tradeoffs they were designed to address, what your conclusions are based on this evidence, and what limitations there are to this analysis
+   4. **NOTE** : The code used for the experiments should also be in the repository referenced in "Code!" above.
+5. **[5 Marks] Community Contributions!  **Under "Final Projects" on Piazza, post your Video and Experiments report.  In your posting, link to 3 other Final Project postings on Piazza that are most like to yours, pointing out the similarities, differences, and what you learned from the other projects.
+6. **[[Separate Submission Here!](https://northeastern.instructure.com/courses/245693/assignments/3172055 "Final Project!  Individual Submission")] Lessons Learned!  **Each team member should reflect on what was learned in this project.  It is important to share what went wrong, why it went wrong, and how you would handle it next time!  Where possible, reflect back on some of the specific concepts of the course and refer back to how the *concepts* apply to the project you did!

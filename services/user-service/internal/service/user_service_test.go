@@ -69,6 +69,10 @@ func (m *mockUserRepo) DeleteUser(ctx context.Context, userID string) error {
 	return m.Called(ctx, userID).Error(0)
 }
 
+func (m *mockUserRepo) DeleteUserWithOutbox(ctx context.Context, userID string) error {
+	return m.Called(ctx, userID).Error(0)
+}
+
 // ── Helpers ──────────────────────────────────────────────
 
 var testUUID = pgtype.UUID{

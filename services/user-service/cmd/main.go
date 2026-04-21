@@ -66,6 +66,27 @@ func main() {
 	svc := service.NewUserService(repo, jwtSecret, svcOpts...)
 	h := handler.New(svc)
 
+	// Start the outbox poller — publishes events written by DeleteUserWithOutbox.
+	if pub != nil {
+		poller := events.NewOutboxPoller(
+			func(ctx context.Context, limit int) ([]events.OutboxRow, error) {
+				repoEvents, err := repo.FetchUnpublishedEvents(ctx, limit)
+				if err != nil {
+					return nil, err
+				}
+				out := make([]events.OutboxRow, len(repoEvents))
+				for i, e := range repoEvents {
+					out[i] = events.OutboxRow{ID: e.ID, EventType: e.EventType, Payload: e.Payload}
+				}
+				return out, nil
+			},
+			repo.MarkPublished,
+			pub.Channel(),
+			500*time.Millisecond,
+		)
+		go poller.Run(context.Background())
+	}
+
 	r := gin.Default()
 	r.Use(middleware.Metrics())
 
