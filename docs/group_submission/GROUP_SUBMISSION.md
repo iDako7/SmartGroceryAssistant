@@ -80,9 +80,9 @@ MVP decisions:
 | 4    | CI/CD — unit tests, linting, path-based detection         | Done                                       |
 | 5    | AI Service sync endpoints + Redis cache                    | Done                                       |
 | 6    | Frontend MVP + Prometheus metrics + Gateway load tests     | Done                                       |
-| 7    | KB module (SQLite + FTS5), circuit breaker, async pipeline | In progress →`<!-- TODO: mark done -->` |
-| 8    | Metrics instrumentation + Grafana dashboards               | In progress →`<!-- TODO: mark done -->` |
-| 9    | Experiments execution (all three with API key)             | `<!-- TODO: status -->`                  |
+| 7    | KB module (SQLite + FTS5), circuit breaker, async pipeline | Done                                     |
+| 8    | Metrics instrumentation + Grafana dashboards               | Done                                     |
+| 9    | Experiments execution (all three with API key)             | Done  |
 | 10   | Final report + presentation                                | In progress                                |
 
 ### 3.4 Problems encountered & how we solved them
@@ -220,8 +220,8 @@ Each member submits their own reflection (see `docs/group_submission/individual_
 
 | Member  | Draft location    | Status                           |
 | ------- | ----------------- | -------------------------------- |
-| William | `<!-- TODO -->` | `<!-- TODO: draft / final -->` |
-| Sylvia  | `<!-- TODO -->` | `<!-- TODO -->`                |
+| William | `docs/group_submission/individual_submission_Xing.md` | Final |
+| Sylvia  | `docs/group_submission/individual_submission_kaiyue.md` | Final |
 | Dako    | `<!-- TODO -->` | `<!-- TODO -->`                |
 
 ---
