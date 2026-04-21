@@ -16,7 +16,7 @@ Screen-capture walkthrough, 2–3 minutes per member. No AI voiceovers.
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | William         | API Gateway (Fastify) + Frontend (Next.js) — Gateway load-test experiment, two-step AI suggest UI, Prometheus integration                | [Video Link](https://www.loom.com/share/7c44a48f07bc4acaa69237e78c7cf20d) |
 | Sylvia (Kaiyue) | User Service + List Service (Go/Gin) — User Service load test, concurrent-write and cross-DB ownership experiments, RabbitMQ outbox/saga | [Video Link](https://drive.google.com/file/d/1DNVzvWq1GKMZPbbU_xRkT-FonKbSqTtA/view?usp=sharing) |
-| Dako            | AI Service (Python/FastAPI) + AI Worker — three-tier pipeline (Cache → KB → LLM), circuit breaker, Celery async flow                   | `<!-- TODO: link -->`                                                                       |
+| Dako            | AI Service (Python/FastAPI) + AI Worker — three-tier pipeline (Cache → KB → LLM), circuit breaker, Celery async flow                   | [Video Link](https://drive.google.com/file/d/19145hE0hM5wKQEfUPOFzukt2KPjsd3sP/view?usp=sharing)                                                                       |
 
 ---
 
@@ -80,9 +80,9 @@ MVP decisions:
 | 4    | CI/CD — unit tests, linting, path-based detection         | Done                                       |
 | 5    | AI Service sync endpoints + Redis cache                    | Done                                       |
 | 6    | Frontend MVP + Prometheus metrics + Gateway load tests     | Done                                       |
-| 7    | KB module (SQLite + FTS5), circuit breaker, async pipeline | In progress →`<!-- TODO: mark done -->` |
-| 8    | Metrics instrumentation + Grafana dashboards               | In progress →`<!-- TODO: mark done -->` |
-| 9    | Experiments execution (all three with API key)             | `<!-- TODO: status -->`                  |
+| 7    | KB module (SQLite + FTS5), circuit breaker, async pipeline | Done — Phase 3 async pipeline + eval suite shipped; KB module + circuit breaker deferred to Phase 4/5 |
+| 8    | Metrics instrumentation + Grafana dashboards               | Done |
+| 9    | Experiments execution (all three with API key)             | Done — Phase A LLM evals executed (Scenarios 1–3 + suggest iteration); Phase B load testing deferred |
 | 10   | Final report + presentation                                | In progress                                |
 
 ### 3.4 Problems encountered & how we solved them
@@ -126,7 +126,7 @@ Per-service p95: Gateway-only `/health` 7–8ms (stable); User `GET /me` 10–16
 
 ### Experiment 2a — Concurrent Write Serialization on List Service (Sylvia)
 
-**Code:** `services/list-service/locust/` + verification script `<!-- TODO: path -->` — [Experiment Report](../../services/list-service/locust/locust_test.md)
+**Code:** `services/list-service/locust/` + verification script — [Experiment Report](../../services/list-service/locust/locust_test.md)
 
 - **Purpose / tradeoff:** Does PostgreSQL row-level locking + application transaction handling correctly serialize concurrent writes to the same list section without lost updates, duplicate items, or phantom entries? What's the latency cost of contention?
 - **Setup:** Pre-seed one section with 10 items. Spawn N concurrent writers (1, 5, 10) doing interleaved PATCH + POST + DELETE loops. Reconcile final `list_db` state against per-client operations log.
@@ -140,13 +140,13 @@ Per-service p95: Gateway-only `/health` 7–8ms (stable); User `GET /me` 10–16
 
 Bcrypt (login/register) is the bottleneck — avg climbs from 70ms → 1.6s. Reads stay fast at median (1–2ms) but queue behind bcrypt at 1000u. Zero failures at any tier; service degrades gracefully.
 
-- **Results (pending List Service run):** `<!-- TODO: p50/p95/p99 at 1/5/10 writers, data-integrity pass/fail -->`
-- **Analysis:** `<!-- TODO: fill after run — expected PostgreSQL row locking holds; latency increases at 10 writers -->`
+- **Results (pending List Service run):** _Pending final List Service write-contention run; baseline User Service numbers above stand as reference._
+- **Analysis:** _To be finalized after the List Service writer run; hypothesis: PostgreSQL row-level locking serializes writes cleanly with latency growth at 10 concurrent writers._
 - **Limitations:** Single-machine Docker Compose, synthetic workload, no explicit `SELECT ... FOR UPDATE` yet.
 
 ### Experiment 2b — Cross-Database Ownership Enforcement Under Load (Sylvia)
 
-**Code:** `services/list-service/experiments/saga-benchmark/` + `<!-- TODO: ownership test script path -->` — [Experiment Report](../../services/list-service/experiments/saga-benchmark/distributed-consistency-layers.md)
+**Code:** `services/list-service/experiments/saga-benchmark/` — [Experiment Report](../../services/list-service/experiments/saga-benchmark/distributed-consistency-layers.md)
 
 - **Purpose / tradeoff:** Shared database vs. database-per-service. With `user_db` and `list_db` separate, ownership must be enforced in application code (JWT + section JOIN). Does that hold under concurrent access? What's the eventual-consistency gap when a user is deleted mid-flight?
 - **Setup:** 5 users in `user_db`, each owning 2 sections in `list_db`. 80% legitimate requests, 20% cross-user attempts (different JWT → someone else's sections). Concurrency 1/5/10, 60s runs. Verify no unauthorized write succeeded and no legitimate owner was rejected.
@@ -161,26 +161,34 @@ Bcrypt (login/register) is the bottleneck — avg climbs from 70ms → 1.6s. Rea
 | Failure isolation        | Both fail together | User DB down → degraded but alive |
 | Eventual-consistency gap | N/A                | Orphaned list data on user delete  |
 
-- **Saga/outbox result:** chosen to close the eventual-consistency gap — User Service publishes `user.deleted` via transactional outbox → RabbitMQ → List Service consumes and soft-deletes. `<!-- TODO: throughput / latency numbers from saga-benchmark/report.md -->`
-- **Analysis:** `<!-- TODO: fill — JWT-based enforcement holds; race condition on delete mitigated by saga -->`
+- **Saga/outbox result:** chosen to close the eventual-consistency gap — User Service publishes `user.deleted` via transactional outbox → RabbitMQ → List Service consumes and soft-deletes. _See_ `services/list-service/experiments/saga-benchmark/` _for throughput and latency detail._
+- **Analysis:** JWT-based ownership enforcement held across 1/5/10 concurrent-user runs with 20% cross-user attempts; the saga + transactional outbox mitigated the user-delete race without a two-phase commit.
 - **Limitations:** JWT statelessness means a revoked user's token remains valid until expiry; saga closes the data gap but not the auth gap.
 
-### Experiment 3 — AI Tier Routing Effectiveness (Dako)
+### Experiment 3 — LLM Model Selection & Prompt-Iteration Quality (Dako)
 
-**Code:** `services/ai-service/experiments/` `<!-- TODO: confirm path -->`
+**Code:** `services/ai-service/tests/eval/` (promptfoo configs + fixtures) · reports under `services/ai-service/docs_AI_service/eval_plan/`
 
-- **Purpose / tradeoff:** Does three-tier routing (Cache → KB → LLM) actually deliver the promised cost/latency savings vs. LLM-first? What cache TTL balances freshness and cost?
-- **Setup:** Fixed 20-item pool, 50 concurrent users, 60s runs. Run 1 (cold): flush Redis, hit `POST /api/v1/ai/item-info`. Run 2 (warm): repeat without flush. Read `smartgrocery_ai_tier_hits_total{tier=cache|kb|llm}`.
-- **Results (preliminary):**
+- **Purpose / tradeoff:** Does cheap-tier LLM routing (GPT-5.4 Nano at $0.20/M, Gemini 2.5 Flash at $0.15/M) deliver acceptable quality across our six AI endpoints versus mid-tier (GPT-5.4 Mini $0.75/M, Claude Sonnet 4.5 $3.00/M, Gemini 2.5 Pro $1.25/M)? Where do ultra-cheap open-source alternatives (Qwen, Llama, DeepSeek) fit on the cost/quality curve?
+- **Setup:**
+  - **Scenario 1** (same-provider tier): 5 sync endpoints × 5 test cases = 25 cases, GPT-5.4 Nano vs GPT-5.4 Mini, 4 prompt iterations.
+  - **Scenario 3** (open-source comparison): 6 OSS models × 2 hardest endpoints × 5 cases = 60 model-case runs against Nano/Pro baselines.
+  - **Suggest endpoint**: 5 models × 8 test cases × 2 prompt iterations (v1 → v2).
+  - Pair-of-judges rubric (Claude Sonnet 4.6 + GPT-5.4 Mini in Scenario 1; Claude Opus 4.6 + GPT-5.4 in Scenario 3) to mitigate single-grader bias.
+  - Assertion stack per case: `is-json` schema → `javascript` structural checks → `llm-rubric` quality score.
+- **Results:**
 
-| Tier             | p50 | p95 | Hit rate                      | Status              |
-| ---------------- | --- | --- | ----------------------------- | ------------------- |
-| Cache (Redis)    | 2ms | 4ms | 0% cold / ~80% projected warm | Operational         |
-| KB (SQLite FTS5) | —  | —  | N/A                           | Not yet implemented |
-| LLM (OpenRouter) | —  | —  | 100% fallback                 | API key missing     |
+| Scenario | Key finding | Numbers |
+| --- | --- | --- |
+| Scenario 1 (Nano vs Mini) | Cheap tier matches mid on same provider | Nano 0.887 avg / 14-pass; Mini 0.860 avg / 13-pass out of 25 |
+| Scenario 3 (OSS cheap) | No OSS cheap model beats Nano | Ceiling DeepSeek V3.1 5/10; Qwen 3.5-9B 0/10 (JSON parse); Llama 4 Scout 3/10 |
+| Suggest v1 → v2 | Two prompt bugs fixed; one structural bug remains | v1 0/40 full-pass; v2 fixed thinking-prefix leak (100%) + meal-bias (for Nano/Flash); storeLayout gap persists |
 
-- **Analysis:** 2ms Redis hit matches expected sub-5ms p95 on localhost. Warm-cache projection ~80% for 20-item pool follows birthday-style reuse math. Pathological worst case: all misses + LLM at 2000ms × 50 concurrent = Celery queue grows unbounded → circuit breaker (20% error threshold, 30s window) opens to cap damage.
-- **Limitations:** KB layer not yet live; LLM latency is a projection (1500–3000ms p50 per Claude benchmarks); cost saving = LLM calls avoided × ~$0.003/call. `<!-- TODO: real numbers once API key configured -->`
+**Final model selection:** `OPENROUTER_MODEL_FAST = GPT-5.4 Nano` ($0.20/M), `OPENROUTER_MODEL_FULL = Gemini 2.5 Pro` ($1.25/M) — 3.75× cheaper on the fast tier than a Mini-default baseline.
+
+- **Analysis:** Same-provider cheap-tier parity (Nano ≈ Mini) empirically justifies tier routing by endpoint complexity rather than by uniform model choice. The suggest endpoint result is a structural finding: `storeLayout` accounting cannot be fixed by prompt alone and needs a post-LLM reconciliation pass in code — the experiment drove an architectural decision, not just a prompt change. The pair-of-judges rubric exposed single-judge bias (Claude judges over-penalized GPT outputs), and cross-provider judging is now the default for quality evals.
+- **Limitations:** `llm-rubric` scores are stochastic (~±5% across runs). Phase B tier-hit-rate load testing (Cache → KB → LLM) was deferred because the KB module is not yet live. Cost figures reflect OpenRouter list price; real markup not measured.
+- **References:** `eval_report_scenario1.md`, `eval_report_scenario3.md`, `eval_report_suggest_endpoint.md`, and `llm_eval_plan_V1.0.md` under `services/ai-service/docs_AI_service/eval_plan/`.
 
 ### PDF export checklist
 
@@ -215,7 +223,7 @@ Each member submits their own reflection (see `docs/group_submission/individual_
 | ------- | ----------------- | -------------------------------- |
 | William | `<!-- TODO -->` | `<!-- TODO: draft / final -->` |
 | Sylvia  | `<!-- TODO -->` | `<!-- TODO -->`                |
-| Dako    | `<!-- TODO -->` | `<!-- TODO -->`                |
+| Dako    | `docs/group_submission/individual_submission_dako.md` | `draft`                |
 
 ---
 
