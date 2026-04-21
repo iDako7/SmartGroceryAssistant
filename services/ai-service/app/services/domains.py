@@ -265,8 +265,10 @@ async def suggest(
             f"Rules:\n"
             f"- 2-4 clusters, 3-6 NEW items total across all clusters\n"
             f"- Every existing item must appear in exactly one cluster or ungrouped\n"
-            f"- Double-check: list all existing items from the grocery list. Each must appear in exactly one cluster or in ungrouped. None may be omitted.\n"
-            f"- When user profile conflicts with answers, profile takes precedence (it represents persistent preferences)\n"
+            f"- Double-check: list all existing items from the grocery list. "
+            f"Each must appear in exactly one cluster or in ungrouped. None may be omitted.\n"
+            f"- When user profile conflicts with answers, profile takes precedence "
+            f"(it represents persistent preferences)\n"
             f"- storeLayout must list EVERY item mentioned anywhere in clusters, ungrouped, or as new suggestions. "
             f"Count them — the total should match."
         ),
