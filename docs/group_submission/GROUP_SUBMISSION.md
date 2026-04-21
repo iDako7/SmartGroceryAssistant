@@ -81,7 +81,7 @@ MVP decisions:
 | 5    | AI Service sync endpoints + Redis cache                    | Done                                       |
 | 6    | Frontend MVP + Prometheus metrics + Gateway load tests     | Done                                       |
 | 7    | KB module (SQLite + FTS5), circuit breaker, async pipeline | Done — Phase 3 async pipeline + eval suite shipped; KB module + circuit breaker deferred to Phase 4/5 |
-| 8    | Metrics instrumentation + Grafana dashboards               | Done |
+| 8    | Metrics instrumentation + Grafana dashboards               | Done                                     |
 | 9    | Experiments execution (all three with API key)             | Done — Phase A LLM evals executed (Scenarios 1–3 + suggest iteration); Phase B load testing deferred |
 | 10   | Final report + presentation                                | In progress                                |
 
@@ -106,23 +106,30 @@ Code for every experiment lives under `services/<svc>/experiments/` or `services
 
 ### Experiment 1 — API Gateway Throughput & Per-Service Latency (William)
 
-**Code:** `services/api-gateway/` load-test scripts
+**Code:** [`services/api-gateway/locust/locustfile.py`](https://github.com/iDako7/SmartGroceryAssistant/blob/main/services/api-gateway/locust/locustfile.py)
+**Full report:** [`services/api-gateway/locust/load_test.md`](https://github.com/iDako7/SmartGroceryAssistant/blob/main/services/api-gateway/locust/load_test.md)
+**Screenshots & HTML results:** [`services/api-gateway/locust/screenshots/`](https://github.com/iDako7/SmartGroceryAssistant/tree/main/services/api-gateway/locust/screenshots) and [`services/api-gateway/locust/results/`](https://github.com/iDako7/SmartGroceryAssistant/tree/main/services/api-gateway/locust/results)
+**Metrics instrumentation:** [`services/api-gateway/src/plugins/metrics.ts`](https://github.com/iDako7/SmartGroceryAssistant/blob/main/services/api-gateway/src/plugins/metrics.ts)
+**Grafana dashboard:** [`infra/grafana/dashboards/gateway-overview.json`](https://github.com/iDako7/SmartGroceryAssistant/blob/main/infra/grafana/dashboards/gateway-overview.json)
 
-- **Purpose / tradeoff:** Does the Gateway's extra network hop + JWT validation add meaningful latency vs. direct service access? Which downstream becomes the bottleneck first?
-- **Setup:** Locust `FastHttpUser` targeting `localhost:3001`, 60s runs at 1/5/20/50 concurrent users, identical per-user flow (register → profile R/W → list R/W → AI item-info → health).
-- **Results (preliminary):**
+- **Purpose / tradeoff:** The API Gateway adds an extra network hop and JWT validation to every request. We wanted to answer: does this proxy layer add meaningful latency vs. direct service access? And which downstream service becomes the bottleneck first under concurrent load?
 
-| Users | RPS  | Avg ms | p95 ms | p99 ms | Fail % |
-| ----- | ---- | ------ | ------ | ------ | ------ |
-| 1     | 1.3  | 17.18  | 61     | 420    | 6%     |
-| 5     | 5.9  | 9.36   | 21     | 100    | 27%    |
-| 20    | 18.1 | 6.16   | 12     | 57     | 29%    |
-| 50    | 28.1 | 4.82   | 10     | 33     | 18%    |
+- **Setup:** Locust load tests targeting `localhost:3001` (API Gateway), 60-second runs at 1, 5, 20, and 50 concurrent users. Each virtual user simulates a realistic flow: register → profile read/write → list CRUD → AI item-info → health check bursts. Prometheus scrapes the Gateway's `/metrics` endpoint (custom metrics: `http_request_duration_seconds`, `gateway_upstream_duration_seconds`, `gateway_upstream_errors_total`, `gateway_in_flight_requests`, `rate_limit_hits_total`). A Grafana dashboard auto-provisioned via `infra/grafana/` visualizes request rate, latency percentiles, and per-service upstream breakdown in real time.
 
-Per-service p95: Gateway-only `/health` 7–8ms (stable); User `GET /me` 10–16ms; register 97–110ms (bcrypt CPU-bound); List `GET /full` 11–15ms; AI item-info 42–420ms (100% failures — no API key).
+- **Results:**
 
-- **Analysis:** Gateway is not the bottleneck — `/health` stays at 3–5ms median regardless of concurrency. Throughput scales linearly 1→50 users. AI Service is an order of magnitude slower than other services and the sole source of functional errors, confirming it as the correct target for circuit-breaker protection.
-- **Limitations:** Single-machine Docker Compose; 50-user ceiling; failures partly artificial (Locust concurrent-register JWT collisions). `<!-- TODO: add 100+ user re-run with API key configured -->`
+| Users | RPS  | Avg (ms) | p95 (ms) | p99 (ms) | Failure % |
+| ----- | ---- | -------- | -------- | -------- | --------- |
+| 1     | 1.3  | 17.18    | 61       | 420      | 6%        |
+| 5     | 5.9  | 9.36     | 21       | 100      | 27%       |
+| 20    | 18.1 | 6.16     | 12       | 57       | 29%       |
+| 50    | 28.1 | 4.82     | 10       | 33       | 18%       |
+
+Per-service p95 at 50 users: Gateway-only `/health` 7ms (stable); User Service `GET /me` 10ms, `POST /register` 110ms (bcrypt CPU-bound); List Service `GET /full` 11ms, `DELETE` 7ms; AI Service `item-info` 42ms (100% failures — no API key configured). Full per-route breakdown with Grafana screenshots available in [`services/api-gateway/locust/screenshots/`](https://github.com/iDako7/SmartGroceryAssistant/tree/main/services/api-gateway/locust/screenshots).
+
+- **Analysis:** The Gateway is definitively **not** the bottleneck — the `/health` endpoint (pure Gateway, no upstream) stays at 3–5ms median regardless of concurrency. Throughput scales linearly from 1.3 to 28.1 RPS across 1→50 users with no degradation cliff. The AI Service is an order of magnitude slower than other services and the sole source of functional errors, confirming it as the correct target for circuit-breaker protection. User registration (bcrypt) is the slowest write path at 97–110ms. The Go-based List Service is the fastest downstream at 5–13ms for all operations.
+
+- **Limitations:** Single-machine Docker Compose (no network latency between services); 50-user ceiling (not production-scale); AI Service failures are artificial (missing API key, not service instability); some failures at 5+ users are caused by Locust concurrent-register JWT timing collisions, not real auth failures.
 
 ### Experiment 2a — Concurrent Write Serialization on List Service (Sylvia)
 
@@ -221,9 +228,9 @@ Each member submits their own reflection (see `docs/group_submission/individual_
 
 | Member  | Draft location    | Status                           |
 | ------- | ----------------- | -------------------------------- |
-| William | `<!-- TODO -->` | `<!-- TODO: draft / final -->` |
-| Sylvia  | `<!-- TODO -->` | `<!-- TODO -->`                |
-| Dako    | `docs/group_submission/individual_submission_dako.md` | `draft`                |
+| William | `docs/group_submission/individual_submission_Xing.md` | Final |
+| Sylvia  | `docs/group_submission/individual_submission_kaiyue.md` | Final |
+| Dako    | `docs/group_submission/individual_submission_dako.md` | `draft` |
 
 ---
 

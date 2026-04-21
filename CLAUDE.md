@@ -16,8 +16,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | Kaiyue | @KaiyueWei | User Service (`services/user-service/`) + List Service (`services/list-service/`) |
 | Dako | @iDako7 | AI Service (`services/ai-service/`) + AI Worker + KB module |
 
-- **Same-service PR:** owner can self-merge after CI passes
-- **Cross-service PR:** both affected owners must review
+- Anyone may open and self-merge a PR after CI passes; CODEOWNERS still auto-requests reviewers but does not block merges
 
 ## Build & Test Commands
 
