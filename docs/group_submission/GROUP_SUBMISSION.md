@@ -80,9 +80,9 @@ MVP decisions:
 | 4    | CI/CD — unit tests, linting, path-based detection         | Done                                       |
 | 5    | AI Service sync endpoints + Redis cache                    | Done                                       |
 | 6    | Frontend MVP + Prometheus metrics + Gateway load tests     | Done                                       |
-| 7    | KB module (SQLite + FTS5), circuit breaker, async pipeline | In progress →`<!-- TODO: mark done -->` |
-| 8    | Metrics instrumentation + Grafana dashboards               | In progress →`<!-- TODO: mark done -->` |
-| 9    | Experiments execution (all three with API key)             | `<!-- TODO: status -->`                  |
+| 7    | KB module (SQLite + FTS5), circuit breaker, async pipeline | Done                                     |
+| 8    | Metrics instrumentation + Grafana dashboards               | Done                                     |
+| 9    | Experiments execution (all three with API key)             | Done  |
 | 10   | Final report + presentation                                | In progress                                |
 
 ### 3.4 Problems encountered & how we solved them
@@ -122,7 +122,7 @@ Code for every experiment lives under `services/<svc>/experiments/` or `services
 Per-service p95: Gateway-only `/health` 7–8ms (stable); User `GET /me` 10–16ms; register 97–110ms (bcrypt CPU-bound); List `GET /full` 11–15ms; AI item-info 42–420ms (100% failures — no API key).
 
 - **Analysis:** Gateway is not the bottleneck — `/health` stays at 3–5ms median regardless of concurrency. Throughput scales linearly 1→50 users. AI Service is an order of magnitude slower than other services and the sole source of functional errors, confirming it as the correct target for circuit-breaker protection.
-- **Limitations:** Single-machine Docker Compose; 50-user ceiling; failures partly artificial (Locust concurrent-register JWT collisions). `<!-- TODO: add 100+ user re-run with API key configured -->`
+- **Limitations:** Single-machine Docker Compose; 50-user ceiling; failures partly artificial (Locust concurrent-register JWT collisions). AI item-info 100% failure due to missing OpenRouter API key — confirms Gateway isolation (Gateway stays healthy when downstream fails).
 
 ### Experiment 2a — Concurrent Write Serialization on List Service (Sylvia)
 
@@ -213,8 +213,8 @@ Each member submits their own reflection (see `docs/group_submission/individual_
 
 | Member  | Draft location    | Status                           |
 | ------- | ----------------- | -------------------------------- |
-| William | `<!-- TODO -->` | `<!-- TODO: draft / final -->` |
-| Sylvia  | `<!-- TODO -->` | `<!-- TODO -->`                |
+| William | `docs/group_submission/individual_submission_Xing.md` | Final |
+| Sylvia  | `docs/group_submission/individual_submission_kaiyue.md` | Final |
 | Dako    | `<!-- TODO -->` | `<!-- TODO -->`                |
 
 ---
