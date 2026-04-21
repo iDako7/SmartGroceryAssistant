@@ -153,3 +153,143 @@ class TestClarifyResponse:
         assert q.allow_other is False
         d = q.model_dump(by_alias=True)
         assert "allowOther" in d
+
+
+# ── ClarifyAnswer ───────────────────────────────────────
+
+
+class TestClarifyAnswer:
+    def test_valid(self):
+        from app.models import ClarifyAnswer
+
+        a = ClarifyAnswer(question="What's the occasion?", answer="Weeknight dinner")
+        assert a.question == "What's the occasion?"
+        assert a.answer == "Weeknight dinner"
+
+    def test_missing_fields(self):
+        from app.models import ClarifyAnswer
+
+        with pytest.raises(ValidationError):
+            ClarifyAnswer(question="Only question")
+
+
+# ── SuggestRequest ──────────────────────────────────────
+
+
+class TestSuggestRequest:
+    def test_valid_full(self):
+        from app.models import ClarifyAnswer, SuggestRequest, UserProfile
+
+        r = SuggestRequest(
+            sections={"Produce": ["apples"], "Meat": ["chicken"]},
+            answers=[ClarifyAnswer(question="Occasion?", answer="Party")],
+            profile=UserProfile(dietary=["vegan"]),
+        )
+        assert len(r.sections) == 2
+        assert len(r.answers) == 1
+        assert r.profile.dietary == ["vegan"]
+
+    def test_defaults(self):
+        from app.models import SuggestRequest
+
+        r = SuggestRequest(sections={"Produce": ["apples"]})
+        assert r.answers == []
+        assert r.profile is None
+
+    def test_missing_sections(self):
+        from app.models import SuggestRequest
+
+        with pytest.raises(ValidationError):
+            SuggestRequest()
+
+    def test_empty_answers_valid(self):
+        from app.models import SuggestRequest
+
+        r = SuggestRequest(sections={"Produce": ["apples"]}, answers=[])
+        assert r.answers == []
+
+
+# ── SuggestResponse ─────────────────────────────────────
+
+
+class TestSuggestResponse:
+    def test_valid_full(self):
+        from app.models import SuggestCluster, SuggestClusterItem, SuggestResponse, SuggestUngroupedItem
+
+        resp = SuggestResponse(
+            reason="Asian dinner theme",
+            clusters=[
+                SuggestCluster(
+                    name="Stir Fry Night",
+                    emoji="🍜",
+                    desc="Quick weeknight stir fry",
+                    items=[
+                        SuggestClusterItem(name_en="chicken thighs", existing=True),
+                        SuggestClusterItem(name_en="soy sauce", existing=False, why="Essential for stir fry"),
+                    ],
+                )
+            ],
+            ungrouped=[SuggestUngroupedItem(name_en="apples")],
+            storeLayout=[],
+        )
+        assert resp.reason == "Asian dinner theme"
+        assert len(resp.clusters) == 1
+        assert resp.clusters[0].items[1].existing is False
+
+    def test_store_layout_alias(self):
+        """storeLayout alias works for both input and output."""
+        from app.models import StoreLayoutCategory, StoreLayoutItem, SuggestResponse
+
+        resp = SuggestResponse(
+            reason="test",
+            clusters=[],
+            ungrouped=[],
+            storeLayout=[
+                StoreLayoutCategory(
+                    category="Produce",
+                    emoji="🥬",
+                    items=[StoreLayoutItem(name_en="apples", existing=True)],
+                )
+            ],
+        )
+        assert len(resp.store_layout) == 1
+        d = resp.model_dump(by_alias=True)
+        assert "storeLayout" in d
+
+    def test_defaults(self):
+        from app.models import SuggestResponse
+
+        resp = SuggestResponse(reason="", clusters=[], ungrouped=[])
+        assert resp.store_layout == []
+
+    def test_populate_by_name(self):
+        """Can use store_layout (Python name) directly."""
+        from app.models import SuggestResponse
+
+        resp = SuggestResponse(reason="", clusters=[], ungrouped=[], store_layout=[])
+        assert resp.store_layout == []
+
+
+# ── JobStatusResponse ───────────────────────────────────
+
+
+class TestJobStatusResponse:
+    def test_pending(self):
+        from app.models import JobStatusResponse
+
+        r = JobStatusResponse(job_id="abc-123", status="pending")
+        assert r.result is None
+        assert r.error == ""
+
+    def test_done_with_result(self):
+        from app.models import JobStatusResponse, SuggestResponse
+
+        result = SuggestResponse(reason="test", clusters=[], ungrouped=[])
+        r = JobStatusResponse(job_id="abc-123", status="done", result=result)
+        assert r.result.reason == "test"
+
+    def test_failed_with_error(self):
+        from app.models import JobStatusResponse
+
+        r = JobStatusResponse(job_id="abc-123", status="failed", error="LLM timeout")
+        assert r.error == "LLM timeout"

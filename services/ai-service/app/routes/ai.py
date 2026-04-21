@@ -1,6 +1,6 @@
-import json
+import uuid
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.middleware.auth import verify_token
 from app.models import (
@@ -12,11 +12,13 @@ from app.models import (
     InspireItemResponse,
     ItemInfoRequest,
     ItemInfoResponse,
+    SuggestRequest,
     TranslateRequest,
     TranslateResponse,
 )
-from app.services import cache, domains
+from app.services import domains, job_store
 from app.services.llm_client import get_llm_client
+from app.worker.tasks import suggest_task
 
 router = APIRouter(prefix="/api/v1/ai", tags=["ai"])
 
@@ -59,19 +61,45 @@ async def clarify(req: ClarifyRequest, _: str = Depends(verify_token)) -> Clarif
     return await domains.clarify(client, req.sections, profile=req.profile)
 
 
+# ── Async suggest ────────────────────────────────────────
+
+
+@router.post("/suggest", status_code=202)
+async def suggest_endpoint(req: SuggestRequest, _: str = Depends(verify_token)):
+    """Submit grocery list for async AI analysis. Returns job_id for polling."""
+    job_id = str(uuid.uuid4())
+
+    await job_store.set_job_status(job_id, "pending")
+
+    suggest_task.delay(
+        job_id=job_id,
+        sections=req.sections,
+        answers=[a.model_dump() for a in req.answers],
+        profile=req.profile.model_dump() if req.profile else None,
+    )
+
+    return {"job_id": job_id, "status": "pending"}
+
+
 # ── Async job status ─────────────────────────────────────
 
 
 @router.get("/jobs/{job_id}")
 async def get_job(job_id: str, _: str = Depends(verify_token)):
     """Return async job status and result payload when available."""
-    # Worker writes completed output to this cache key.
-    raw = await cache.cache_get(f"ai:result:{job_id}")
-    if raw is None:
-        return {"job_id": job_id, "status": "pending"}
-    try:
-        # Current worker behavior stores JSON strings.
-        return {"job_id": job_id, "status": "done", "result": json.loads(raw)}
-    except json.JSONDecodeError:
-        # Backward compatibility for legacy/non-JSON cache values.
-        return {"job_id": job_id, "status": "done", "result": raw}
+    status_data = await job_store.get_job_status(job_id)
+    if status_data is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    status = status_data["status"]
+
+    if status == "done":
+        result = await job_store.get_job_result(job_id)
+        if result is None:
+            return {"job_id": job_id, "status": "processing"}
+        return {"job_id": job_id, "status": "done", "result": result}
+
+    if status == "failed":
+        return {"job_id": job_id, "status": "failed", "error": status_data.get("error", "")}
+
+    return {"job_id": job_id, "status": status}

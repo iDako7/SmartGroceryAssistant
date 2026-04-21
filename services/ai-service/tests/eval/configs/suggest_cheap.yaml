@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+# Suggest eval config — cheap tier only (2 models).
+# Run: npx promptfoo@latest eval -c configs/suggest_cheap.yaml --env-file ../../.env --no-cache
+
+description: "Suggest — cheap tier only (iter2 prompt)"
+
+prompts:
+  - file://../prompts/current/suggest.json
+
+providers:
+  - id: openrouter:openai/gpt-5.4-nano
+    label: "GPT-5.4 Nano (cheap)"
+    config:
+      temperature: 0.7
+      max_tokens: 2000
+  - id: openrouter:google/gemini-2.5-flash
+    label: "Gemini 2.5 Flash (cheap)"
+    config:
+      temperature: 0.7
+      max_tokens: 2000
+
+tests: file://../fixtures/suggest_cases.yaml
