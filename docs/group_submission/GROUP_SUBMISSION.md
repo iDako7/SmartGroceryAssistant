@@ -14,7 +14,7 @@ Screen-capture walkthrough, 2–3 minutes per member. No AI voiceovers.
 
 | Member          | Topic / Scope                                                                                                                             | Video link                                                                                    |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| William         | API Gateway (Fastify) + Frontend (Next.js) — Gateway load-test experiment, two-step AI suggest UI, Prometheus integration                | `<!-- TODO: link -->`                                                                       |
+| William         | API Gateway (Fastify) + Frontend (Next.js) — Gateway load-test experiment, two-step AI suggest UI, Prometheus integration                | [Video Link](https://www.loom.com/share/7c44a48f07bc4acaa69237e78c7cf20d) |
 | Sylvia (Kaiyue) | User Service + List Service (Go/Gin) — User Service load test, concurrent-write and cross-DB ownership experiments, RabbitMQ outbox/saga | [Video Link](https://drive.google.com/file/d/1DNVzvWq1GKMZPbbU_xRkT-FonKbSqTtA/view?usp=sharing) |
 | Dako            | AI Service (Python/FastAPI) + AI Worker — three-tier pipeline (Cache → KB → LLM), circuit breaker, Celery async flow                   | `<!-- TODO: link -->`                                                                       |
 
