@@ -62,13 +62,14 @@ tests/eval/
 
 ## Endpoints at a Glance
 
-| Endpoint | Tier | Cases | What it tests |
-|----------|------|-------|---------------|
-| translate | fast | 5 | Multilingual accuracy, regional variants |
-| item_info | fast | 5 | Factual accuracy, actionable tips |
-| alternatives | full | 5 | Dietary constraints, match honesty |
-| inspire_item | full | 5 | Cuisine direction, profile conflicts |
-| clarify | full | 5 | Adaptive question count, conversational tone |
+| Endpoint | Tier | Cases | Models | What it tests |
+|----------|------|-------|--------|---------------|
+| translate | fast | 5 | 2 | Multilingual accuracy, regional variants |
+| item_info | fast | 5 | 2 | Factual accuracy, actionable tips |
+| alternatives | full | 5 | 2 | Dietary constraints, match honesty |
+| inspire_item | full | 5 | 2 | Cuisine direction, profile conflicts |
+| clarify | full | 5 | 2 | Adaptive question count, conversational tone |
+| suggest | full | 8 | 5 | Meal clustering, gap analysis, store layout, profile constraints |
 
 ## Re-run After Changes
 

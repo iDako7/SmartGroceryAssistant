@@ -107,3 +107,65 @@ class ClarifyQuestion(BaseModel):
 
 class ClarifyResponse(BaseModel):
     questions: list[ClarifyQuestion]
+
+
+# ── Suggest (async) ─────────────────────────────────────
+
+
+class ClarifyAnswer(BaseModel):
+    question: str
+    answer: str
+
+
+class SuggestRequest(BaseModel):
+    sections: dict[str, list[str]]
+    answers: list[ClarifyAnswer] = Field(default_factory=list)
+    profile: UserProfile | None = None
+
+
+class SuggestClusterItem(BaseModel):
+    name_en: str
+    existing: bool
+    why: str = ""
+
+
+class SuggestCluster(BaseModel):
+    name: str
+    emoji: str
+    desc: str
+    items: list[SuggestClusterItem]
+
+
+class SuggestUngroupedItem(BaseModel):
+    name_en: str
+    existing: bool = True
+
+
+class StoreLayoutItem(BaseModel):
+    name_en: str
+    existing: bool
+
+
+class StoreLayoutCategory(BaseModel):
+    category: str
+    emoji: str
+    items: list[StoreLayoutItem]
+
+
+class SuggestResponse(BaseModel):
+    reason: str
+    clusters: list[SuggestCluster]
+    ungrouped: list[SuggestUngroupedItem]
+    store_layout: list[StoreLayoutCategory] = Field(alias="storeLayout", default_factory=list)
+
+    model_config = {"populate_by_name": True}
+
+
+# ── Job Status ──────────────────────────────────────────
+
+
+class JobStatusResponse(BaseModel):
+    job_id: str
+    status: str
+    result: SuggestResponse | None = None
+    error: str = ""

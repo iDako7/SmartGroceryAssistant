@@ -250,3 +250,128 @@ class TestClarify:
         await clarify(client, {"Produce": ["apples"]})
         kwargs = client.call.call_args.kwargs
         assert kwargs["max_tokens"] == 600
+
+
+# ── suggest ─────────────────────────────────────────────
+
+
+class TestSuggest:
+    @pytest.mark.asyncio
+    async def test_uses_full_tier(self):
+        from app.services.domains import suggest
+
+        raw = '{"reason": "", "clusters": [], "ungrouped": [], "storeLayout": []}'
+        client = _make_mock_client(raw)
+        await suggest(client, {"Produce": ["apples"]})
+        kwargs = client.call.call_args.kwargs
+        assert kwargs["tier"] == "full"
+
+    @pytest.mark.asyncio
+    async def test_max_tokens_2000(self):
+        from app.services.domains import suggest
+
+        raw = '{"reason": "", "clusters": [], "ungrouped": [], "storeLayout": []}'
+        client = _make_mock_client(raw)
+        await suggest(client, {"Produce": ["apples"]})
+        kwargs = client.call.call_args.kwargs
+        assert kwargs["max_tokens"] == 2000
+
+    @pytest.mark.asyncio
+    async def test_profile_in_prompt(self):
+        from app.services.domains import suggest
+
+        raw = '{"reason": "", "clusters": [], "ungrouped": [], "storeLayout": []}'
+        client = _make_mock_client(raw)
+        profile = UserProfile(dietary=["vegan"], household_size=4)
+        await suggest(client, {"Produce": ["apples"]}, profile=profile)
+        prompt_arg = client.call.call_args.kwargs["prompt"]
+        assert "vegan" in prompt_arg
+
+    @pytest.mark.asyncio
+    async def test_answers_in_prompt(self):
+        from app.models import ClarifyAnswer
+        from app.services.domains import suggest
+
+        raw = '{"reason": "", "clusters": [], "ungrouped": [], "storeLayout": []}'
+        client = _make_mock_client(raw)
+        answers = [ClarifyAnswer(question="Occasion?", answer="Weeknight dinner")]
+        await suggest(client, {"Produce": ["apples"]}, answers=answers)
+        prompt_arg = client.call.call_args.kwargs["prompt"]
+        assert "Weeknight dinner" in prompt_arg
+        assert "Occasion?" in prompt_arg
+
+    @pytest.mark.asyncio
+    async def test_answers_absent_when_empty(self):
+        from app.services.domains import suggest
+
+        raw = '{"reason": "", "clusters": [], "ungrouped": [], "storeLayout": []}'
+        client = _make_mock_client(raw)
+        await suggest(client, {"Produce": ["apples"]}, answers=[])
+        prompt_arg = client.call.call_args.kwargs["prompt"]
+        assert "User context" not in prompt_arg
+
+    @pytest.mark.asyncio
+    async def test_sections_in_prompt(self):
+        from app.services.domains import suggest
+
+        raw = '{"reason": "", "clusters": [], "ungrouped": [], "storeLayout": []}'
+        client = _make_mock_client(raw)
+        await suggest(client, {"Produce": ["apples", "bananas"], "Meat": ["chicken"]})
+        prompt_arg = client.call.call_args.kwargs["prompt"]
+        assert "apples" in prompt_arg
+        assert "chicken" in prompt_arg
+
+    @pytest.mark.asyncio
+    async def test_valid_json_returns_suggest_response(self):
+        from app.services.domains import suggest
+
+        raw = json.dumps(
+            {
+                "reason": "Asian dinner",
+                "clusters": [
+                    {
+                        "name": "Stir Fry",
+                        "emoji": "🍜",
+                        "desc": "Quick stir fry",
+                        "items": [
+                            {"name_en": "chicken", "existing": True},
+                            {"name_en": "soy sauce", "existing": False, "why": "Essential"},
+                        ],
+                    }
+                ],
+                "ungrouped": [{"name_en": "apples", "existing": True}],
+                "storeLayout": [
+                    {
+                        "category": "Produce",
+                        "emoji": "🥬",
+                        "items": [{"name_en": "apples", "existing": True}],
+                    }
+                ],
+            }
+        )
+        client = _make_mock_client(raw)
+        result = await suggest(client, {"Produce": ["apples"], "Meat": ["chicken"]})
+        assert result.reason == "Asian dinner"
+        assert len(result.clusters) == 1
+        assert result.clusters[0].items[1].existing is False
+
+    @pytest.mark.asyncio
+    async def test_fallback_on_garbage(self):
+        from app.services.domains import suggest
+
+        client = _make_mock_client("not json at all")
+        result = await suggest(client, {"Produce": ["apples"]})
+        assert result.reason == ""
+        assert result.clusters == []
+        assert result.ungrouped == []
+        assert result.store_layout == []
+
+    @pytest.mark.asyncio
+    async def test_no_cache_key(self):
+        from app.services.domains import suggest
+
+        raw = '{"reason": "", "clusters": [], "ungrouped": [], "storeLayout": []}'
+        client = _make_mock_client(raw)
+        await suggest(client, {"Produce": ["apples"]})
+        kwargs = client.call.call_args.kwargs
+        assert kwargs.get("cache_key") in (None, "")

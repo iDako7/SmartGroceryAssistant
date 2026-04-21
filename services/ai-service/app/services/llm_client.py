@@ -26,10 +26,11 @@ class LLMClient:
         self, prompt: str, system: str, cache_key: str, *, tier: str = "fast", max_tokens: int = 512, ttl: int = 3600
     ) -> str:
         """Call the LLM with cache-first behavior and tier-based model routing."""
-        # Step A: check cache first
-        cached = await cache_get(cache_key)
-        if cached:
-            return cached
+        # Step A: check cache first (skip if no cache key)
+        if cache_key:
+            cached = await cache_get(cache_key)
+            if cached:
+                return cached
 
         # Step B: pick model by tier
         model = self._model_full if tier == "full" else self._model_fast
@@ -46,7 +47,8 @@ class LLMClient:
         result = response.choices[0].message.content or ""
 
         # Step D: cache for next time
-        await cache_set(cache_key, result, ttl)
+        if cache_key:
+            await cache_set(cache_key, result, ttl)
         return result
 
     @staticmethod

@@ -1,0 +1,522 @@
+# Test fixtures for the suggest endpoint eval.
+# 8 cases: 4 core behavior, 2 edge cases, 2 profile variants.
+# Each case has: is-json schema check, javascript structural validation, and 2x llm-rubric judges.
+# Variables (sections_text, answers_text, profile_context) map to the prompt template.
+# Transform strips markdown fences since suggest output is large and models often wrap it.
+
+# ── Shared JSON Schema for SuggestResponse ──────────────────
+# Used by is-json in every case. Validates the full nested structure.
+
+# Case 1: Clear Asian weeknight dinner
+- description: "Asian dinner — chicken/rice/soy sauce with clarify answers"
+  vars:
+    sections_text: "Produce: garlic, ginger, bok choy. Meat: chicken thighs. Pantry: rice, soy sauce"
+    answers_text: "User context (from their answers):\nQ: What's the occasion?\nA: Weeknight dinner\nQ: How many people?\nA: Family of 4\nQ: Any cuisine preference?\nA: Asian"
+    profile_context: ""
+  options:
+    transform: "output.replace(/```json\\n?|```/g, '').trim()"
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["reason", "clusters", "ungrouped", "storeLayout"]
+        properties:
+          reason: { type: string }
+          clusters:
+            type: array
+            minItems: 2
+            maxItems: 4
+            items:
+              type: object
+              required: ["name", "emoji", "desc", "items"]
+              properties:
+                name: { type: string }
+                emoji: { type: string }
+                desc: { type: string }
+                items:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: object
+                    required: ["name_en", "existing"]
+                    properties:
+                      name_en: { type: string }
+                      existing: { type: boolean }
+          ungrouped:
+            type: array
+            items:
+              type: object
+              required: ["name_en", "existing"]
+          storeLayout:
+            type: array
+            minItems: 1
+            items:
+              type: object
+              required: ["category", "emoji", "items"]
+              properties:
+                category: { type: string }
+                emoji: { type: string }
+                items:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: object
+                    required: ["name_en", "existing"]
+    - type: javascript
+      value: |
+        const d = JSON.parse(output.replace(/```json\n?|```/g, '').trim());
+        const existingItems = ['garlic', 'ginger', 'bok choy', 'chicken thighs', 'rice', 'soy sauce'];
+        const allClusterItems = d.clusters.flatMap(c => c.items);
+        const allUngrouped = d.ungrouped || [];
+        const newItems = allClusterItems.filter(i => !i.existing);
+        const existingInClusters = allClusterItems.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const existingInUngrouped = allUngrouped.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const allAccountedExisting = [...existingInClusters, ...existingInUngrouped];
+        const layoutItems = d.storeLayout.flatMap(c => c.items).map(i => i.name_en.toLowerCase());
+        const allItemNames = [...allClusterItems, ...allUngrouped].map(i => i.name_en.toLowerCase());
+        const errors = [];
+        if (d.clusters.length < 2 || d.clusters.length > 4) errors.push(`cluster count ${d.clusters.length} not in 2-4`);
+        if (newItems.length < 3 || newItems.length > 6) errors.push(`new item count ${newItems.length} not in 3-6`);
+        for (const ei of existingItems) {
+          const matches = allAccountedExisting.filter(n => n.includes(ei) || ei.includes(n));
+          if (matches.length === 0) errors.push(`existing item "${ei}" not found in clusters or ungrouped`);
+        }
+        if (layoutItems.length < allItemNames.length) errors.push(`storeLayout has ${layoutItems.length} items but total is ${allItemNames.length}`);
+        const pass = errors.length === 0;
+        return { pass, score: pass ? 1 : 0, reason: pass ? 'All structural checks passed' : errors.join('; ') };
+    - type: llm-rubric
+      value: |
+        This is an Asian weeknight dinner for a family of 4. The grocery list has: garlic, ginger, bok choy, chicken thighs, rice, soy sauce.
+        Evaluate: (1) Are the meal clusters coherent Asian dishes? (2) Do new item suggestions make sense for Asian cooking (e.g. sesame oil, oyster sauce, scallions)? (3) Does the reason accurately summarize the analysis? (4) Is the store layout organized by real grocery store sections?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        This is an Asian weeknight dinner for a family of 4. The grocery list has: garlic, ginger, bok choy, chicken thighs, rice, soy sauce.
+        Evaluate: (1) Are the meal clusters coherent Asian dishes? (2) Do new item suggestions make sense for Asian cooking (e.g. sesame oil, oyster sauce, scallions)? (3) Does the reason accurately summarize the analysis? (4) Is the store layout organized by real grocery store sections?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
+
+# Case 2: Mixed cuisine fusion
+- description: "fusion — tortillas/kimchi/chicken with Korean-Mexican direction"
+  vars:
+    sections_text: "Produce: tortillas, kimchi. Meat: chicken. Dairy: cheese. Pantry: rice"
+    answers_text: "User context (from their answers):\nQ: These items span Korean and Mexican — what direction?\nA: Korean-Mexican fusion\nQ: What's the occasion?\nA: Date night"
+    profile_context: ""
+  options:
+    transform: "output.replace(/```json\\n?|```/g, '').trim()"
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["reason", "clusters", "ungrouped", "storeLayout"]
+        properties:
+          reason: { type: string }
+          clusters:
+            type: array
+            minItems: 2
+            maxItems: 4
+          ungrouped: { type: array }
+          storeLayout: { type: array, minItems: 1 }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output.replace(/```json\n?|```/g, '').trim());
+        const existingItems = ['tortillas', 'kimchi', 'chicken', 'cheese', 'rice'];
+        const allClusterItems = d.clusters.flatMap(c => c.items);
+        const allUngrouped = d.ungrouped || [];
+        const newItems = allClusterItems.filter(i => !i.existing);
+        const existingInClusters = allClusterItems.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const existingInUngrouped = allUngrouped.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const allAccountedExisting = [...existingInClusters, ...existingInUngrouped];
+        const layoutItems = d.storeLayout.flatMap(c => c.items).map(i => i.name_en.toLowerCase());
+        const allItemNames = [...allClusterItems, ...allUngrouped].map(i => i.name_en.toLowerCase());
+        const errors = [];
+        if (d.clusters.length < 2 || d.clusters.length > 4) errors.push(`cluster count ${d.clusters.length} not in 2-4`);
+        if (newItems.length < 3 || newItems.length > 6) errors.push(`new item count ${newItems.length} not in 3-6`);
+        for (const ei of existingItems) {
+          const matches = allAccountedExisting.filter(n => n.includes(ei) || ei.includes(n));
+          if (matches.length === 0) errors.push(`existing item "${ei}" not found in clusters or ungrouped`);
+        }
+        if (layoutItems.length < allItemNames.length) errors.push(`storeLayout has ${layoutItems.length} items but total is ${allItemNames.length}`);
+        const pass = errors.length === 0;
+        return { pass, score: pass ? 1 : 0, reason: pass ? 'All structural checks passed' : errors.join('; ') };
+    - type: llm-rubric
+      value: |
+        The user wants Korean-Mexican fusion for a date night. List has: tortillas, kimchi, chicken, cheese, rice.
+        Evaluate: (1) Do clusters reflect fusion dishes (e.g. Korean BBQ tacos, kimchi quesadillas)? (2) Do new items bridge both cuisines (e.g. gochujang, cilantro, lime)? (3) Is the scope appropriate for a date night (not a massive meal plan)?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        The user wants Korean-Mexican fusion for a date night. List has: tortillas, kimchi, chicken, cheese, rice.
+        Evaluate: (1) Do clusters reflect fusion dishes (e.g. Korean BBQ tacos, kimchi quesadillas)? (2) Do new items bridge both cuisines (e.g. gochujang, cilantro, lime)? (3) Is the scope appropriate for a date night (not a massive meal plan)?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
+
+# Case 3: Baking for party
+- description: "baking — flour/sugar/butter/eggs for kids' birthday cookies"
+  vars:
+    sections_text: "Baking: flour, sugar, butter, eggs, vanilla, chocolate chips"
+    answers_text: "User context (from their answers):\nQ: What are you baking?\nA: Baking cookies\nQ: What's the occasion?\nA: Kids' birthday party"
+    profile_context: ""
+  options:
+    transform: "output.replace(/```json\\n?|```/g, '').trim()"
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["reason", "clusters", "ungrouped", "storeLayout"]
+        properties:
+          reason: { type: string }
+          clusters:
+            type: array
+            minItems: 2
+            maxItems: 4
+          ungrouped: { type: array }
+          storeLayout: { type: array, minItems: 1 }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output.replace(/```json\n?|```/g, '').trim());
+        const existingItems = ['flour', 'sugar', 'butter', 'eggs', 'vanilla', 'chocolate chips'];
+        const allClusterItems = d.clusters.flatMap(c => c.items);
+        const allUngrouped = d.ungrouped || [];
+        const newItems = allClusterItems.filter(i => !i.existing);
+        const existingInClusters = allClusterItems.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const existingInUngrouped = allUngrouped.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const allAccountedExisting = [...existingInClusters, ...existingInUngrouped];
+        const layoutItems = d.storeLayout.flatMap(c => c.items).map(i => i.name_en.toLowerCase());
+        const allItemNames = [...allClusterItems, ...allUngrouped].map(i => i.name_en.toLowerCase());
+        const errors = [];
+        if (d.clusters.length < 2 || d.clusters.length > 4) errors.push(`cluster count ${d.clusters.length} not in 2-4`);
+        if (newItems.length < 3 || newItems.length > 6) errors.push(`new item count ${newItems.length} not in 3-6`);
+        for (const ei of existingItems) {
+          const matches = allAccountedExisting.filter(n => n.includes(ei) || ei.includes(n));
+          if (matches.length === 0) errors.push(`existing item "${ei}" not found in clusters or ungrouped`);
+        }
+        if (layoutItems.length < allItemNames.length) errors.push(`storeLayout has ${layoutItems.length} items but total is ${allItemNames.length}`);
+        const pass = errors.length === 0;
+        return { pass, score: pass ? 1 : 0, reason: pass ? 'All structural checks passed' : errors.join('; ') };
+    - type: llm-rubric
+      value: |
+        The user is baking cookies for a kids' birthday party. List has: flour, sugar, butter, eggs, vanilla, chocolate chips.
+        Evaluate: (1) Are clusters baking-focused (cookie varieties, frosting, decorations) — NOT savory meal clusters? (2) Do new items make sense for a baking party (sprinkles, food coloring, baking soda/powder)? (3) Does the response understand this is NOT a cooking/meal scenario?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        The user is baking cookies for a kids' birthday party. List has: flour, sugar, butter, eggs, vanilla, chocolate chips.
+        Evaluate: (1) Are clusters baking-focused (cookie varieties, frosting, decorations) — NOT savory meal clusters? (2) Do new items make sense for a baking party (sprinkles, food coloring, baking soda/powder)? (3) Does the response understand this is NOT a cooking/meal scenario?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
+
+# Case 4: Large meal-prep list
+- description: "meal prep — 16 items across 4 sections for weekly prep"
+  vars:
+    sections_text: "Produce: broccoli, spinach, bell peppers, onions, sweet potatoes. Meat: chicken breast, ground turkey, salmon. Dairy: greek yogurt, eggs, cheddar cheese. Pantry: brown rice, quinoa, olive oil, canned black beans, oats"
+    answers_text: "User context (from their answers):\nQ: What's the plan for these groceries?\nA: Meal prep for the week\nQ: How many people?\nA: 2 adults"
+    profile_context: ""
+  options:
+    transform: "output.replace(/```json\\n?|```/g, '').trim()"
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["reason", "clusters", "ungrouped", "storeLayout"]
+        properties:
+          reason: { type: string }
+          clusters:
+            type: array
+            minItems: 2
+            maxItems: 4
+          ungrouped: { type: array }
+          storeLayout: { type: array, minItems: 1 }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output.replace(/```json\n?|```/g, '').trim());
+        const existingItems = ['broccoli', 'spinach', 'bell peppers', 'onions', 'sweet potatoes', 'chicken breast', 'ground turkey', 'salmon', 'greek yogurt', 'eggs', 'cheddar cheese', 'brown rice', 'quinoa', 'olive oil', 'canned black beans', 'oats'];
+        const allClusterItems = d.clusters.flatMap(c => c.items);
+        const allUngrouped = d.ungrouped || [];
+        const newItems = allClusterItems.filter(i => !i.existing);
+        const existingInClusters = allClusterItems.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const existingInUngrouped = allUngrouped.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const allAccountedExisting = [...existingInClusters, ...existingInUngrouped];
+        const layoutItems = d.storeLayout.flatMap(c => c.items).map(i => i.name_en.toLowerCase());
+        const allItemNames = [...allClusterItems, ...allUngrouped].map(i => i.name_en.toLowerCase());
+        const errors = [];
+        if (d.clusters.length < 2 || d.clusters.length > 4) errors.push(`cluster count ${d.clusters.length} not in 2-4`);
+        if (newItems.length < 3 || newItems.length > 6) errors.push(`new item count ${newItems.length} not in 3-6`);
+        for (const ei of existingItems) {
+          const matches = allAccountedExisting.filter(n => n.includes(ei) || ei.includes(n));
+          if (matches.length === 0) errors.push(`existing item "${ei}" not found in clusters or ungrouped`);
+        }
+        if (layoutItems.length < allItemNames.length) errors.push(`storeLayout has ${layoutItems.length} items but total is ${allItemNames.length}`);
+        const pass = errors.length === 0;
+        return { pass, score: pass ? 1 : 0, reason: pass ? 'All structural checks passed' : errors.join('; ') };
+    - type: llm-rubric
+      value: |
+        This is a weekly meal prep for 2 adults with 16 items across produce, meat, dairy, and pantry.
+        Evaluate: (1) Do clusters represent distinct meal-prep containers (e.g. protein bowls, stir-fry, breakfast prep)? (2) Are all 16 existing items accounted for in clusters or ungrouped? (3) Do new items fill genuine gaps for meal prep (e.g. soy sauce, garlic, meal prep containers are NOT groceries)? (4) Is the store layout comprehensive?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        This is a weekly meal prep for 2 adults with 16 items across produce, meat, dairy, and pantry.
+        Evaluate: (1) Do clusters represent distinct meal-prep containers (e.g. protein bowls, stir-fry, breakfast prep)? (2) Are all 16 existing items accounted for in clusters or ungrouped? (3) Do new items fill genuine gaps for meal prep (e.g. soy sauce, garlic, meal prep containers are NOT groceries)? (4) Is the store layout comprehensive?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
+
+# Case 5: No clarify answers (skipped clarify step)
+- description: "no answers — Italian-leaning list, user skipped clarify"
+  vars:
+    sections_text: "Produce: garlic, tomatoes. Meat: chicken. Pantry: pasta, olive oil"
+    answers_text: ""
+    profile_context: ""
+  options:
+    transform: "output.replace(/```json\\n?|```/g, '').trim()"
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["reason", "clusters", "ungrouped", "storeLayout"]
+        properties:
+          reason: { type: string }
+          clusters:
+            type: array
+            minItems: 2
+            maxItems: 4
+          ungrouped: { type: array }
+          storeLayout: { type: array, minItems: 1 }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output.replace(/```json\n?|```/g, '').trim());
+        const existingItems = ['garlic', 'tomatoes', 'chicken', 'pasta', 'olive oil'];
+        const allClusterItems = d.clusters.flatMap(c => c.items);
+        const allUngrouped = d.ungrouped || [];
+        const newItems = allClusterItems.filter(i => !i.existing);
+        const existingInClusters = allClusterItems.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const existingInUngrouped = allUngrouped.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const allAccountedExisting = [...existingInClusters, ...existingInUngrouped];
+        const layoutItems = d.storeLayout.flatMap(c => c.items).map(i => i.name_en.toLowerCase());
+        const allItemNames = [...allClusterItems, ...allUngrouped].map(i => i.name_en.toLowerCase());
+        const errors = [];
+        if (d.clusters.length < 2 || d.clusters.length > 4) errors.push(`cluster count ${d.clusters.length} not in 2-4`);
+        if (newItems.length < 3 || newItems.length > 6) errors.push(`new item count ${newItems.length} not in 3-6`);
+        for (const ei of existingItems) {
+          const matches = allAccountedExisting.filter(n => n.includes(ei) || ei.includes(n));
+          if (matches.length === 0) errors.push(`existing item "${ei}" not found in clusters or ungrouped`);
+        }
+        if (layoutItems.length < allItemNames.length) errors.push(`storeLayout has ${layoutItems.length} items but total is ${allItemNames.length}`);
+        const pass = errors.length === 0;
+        return { pass, score: pass ? 1 : 0, reason: pass ? 'All structural checks passed' : errors.join('; ') };
+    - type: llm-rubric
+      value: |
+        The user skipped clarify — no answers provided. List has: garlic, tomatoes, chicken, pasta, olive oil (Italian-leaning).
+        Evaluate: (1) Does the model still produce useful clusters without user context? (2) Does it reasonably infer the cuisine direction from the items? (3) Are new items sensible complements (e.g. basil, parmesan, onion)? (4) Does it NOT hallucinate user preferences it doesn't have?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        The user skipped clarify — no answers provided. List has: garlic, tomatoes, chicken, pasta, olive oil (Italian-leaning).
+        Evaluate: (1) Does the model still produce useful clusters without user context? (2) Does it reasonably infer the cuisine direction from the items? (3) Are new items sensible complements (e.g. basil, parmesan, onion)? (4) Does it NOT hallucinate user preferences it doesn't have?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
+
+# Case 6: Minimal list (just 2 items)
+- description: "minimal — only pasta and tomatoes, no answers"
+  vars:
+    sections_text: "Pantry: pasta, tomatoes"
+    answers_text: ""
+    profile_context: ""
+  options:
+    transform: "output.replace(/```json\\n?|```/g, '').trim()"
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["reason", "clusters", "ungrouped", "storeLayout"]
+        properties:
+          reason: { type: string }
+          clusters:
+            type: array
+            minItems: 2
+            maxItems: 4
+          ungrouped: { type: array }
+          storeLayout: { type: array, minItems: 1 }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output.replace(/```json\n?|```/g, '').trim());
+        const existingItems = ['pasta', 'tomatoes'];
+        const allClusterItems = d.clusters.flatMap(c => c.items);
+        const allUngrouped = d.ungrouped || [];
+        const newItems = allClusterItems.filter(i => !i.existing);
+        const existingInClusters = allClusterItems.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const existingInUngrouped = allUngrouped.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const allAccountedExisting = [...existingInClusters, ...existingInUngrouped];
+        const layoutItems = d.storeLayout.flatMap(c => c.items).map(i => i.name_en.toLowerCase());
+        const allItemNames = [...allClusterItems, ...allUngrouped].map(i => i.name_en.toLowerCase());
+        const errors = [];
+        if (d.clusters.length < 2 || d.clusters.length > 4) errors.push(`cluster count ${d.clusters.length} not in 2-4`);
+        if (newItems.length < 3 || newItems.length > 6) errors.push(`new item count ${newItems.length} not in 3-6`);
+        for (const ei of existingItems) {
+          const matches = allAccountedExisting.filter(n => n.includes(ei) || ei.includes(n));
+          if (matches.length === 0) errors.push(`existing item "${ei}" not found in clusters or ungrouped`);
+        }
+        if (layoutItems.length < allItemNames.length) errors.push(`storeLayout has ${layoutItems.length} items but total is ${allItemNames.length}`);
+        const pass = errors.length === 0;
+        return { pass, score: pass ? 1 : 0, reason: pass ? 'All structural checks passed' : errors.join('; ') };
+    - type: llm-rubric
+      value: |
+        Only 2 items: pasta and tomatoes. No user context.
+        Evaluate: (1) Does the model keep suggestions proportional — not hallucinating a huge meal plan from 2 items? (2) Are clusters still coherent (e.g. simple pasta dish, maybe a soup)? (3) Are new items basic and practical (garlic, olive oil, herbs) not exotic? (4) The response should feel helpful but restrained.
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Only 2 items: pasta and tomatoes. No user context.
+        Evaluate: (1) Does the model keep suggestions proportional — not hallucinating a huge meal plan from 2 items? (2) Are clusters still coherent (e.g. simple pasta dish, maybe a soup)? (3) Are new items basic and practical (garlic, olive oil, herbs) not exotic? (4) The response should feel helpful but restrained.
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
+
+# Case 7: Profile variant — vegetarian on the Asian dinner list
+- description: "vegetarian profile — Asian list but dietary constraint must be respected"
+  vars:
+    sections_text: "Produce: garlic, ginger, bok choy. Meat: chicken thighs. Pantry: rice, soy sauce"
+    answers_text: "User context (from their answers):\nQ: What's the occasion?\nA: Weeknight dinner\nQ: How many people?\nA: Family of 4\nQ: Any cuisine preference?\nA: Asian"
+    profile_context: "\nUser profile (MUST respect): Dietary: vegetarian."
+  options:
+    transform: "output.replace(/```json\\n?|```/g, '').trim()"
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["reason", "clusters", "ungrouped", "storeLayout"]
+        properties:
+          reason: { type: string }
+          clusters:
+            type: array
+            minItems: 2
+            maxItems: 4
+          ungrouped: { type: array }
+          storeLayout: { type: array, minItems: 1 }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output.replace(/```json\n?|```/g, '').trim());
+        const existingItems = ['garlic', 'ginger', 'bok choy', 'chicken thighs', 'rice', 'soy sauce'];
+        const allClusterItems = d.clusters.flatMap(c => c.items);
+        const allUngrouped = d.ungrouped || [];
+        const newItems = allClusterItems.filter(i => !i.existing);
+        const existingInClusters = allClusterItems.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const existingInUngrouped = allUngrouped.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const allAccountedExisting = [...existingInClusters, ...existingInUngrouped];
+        const layoutItems = d.storeLayout.flatMap(c => c.items).map(i => i.name_en.toLowerCase());
+        const allItemNames = [...allClusterItems, ...allUngrouped].map(i => i.name_en.toLowerCase());
+        const errors = [];
+        if (d.clusters.length < 2 || d.clusters.length > 4) errors.push(`cluster count ${d.clusters.length} not in 2-4`);
+        if (newItems.length < 3 || newItems.length > 6) errors.push(`new item count ${newItems.length} not in 3-6`);
+        for (const ei of existingItems) {
+          const matches = allAccountedExisting.filter(n => n.includes(ei) || ei.includes(n));
+          if (matches.length === 0) errors.push(`existing item "${ei}" not found in clusters or ungrouped`);
+        }
+        if (layoutItems.length < allItemNames.length) errors.push(`storeLayout has ${layoutItems.length} items but total is ${allItemNames.length}`);
+        const pass = errors.length === 0;
+        return { pass, score: pass ? 1 : 0, reason: pass ? 'All structural checks passed' : errors.join('; ') };
+    - type: llm-rubric
+      value: |
+        Same Asian dinner list as Case 1, but user has vegetarian dietary restriction. List includes chicken thighs (conflict!).
+        Evaluate: (1) Does the model acknowledge the vegetarian constraint? (2) Are ALL new suggested items vegetarian — no meat, poultry, or fish? (3) Does it handle the chicken thighs conflict gracefully (place in ungrouped, suggest tofu/tempeh replacement, or note the conflict)? (4) Are clusters vegetarian-friendly Asian meals?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Same Asian dinner list as Case 1, but user has vegetarian dietary restriction. List includes chicken thighs (conflict!).
+        Evaluate: (1) Does the model acknowledge the vegetarian constraint? (2) Are ALL new suggested items vegetarian — no meat, poultry, or fish? (3) Does it handle the chicken thighs conflict gracefully (place in ungrouped, suggest tofu/tempeh replacement, or note the conflict)? (4) Are clusters vegetarian-friendly Asian meals?
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
+
+# Case 8: Profile variant — single person on the large meal-prep list
+- description: "single household — large meal-prep list scaled for 1 person"
+  vars:
+    sections_text: "Produce: broccoli, spinach, bell peppers, onions, sweet potatoes. Meat: chicken breast, ground turkey, salmon. Dairy: greek yogurt, eggs, cheddar cheese. Pantry: brown rice, quinoa, olive oil, canned black beans, oats"
+    answers_text: "User context (from their answers):\nQ: What's the plan for these groceries?\nA: Meal prep for the week\nQ: How many people?\nA: 2 adults"
+    profile_context: "\nUser profile (MUST respect): Household: 1 person."
+  options:
+    transform: "output.replace(/```json\\n?|```/g, '').trim()"
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: ["reason", "clusters", "ungrouped", "storeLayout"]
+        properties:
+          reason: { type: string }
+          clusters:
+            type: array
+            minItems: 2
+            maxItems: 4
+          ungrouped: { type: array }
+          storeLayout: { type: array, minItems: 1 }
+    - type: javascript
+      value: |
+        const d = JSON.parse(output.replace(/```json\n?|```/g, '').trim());
+        const existingItems = ['broccoli', 'spinach', 'bell peppers', 'onions', 'sweet potatoes', 'chicken breast', 'ground turkey', 'salmon', 'greek yogurt', 'eggs', 'cheddar cheese', 'brown rice', 'quinoa', 'olive oil', 'canned black beans', 'oats'];
+        const allClusterItems = d.clusters.flatMap(c => c.items);
+        const allUngrouped = d.ungrouped || [];
+        const newItems = allClusterItems.filter(i => !i.existing);
+        const existingInClusters = allClusterItems.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const existingInUngrouped = allUngrouped.filter(i => i.existing).map(i => i.name_en.toLowerCase());
+        const allAccountedExisting = [...existingInClusters, ...existingInUngrouped];
+        const layoutItems = d.storeLayout.flatMap(c => c.items).map(i => i.name_en.toLowerCase());
+        const allItemNames = [...allClusterItems, ...allUngrouped].map(i => i.name_en.toLowerCase());
+        const errors = [];
+        if (d.clusters.length < 2 || d.clusters.length > 4) errors.push(`cluster count ${d.clusters.length} not in 2-4`);
+        if (newItems.length < 3 || newItems.length > 6) errors.push(`new item count ${newItems.length} not in 3-6`);
+        for (const ei of existingItems) {
+          const matches = allAccountedExisting.filter(n => n.includes(ei) || ei.includes(n));
+          if (matches.length === 0) errors.push(`existing item "${ei}" not found in clusters or ungrouped`);
+        }
+        if (layoutItems.length < allItemNames.length) errors.push(`storeLayout has ${layoutItems.length} items but total is ${allItemNames.length}`);
+        const pass = errors.length === 0;
+        return { pass, score: pass ? 1 : 0, reason: pass ? 'All structural checks passed' : errors.join('; ') };
+    - type: llm-rubric
+      value: |
+        Same large meal-prep list as Case 4, but profile says household size is 1 person (answers say 2 adults — conflict).
+        Evaluate: (1) Does the model acknowledge the single-person household? (2) Are portions/clusters scaled appropriately — fewer clusters or smaller scope than a 2-person plan? (3) Does it handle the conflict between "2 adults" answer and "1 person" profile gracefully? (4) New items should be practical for single-person meal prep (storage containers are NOT groceries).
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_A }}'
+        config:
+          temperature: 0
+    - type: llm-rubric
+      value: |
+        Same large meal-prep list as Case 4, but profile says household size is 1 person (answers say 2 adults — conflict).
+        Evaluate: (1) Does the model acknowledge the single-person household? (2) Are portions/clusters scaled appropriately — fewer clusters or smaller scope than a 2-person plan? (3) Does it handle the conflict between "2 adults" answer and "1 person" profile gracefully? (4) New items should be practical for single-person meal prep (storage containers are NOT groceries).
+      provider:
+        id: 'openrouter:{{ env.JUDGE_MODEL_B }}'
+        config:
+          temperature: 0
